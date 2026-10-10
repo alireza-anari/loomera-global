@@ -1,0 +1,89 @@
+{% load humanize %}
+
+{% if services %}
+  <div class="grid gap-3 sm:grid-cols-2 lg:grid-cols-3" role="list" aria-label="لیست خدمات">
+    {% for service in services %}
+      <article
+        class="group overflow-hidden rounded-[1.5rem] border border-loomera-borderSoft bg-white transition hover:border-loomera-primary/25"
+        role="listitem"
+      >
+        <a href="{{ service.get_absolute_url }}" class="block">
+          <div class="relative aspect-[16/10] overflow-hidden bg-loomera-primarySoft">
+            {% if service.service_image %}
+              <img
+                src="{{ service.service_image.url }}"
+                alt="{{ service.service_name }}"
+                class="h-full w-full object-cover transition duration-500 group-hover:scale-[1.03]"
+              >
+            {% else %}
+              <div class="flex h-full w-full items-center justify-center text-4xl text-loomera-primary">
+                <i class="fa-solid fa-spa" aria-hidden="true"></i>
+              </div>
+            {% endif %}
+
+            <span class="absolute right-2.5 top-2.5 rounded-full bg-white/90 px-2.5 py-1 text-[10px] font-black text-loomera-primary backdrop-blur">
+              {{ service.duration_minutes }} دقیقه
+            </span>
+          </div>
+
+          <div class="p-3.5 pb-2">
+            <div class="flex items-start justify-between gap-3">
+              <div class="min-w-0">
+                <h3 class="line-clamp-2 text-sm font-black leading-7 text-loomera-textPrimary sm:text-base">
+                  {{ service.service_name }}
+                </h3>
+                {% if service.public_service_groups %}
+                  <div class="mt-1 flex flex-wrap gap-1.5" aria-label="گروه‌های خدمت">
+                    {% for group in service.public_service_groups %}
+                      <span class="rounded-full bg-loomera-bgSubtle px-2 py-0.5 text-[10px] font-bold text-loomera-textMuted">
+                        {{ group.group_title }}
+                      </span>
+                    {% endfor %}
+                  </div>
+                {% endif %}
+              </div>
+
+              {% if service.public_avg_score %}
+                <span class="inline-flex shrink-0 items-center gap-1 pt-1 text-[11px] font-black text-loomera-textSecondary">
+                  {{ service.public_avg_score|floatformat:1 }}
+                  <i class="fa-solid fa-star text-[10px] text-yellow-400" aria-hidden="true"></i>
+                </span>
+              {% endif %}
+            </div>
+          </div>
+        </a>
+
+        <div class="flex items-center gap-2 px-3.5 pb-3.5">
+          <a
+            href="{% url 'search:search_page' %}?q={{ service.service_name|urlencode }}&q_type=service&q_id={{ service.id }}"
+            class="inline-flex min-h-10 flex-1 items-center justify-center gap-2 rounded-full bg-loomera-primary px-4 text-xs font-black text-white transition hover:bg-loomera-primaryHover"
+          >
+            مجموعه‌ها
+            <i class="fa-solid fa-arrow-left text-[10px]" aria-hidden="true"></i>
+          </a>
+
+          <button
+            type="button"
+            data-price-list-url="{% url 'services:service_priceList' service.id %}"
+            data-service-name="{{ service.service_name }}"
+            class="inline-flex min-h-10 shrink-0 items-center justify-center gap-2 rounded-full border border-loomera-borderSoft bg-white px-3.5 text-xs font-black text-loomera-textSecondary transition hover:border-loomera-primary/30 hover:text-loomera-primary"
+          >
+            <i class="fa-solid fa-tag text-[10px]" aria-hidden="true"></i>
+            قیمت‌ها
+          </button>
+        </div>
+      </article>
+    {% endfor %}
+  </div>
+{% else %}
+  <div class="rounded-2xl border border-dashed border-loomera-borderSoft bg-white px-5 py-8 text-center">
+    <i class="fa-solid fa-layer-group text-2xl text-loomera-primary" aria-hidden="true"></i>
+    <h3 class="mt-3 text-base font-black text-loomera-textPrimary">خدمتی در این دسته پیدا نشد</h3>
+    <a
+      href="{% url 'services:all_services' %}"
+      class="mt-3 inline-flex text-xs font-black text-loomera-primary"
+    >
+      مشاهده همه خدمات
+    </a>
+  </div>
+{% endif %}

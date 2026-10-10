@@ -1,0 +1,163 @@
+{% extends "dashboard_template.html" %}
+{% load jalali_extras %}
+
+{% block title %}درآمد متخصصان{% endblock %}
+
+{% block content %}
+{% url 'dashboards:finance_stylist_withdrawals' as team_withdrawals_url %}
+{% url 'dashboards:finance_cost_center' as finance_cost_url %}
+
+<section class="min-w-0 max-w-full space-y-4 overflow-visible lg:space-y-5" data-dashboard-workspace-root data-dashboard-page="finance-team-income">
+  <section class="relative min-w-0 overflow-hidden rounded-[30px] border border-loomera-borderSoft bg-white/95 p-4 shadow-lm-card sm:rounded-[34px] sm:p-6 lg:p-7" aria-labelledby="team-income-title">
+    <div class="pointer-events-none absolute inset-x-0 top-0 h-44 bg-[radial-gradient(circle_at_top_right,rgba(115,92,190,0.14),transparent_42%),linear-gradient(180deg,rgba(245,240,255,0.96),rgba(255,255,255,0))]" aria-hidden="true"></div>
+    <div class="relative min-w-0 rounded-[26px] border border-white/80 bg-white/90 p-4 shadow-lm-soft backdrop-blur sm:p-5 lg:p-6">
+      <div class="flex min-w-0 flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
+        <div class="min-w-0">
+          <span class="inline-flex max-w-full items-center gap-2 rounded-full border border-loomera-primary/10 bg-loomera-primarySoft px-3 py-1.5 text-[11px] font-black text-loomera-primaryText">
+            <span class="h-4 w-4" aria-hidden="true">{% include "partials/dashboard/nav_icon.html" with key="finance_team" %}</span>
+            <span>مالی متخصصان</span>
+          </span>
+          <h1 id="team-income-title" class="mt-4 text-xl font-black leading-8 tracking-tight text-loomera-textPrimary sm:text-3xl lg:text-4xl">درآمد متخصصان</h1>
+          <p class="mt-3 max-w-4xl text-sm leading-7 text-loomera-textSecondary sm:text-[15px]">برای هر متخصص ببین چه مقدار درآمد قطعی ثبت شده، چه مبلغی قابل دریافت است و چه مقدار هنوز در انتظار آزادشدن قرار دارد.</p>
+        </div>
+        <a href="{{ team_withdrawals_url }}" class="inline-flex min-h-11 shrink-0 items-center justify-center gap-2 self-start rounded-full {% if team_finance_summary.withdrawal_count %}bg-loomera-primary text-white shadow-lm-soft{% else %}border border-loomera-borderSoft bg-white text-loomera-primaryText{% endif %} px-4 py-2.5 text-xs font-black transition hover:opacity-95">
+          <span>برداشت متخصصان</span>
+          {% if team_finance_summary.withdrawal_count %}<span class="inline-flex min-h-5 min-w-5 items-center justify-center rounded-full bg-white/20 px-1.5 text-[9px]">{{ team_finance_summary.withdrawal_count|fa_digits }}</span>{% endif %}
+        </a>
+      </div>
+
+      <div class="mt-5 grid grid-cols-2 gap-2.5 sm:gap-3 xl:grid-cols-4" aria-label="خلاصه مالی متخصصان">
+        <article class="rounded-[22px] border border-loomera-borderSoft bg-white p-3.5 sm:p-4">
+          <p class="text-[10px] font-bold leading-5 text-loomera-textMuted sm:text-xs">درآمد قطعی متخصصان</p>
+          <strong class="mt-1.5 block break-words text-sm font-black text-loomera-textPrimary sm:text-lg">{{ team_finance_summary.earned }}</strong>
+          <p class="mt-1 hidden text-[10px] leading-5 text-loomera-textMuted sm:block">فقط خدمات مالی نهایی‌شده</p>
+        </article>
+        <article class="rounded-[22px] border border-loomera-success/15 bg-loomera-successSoft/45 p-3.5 sm:p-4">
+          <p class="text-[10px] font-bold leading-5 text-loomera-textMuted sm:text-xs">قابل دریافت</p>
+          <strong class="mt-1.5 block break-words text-sm font-black text-loomera-success sm:text-lg">{{ team_finance_summary.available }}</strong>
+          <p class="mt-1 hidden text-[10px] leading-5 text-loomera-textMuted sm:block">آماده ثبت درخواست برداشت</p>
+        </article>
+        <article class="rounded-[22px] border border-loomera-warning/15 bg-loomera-warningSoft/45 p-3.5 sm:p-4">
+          <p class="text-[10px] font-bold leading-5 text-loomera-textMuted sm:text-xs">در انتظار آزادشدن</p>
+          <strong class="mt-1.5 block break-words text-sm font-black text-loomera-warning sm:text-lg">{{ team_finance_summary.pending }}</strong>
+          <p class="mt-1 hidden text-[10px] leading-5 text-loomera-textMuted sm:block">هنوز قابل برداشت نیست</p>
+        </article>
+        <a href="{{ team_withdrawals_url }}" class="rounded-[22px] border border-loomera-borderSoft bg-white p-3.5 transition hover:border-loomera-primary/25 hover:bg-loomera-primarySoft/30 sm:p-4">
+          <p class="text-[10px] font-bold leading-5 text-loomera-textMuted sm:text-xs">درخواست در انتظار پرداخت</p>
+          <strong class="mt-1.5 block break-words text-sm font-black text-loomera-textPrimary sm:text-lg">{{ team_finance_summary.withdrawal_amount }}</strong>
+          <p class="mt-1 text-[10px] leading-5 text-loomera-primaryText">{{ team_finance_summary.withdrawal_count|fa_digits }} درخواست نیازمند بررسی</p>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  {% include "dashboards/partials/finance/workspace_nav.html" with active="team" %}
+  {% include "dashboards/partials/finance/team_nav.html" with active_team_finance="income" %}
+
+  <section class="overflow-hidden rounded-[28px] border border-loomera-borderSoft bg-white/95 shadow-lm-card" aria-labelledby="team-balance-title">
+    <header class="flex flex-col gap-3 border-b border-loomera-borderSoft px-4 py-4 sm:flex-row sm:items-end sm:justify-between sm:px-5 lg:px-6">
+      <div class="min-w-0">
+        <p class="text-[11px] font-black text-loomera-primaryText">وضعیت هر متخصص</p>
+        <h2 id="team-balance-title" class="mt-1 text-base font-black text-loomera-textPrimary sm:text-lg">درآمد و مانده فعلی</h2>
+        <p class="mt-1 max-w-3xl text-xs leading-6 text-loomera-textMuted">درآمد قطعی سابقه مالی است؛ قابل دریافت و در انتظار، مانده فعلی متخصص در همین مجموعه را نشان می‌دهند.</p>
+      </div>
+      <a href="{{ finance_cost_url }}" class="inline-flex min-h-10 shrink-0 items-center gap-2 self-start rounded-full border border-loomera-borderSoft bg-white px-3.5 py-2 text-xs font-black text-loomera-primaryText transition hover:bg-loomera-primarySoft sm:self-auto">قوانین سهم</a>
+    </header>
+
+    <div class="p-4 sm:p-5 lg:p-6">
+      <div class="grid gap-3 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-center">
+        <label class="relative block max-w-xl">
+          <span class="sr-only">جستجوی متخصص</span>
+          <span class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-4 text-loomera-textMuted"><i class="fa-solid fa-magnifying-glass text-xs" aria-hidden="true"></i></span>
+          <input type="search" class="w-full rounded-2xl border border-loomera-borderSoft bg-white py-3 pr-10 pl-4 text-sm outline-none transition focus:border-loomera-primary/30 focus:ring-2 focus:ring-loomera-primary/10" placeholder="جستجو با نام متخصص" data-team-wallet-search>
+        </label>
+        <div class="flex min-w-0 gap-2 overflow-x-auto pb-1 lg:justify-end" role="group" aria-label="فیلتر وضعیت مالی متخصصان" data-team-wallet-filters>
+          <button type="button" class="shrink-0 rounded-full bg-loomera-primary px-3.5 py-2 text-[11px] font-black text-white" data-team-wallet-filter="all">همه</button>
+          <button type="button" class="shrink-0 rounded-full border border-loomera-borderSoft bg-white px-3.5 py-2 text-[11px] font-black text-loomera-textSecondary" data-team-wallet-filter="available">قابل دریافت</button>
+          <button type="button" class="shrink-0 rounded-full border border-loomera-borderSoft bg-white px-3.5 py-2 text-[11px] font-black text-loomera-textSecondary" data-team-wallet-filter="pending">در انتظار</button>
+          <button type="button" class="shrink-0 rounded-full border border-loomera-borderSoft bg-white px-3.5 py-2 text-[11px] font-black text-loomera-textSecondary" data-team-wallet-filter="withdrawal">درخواست برداشت</button>
+        </div>
+      </div>
+
+      <div class="mt-4 grid gap-3 md:grid-cols-2 xl:grid-cols-3" data-team-wallet-list>
+        {% for row in rows %}
+          <details class="lm-compact-record" data-lm-compact-record data-team-wallet-card data-team-wallet-name="{{ row.stylist }}" data-has-available="{% if row.available_balance %}1{% else %}0{% endif %}" data-has-pending="{% if row.pending_balance %}1{% else %}0{% endif %}" data-has-withdrawal="{% if row.pending_withdrawal_count %}1{% else %}0{% endif %}">
+            <summary class="lm-compact-record-summary">
+              <span class="lm-compact-record-avatar" aria-hidden="true"><i class="fa-solid fa-user"></i></span>
+              <span class="min-w-0 flex-1 text-right">
+                <span class="flex min-w-0 items-center gap-2"><strong class="min-w-0 flex-1 truncate text-sm font-black text-loomera-textPrimary">{{ row.stylist }}</strong>{% if not row.is_current_member %}<span class="shrink-0 rounded-full bg-loomera-bgSubtle px-2 py-1 text-[9px] font-black text-loomera-textMuted">عضو سابق</span>{% elif not row.is_active %}<span class="shrink-0 rounded-full bg-loomera-bgSubtle px-2 py-1 text-[9px] font-black text-loomera-textMuted">غیرفعال</span>{% endif %}</span>
+                <span class="mt-1 block text-xs text-loomera-textMuted">قابل دریافت: <strong class="text-loomera-success">{{ row.available_balance|floatformat:0 }} تومان</strong></span>
+              </span>
+              <span class="lm-compact-record-chevron" aria-hidden="true"><i class="fa-solid fa-chevron-down text-[10px]"></i></span>
+            </summary>
+            <div class="lm-compact-record-body space-y-3">
+              <div class="grid grid-cols-2 gap-2 text-xs">
+                <div class="rounded-2xl bg-loomera-successSoft p-3"><span class="text-loomera-textMuted">قابل دریافت</span><strong class="mt-1 block text-loomera-success">{{ row.available_balance|floatformat:0 }} تومان</strong></div>
+                <div class="rounded-2xl bg-loomera-warningSoft p-3"><span class="text-loomera-textMuted">در انتظار آزادشدن</span><strong class="mt-1 block text-loomera-warning">{{ row.pending_balance|floatformat:0 }} تومان</strong></div>
+                <div class="rounded-2xl bg-loomera-bgSubtle p-3"><span class="text-loomera-textMuted">درآمد قطعی</span><strong class="mt-1 block text-loomera-textPrimary">{{ row.stylist_share|floatformat:0 }} تومان</strong></div>
+                <div class="rounded-2xl bg-loomera-bgSubtle p-3"><span class="text-loomera-textMuted">خدمات نهایی‌شده</span><strong class="mt-1 block text-loomera-textPrimary">{{ row.services_count|fa_digits }}</strong></div>
+              </div>
+              {% if row.pending_withdrawal_count %}
+                <a href="{{ team_withdrawals_url }}" class="flex items-center justify-between gap-3 rounded-2xl border border-loomera-primary/10 bg-loomera-primarySoft/55 px-3 py-2.5 text-xs">
+                  <span class="font-black text-loomera-primaryText">{{ row.pending_withdrawal_count|fa_digits }} درخواست برداشت در انتظار</span>
+                  <strong class="shrink-0 text-loomera-textPrimary">{{ row.pending_withdrawal_amount|floatformat:0 }} تومان</strong>
+                </a>
+              {% endif %}
+            </div>
+          </details>
+        {% empty %}
+          <div class="rounded-[22px] border border-dashed border-loomera-borderSoft p-6 text-center text-sm text-loomera-textMuted md:col-span-2 xl:col-span-3">هنوز عضوی برای نمایش مالی در این مجموعه وجود ندارد.</div>
+        {% endfor %}
+      </div>
+      <div class="mt-4 hidden rounded-[22px] border border-dashed border-loomera-borderSoft p-6 text-center text-sm text-loomera-textMuted" data-team-wallet-empty>متخصصی با این جستجو یا فیلتر پیدا نشد.</div>
+    </div>
+  </section>
+</section>
+{% endblock %}
+
+{% block js %}
+{{ block.super }}
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const input = document.querySelector('[data-team-wallet-search]');
+  const cards = [...document.querySelectorAll('[data-team-wallet-card]')];
+  const empty = document.querySelector('[data-team-wallet-empty]');
+  const buttons = [...document.querySelectorAll('[data-team-wallet-filter]')];
+  let filter = 'all';
+
+  const matchesFilter = (card) => {
+    if (filter === 'available') return card.dataset.hasAvailable === '1';
+    if (filter === 'pending') return card.dataset.hasPending === '1';
+    if (filter === 'withdrawal') return card.dataset.hasWithdrawal === '1';
+    return true;
+  };
+
+  const apply = () => {
+    const query = (input?.value || '').trim().toLowerCase();
+    let visible = 0;
+    cards.forEach((card) => {
+      const matchesName = (card.dataset.teamWalletName || '').toLowerCase().includes(query);
+      const show = matchesName && matchesFilter(card);
+      card.classList.toggle('hidden', !show);
+      if (show) visible += 1;
+    });
+    empty?.classList.toggle('hidden', visible !== 0);
+  };
+
+  input?.addEventListener('input', apply);
+  buttons.forEach((button) => button.addEventListener('click', () => {
+    filter = button.dataset.teamWalletFilter || 'all';
+    buttons.forEach((item) => {
+      const active = item === button;
+      item.classList.toggle('bg-loomera-primary', active);
+      item.classList.toggle('text-white', active);
+      item.classList.toggle('border', !active);
+      item.classList.toggle('border-loomera-borderSoft', !active);
+      item.classList.toggle('bg-white', !active);
+      item.classList.toggle('text-loomera-textSecondary', !active);
+    });
+    apply();
+  }));
+});
+</script>
+{% endblock %}

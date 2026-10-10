@@ -1,0 +1,504 @@
+{% extends "dashboard_template.html" %}
+{% load static %}
+{% load jalali_extras %}
+{% block title %}جزئیات نوبت من{% endblock %}
+{% block body_attrs %}data-page="stylist-appointment-detail"{% endblock %}
+
+{% block head %}
+  {{ block.super }}
+  <link rel="stylesheet" href="{% static 'css/pages/stylist_workspace.css' %}">
+{% endblock %}
+
+{% block content %}
+  {% url 'dashboards:stylist_appointments' as stylist_appointments_url %}
+
+  <section class="min-w-0 max-w-full space-y-3.5 overflow-visible lm-stylist-workspace" data-dashboard-workspace-root data-dashboard-page="stylist-appointment-detail">
+    <div class="flex items-center justify-between gap-3 px-1 py-1" data-stylist-appointment-compact-header>
+      <div class="min-w-0">
+        <p class="text-[11px] font-black text-loomera-primary">نوبت شخصی</p>
+        <h1 class="mt-0.5 truncate text-lg font-black text-loomera-textPrimary">جزئیات نوبت</h1>
+      </div>
+      <a href="{{ stylist_appointments_url }}"
+         class="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-loomera-borderSoft bg-white text-loomera-textPrimary shadow-sm transition hover:bg-loomera-primarySoft"
+         aria-label="بازگشت به نوبت‌ها">
+        <i class="fa-solid fa-arrow-right text-xs" aria-hidden="true"></i>
+      </a>
+    </div>
+
+
+
+    <!-- PRIMARY TASK: always first -->
+    <section id="stylist-appointment-section-actions"
+             class="overflow-hidden rounded-[26px] border border-loomera-primary/20 bg-gradient-to-br from-loomera-primarySoft/65 via-white to-loomera-accentSoft/30 shadow-lm-card"
+             data-dashboard-workspace-panel data-lm-direct-section data-stylist-primary-actions>
+      <div class="p-3.5 sm:p-4 lg:p-5">
+        <div class="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
+          <div class="min-w-0">
+            <div class="flex flex-wrap items-center gap-2">
+              <span class="lm-status-chip inline-flex items-center rounded-full px-3 py-1 text-[11px] font-black {{ appointment.status_badge_class }}">
+                {{ appointment.status_label }}
+              </span>
+              <span class="inline-flex items-center gap-1.5 rounded-full bg-white/80 px-3 py-1 text-[11px] font-bold text-loomera-textSecondary ring-1 ring-loomera-borderSoft">
+                <i class="fa-regular fa-clock text-[10px] text-loomera-primary" aria-hidden="true"></i>
+                {{ appointment.date_label }} • {{ appointment.time_label }}{% if appointment.end_time_label != '—' %} تا {{ appointment.end_time_label }}{% endif %}
+              </span>
+            </div>
+            <p class="mt-3 truncate text-sm font-black text-loomera-textPrimary">
+              {{ appointment.customer_name }}
+              <span class="mx-1 text-loomera-textMuted" aria-hidden="true">•</span>
+              <span class="font-bold text-loomera-textSecondary">{{ appointment.service_name }}</span>
+            </p>
+          </div>
+
+          {% if stylist_lifecycle_actions %}
+            <form method="post" data-lm-form-ux="off" class="flex w-full gap-2 lg:w-auto lg:min-w-[360px]">
+              {% csrf_token %}
+              {% for item in stylist_lifecycle_actions %}
+                {% if item.key == "no_show_decision" %}
+                  <button type="button"
+                          data-no-show-decision-open
+                          data-action-url="{{ request.path }}"
+                          data-next="{{ request.path }}"
+                          class="inline-flex min-h-11 min-w-0 flex-1 items-center justify-center rounded-2xl border border-orange-200 bg-orange-50 px-3 py-2.5 text-sm font-black text-orange-700 transition hover:bg-orange-100">
+                    {{ item.label }}
+                  </button>
+                {% else %}
+                  <button type="submit" name="action" value="{{ item.key }}"
+                          {% if item.key == "reject" %}onclick="return confirm('این نوبت لغو می‌شود و به مشتری اطلاع داده خواهد شد. ادامه می‌دهی؟')"{% endif %}
+                          class="inline-flex min-h-11 min-w-0 flex-1 items-center justify-center rounded-2xl px-3 py-2.5 text-sm font-black transition
+                                 {% if item.key == 'reject' %}
+                                   border border-rose-200 bg-rose-50 text-rose-700 shadow-none hover:bg-rose-100
+                                 {% else %}
+                                   shadow-sm hover:-translate-y-0.5 hover:opacity-95 {{ item.class }}
+                                 {% endif %}">
+                    {{ item.label }}
+                  </button>
+                {% endif %}
+              {% endfor %}
+            </form>
+          {% else %}
+            <span class="inline-flex w-full items-center justify-center rounded-2xl border border-loomera-borderSoft bg-white/75 px-4 py-3 text-sm font-bold text-loomera-textMuted lg:w-auto">
+              فعلاً اقدامی نیاز نیست
+            </span>
+          {% endif %}
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ESSENTIAL APPOINTMENT CONTEXT -->
+    <section id="stylist-appointment-section-summary"
+             class="overflow-hidden rounded-[26px] border border-loomera-borderSoft bg-white/95 shadow-lm-card"
+             data-dashboard-workspace-panel data-lm-direct-section>
+      <div class="flex items-center justify-between gap-3 border-b border-loomera-borderSoft px-4 py-3 sm:px-5">
+        <div class="flex min-w-0 items-center gap-3">
+          <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-loomera-primarySoft text-loomera-primary">
+            <i class="fa-regular fa-user" aria-hidden="true"></i>
+          </span>
+          <div class="min-w-0">
+            <h2 class="truncate text-base font-black text-loomera-textPrimary">{{ appointment.customer_name }}</h2>
+            <p class="mt-0.5 truncate text-xs font-bold text-loomera-textMuted">{{ appointment.service_name }}</p>
+          </div>
+        </div>
+        {% if appointment.customer_phone %}
+          <a href="tel:{{ appointment.customer_phone }}"
+             class="inline-flex h-10 shrink-0 items-center gap-2 rounded-full border border-loomera-borderSoft bg-white px-3 text-xs font-black text-loomera-primary transition hover:bg-loomera-primarySoft">
+            <i class="fa-solid fa-phone text-[10px]" aria-hidden="true"></i>
+            <span class="hidden sm:inline">تماس</span>
+          </a>
+        {% endif %}
+      </div>
+
+      <div class="grid grid-cols-2 gap-2 p-3 sm:p-4 lg:grid-cols-4 lg:px-5">
+        <div class="rounded-2xl bg-loomera-bgSubtle px-3 py-3">
+          <p class="text-[10px] font-black text-loomera-textMuted">زمان</p>
+          <p class="mt-1 text-xs font-black text-loomera-textPrimary">{{ appointment.date_label }}</p>
+          <p class="mt-0.5 text-xs font-bold text-loomera-textSecondary">{{ appointment.time_label }}{% if appointment.end_time_label != '—' %} تا {{ appointment.end_time_label }}{% endif %}</p>
+        </div>
+        <div class="rounded-2xl bg-loomera-bgSubtle px-3 py-3">
+          <p class="text-[10px] font-black text-loomera-textMuted">مبلغ</p>
+          <p class="mt-1 text-sm font-black text-loomera-textPrimary">{{ appointment.price_label }}</p>
+          {% if appointment.has_discount %}
+            <p class="mt-0.5 text-[10px] font-bold text-emerald-700">تخفیف {{ appointment.discount_label }}</p>
+          {% endif %}
+        </div>
+        <div class="rounded-2xl bg-loomera-bgSubtle px-3 py-3">
+          <p class="text-[10px] font-black text-loomera-textMuted">پرداخت</p>
+          <p class="mt-1 truncate text-xs font-black text-loomera-textPrimary">{{ appointment.payment_method }}</p>
+          <p class="mt-0.5 truncate text-[10px] font-bold text-loomera-textMuted">{{ appointment.payment_state }}</p>
+        </div>
+        <div class="rounded-2xl bg-loomera-bgSubtle px-3 py-3">
+          <p class="text-[10px] font-black text-loomera-textMuted">مجموعه</p>
+          <p class="mt-1 truncate text-xs font-black text-loomera-textPrimary">{{ appointment.salon_name|default:'—' }}</p>
+          <p class="mt-0.5 truncate text-[10px] font-bold text-loomera-textMuted">{{ appointment.customer_phone|default:'بدون شماره تماس' }}</p>
+        </div>
+      </div>
+    </section>
+
+    <div data-lm-task-tabs-anchor="stylist-appointment-detail" data-lm-task-tabs-label="جزئیات تکمیلی نوبت"></div>
+
+    <section id="stylist-appointment-section-timeline"
+             class="scroll-mt-28 overflow-hidden rounded-[26px] border border-loomera-borderSoft bg-white/95 shadow-lm-card lg:scroll-mt-36"
+             data-dashboard-workspace-panel
+             data-lm-direct-section
+             data-lm-task-panel="stylist-appointment-detail" data-lm-task-key="history" data-lm-task-label="سوابق" data-lm-task-order="3">
+      <header data-lm-direct-section-header class="flex items-center gap-3 border-b border-loomera-borderSoft bg-white/95 px-4 py-3 sm:px-5">
+        <span class="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-2xl bg-loomera-primarySoft text-loomera-primaryText">
+          <i class="fa-solid fa-clock-rotate-left text-xs" aria-hidden="true"></i>
+        </span>
+        <div class="min-w-0">
+          <p class="text-[10px] font-black text-loomera-primaryText">رویدادهای نوبت</p>
+          <h2 class="mt-0.5 truncate text-base font-black text-loomera-textPrimary">سوابق نوبت</h2>
+        </div>
+      </header>
+
+      <div class="space-y-3 p-4 sm:p-5 lg:p-6">
+        {% for item in stylist_lifecycle_timeline %}
+          <article class="rounded-2xl border border-loomera-borderSoft bg-loomera-bgSubtle/70 px-4 py-4">
+            <div class="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+              <h4 class="text-sm font-black text-loomera-textPrimary">{{ item.title }}</h4>
+              <span class="text-xs font-bold text-loomera-textMuted">{{ item.meta }}</span>
+            </div>
+            <p class="mt-2 text-sm leading-7 text-loomera-textSecondary">{{ item.description }}</p>
+          </article>
+        {% empty %}
+          <div class="rounded-2xl border border-dashed border-loomera-borderSoft bg-loomera-bgSubtle/70 px-4 py-6 text-center text-sm leading-7 text-loomera-textMuted">
+            هنوز سابقه‌ای برای این نوبت ثبت نشده است.
+          </div>
+        {% endfor %}
+      </div>
+    </section>
+
+    <section id="stylist-appointment-section-disputes"
+         class="scroll-mt-28 overflow-hidden rounded-[26px] border border-loomera-borderSoft bg-white/95 shadow-lm-card lg:scroll-mt-36"
+         data-dashboard-workspace-panel
+         data-lm-direct-section
+         data-lm-task-panel="stylist-appointment-detail" data-lm-task-key="history" data-lm-task-label="سوابق" data-lm-task-order="3">
+      <header data-lm-direct-section-header class="flex items-center gap-3 border-b border-loomera-borderSoft bg-white/95 px-4 py-3 sm:px-5">
+        <span class="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-2xl bg-rose-50 text-rose-700">
+          <i class="fa-solid fa-shield-halved text-xs" aria-hidden="true"></i>
+        </span>
+        <div class="min-w-0">
+          <p class="text-[10px] font-black text-loomera-primaryText">پیگیری‌های ویژه</p>
+          <h2 class="mt-0.5 truncate text-base font-black text-loomera-textPrimary">اختلاف و عدم حضور</h2>
+        </div>
+      </header>
+
+      <div class="space-y-3 p-4 sm:p-5 lg:p-6">
+        {% if stylist_dispute_cases %}
+          {% for dispute in stylist_dispute_cases %}
+            <article class="rounded-[24px] border border-rose-100 bg-rose-50/50 p-4">
+              <div class="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+                <div class="min-w-0">
+                  <p class="text-[11px] font-black text-rose-700">{{ dispute.type_label }}</p>
+                  <h3 class="mt-1 text-sm font-black text-loomera-textPrimary">{{ dispute.subject }}</h3>
+                  <p class="mt-1 text-xs leading-6 text-loomera-textMuted">آخرین بروزرسانی: {{ dispute.updated_label }}</p>
+                </div>
+                <span class="inline-flex w-fit rounded-full bg-white px-3 py-2 text-xs font-black text-rose-700 ring-1 ring-rose-100">
+                  {{ dispute.status_label }}
+                </span>
+              </div>
+
+              {% if dispute.description %}
+                <p class="mt-3 whitespace-pre-line text-sm leading-7 text-loomera-textSecondary">{{ dispute.description }}</p>
+              {% endif %}
+
+              {% if dispute.resolution or dispute.resolution_note %}
+                <div class="mt-3 rounded-2xl border border-emerald-100 bg-emerald-50 px-4 py-3">
+                  <p class="text-xs font-black text-emerald-800">نتیجه بررسی</p>
+                  {% if dispute.resolution %}
+                    <p class="mt-1 text-sm font-bold text-emerald-700">{{ dispute.resolution }}</p>
+                  {% endif %}
+                  {% if dispute.resolution_note %}
+                    <p class="mt-2 whitespace-pre-line text-sm leading-7 text-emerald-800">{{ dispute.resolution_note }}</p>
+                  {% endif %}
+                </div>
+              {% endif %}
+            </article>
+          {% endfor %}
+        {% else %}
+          <div class="rounded-[24px] border border-dashed border-loomera-borderSoft bg-loomera-bgSubtle/70 px-4 py-6 text-center text-sm leading-7 text-loomera-textMuted">
+            برای این خدمت پرونده اختلافی ثبت نشده است.
+          </div>
+        {% endif %}
+      </div>
+    </section>
+
+    <section id="stylist-appointment-section-materials"
+             class="group scroll-mt-28 overflow-hidden rounded-[26px] border border-loomera-borderSoft bg-white/95 shadow-lm-card lg:scroll-mt-36"
+             data-dashboard-workspace-panel data-lm-direct-section data-lm-task-panel="stylist-appointment-detail" data-lm-task-key="materials" data-lm-task-label="مواد مصرفی" data-lm-task-default data-lm-task-order="1">
+      <header data-lm-direct-section-header class="hidden cursor-default list-none items-center justify-between gap-3 border-b border-loomera-borderSoft bg-white/95 px-4 py-3 shadow-sm transition hover:bg-loomera-primarySoft/25 sm:px-5 lg:flex lg:px-6 lg:py-4">
+        <div class="min-w-0">
+          <h2 class="truncate text-base font-black text-loomera-textPrimary sm:text-lg">مواد مصرفی</h2>
+        </div>
+</header>
+
+      <div class="space-y-5 p-4 sm:p-5 lg:p-6">
+        {% if can_finalize_finance %}
+          <div class="rounded-[24px] border border-amber-200 bg-amber-50 p-4">
+            <div class="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+              <div class="min-w-0">
+                <p class="text-sm font-black text-amber-900">مواد مصرفی را بررسی و مالی را نهایی کن</p>
+              </div>
+              <div class="flex flex-col gap-2 sm:flex-row">
+                <form method="post">
+                  {% csrf_token %}
+                  <input type="hidden" name="action" value="generate_materials">
+                  <button type="submit" class="inline-flex min-h-11 items-center justify-center gap-2 rounded-full bg-white px-4 py-2 text-xs font-black text-amber-800 shadow-sm ring-1 ring-amber-200 transition hover:bg-amber-100">
+                    <i class="fa-solid fa-wand-magic-sparkles" aria-hidden="true"></i>
+                    افزودن از قالب
+                  </button>
+                </form>
+                <form method="post">
+                  {% csrf_token %}
+                  <input type="hidden" name="action" value="finalize_detail_finance">
+                  <button type="submit" class="inline-flex min-h-11 items-center justify-center gap-2 rounded-full bg-loomera-success px-4 py-2 text-xs font-black text-white shadow-sm transition hover:opacity-95">
+                    <i class="fa-solid fa-calculator" aria-hidden="true"></i>
+                    نهایی‌سازی مالی
+                  </button>
+                </form>
+              </div>
+            </div>
+          </div>
+        {% endif %}
+        <div class="flex items-center justify-between gap-3">
+          <div class="min-w-0">
+            <h3 class="text-sm font-black text-loomera-textPrimary">مواد مصرفی</h3>
+          </div>
+
+          <div class="flex flex-wrap items-center gap-2">
+            <span class="inline-flex items-center gap-2 rounded-full bg-loomera-bgSubtle px-3 py-2 text-xs font-bold text-loomera-textSecondary">
+              <i class="fa-solid fa-flask-vial text-[10px]" aria-hidden="true"></i>
+              <span>جمع مواد: {{ material_total_label }}</span>
+            </span>
+
+            {% if is_financial_finalized %}
+              <span class="inline-flex items-center gap-2 rounded-full bg-emerald-50 px-3 py-2 text-xs font-bold text-emerald-700">
+                <i class="fa-solid fa-check text-[10px]" aria-hidden="true"></i>
+                <span>مالی نهایی شده</span>
+              </span>
+            {% endif %}
+          </div>
+        </div>
+
+        {% if not is_financial_finalized %}
+          <div class="grid gap-5 xl:grid-cols-[minmax(280px,0.8fr)_minmax(0,1.2fr)]">
+            <details class="group overflow-hidden rounded-[22px] border border-loomera-borderSoft bg-white" {% if material_usage_form.errors %}open{% endif %}>
+              <summary class="flex cursor-pointer list-none items-center justify-between gap-3 px-4 py-3.5">
+                <div class="flex min-w-0 items-center gap-2.5">
+                  <span class="flex h-9 w-9 shrink-0 items-center justify-center rounded-2xl bg-loomera-primarySoft text-loomera-primary">
+                    <i class="fa-solid fa-plus text-xs" aria-hidden="true"></i>
+                  </span>
+                  <div class="min-w-0">
+                    <h4 class="text-sm font-black text-loomera-textPrimary">افزودن ماده مصرفی</h4>
+                    <p class="mt-0.5 text-[11px] text-loomera-textMuted">ثبت دستی یا افزودن از قالب</p>
+                  </div>
+                </div>
+                <span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-loomera-bgSubtle text-loomera-textSecondary transition group-open:rotate-180">
+                  <i class="fa-solid fa-chevron-down text-[10px]" aria-hidden="true"></i>
+                </span>
+              </summary>
+              <div class="border-t border-loomera-borderSoft bg-loomera-bgSubtle/45 p-4">
+              <form method="post" class="space-y-4">
+                {% csrf_token %}
+                <input type="hidden" name="action" value="create_material_usage">
+
+                {% for field in material_usage_form %}
+                  <div>
+                    <label class="mb-2 block text-xs font-bold text-loomera-textMuted" for="{{ field.id_for_label }}">{{ field.label }}</label>
+                    {{ field }}
+                    {% if field.errors %}
+                      <p class="mt-1 text-xs text-rose-600">{{ field.errors|join:"، " }}</p>
+                    {% endif %}
+                  </div>
+                {% endfor %}
+
+                <button class="inline-flex w-full items-center justify-center gap-2 rounded-full bg-loomera-primary px-4 py-3 text-sm font-bold text-white transition hover:bg-loomera-primaryHover">
+                  <i class="fa-solid fa-plus text-xs" aria-hidden="true"></i>
+                  <span>ثبت ماده مصرفی</span>
+                </button>
+              </form>
+
+              <form method="post" class="mt-3">
+                {% csrf_token %}
+                <input type="hidden" name="action" value="generate_materials">
+                <button class="inline-flex w-full items-center justify-center gap-2 rounded-full border border-loomera-borderSoft bg-white px-4 py-3 text-sm font-bold text-loomera-textSecondary transition hover:bg-loomera-primarySoft/40">
+                  <i class="fa-solid fa-wand-magic-sparkles text-xs" aria-hidden="true"></i>
+                  <span>افزودن از قالب خدمت</span>
+                </button>
+              </form>
+              <form method="post" class="mt-3 rounded-[22px] border border-dashed border-loomera-borderSoft bg-white p-4">
+                {% csrf_token %}
+                <input type="hidden" name="action" value="create_material_template">
+
+                <h4 class="text-sm font-black text-loomera-textPrimary">ثبت قالب مواد</h4>
+
+                <div class="mt-4 grid gap-3 sm:grid-cols-2">
+                  <div>
+                    <label class="mb-2 block text-xs font-bold text-loomera-textMuted">نام ماده</label>
+                    <input name="template_material_name" placeholder="مثلاً ماسک پوست یا رنگ مو" class="w-full rounded-2xl border border-loomera-borderSoft bg-white px-3 py-2 text-sm outline-none focus:border-loomera-primary/40 focus:ring-4 focus:ring-loomera-primary/10">
+                  </div>
+
+
+                  <div>
+                    <label class="mb-2 block text-xs font-bold text-loomera-textMuted">واحد</label>
+                    <select name="template_material_unit" class="w-full rounded-2xl border border-loomera-borderSoft bg-white px-3 py-2 text-sm outline-none focus:border-loomera-primary/40 focus:ring-4 focus:ring-loomera-primary/10">
+                      <option value="piece">عدد</option>
+                      <option value="gram">گرم</option>
+                      <option value="milliliter">میلی‌لیتر</option>
+                      <option value="session">نوبت</option>
+                      <option value="other">سایر</option>
+                    </select>
+                  </div>
+
+                  <div>
+                    <label class="mb-2 block text-xs font-bold text-loomera-textMuted">مقدار پیش‌فرض</label>
+                    <input name="template_quantity" value="1" inputmode="decimal" class="w-full rounded-2xl border border-loomera-borderSoft bg-white px-3 py-2 text-sm outline-none focus:border-loomera-primary/40 focus:ring-4 focus:ring-loomera-primary/10">
+                  </div>
+
+                  <div>
+                    <label class="mb-2 block text-xs font-bold text-loomera-textMuted">هزینه واحد</label>
+                    <input name="template_unit_cost" value="0" inputmode="numeric" class="w-full rounded-2xl border border-loomera-borderSoft bg-white px-3 py-2 text-sm outline-none focus:border-loomera-primary/40 focus:ring-4 focus:ring-loomera-primary/10">
+                  </div>
+
+                  <div class="sm:col-span-2">
+                    <label class="mb-2 block text-xs font-bold text-loomera-textMuted">پرداخت‌کننده</label>
+                    <select name="template_paid_by" class="w-full rounded-2xl border border-loomera-borderSoft bg-white px-3 py-2 text-sm outline-none focus:border-loomera-primary/40 focus:ring-4 focus:ring-loomera-primary/10">
+                      <option value="salon">هزینه با مجموعه</option>
+                      <option value="stylist">هزینه با متخصص</option>
+                      <option value="shared">هزینه مشترک</option>
+                    </select>
+                  </div>
+                </div>
+
+                <button type="submit" class="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-full border border-loomera-borderSoft bg-white px-4 py-3 text-sm font-black text-loomera-primary transition hover:bg-loomera-primarySoft">
+                  <i class="fa-solid fa-flask" aria-hidden="true"></i>
+                  ذخیره قالب برای این خدمت
+                </button>
+              </form>
+            </div>
+            </details>
+
+            <div class="space-y-3">
+              {% for usage in material_usages %}
+                <form method="post" class="rounded-[24px] border border-loomera-borderSoft bg-loomera-bgSubtle/70 p-4">
+                  {% csrf_token %}
+                  <input type="hidden" name="usage_id" value="{{ usage.id }}">
+
+                  <div class="flex items-start justify-between gap-3">
+                    <div class="min-w-0">
+                      <p class="text-sm font-black text-loomera-textPrimary">{{ usage.material.name }}</p>
+                      <p class="mt-1 text-xs text-loomera-textMuted">
+                        هزینه کل: {{ usage.total_cost }} تومان • {{ usage.get_paid_by_display }}
+                      </p>
+                    </div>
+
+                    <button name="action" value="delete_material_usage" class="shrink-0 rounded-full bg-rose-50 px-3 py-2 text-xs font-bold text-rose-700">
+                      حذف
+                    </button>
+                  </div>
+
+                  <div class="mt-4 grid gap-3 sm:grid-cols-3">
+                    <div>
+                      <label class="mb-2 block text-xs font-bold text-loomera-textMuted">مقدار</label>
+                      <input name="quantity" value="{{ usage.quantity }}" class="w-full rounded-2xl border border-loomera-borderSoft bg-white px-3 py-2 text-sm outline-none focus:border-loomera-primary/40 focus:ring-4 focus:ring-loomera-primary/10">
+                    </div>
+
+                    <div>
+                      <label class="mb-2 block text-xs font-bold text-loomera-textMuted">هزینه واحد</label>
+                      <input name="unit_cost" value="{{ usage.unit_cost }}" class="w-full rounded-2xl border border-loomera-borderSoft bg-white px-3 py-2 text-sm outline-none focus:border-loomera-primary/40 focus:ring-4 focus:ring-loomera-primary/10">
+                    </div>
+
+                    <div>
+                      <label class="mb-2 block text-xs font-bold text-loomera-textMuted">پرداخت‌کننده</label>
+                      <select name="paid_by" class="w-full rounded-2xl border border-loomera-borderSoft bg-white px-3 py-2 text-sm outline-none focus:border-loomera-primary/40 focus:ring-4 focus:ring-loomera-primary/10">
+                        <option value="salon" {% if usage.paid_by == "salon" %}selected{% endif %}>هزینه با مجموعه</option>
+                        <option value="stylist" {% if usage.paid_by == "stylist" %}selected{% endif %}>هزینه با متخصص</option>
+                        <option value="shared" {% if usage.paid_by == "shared" %}selected{% endif %}>هزینه مشترک</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <div class="mt-3">
+                    <label class="mb-2 block text-xs font-bold text-loomera-textMuted">یادداشت</label>
+                    <textarea name="note" rows="2" class="w-full rounded-2xl border border-loomera-borderSoft bg-white px-3 py-2 text-sm outline-none focus:border-loomera-primary/40 focus:ring-4 focus:ring-loomera-primary/10">{{ usage.note }}</textarea>
+                  </div>
+
+                  <button name="action" value="update_material_usage" class="mt-3 inline-flex items-center gap-2 rounded-full border border-loomera-borderSoft bg-white px-4 py-2 text-xs font-bold text-loomera-textSecondary transition hover:bg-loomera-primarySoft/40">
+                    ذخیره تغییرات
+                  </button>
+                </form>
+              {% empty %}
+                <div class="rounded-[24px] border border-dashed border-loomera-borderSoft bg-loomera-bgSubtle/70 p-8 text-center text-sm text-loomera-textMuted">
+                  هنوز ماده مصرفی برای این نوبت ثبت نشده است.
+                </div>
+              {% endfor %}
+            </div>
+          </div>
+        {% else %}
+          <div class="rounded-[24px] border border-emerald-100 bg-emerald-50 px-4 py-5 text-sm leading-7 text-emerald-800">
+            محاسبات مالی این خدمت نهایی شده و مواد مصرفی دیگر قابل تغییر نیست.
+          </div>
+        {% endif %}
+      </div>
+    </section>
+
+    <section id="stylist-appointment-section-finance"
+             class="group scroll-mt-28 overflow-hidden rounded-[26px] border border-loomera-borderSoft bg-white/95 shadow-lm-card lg:scroll-mt-36"
+             data-dashboard-workspace-panel data-lm-direct-section data-lm-task-panel="stylist-appointment-detail" data-lm-task-key="finance" data-lm-task-label="مالی" data-lm-task-order="2">
+      <header data-lm-direct-section-header class="hidden cursor-default list-none items-center justify-between gap-3 border-b border-loomera-borderSoft bg-white/95 px-4 py-3 shadow-sm transition hover:bg-loomera-primarySoft/25 sm:px-5 lg:flex lg:px-6 lg:py-4">
+        <div class="min-w-0">
+          <h2 class="truncate text-base font-black text-loomera-textPrimary sm:text-lg">خلاصه مالی</h2>
+        </div>
+</header>
+
+      <div class="space-y-5 p-4 sm:p-5 lg:p-6">
+        {% if is_financial_finalized and financial_snapshot %}
+          <div class="grid grid-cols-2 gap-3 xl:grid-cols-4">
+            <div class="rounded-2xl bg-loomera-bgSubtle px-4 py-3">
+              <p class="text-xs font-bold text-loomera-textMuted">هزینه مواد</p>
+              <p class="mt-1 text-sm font-black text-loomera-textPrimary">{{ financial_snapshot.material_cost_total }} تومان</p>
+            </div>
+
+            <div class="rounded-2xl bg-loomera-bgSubtle px-4 py-3">
+              <p class="text-xs font-bold text-loomera-textMuted">سهم من</p>
+              <p class="mt-1 text-sm font-black text-emerald-700">{{ financial_snapshot.stylist_net_share }} تومان</p>
+            </div>
+
+            <div class="rounded-2xl bg-loomera-bgSubtle px-4 py-3">
+              <p class="text-xs font-bold text-loomera-textMuted">سهم مجموعه</p>
+              <p class="mt-1 text-sm font-black text-loomera-textPrimary">{{ financial_snapshot.salon_net_share }} تومان</p>
+            </div>
+
+            <div class="rounded-2xl bg-loomera-bgSubtle px-4 py-3">
+              <p class="text-xs font-bold text-loomera-textMuted">وضعیت</p>
+              <p class="mt-1 text-sm font-black text-loomera-textPrimary">{{ financial_snapshot.get_status_display }}</p>
+            </div>
+          </div>
+        {% else %}
+          <div class="rounded-[24px] border border-dashed border-loomera-borderSoft bg-loomera-bgSubtle/70 px-4 py-6 text-sm leading-7 text-loomera-textMuted">
+            هنوز محاسبات مالی این خدمت نهایی نشده است.
+          </div>
+        {% endif %}
+
+        {% if not is_financial_finalized %}
+          {% if can_finalize_finance %}
+            <form method="post">
+              {% csrf_token %}
+              <input type="hidden" name="action" value="finalize_detail_finance">
+              <button class="inline-flex w-full items-center justify-center gap-2 rounded-full bg-emerald-600 px-4 py-3 text-sm font-black text-white transition hover:bg-emerald-700 sm:w-auto">
+                <i class="fa-solid fa-check text-xs" aria-hidden="true"></i>
+                <span>نهایی‌سازی مالی این خدمت</span>
+              </button>
+            </form>
+          {% else %}
+            <div class="rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3 text-xs leading-6 text-amber-800">
+              برای نهایی‌سازی مالی، ابتدا باید وضعیت خدمت به «پایان کار» برسد.
+            </div>
+          {% endif %}
+        {% endif %}
+      </div>
+    </section>
+  </section>
+{% include "dashboards/partials/stylist_no_show_decision_dialog.html" %}
+{% endblock %}

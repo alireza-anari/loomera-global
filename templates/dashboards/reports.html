@@ -1,0 +1,176 @@
+{% extends "dashboard_template.html" %}
+
+{% block title %}گزارش‌ها{% endblock %}
+
+{% block body_attrs %}data-page="reports-dashboard" data-reports-filter-count="{{ reports_dashboard.active_filter_count|default:0 }}"{% endblock %}
+
+{% block content %}
+  {% if salon %}
+    <section class="min-w-0 max-w-full space-y-3 overflow-visible sm:space-y-4" data-dashboard-workspace-root data-dashboard-page="reports-dashboard">
+      <div class="flex min-w-0 items-center justify-between gap-3 px-1" aria-label="ابزار گزارش">
+        <span class="inline-flex min-h-9 min-w-0 items-center gap-2 rounded-xl bg-loomera-bgSubtle px-3 py-2 text-[10px] font-black text-loomera-textSecondary">
+          <i class="fa-regular fa-calendar text-[10px] text-loomera-primaryText" aria-hidden="true"></i>
+          <span class="truncate">{{ reports_dashboard.active_range_label }}</span>
+        </span>
+
+        <a href="{{ reports_dashboard.export_url }}"
+           class="inline-flex min-h-9 shrink-0 items-center justify-center gap-1.5 rounded-xl border border-loomera-borderSoft bg-white px-3 py-2 text-[10px] font-black text-loomera-primaryText shadow-lm-soft transition hover:bg-loomera-primarySoft/35"
+           aria-label="دریافت گزارش PDF">
+          <i class="fa-solid fa-file-arrow-down text-[11px]" aria-hidden="true"></i>
+          <span>گزارش PDF</span>
+        </a>
+      </div>
+
+      <div class="lm-task-tabs-anchor" data-reports-tabs-anchor>
+        <div class="lm-task-tabs" role="tablist" aria-label="بخش‌های گزارش">
+          <button type="button"
+                  class="lm-task-tab lm-reports-filter-tab hidden"
+                  data-reports-filter-open
+                  aria-haspopup="dialog"
+                  aria-controls="reportsFilterModal"
+                  aria-label="{% if reports_dashboard.active_filter_count %}فیلتر گزارش‌ها، {{ reports_dashboard.active_filter_count }} فیلتر فعال{% else %}فیلتر گزارش‌ها{% endif %}">
+            <i class="fa-solid fa-filter text-[10px]" aria-hidden="true"></i>
+            <span>فیلتر</span>
+            {% if reports_dashboard.active_filter_count %}
+              <span class="lm-reports-filter-count" aria-hidden="true">{{ reports_dashboard.active_filter_count }}</span>
+            {% endif %}
+          </button>
+
+          <button type="button"
+                  class="lm-task-tab"
+                  id="reports-tab-overview"
+                  data-reports-section-tab="overview"
+                  role="tab"
+                  aria-selected="true"
+                  aria-controls="reports-section-overview">
+            <span>نمای کلی</span>
+          </button>
+
+          <button type="button"
+                  class="lm-task-tab"
+                  id="reports-tab-analytics"
+                  data-reports-section-tab="analytics"
+                  role="tab"
+                  aria-selected="false"
+                  aria-controls="reports-section-analytics">
+            <span>تحلیل روند</span>
+          </button>
+
+          <button type="button"
+                  class="lm-task-tab"
+                  id="reports-tab-rankings"
+                  data-reports-section-tab="rankings"
+                  role="tab"
+                  aria-selected="false"
+                  aria-controls="reports-section-rankings">
+            <span>برترین‌ها</span>
+          </button>
+
+          <button type="button"
+                  class="lm-task-tab"
+                  id="reports-tab-table"
+                  data-reports-section-tab="table"
+                  role="tab"
+                  aria-selected="false"
+                  aria-controls="reports-section-table">
+            <span>جزئیات</span>
+          </button>
+        </div>
+      </div>
+
+      <section id="reports-section-overview"
+               data-reports-section-panel="overview"
+               role="tabpanel"
+               aria-labelledby="reports-tab-overview"
+               class="overflow-hidden rounded-[24px] border border-loomera-borderSoft bg-white/95 shadow-lm-card">
+        <header class="flex items-center justify-between gap-3 border-b border-loomera-borderSoft px-4 py-3 sm:px-5">
+          <h1 class="text-sm font-black text-loomera-textPrimary sm:text-base">خلاصه عملکرد</h1>
+          <span class="shrink-0 text-[10px] font-bold text-loomera-textMuted">{{ reports_dashboard.active_range_label }}</span>
+        </header>
+
+        <div class="p-3 sm:p-4">
+          <div class="grid min-w-0 grid-cols-2 gap-2.5 sm:grid-cols-3 xl:grid-cols-5">
+            {% for card in reports_dashboard.stats %}
+              <article class="min-w-0 rounded-[18px] border border-loomera-borderSoft bg-white p-3 shadow-lm-soft {% if forloop.last %}col-span-2 sm:col-span-1{% endif %}">
+                <div class="flex min-w-0 items-start justify-between gap-2">
+                  <div class="min-w-0 flex-1">
+                    <p class="text-[10px] font-black leading-5 text-loomera-textSecondary sm:text-[11px]">{{ card.title }}</p>
+                    <strong class="mt-1.5 block break-words text-lg font-black leading-7 text-loomera-textPrimary sm:text-xl">{{ card.value }}</strong>
+                  </div>
+                  <span class="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-loomera-primarySoft text-sm text-loomera-primaryText">
+                    <i class="{{ card.icon }}" aria-hidden="true"></i>
+                  </span>
+                </div>
+                {% if card.meta %}
+                  <span class="mt-2 inline-flex max-w-full items-center gap-1 rounded-full bg-loomera-bgSubtle px-2 py-1 text-[9px] font-bold leading-4 text-loomera-textMuted">
+                    <i class="fa-solid fa-circle-info shrink-0 text-[8px] text-loomera-primaryText" aria-hidden="true"></i>
+                    <span class="truncate">{{ card.meta }}</span>
+                  </span>
+                {% endif %}
+              </article>
+            {% endfor %}
+          </div>
+        </div>
+      </section>
+
+      <section id="reports-section-analytics"
+               data-reports-section-panel="analytics"
+               role="tabpanel"
+               hidden
+               class="rounded-[24px] border border-loomera-borderSoft bg-white/95 p-3 shadow-lm-card sm:p-4">
+        <div class="grid gap-3 xl:grid-cols-[minmax(0,1.28fr)_minmax(0,0.92fr)]">
+          {% include "dashboards/components/chart_wrapper.html" with title="روند درآمد و رزروها" subtitle="درآمد و تعداد رزرو در هر بازه" body_template="dashboards/partials/reports_chart_body.html" %}
+          {% include "dashboards/components/widget_container.html" with title="وضعیت رزروها" subtitle="سهم هر وضعیت از کل رزروهای بازه" body_template="dashboards/partials/reports_status_widget.html" %}
+        </div>
+      </section>
+
+      <section id="reports-section-rankings"
+               data-reports-section-panel="rankings"
+               role="tabpanel"
+               hidden
+               class="rounded-[24px] border border-loomera-borderSoft bg-white/95 p-3 shadow-lm-card sm:p-4">
+        <div class="grid gap-3 xl:grid-cols-2">
+          {% include "dashboards/components/widget_container.html" with title="خدمات پرفروش" subtitle="بر اساس درآمد ثبت‌شده" body_template="dashboards/partials/reports_ranking_chart.html" widget=reports_dashboard.top_services empty_icon="fa-solid fa-scissors" empty_title="داده‌ای برای خدمات وجود ندارد" empty_description="در این بازه فروش ثبت‌شده‌ای برای خدمات وجود ندارد." %}
+          {% include "dashboards/components/widget_container.html" with title="عملکرد تیم" subtitle="درآمد و تعداد رزرو هر عضو" body_template="dashboards/partials/reports_ranking_chart.html" widget=reports_dashboard.top_team empty_icon="fa-solid fa-user-group" empty_title="داده‌ای برای تیم وجود ندارد" empty_description="در این بازه رزروی برای اعضای تیم ثبت نشده است." %}
+        </div>
+      </section>
+
+      <section id="reports-section-table"
+               data-reports-section-panel="table"
+               role="tabpanel"
+               hidden
+               class="overflow-hidden rounded-[24px] border border-loomera-borderSoft bg-white/95 shadow-lm-card">
+        <div class="p-3 sm:p-4">
+          {% include "dashboards/components/reports_table.html" %}
+        </div>
+      </section>
+
+      <div id="reportsFilterModal"
+             class="fixed inset-0 z-[95] hidden items-end justify-center bg-loomera-textPrimary/45 p-0 backdrop-blur-sm sm:items-center sm:p-4"
+             data-reports-filter-modal
+             aria-hidden="true">
+          <section class="flex max-h-[92dvh] w-full flex-col overflow-hidden rounded-t-[28px] border border-loomera-borderSoft bg-white shadow-lm-elevated sm:max-w-5xl sm:rounded-[28px]"
+                   role="dialog"
+                   aria-modal="true"
+                   aria-labelledby="reports-filter-modal-title">
+            <header class="flex items-center justify-between gap-3 border-b border-loomera-borderSoft px-4 py-3 sm:px-5">
+              <h2 id="reports-filter-modal-title" class="text-sm font-black text-loomera-textPrimary sm:text-base">فیلتر گزارش</h2>
+              <button type="button"
+                      class="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-loomera-borderSoft bg-white text-loomera-textSecondary transition hover:bg-loomera-primarySoft hover:text-loomera-primaryText"
+                      data-reports-filter-close
+                      aria-label="بستن فیلترها">
+                <i class="fa-solid fa-xmark text-xs" aria-hidden="true"></i>
+              </button>
+            </header>
+
+            <div class="min-h-0 flex-1 overflow-y-auto p-4 sm:p-5">
+              {% include "dashboards/components/reports_filter_bar.html" %}
+            </div>
+          </section>
+        </div>
+    </section>
+  {% else %}
+    {% url "dashboards:salon_manager_dashboard" as dashboard_overview_url %}
+    {% include "dashboards/components/empty_state.html" with icon="fa-regular fa-building" title="مجموعه فعالی برای این حساب پیدا نشد" description="برای استفاده از گزارش‌ها ابتدا باید یک مجموعه به حساب مدیر متصل باشد." action_label="بازگشت به داشبورد" action_url=dashboard_overview_url %}
+  {% endif %}
+{% endblock %}

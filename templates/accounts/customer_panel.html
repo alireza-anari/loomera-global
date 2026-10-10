@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+{% load humanize %}
+{% block title %}حساب من{% endblock %}
+{% block body_attrs %}data-page="customer-account"{% endblock %}
+{% block content %}
+<main class="min-h-dvh bg-loomera-bg pb-28 text-loomera-textPrimary lg:pb-14">
+  <div class="mx-auto w-full max-w-6xl space-y-5 px-4 py-5 sm:px-6 lg:py-8">
+    <header class="rounded-[28px] border border-loomera-borderSoft bg-white p-5 shadow-lm-card sm:p-6">
+      <div class="flex items-center gap-4">
+        {% if customer.profile_image %}
+          <img src="{{ customer.profile_image.url }}" alt="" class="h-16 w-16 shrink-0 rounded-2xl object-cover shadow-lm-soft sm:h-20 sm:w-20">
+        {% else %}
+          <span class="flex h-16 w-16 shrink-0 items-center justify-center rounded-2xl bg-loomera-primarySoft text-xl font-black text-loomera-primary sm:h-20 sm:w-20">{{ customer.user.name|slice:":1" }}{{ customer.user.family|slice:":1" }}</span>
+        {% endif %}
+        <div class="min-w-0 flex-1">
+          <p class="text-xs font-black text-loomera-primary">حساب من</p>
+          <h1 class="mt-1 truncate text-xl font-black sm:text-2xl">{{ customer.user.name }} {{ customer.user.family }}</h1>
+          <p class="mt-1 text-sm leading-6 text-loomera-textMuted">برای رزرو، پیگیری نوبت یا مدیریت حسابت مقصد موردنظر را انتخاب کن.</p>
+        </div>
+        <a href="{% url 'accounts:customer_settings' %}" class="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl border border-loomera-borderSoft bg-white text-loomera-textSecondary" aria-label="تنظیمات"><i class="fa-solid fa-gear" aria-hidden="true"></i></a>
+      </div>
+    </header>
+
+    <section class="grid grid-cols-2 gap-3 lg:grid-cols-4" aria-label="کارهای اصلی حساب">
+      <a href="{% url 'orders:appointments' %}" class="rounded-[24px] border border-loomera-borderSoft bg-white p-4 shadow-lm-card transition hover:border-loomera-primary/30">
+        <span class="flex h-11 w-11 items-center justify-center rounded-2xl bg-loomera-primarySoft text-loomera-primary"><i class="fa-regular fa-calendar-check"></i></span>
+        <strong class="mt-4 block text-sm font-black">نوبت‌های من</strong><span class="mt-1 block text-xs leading-5 text-loomera-textMuted">آینده، گذشته و جزئیات رزرو</span>
+      </a>
+      <a href="{% url 'csf:favorite_salons' %}" class="rounded-[24px] border border-loomera-borderSoft bg-white p-4 shadow-lm-card transition hover:border-rose-200">
+        <span class="flex h-11 w-11 items-center justify-center rounded-2xl bg-rose-50 text-rose-600"><i class="fa-regular fa-heart"></i></span>
+        <strong class="mt-4 block text-sm font-black">علاقه‌مندی‌ها</strong><span class="mt-1 block text-xs leading-5 text-loomera-textMuted">مجموعه‌های ذخیره‌شده</span>
+      </a>
+      <a href="{% url 'payments:detail' %}" class="rounded-[24px] border border-loomera-borderSoft bg-white p-4 shadow-lm-card transition hover:border-emerald-200">
+        <span class="flex h-11 w-11 items-center justify-center rounded-2xl bg-emerald-50 text-emerald-700"><i class="fa-solid fa-wallet"></i></span>
+        <strong class="mt-4 block text-sm font-black">کیف پول</strong><span class="mt-1 block text-xs leading-5 text-loomera-textMuted">{% if wallet %}{{ wallet.balance|default:0|intcomma }} تومان{% else %}گردش مالی حساب{% endif %}</span>
+      </a>
+      <a href="{% url 'search:search_page' %}" class="rounded-[24px] border border-loomera-borderSoft bg-white p-4 shadow-lm-card transition hover:border-sky-200">
+        <span class="flex h-11 w-11 items-center justify-center rounded-2xl bg-sky-50 text-sky-700"><i class="fa-solid fa-magnifying-glass"></i></span>
+        <strong class="mt-4 block text-sm font-black">رزرو جدید</strong><span class="mt-1 block text-xs leading-5 text-loomera-textMuted">جستجوی مجموعه و خدمت</span>
+      </a>
+    </section>
+
+    {% if not request.user.stylist or not request.user.salon_manager_profile %}
+      <section data-multirole-account-actions class="rounded-[28px] border border-loomera-borderSoft bg-white p-4 shadow-lm-card sm:p-5" aria-labelledby="account-growth-title">
+        <div class="mb-3">
+          <p class="text-xs font-black text-loomera-primary">گسترش فعالیت</p>
+          <h2 id="account-growth-title" class="mt-1 text-lg font-black">نقش جدیدی به همین حساب اضافه کن</h2>
+          <p class="mt-1 text-xs leading-5 text-loomera-textMuted">تغییر محیط کاری از نوار بالای صفحه انجام می‌شود؛ این بخش فقط برای فعال‌کردن نقش‌های جدید است.</p>
+        </div>
+        <div class="grid gap-2 sm:grid-cols-2">
+          {% if not request.user.stylist %}
+            <a href="{% url 'accounts:add_role' kind='stylist' %}" class="flex min-h-12 items-center justify-between rounded-2xl border border-loomera-borderSoft px-4 py-3 text-sm font-bold transition hover:border-loomera-primary/25 hover:bg-loomera-primarySoft/30">فعالیت به‌عنوان متخصص <i class="fa-solid fa-plus" aria-hidden="true"></i></a>
+          {% endif %}
+          {% if not request.user.salon_manager_profile %}
+            <a href="{% url 'accounts:add_role' kind='manager' %}" class="flex min-h-12 items-center justify-between rounded-2xl border border-loomera-borderSoft px-4 py-3 text-sm font-bold transition hover:border-loomera-primary/25 hover:bg-loomera-primarySoft/30">مدیریت سالن <i class="fa-solid fa-plus" aria-hidden="true"></i></a>
+          {% endif %}
+        </div>
+      </section>
+    {% endif %}
+
+    <section class="rounded-[28px] border border-loomera-borderSoft bg-white p-4 shadow-lm-card sm:p-5" aria-labelledby="customer-account-details-title">
+      <div class="mb-4"><p class="text-xs font-black text-loomera-primary">حساب و تنظیمات</p><h2 id="customer-account-details-title" class="mt-1 text-lg font-black">اطلاعات شخصی و ارتباطات</h2></div>
+      <div class="grid gap-2 sm:grid-cols-2">
+        <a href="{% url 'accounts:customerProfile' %}" class="flex items-center gap-3 rounded-2xl border border-loomera-borderSoft px-4 py-3 transition hover:bg-loomera-primarySoft/30"><i class="fa-regular fa-user w-5 text-loomera-primary"></i><span class="flex-1"><strong class="block text-sm font-black">پروفایل من</strong><small class="text-xs text-loomera-textMuted">نام، تصویر و تاریخ تولد</small></span><i class="fa-solid fa-chevron-left text-xs text-loomera-textMuted"></i></a>
+        <a href="{% url 'accounts:customer_addresses' %}" class="flex items-center gap-3 rounded-2xl border border-loomera-borderSoft px-4 py-3 transition hover:bg-loomera-primarySoft/30"><i class="fa-solid fa-location-dot w-5 text-loomera-primary"></i><span class="flex-1"><strong class="block text-sm font-black">آدرس‌ها</strong><small class="text-xs text-loomera-textMuted">{{ address_count }} آدرس ثبت‌شده{% if primary_address %} · {{ primary_address.title }}{% endif %}</small></span><i class="fa-solid fa-chevron-left text-xs text-loomera-textMuted"></i></a>
+        <a href="{% url 'accounts:customer_communication_settings' %}" class="flex items-center gap-3 rounded-2xl border border-loomera-borderSoft px-4 py-3 transition hover:bg-loomera-primarySoft/30"><i class="fa-regular fa-bell w-5 text-loomera-primary"></i><span class="flex-1"><strong class="block text-sm font-black">اعلان‌ها و ارتباطات</strong><small class="text-xs text-loomera-textMuted">پیامک، ایمیل و اتصال بله</small></span><i class="fa-solid fa-chevron-left text-xs text-loomera-textMuted"></i></a>
+        <a href="{% url 'main:support_ticket_list' %}" class="flex items-center gap-3 rounded-2xl border border-loomera-borderSoft px-4 py-3 transition hover:bg-loomera-primarySoft/30"><i class="fa-solid fa-headset w-5 text-loomera-primary"></i><span class="flex-1"><strong class="block text-sm font-black">پشتیبانی</strong><small class="text-xs text-loomera-textMuted">درخواست‌های من و پیام جدید</small></span><i class="fa-solid fa-chevron-left text-xs text-loomera-textMuted"></i></a>
+      </div>
+    </section>
+  </div>
+</main>
+{% endblock %}

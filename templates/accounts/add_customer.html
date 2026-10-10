@@ -1,0 +1,88 @@
+{% extends "dashboard_template.html" %}
+{% block title %}افزودن مشتری{% endblock %}
+
+{% block content %}
+<section class="mx-auto min-w-0 max-w-4xl space-y-4" data-dashboard-page="manager-add-customer">
+  <section class="relative overflow-hidden rounded-[30px] border border-loomera-borderSoft bg-white/95 p-4 shadow-lm-card sm:rounded-[34px] sm:p-6" aria-labelledby="add-customer-title">
+    <div class="pointer-events-none absolute inset-x-0 top-0 h-36 bg-[radial-gradient(circle_at_top_right,rgba(115,92,190,0.14),transparent_44%),linear-gradient(180deg,rgba(245,240,255,0.95),rgba(255,255,255,0))]" aria-hidden="true"></div>
+    <div class="relative flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+      <div class="min-w-0">
+        <span class="inline-flex items-center gap-2 rounded-full border border-loomera-primary/10 bg-loomera-primarySoft px-3 py-1.5 text-[11px] font-black text-loomera-primaryText">
+          <i class="fa-solid fa-user-plus text-[10px]" aria-hidden="true"></i>
+          مشتریان
+        </span>
+        <h1 id="add-customer-title" class="mt-4 text-xl font-black leading-8 text-loomera-textPrimary sm:text-3xl">افزودن مشتری</h1>
+        <p class="mt-2 max-w-2xl text-sm leading-7 text-loomera-textSecondary">اطلاعات لازم برای شناسایی و ارتباط با مشتری را ثبت کن. ایمیل و آدرس اختیاری‌اند.</p>
+      </div>
+      <div class="shrink-0 rounded-[22px] border border-loomera-borderSoft bg-loomera-bgSubtle/70 px-4 py-3 text-xs text-loomera-textSecondary sm:max-w-60">
+        <p class="font-black text-loomera-textPrimary">مجموعه</p>
+        <p class="mt-1 truncate font-bold">{{ target_salon.salon_name }}</p>
+      </div>
+    </div>
+  </section>
+
+  <form method="post" class="space-y-4" data-lm-dirty-form data-add-customer-form>
+    {% csrf_token %}
+    {% if next_url %}<input type="hidden" name="next" value="{{ next_url }}">{% endif %}
+
+    {% if form.non_field_errors %}
+      <div class="rounded-[22px] border border-loomera-danger/20 bg-loomera-dangerSoft px-4 py-3 text-sm font-bold leading-7 text-loomera-danger">
+        {% for error in form.non_field_errors %}<p>{{ error }}</p>{% endfor %}
+      </div>
+    {% endif %}
+
+    <section class="overflow-hidden rounded-[28px] border border-loomera-borderSoft bg-white/95 shadow-lm-card">
+      <header class="border-b border-loomera-borderSoft px-4 py-4 sm:px-5 lg:px-6">
+        <p class="text-[11px] font-black text-loomera-primaryText">اطلاعات اصلی</p>
+        <h2 class="mt-1 text-base font-black text-loomera-textPrimary sm:text-lg">مشخصات مشتری</h2>
+        <p class="mt-1 text-xs leading-6 text-loomera-textMuted">نام و شماره موبایل برای ثبت مشتری لازم‌اند.</p>
+      </header>
+      <div class="grid gap-4 p-4 sm:grid-cols-2 sm:p-5 lg:p-6">
+        <div>
+          <label class="mb-2 block text-xs font-black text-loomera-textSecondary" for="id_name">نام</label>
+          {{ form.name }}
+          {% for error in form.name.errors %}<p class="mt-2 text-xs font-black text-loomera-danger">{{ error }}</p>{% endfor %}
+        </div>
+        <div>
+          <label class="mb-2 block text-xs font-black text-loomera-textSecondary" for="id_family">نام خانوادگی</label>
+          {{ form.family }}
+          {% for error in form.family.errors %}<p class="mt-2 text-xs font-black text-loomera-danger">{{ error }}</p>{% endfor %}
+        </div>
+        <div>
+          <label class="mb-2 block text-xs font-black text-loomera-textSecondary" for="id_mobile_number">شماره موبایل</label>
+          {{ form.mobile_number }}
+          <p class="mt-2 text-[11px] leading-5 text-loomera-textMuted">این شماره شناسه اصلی مشتری برای رزرو و ارتباط است.</p>
+          {% for error in form.mobile_number.errors %}<p class="mt-2 text-xs font-black text-loomera-danger">{{ error }}</p>{% endfor %}
+        </div>
+        <div>
+          <label class="mb-2 block text-xs font-black text-loomera-textSecondary" for="id_email">ایمیل <span class="font-bold text-loomera-textMuted">(اختیاری)</span></label>
+          {{ form.email }}
+          {% for error in form.email.errors %}<p class="mt-2 text-xs font-black text-loomera-danger">{{ error }}</p>{% endfor %}
+        </div>
+      </div>
+    </section>
+
+    <details class="group overflow-hidden rounded-[28px] border border-loomera-borderSoft bg-white/95 shadow-lm-card">
+      <summary class="flex cursor-pointer list-none items-center justify-between gap-3 px-4 py-4 sm:px-5 lg:px-6">
+        <div>
+          <p class="text-[11px] font-black text-loomera-primaryText">اطلاعات تکمیلی</p>
+          <h2 class="mt-1 text-base font-black text-loomera-textPrimary">آدرس مشتری <span class="text-xs font-bold text-loomera-textMuted">(اختیاری)</span></h2>
+        </div>
+        <span class="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-loomera-primarySoft text-loomera-primaryText transition group-open:rotate-180"><i class="fa-solid fa-chevron-down text-xs" aria-hidden="true"></i></span>
+      </summary>
+      <div class="border-t border-loomera-borderSoft p-4 sm:p-5 lg:p-6">
+        <label class="mb-2 block text-xs font-black text-loomera-textSecondary" for="id_address">آدرس یا توضیح برای شناسایی مشتری</label>
+        {{ form.address }}
+        {% for error in form.address.errors %}<p class="mt-2 text-xs font-black text-loomera-danger">{{ error }}</p>{% endfor %}
+      </div>
+    </details>
+
+    <div class="lm-dashboard-sticky-action sticky bottom-3 z-20 flex justify-end rounded-[24px] border border-loomera-borderSoft bg-white/95 p-3 shadow-lm-elevated backdrop-blur">
+      <button type="submit" class="inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-2xl bg-loomera-primary px-5 py-3 text-sm font-black text-white shadow-[0_14px_30px_rgba(115,92,190,0.18)] transition hover:-translate-y-0.5 sm:w-auto" data-lm-submit-label="ثبت مشتری">
+        ثبت مشتری
+        <i class="fa-solid fa-check text-xs" aria-hidden="true"></i>
+      </button>
+    </div>
+  </form>
+</section>
+{% endblock %}

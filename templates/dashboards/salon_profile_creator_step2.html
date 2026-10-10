@@ -1,0 +1,258 @@
+{% extends "dashboard_template.html" %}
+{% load static salons_filters %}
+
+{% block title %}موقعیت و آدرس مجموعه{% endblock %}
+
+{% block body_attrs %}
+data-page="dashboard-layout"
+data-dashboard-page="salon-location-step"
+data-map-enabled="{{ map_provider_enabled|yesno:'true,false' }}"
+data-reverse-geocode-url="{% url 'search:reverse_geocode_proxy' %}"
+data-city-search-url="{% url 'search:city_search_proxy' %}"
+data-map-tile-seed-url="{% url 'search:map_tile_proxy' z=0 x=0 y=0 %}"
+data-map-tile-url-template="{% url 'search:map_tile_proxy' z=987654 x=876543 y=765432 %}"
+data-marker-icon-url="{% static 'vendor/mapp/dist/assets/images/marker-icon.png' %}"
+{% endblock %}
+
+{% block head %}
+  <link rel="stylesheet" href="{% static 'vendor/mapp/dist/css/mapp.min.css' %}">
+  <link rel="stylesheet" href="{% static 'vendor/mapp/dist/css/fa/style.css' %}">
+  <style>
+    #salon-location-map .leaflet-default-icon-path,
+    #salon-location-map .salon-location-marker { background-image: none !important; }
+    #salon-location-map,
+    #salon-location-map .leaflet-container { position: relative; z-index: 0; }
+    #salon-location-map .leaflet-pane,
+    #salon-location-map .leaflet-control,
+    #salon-location-map .leaflet-top,
+    #salon-location-map .leaflet-bottom {
+      z-index: 5 !important;
+    }
+
+    .lm-onboarding-savebar {
+      bottom: var(--lm-bottom-nav-space, 4.75rem) !important;
+    }
+    @media (min-width: 1024px) {
+      .lm-onboarding-savebar { bottom: 0 !important; }
+    }
+  </style>
+{% endblock %}
+
+{% block content %}
+  {% url 'dashboards:salon_profile' as salon_profile_url %}
+  {% url 'dashboards:salon_profile_creator_step1' as step1_url %}
+
+  <section class="mx-auto min-w-0 max-w-5xl space-y-4" data-salon-location-step-page data-profile-edit-mode="{{ profile_edit_mode|yesno:'true,false' }}">
+    <header class="rounded-[28px] border border-loomera-borderSoft bg-white/95 p-4 shadow-lm-card sm:p-6">
+      <span class="inline-flex items-center gap-2 rounded-full bg-loomera-primarySoft px-3 py-1.5 text-[11px] font-black text-loomera-primaryText">
+        <i class="fa-solid fa-location-dot text-[10px]" aria-hidden="true"></i>
+        {% if profile_edit_mode %}پروفایل مجموعه / آدرس و موقعیت{% else %}مرحله ۲ از ۳{% endif %}
+      </span>
+      <h1 class="mt-4 text-xl font-black leading-8 text-loomera-textPrimary sm:text-3xl">موقعیت و آدرس مجموعه</h1>
+      <p class="mt-2 max-w-2xl text-sm leading-7 text-loomera-textSecondary">پین را روی محل مجموعه بگذار و آدرسی را که مشتری می‌بیند کامل کن.</p>
+    </header>
+
+    <form method="post" class="space-y-4" id="salonLocationForm" novalidate>
+      {% csrf_token %}
+      {{ form.latitude }}
+      {{ form.longitude }}
+      {{ form.city }}
+      {{ form.zone }}
+      {{ form.neighborhood }}
+      {{ form.neighborhood_name }}
+      {{ form.zone_label }}
+
+      {% if form.non_field_errors %}
+        <div class="rounded-[22px] border border-loomera-danger/20 bg-loomera-dangerSoft px-4 py-3 text-sm font-bold leading-7 text-loomera-danger">
+          {% for error in form.non_field_errors %}<div>{{ error }}</div>{% endfor %}
+        </div>
+      {% endif %}
+
+      <section class="rounded-[28px] border border-loomera-borderSoft bg-white/95 p-4 shadow-lm-card sm:p-5 lg:p-6">
+        <div class="mb-4 flex items-center justify-between gap-3">
+          <div>
+            <h2 class="text-base font-black text-loomera-textPrimary sm:text-lg">موقعیت مکانی روی نقشه</h2>
+            <p class="mt-1 text-xs leading-6 text-loomera-textMuted">اول شهر را انتخاب کن؛ سپس محل دقیق مجموعه را روی نقشه مشخص کن.</p>
+          </div>
+          <span class="inline-flex shrink-0 items-center gap-2 rounded-full bg-loomera-primarySoft px-3 py-2 text-xs font-black text-loomera-primaryText" data-location-step-coordinate-status>
+            <i class="fa-solid fa-circle-info text-[10px]" aria-hidden="true"></i>
+            مکانی انتخاب نشده
+          </span>
+        </div>
+
+        <div class="mb-4">
+          <label for="id_city_search" class="mb-2 block text-xs font-black text-loomera-textMuted">شهر</label>
+          <div class="relative">
+            <input id="id_city_search" type="search" value="{{ form.city.value|default:'' }}" autocomplete="off" class="w-full rounded-[20px] border border-loomera-borderSoft bg-loomera-bgSubtle/70 px-4 py-3.5 text-sm font-bold text-loomera-textPrimary outline-none transition focus:border-loomera-primary/40 focus:bg-white focus:ring-4 focus:ring-loomera-primary/10" placeholder="نام شهر را بنویس؛ مثلاً اصفهان">
+            <div id="citySearchResults" class="absolute inset-x-0 top-[calc(100%+0.5rem)] z-30 hidden max-h-64 overflow-y-auto rounded-[20px] border border-loomera-borderSoft bg-white p-2 shadow-lm-elevated" role="listbox" aria-label="نتایج جستجوی شهر"></div>
+          </div>
+          <p class="mt-2 text-xs leading-6 text-loomera-textMuted">با انتخاب شهر، نقشه روی همان شهر زوم می‌شود؛ انتخاب شهر به‌تنهایی محل مجموعه را ثبت نمی‌کند.</p>
+        </div>
+
+        <div id="mapWarning" class="mb-4 hidden rounded-2xl border border-loomera-danger/20 bg-loomera-dangerSoft px-4 py-3 text-sm font-bold leading-7 text-loomera-danger"></div>
+        <div class="overflow-hidden rounded-[24px] border border-loomera-borderSoft bg-loomera-bgSubtle">
+          <div id="salon-location-map" class="lm-onboarding-location-map w-full bg-loomera-bgSubtle"></div>
+        </div>
+        <div class="mt-3 flex flex-wrap gap-2">
+          <button type="button" id="useCurrentLocationBtn" class="inline-flex min-h-11 items-center justify-center gap-2 rounded-2xl border border-loomera-primary/15 bg-loomera-primarySoft px-4 py-2.5 text-sm font-black text-loomera-primaryText transition hover:bg-white">
+            <i class="fa-solid fa-location-crosshairs text-xs" aria-hidden="true"></i> موقعیت فعلی من
+          </button>
+          <button type="button" id="clearLocationBtn" class="inline-flex min-h-11 items-center justify-center gap-2 rounded-2xl border border-loomera-borderSoft bg-white px-4 py-2.5 text-sm font-black text-loomera-textSecondary transition hover:bg-loomera-dangerSoft hover:text-loomera-danger">
+            پاک کردن موقعیت
+          </button>
+        </div>
+      </section>
+
+      <section class="rounded-[28px] border border-loomera-borderSoft bg-white/95 p-4 shadow-lm-card sm:p-5 lg:p-6">
+        <h2 class="text-base font-black text-loomera-textPrimary sm:text-lg">آدرس قابل نمایش برای مشتری</h2>
+        <div class="mt-4 grid gap-4 sm:grid-cols-2">
+          <div>
+            <label for="id_zone_display" class="mb-2 block text-xs font-black text-loomera-textMuted">منطقه / ناحیه</label>
+            <input id="id_zone_display" type="text" value="{% if form.zone_label.value %}{{ form.zone_label.value }}{% elif form.zone.value %}منطقه {{ form.zone.value }}{% endif %}" readonly class="w-full cursor-not-allowed rounded-[20px] border border-loomera-borderSoft bg-loomera-bgSubtle/80 px-4 py-3.5 text-sm font-bold text-loomera-textPrimary" placeholder="با انتخاب موقعیت پر می‌شود">
+          </div>
+          <div>
+            <label for="id_neighborhood_display" class="mb-2 block text-xs font-black text-loomera-textMuted">محله</label>
+            <input id="id_neighborhood_display" type="text" value="{% if form.neighborhood_name.value %}{{ form.neighborhood_name.value }}{% elif salon.neighborhood %}{{ salon.neighborhood.name }}{% endif %}" readonly class="w-full cursor-not-allowed rounded-[20px] border border-loomera-borderSoft bg-loomera-bgSubtle/80 px-4 py-3.5 text-sm font-bold text-loomera-textPrimary" placeholder="با انتخاب موقعیت پر می‌شود">
+          </div>
+        </div>
+        <div class="mt-4">
+          <label for="{{ form.address.id_for_label }}" class="mb-2 block text-xs font-black text-loomera-textMuted">آدرس دقیق</label>
+          {{ form.address|add_class:"min-h-[120px] w-full rounded-[22px] border border-loomera-borderSoft bg-loomera-bgSubtle/70 px-4 py-3.5 text-sm font-bold leading-8 text-loomera-textPrimary outline-none transition focus:border-loomera-primary/40 focus:bg-white focus:ring-4 focus:ring-loomera-primary/10" }}
+          <p class="mt-2 text-xs leading-6 text-loomera-textMuted">آدرس خیابان و کوچه را بررسی کن؛ پلاک و واحد در فیلدهای جداگانه و الزامی ثبت می‌شوند.</p>
+          <div id="addressAutofillMessage" class="mt-3 hidden rounded-2xl border px-4 py-3 text-xs font-bold"></div>
+          {% for error in form.address.errors %}<span class="mt-2 block text-xs font-bold text-loomera-danger">{{ error }}</span>{% endfor %}
+        </div>
+        <div class="mt-4 grid gap-4 sm:grid-cols-2">
+          <div>
+            <label for="{{ form.address_plaque.id_for_label }}" class="mb-2 block text-xs font-black text-loomera-textMuted">پلاک</label>
+            {{ form.address_plaque|add_class:"w-full rounded-[20px] border border-loomera-borderSoft bg-loomera-bgSubtle/70 px-4 py-3.5 text-sm font-bold text-loomera-textPrimary outline-none transition focus:border-loomera-primary/40 focus:bg-white focus:ring-4 focus:ring-loomera-primary/10" }}
+            {% for error in form.address_plaque.errors %}<span class="mt-2 block text-xs font-bold text-loomera-danger">{{ error }}</span>{% endfor %}
+          </div>
+          <div>
+            <label for="{{ form.address_unit.id_for_label }}" class="mb-2 block text-xs font-black text-loomera-textMuted">واحد</label>
+            {{ form.address_unit|add_class:"w-full rounded-[20px] border border-loomera-borderSoft bg-loomera-bgSubtle/70 px-4 py-3.5 text-sm font-bold text-loomera-textPrimary outline-none transition focus:border-loomera-primary/40 focus:bg-white focus:ring-4 focus:ring-loomera-primary/10" }}
+            {% for error in form.address_unit.errors %}<span class="mt-2 block text-xs font-bold text-loomera-danger">{{ error }}</span>{% endfor %}
+          </div>
+        </div>
+      </section>
+
+      <div data-mobile-primary-action class="lm-onboarding-savebar fixed inset-x-0 z-[60] border-t border-loomera-borderSoft bg-white/96 px-3 py-2 shadow-[0_-12px_34px_rgba(46,42,60,0.10)] backdrop-blur sm:px-5 lg:sticky lg:inset-x-auto lg:z-20 lg:rounded-[22px] lg:border lg:p-2.5 lg:shadow-lm-elevated">
+        <div class="mx-auto flex w-full max-w-5xl justify-end">
+          <button type="submit" id="submitStepBtn" class="inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-2xl bg-loomera-primary px-5 py-2.5 text-sm font-black text-white shadow-[0_10px_24px_rgba(115,92,190,0.18)] transition hover:opacity-95 disabled:cursor-not-allowed disabled:opacity-55 sm:w-auto sm:min-w-36" disabled>
+            <i class="fa-solid fa-floppy-disk text-xs" aria-hidden="true"></i>
+            <span>ذخیره</span>
+          </button>
+        </div>
+      </div>
+      <div class="block h-16 lg:h-2" aria-hidden="true"></div>
+    </form>
+  </section>
+{% endblock %}
+
+{% block js %}
+  <script src="{% static 'vendor/mapp/dist/js/jquery-3.2.1.min.js' %}"></script>
+  <script src="{% static 'vendor/mapp/dist/js/mapp.env.js' %}"></script>
+  <script src="{% static 'vendor/mapp/dist/js/mapp.env.bridge.js' %}"></script>
+  <script src="{% static 'vendor/mapp/dist/js/mapp.min.js' %}"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const root = document.querySelector("[data-salon-location-step-page]");
+      const profileEditMode = root?.dataset.profileEditMode === "true";
+      if (!root) return;
+
+      const latitudeInput = document.getElementById("id_latitude");
+      const longitudeInput = document.getElementById("id_longitude");
+      const zoneInput = document.getElementById("id_zone");
+      const neighborhoodInput = document.getElementById("id_neighborhood");
+      const neighborhoodNameInput = document.getElementById("id_neighborhood_name");
+      const zoneLabelInput = document.getElementById("id_zone_label");
+      const zoneDisplayInput = document.getElementById("id_zone_display");
+      const neighborhoodDisplayInput = document.getElementById("id_neighborhood_display");
+      const addressInput = document.getElementById("id_address");
+      const plaqueInput = document.getElementById("id_address_plaque");
+      const unitInput = document.getElementById("id_address_unit");
+      const submitButton = document.getElementById("submitStepBtn");
+
+      const statusLabel = root.querySelector("[data-location-step-status-label]");
+      const statusHelp = root.querySelector("[data-location-step-status-help]");
+      const coordinateStatus = root.querySelector("[data-location-step-coordinate-status]");
+      const readinessTitle = root.querySelector("[data-location-step-readiness-title]");
+      const readinessHelp = root.querySelector("[data-location-step-readiness-help]");
+      const progress = root.querySelector("[data-location-step-progress]");
+      const previewCoordinate = root.querySelector("[data-location-step-preview-coordinate]");
+      const previewArea = root.querySelector("[data-location-step-preview-area]");
+      const previewAddress = root.querySelector("[data-location-step-preview-address]");
+
+      const readSelectLabel = (select) => {
+        if (!select || !select.options || select.selectedIndex < 0) return "";
+        return select.options[select.selectedIndex]?.textContent?.trim() || "";
+      };
+
+      const hasValue = (input) => Boolean(String(input?.value || "").trim());
+
+      const updateLocationReadiness = () => {
+        const hasLocation = hasValue(latitudeInput) && hasValue(longitudeInput);
+        const hasZone = hasValue(zoneInput) || hasValue(zoneLabelInput) || hasValue(zoneDisplayInput);
+        const hasNeighborhood = hasValue(neighborhoodNameInput) || hasValue(neighborhoodDisplayInput) || hasValue(neighborhoodInput);
+        const hasAddress = hasValue(addressInput);
+        const hasPlaque = hasValue(plaqueInput);
+        const hasUnit = hasValue(unitInput);
+        const score = [hasLocation, hasZone, hasNeighborhood, hasAddress, hasPlaque, hasUnit].filter(Boolean).length;
+        const percent = Math.round((score / 6) * 100);
+        const requiredReady = hasLocation && hasAddress && hasPlaque && hasUnit;
+
+        if (progress) progress.style.width = `${Math.max(percent, 10)}%`;
+        if (submitButton) submitButton.disabled = !requiredReady;
+
+        if (previewCoordinate) {
+          previewCoordinate.textContent = hasLocation
+            ? `${Number(latitudeInput.value).toFixed(5)}، ${Number(longitudeInput.value).toFixed(5)}`
+            : "انتخاب نشده";
+        }
+
+        if (previewArea) {
+          const zone = (zoneDisplayInput?.value || zoneLabelInput?.value || (zoneInput?.value ? `منطقه ${zoneInput.value}` : "")).trim();
+          const neighborhood = (neighborhoodDisplayInput?.value || neighborhoodNameInput?.value || readSelectLabel(neighborhoodInput)).trim();
+          previewArea.textContent = [zone, neighborhood].filter(Boolean).join(" / ") || "ثبت نشده";
+        }
+
+        if (previewAddress) {
+          previewAddress.textContent = hasAddress ? addressInput.value.trim() : "هنوز آدرسی ثبت نشده است.";
+        }
+
+        if (coordinateStatus) {
+          coordinateStatus.innerHTML = hasLocation
+            ? '<i class="fa-solid fa-check text-[10px]" aria-hidden="true"></i> نقطه انتخاب شد'
+            : '<i class="fa-solid fa-circle-info text-[10px]" aria-hidden="true"></i> مکانی انتخاب نشده';
+        }
+
+        if (percent >= 100) {
+          if (statusLabel) statusLabel.textContent = profileEditMode ? "آماده ذخیره" : "آماده ادامه";
+          if (statusHelp) statusHelp.textContent = "موقعیت، آدرس، پلاک و واحد تکمیل شده‌اند.";
+          if (readinessTitle) readinessTitle.textContent = profileEditMode ? "موقعیت آماده ذخیره است" : "آماده رفتن به مرحله بعد";
+          if (readinessHelp) readinessHelp.textContent = profileEditMode ? "قبل از ذخیره، آدرس را یک‌بار از نگاه مشتری بررسی کن." : "قبل از ادامه، فقط یک بار آدرس را از نگاه مشتری بررسی کن.";
+        } else if (hasLocation) {
+          if (statusLabel) statusLabel.textContent = "لوکیشن انتخاب شد";
+          if (statusHelp) statusHelp.textContent = "حالا آدرس را بررسی و پلاک و واحد را کامل کن.";
+          if (readinessTitle) readinessTitle.textContent = "لوکیشن ثبت شده";
+          if (readinessHelp) readinessHelp.textContent = profileEditMode ? "آدرس را بررسی کن؛ منطقه و محله خودکار ثبت می‌شوند." : "برای کامل شدن مرحله، آدرس را بررسی کن؛ منطقه و محله خودکار ثبت می‌شوند.";
+        } else {
+          if (statusLabel) statusLabel.textContent = "در حال تکمیل";
+          if (statusHelp) statusHelp.textContent = "اول نقطه مجموعه را روی نقشه انتخاب کن.";
+          if (readinessTitle) readinessTitle.textContent = "در حال تکمیل";
+          if (readinessHelp) readinessHelp.textContent = profileEditMode ? "برای ذخیره، نقطه مجموعه را روی نقشه انتخاب کن و آدرس را کامل کن." : "برای ادامه، نقطه مجموعه را روی نقشه انتخاب کن و آدرس را کامل کن.";
+        }
+      };
+
+      [latitudeInput, longitudeInput, zoneInput, neighborhoodInput, addressInput, plaqueInput, unitInput].forEach((input) => {
+        input?.addEventListener("input", updateLocationReadiness);
+        input?.addEventListener("change", updateLocationReadiness);
+      });
+
+      root.addEventListener("click", () => window.setTimeout(updateLocationReadiness, 180));
+      updateLocationReadiness();
+      window.setInterval(updateLocationReadiness, 900);
+      window.setTimeout(() => window.LoomeraDashboardWorkspace?.refresh?.(root), 280);
+    });
+  </script>
+{% endblock %}

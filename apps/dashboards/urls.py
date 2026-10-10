@@ -1,0 +1,703 @@
+from .payment_views import (
+    SalonPayoutSettingsView,
+    SalonFinanceHubView,
+    SalonFinanceWithdrawView,
+    SalonFinanceWithdrawCancelView,
+    SalonCouponManagementView,
+    SalonCouponToggleView,
+    SalonCouponUpdateView,
+    SalonCouponDeleteView,
+    SalonDiscountBasketManagementView,
+    SalonDiscountBasketUpdateView,
+    SalonDiscountBasketToggleView,
+    SalonDiscountBasketDeleteView,
+    SalonDiscountCampaignManagementView,
+    SalonDiscountCampaignUpdateView,
+    SalonDiscountCampaignToggleView,
+    SalonDiscountCampaignDeleteView,
+    SalonFinanceReportsView,
+    SalonFinanceReportsExportCsvView,
+    PlatformFinanceAdminReportView,
+    PlatformFinanceAdminReportExportCsvView,
+)
+from .finance_withdrawal_views import (
+    ManagerStylistWithdrawalRequestsView,
+    StylistWithdrawalRequestsView,
+)
+from .finance_cost_views import (
+    AppointmentMaterialUsageView,
+    ManagerFinalizeAppointmentFinanceView,
+    SalonCostCenterView,
+    SalonProfitReportView,
+    SalonStylistWalletsView,
+)
+from django.urls import path
+from django.views.generic import RedirectView
+from .finance_settings_views import SalonFinanceMaterialSettingsView
+from .views import (
+    SalonManagerDashboardView,
+    salonManagerHeader,
+    DashboardHomeView,
+    recently_sales,
+    upcoming_appointments,
+    get_popular_services,
+    today_appointment,
+    appointments_activity,
+    SalonsCustomersPageView,
+    CustomerDetailView,
+    OnlineBookingView,
+    OnlineBookingQuickLinkOptionsView,
+    salon_profile_creator,
+    SalonProfileCreatorStep1View,
+    SalonProfileCreatorStep2View,
+    SalonProfileCreatorStep3View,
+    salon_profile_creator_step4,
+    salon_profile_creator_step5,
+    SalonProfileCreatorStep6View,
+    delete_salon_image,
+    SalonProfileCreatorStep7View,
+    SalonProfileCreatorStep8View,
+    salon_profile_creator_step9,
+    SalonProfileCreatorStep10View,
+    salon_profile_creator_finalStep,
+    SalonProfileView,
+    CatalogView,
+    ServiceMenuView,
+    AddServicesView,
+    RequestServiceView,
+    EditServiceView,
+    archieve_service,
+    remove_service,
+    membership,
+    products,
+    stocktakes,
+    team_managment,
+    TeamMemberView,
+    ManagerMembershipRequestActionView,
+    StylistOverviewView,
+    AddStylistView,
+    EditStylistView,
+    get_services_list,
+    ScheduledShiftsView,
+    ManagerStaffScheduleRequestActionView,
+    ManagerStaffLeaveRequestActionView,
+    EditStylistDayScheduleView,
+    DeleteDayScheduleView,
+    SetRegularShiftsView,
+    AddTimeOffView,
+    get_popular_stylists,
+    calendar_view,
+    DashboardManualBookingView,
+    DashboardManualBookingAvailabilityView,
+    reports_view,
+    get_calendar_data,
+    AppointmentDetailView,
+    ManagerAppointmentDetailView,
+    ManagerAppointmentActionView,
+    ManagerProfileView,
+    ManagerNotificationCenterView,
+    StylistSettingsHubView,
+    StylistNotificationCenterView,
+    WorkspaceSettingsHubView,
+    toggle_service_status,
+    toggle_stylist_status,
+    StylistDashboardView,
+    StylistAppointmentsView,
+    StylistAppointmentDetailView,
+    StylistScheduleView,
+    StylistAddScheduleView,
+    StylistAddTimeOffView,
+    StylistAddCustomerView,
+    StylistAddBookingView,
+    StylistQuickLinksView,
+    StylistQuickLinkOptionsView,
+    ManagerBookingQuickLinkQRView,
+    StylistBookingQuickLinkQRView,
+    StylistProfileView,
+    StylistFinanceView,
+    set_stylist_active_salon,
+    ManagerEndStylistCollaborationView,
+    ManagerCreateStylistInviteView,
+    ManagerCancelStylistInviteView,
+)
+from .content_views import ManagerContentHubView, StylistContentHubView
+from .quick_link_views import ManagerQuickLinksView
+from .quick_link_detail_views import (
+    ManagerQuickLinkDetailView,
+    StylistQuickLinkDetailView,
+)
+from .quick_link_print_views import (
+    ManagerQuickLinkPrintTemplateDownloadView,
+    ManagerQuickLinkPrintTemplatePreviewView,
+    ManagerQuickLinkPrintTemplatesView,
+    StylistQuickLinkPrintTemplateDownloadView,
+    StylistQuickLinkPrintTemplatePreviewView,
+    StylistQuickLinkPrintTemplatesView,
+    ManagerQuickLinkBusinessCardBackDownloadView,
+    ManagerQuickLinkBusinessCardBackPreviewView,
+    ManagerQuickLinkBusinessCardZipView,
+    StylistQuickLinkBusinessCardBackDownloadView,
+    StylistQuickLinkBusinessCardBackPreviewView,
+    StylistQuickLinkBusinessCardZipView,
+)
+
+# ----------------------------------------------------------------
+from .manager_settings_views import ManagerCommunicationSettingsView, StylistCommunicationSettingsView
+from .multirole_manager_views import (
+    MultiroleManagerSalonOverviewView,
+    ScopedManagerServicesView,
+    ScopedManagerTeamView,
+    ScopedManagerBookingsView,
+    ScopedManagerServiceStatusView,
+    ScopedManagerServiceAddView,
+    ScopedManagerServiceEditView,
+    ScopedManagerTeamInviteView,
+    ScopedManagerTeamInviteCancelView,
+    ScopedManagerTeamMemberEditView,
+)
+
+from .multirole_manual_booking import ScopedManagerManualBookingView
+from .multirole_manual_booking_cancel import ScopedManagerManualBookingCancelView
+from .multirole_finance_preview import ScopedManagerFinancePreviewView
+from .multirole_settlement_ledger import ScopedManagerSettlementLedgerView
+from .multirole_manager_customers import ScopedManagerCustomersView
+app_name = "dashboards"
+urlpatterns = [
+    path("manager/salons/<int:salon_id>/", MultiroleManagerSalonOverviewView.as_view(), name="multirole_manager_salon_overview"),
+    path("manager/salons/<int:salon_id>/customers/", ScopedManagerCustomersView.as_view(), name="multirole_manager_salon_customers"),
+    path("manager/salons/<int:salon_id>/services/", ScopedManagerServicesView.as_view(), name="multirole_manager_salon_services"),
+    path("manager/salons/<int:salon_id>/services/<int:service_id>/toggle/", ScopedManagerServiceStatusView.as_view(), name="multirole_manager_service_toggle"),
+    path("manager/salons/<int:salon_id>/services/add/", ScopedManagerServiceAddView.as_view(), name="multirole_manager_service_add"),
+    path("manager/salons/<int:salon_id>/services/<int:service_id>/edit/", ScopedManagerServiceEditView.as_view(), name="multirole_manager_service_edit"),
+    path("manager/salons/<int:salon_id>/team/", ScopedManagerTeamView.as_view(), name="multirole_manager_salon_team"),
+    path("manager/salons/<int:salon_id>/team/invite/", ScopedManagerTeamInviteView.as_view(), name="multirole_manager_team_invite"),
+    path("manager/salons/<int:salon_id>/team/invites/<int:membership_id>/cancel/", ScopedManagerTeamInviteCancelView.as_view(), name="multirole_manager_team_invite_cancel"),
+    path("manager/salons/<int:salon_id>/team/members/<int:membership_id>/edit/", ScopedManagerTeamMemberEditView.as_view(), name="multirole_manager_team_member_edit"),
+    path("manager/salons/<int:salon_id>/bookings/", ScopedManagerBookingsView.as_view(), name="multirole_manager_salon_bookings"),
+    path("manager/salons/<int:salon_id>/bookings/add/", ScopedManagerManualBookingView.as_view(), name="multirole_manager_manual_booking"),
+    path("manager/salons/<int:salon_id>/bookings/<int:appointment_id>/cancel/", ScopedManagerManualBookingCancelView.as_view(), name="multirole_manager_manual_booking_cancel"),
+    path("manager/salons/<int:salon_id>/finance/preview/", ScopedManagerFinancePreviewView.as_view(), name="multirole_manager_salon_finance_preview"),
+    path("manager/salons/<int:salon_id>/finance/settlements/", ScopedManagerSettlementLedgerView.as_view(), name="multirole_manager_salon_settlements"),
+    path(
+        "notifications/",
+        ManagerNotificationCenterView.as_view(),
+        name="notifications_center",
+    ),
+    path(
+        "",
+        SalonManagerDashboardView.as_view(),
+        name="salon_manager_dashboard",
+    ),
+    path("content/", ManagerContentHubView.as_view(), name="content_hub"),
+    path("stylist/content/", StylistContentHubView.as_view(), name="stylist_content"),
+    path("stylist/notifications/", StylistNotificationCenterView.as_view(), name="stylist_notifications"),
+    path("stylist/settings/", StylistSettingsHubView.as_view(), name="stylist_settings"),
+    path(
+        "stylist/settings/communications/",
+        StylistCommunicationSettingsView.as_view(),
+        name="stylist_communication_settings",
+    ),
+    path("stylist/", StylistDashboardView.as_view(), name="stylist_dashboard"),
+    path(
+        "stylist/set-active-salon/",
+        set_stylist_active_salon,
+        name="set_stylist_active_salon",
+    ),
+    path(
+        "stylist/appointments/",
+        StylistAppointmentsView.as_view(),
+        name="stylist_appointments",
+    ),
+    path(
+        "stylist/appointments/<int:appointment_id>/",
+        StylistAppointmentDetailView.as_view(),
+        name="stylist_appointment_detail",
+    ),
+    path(
+        "s/a/<int:appointment_id>/",
+        StylistAppointmentDetailView.as_view(),
+        name="stylist_appointment_sms",
+    ),
+    path("stylist/finance/", StylistFinanceView.as_view(), name="stylist_finance"),
+    path("stylist/schedule/", StylistScheduleView.as_view(), name="stylist_schedule"),
+    path(
+        "stylist/schedule/add/",
+        StylistAddScheduleView.as_view(),
+        name="stylist_add_schedule",
+    ),
+    path(
+        "stylist/time-off/add/",
+        StylistAddTimeOffView.as_view(),
+        name="stylist_add_time_off",
+    ),
+    path(
+        "stylist/customers/add/",
+        StylistAddCustomerView.as_view(),
+        name="stylist_add_customer",
+    ),
+    path(
+        "stylist/bookings/add/",
+        StylistAddBookingView.as_view(),
+        name="stylist_add_booking",
+    ),
+    path(
+        "stylist/quick-links/",
+        StylistQuickLinksView.as_view(),
+        name="stylist_quick_links",
+    ),
+    path(
+        "stylist/quick-links/options/",
+        StylistQuickLinkOptionsView.as_view(),
+        name="stylist_quick_link_options",
+    ),
+    path(
+        "stylist/quick-links/<int:link_id>/",
+        StylistQuickLinkDetailView.as_view(),
+        name="stylist_quick_link_detail",
+    ),
+    path(
+        "stylist/quick-links/<int:link_id>/print-templates/",
+        StylistQuickLinkPrintTemplatesView.as_view(),
+        name="stylist_quick_link_print_templates",
+    ),
+    path(
+        "stylist/quick-links/<int:link_id>/print-templates/<slug:template_key>/preview.png",
+        StylistQuickLinkPrintTemplatePreviewView.as_view(),
+        name="stylist_quick_link_print_template_preview",
+    ),
+    path(
+        "stylist/quick-links/<int:link_id>/print-templates/<slug:template_key>/download.png",
+        StylistQuickLinkPrintTemplateDownloadView.as_view(),
+        name="stylist_quick_link_print_template_download",
+    ),
+
+    path(
+        "stylist/quick-links/<int:link_id>/print-templates/business-card/back/preview.png",
+        StylistQuickLinkBusinessCardBackPreviewView.as_view(),
+        name="stylist_quick_link_business_card_back_preview",
+    ),
+    path(
+        "stylist/quick-links/<int:link_id>/print-templates/business-card/back/download.png",
+        StylistQuickLinkBusinessCardBackDownloadView.as_view(),
+        name="stylist_quick_link_business_card_back_download",
+    ),
+    path(
+        "stylist/quick-links/<int:link_id>/print-templates/business-card/download.zip",
+        StylistQuickLinkBusinessCardZipView.as_view(),
+        name="stylist_quick_link_business_card_zip",
+    ),
+    path(
+        "stylist/quick-links/<int:link_id>/qr/preview/",
+        StylistBookingQuickLinkQRView.as_view(
+            as_attachment=False
+        ),
+        name="stylist_quick_link_qr_preview",
+    ),
+    path(
+        "stylist/quick-links/<int:link_id>/qr/download/",
+        StylistBookingQuickLinkQRView.as_view(
+            as_attachment=True
+        ),
+        name="stylist_quick_link_qr_download",
+    ),
+    path("stylist/profile/", StylistProfileView.as_view(), name="stylist_profile"),
+    path("salonManagerHeader/", salonManagerHeader, name="salon_manager_header"),
+    path("home/", RedirectView.as_view(pattern_name="dashboards:salon_manager_dashboard", permanent=False), name="home"),
+    path("recently-sales/", recently_sales, name="recentlySales"),
+    path(
+        "upcoming-appointments/",
+        upcoming_appointments,
+        name="upcomingAppointments",
+    ),
+    path("popular_services/", get_popular_services, name="popular_services"),
+    path("popular_stylists/", get_popular_stylists, name="popular_stylists"),
+    path("today_appointments/", today_appointment, name="today_appointments"),
+    path("appointments_activity/", appointments_activity, name="appointments_activity"),
+    path(
+        "SalonsCustomers/",
+        SalonsCustomersPageView.as_view(),
+        name="salons_customers_page",
+    ),
+    path(
+        "customers/<int:customer_id>/",
+        CustomerDetailView.as_view(),
+        name="customer_detail",
+    ),
+    path("online_booking/", OnlineBookingView.as_view(), name="online_booking"),
+    path(
+        "online_booking/quick-link-options/",
+        OnlineBookingQuickLinkOptionsView.as_view(),
+        name="online_booking_quick_link_options",
+    ),
+    path("quick-links/", ManagerQuickLinksView.as_view(), name="quick_links"),
+    path(
+        "quick-links/<int:link_id>/",
+        ManagerQuickLinkDetailView.as_view(),
+        name="quick_link_detail",
+    ),
+    path(
+        "quick-links/<int:link_id>/print-templates/",
+        ManagerQuickLinkPrintTemplatesView.as_view(),
+        name="quick_link_print_templates",
+    ),
+    path(
+        "quick-links/<int:link_id>/print-templates/<slug:template_key>/preview.png",
+        ManagerQuickLinkPrintTemplatePreviewView.as_view(),
+        name="quick_link_print_template_preview",
+    ),
+    path(
+        "quick-links/<int:link_id>/print-templates/<slug:template_key>/download.png",
+        ManagerQuickLinkPrintTemplateDownloadView.as_view(),
+        name="quick_link_print_template_download",
+    ),
+
+    path(
+        "quick-links/<int:link_id>/print-templates/business-card/back/preview.png",
+        ManagerQuickLinkBusinessCardBackPreviewView.as_view(),
+        name="quick_link_business_card_back_preview",
+    ),
+    path(
+        "quick-links/<int:link_id>/print-templates/business-card/back/download.png",
+        ManagerQuickLinkBusinessCardBackDownloadView.as_view(),
+        name="quick_link_business_card_back_download",
+    ),
+    path(
+        "quick-links/<int:link_id>/print-templates/business-card/download.zip",
+        ManagerQuickLinkBusinessCardZipView.as_view(),
+        name="quick_link_business_card_zip",
+    ),
+    path(
+        "quick-links/<int:link_id>/qr/preview/",
+        ManagerBookingQuickLinkQRView.as_view(
+            as_attachment=False
+        ),
+        name="quick_link_qr_preview",
+    ),
+    path(
+        "quick-links/<int:link_id>/qr/download/",
+        ManagerBookingQuickLinkQRView.as_view(
+            as_attachment=True
+        ),
+        name="quick_link_qr_download",
+    ),
+    path("salon_profile_creator/", salon_profile_creator, name="salon_profile_creator"),
+    path(
+        "salon_profile_creator_step1/",
+        SalonProfileCreatorStep1View.as_view(),
+        name="salon_profile_creator_step1",
+    ),
+    path(
+        "salon_profile_creator_step2/",
+        SalonProfileCreatorStep2View.as_view(),
+        name="salon_profile_creator_step2",
+    ),
+    path(
+        "salon_profile_creator_step3/",
+        SalonProfileCreatorStep3View.as_view(),
+        name="salon_profile_creator_step3",
+    ),
+    path(
+        "salon_profile_creator_step4/",
+        salon_profile_creator_step4,
+        name="salon_profile_creator_step4",
+    ),
+    path(
+        "salon_profile_creator_step5/",
+        salon_profile_creator_step5,
+        name="salon_profile_creator_step5",
+    ),
+    path(
+        "salon_profile_creator_step6/",
+        SalonProfileCreatorStep6View.as_view(),
+        name="salon_profile_creator_step6",
+    ),
+    path(
+        "salon/gallery/delete/<int:image_id>/",
+        delete_salon_image,
+        name="delete_salon_image",
+    ),
+    path(
+        "salon_profile_creator_step7/",
+        SalonProfileCreatorStep7View.as_view(),
+        name="salon_profile_creator_step7",
+    ),
+    path(
+        "salon_profile_creator_step8/",
+        SalonProfileCreatorStep8View.as_view(),
+        name="salon_profile_creator_step8",
+    ),
+    path(
+        "salon_profile_creator_step9/",
+        salon_profile_creator_step9,
+        name="salon_profile_creator_step9",
+    ),
+    path(
+        "salon_profile_creator_step10/",
+        SalonProfileCreatorStep10View.as_view(),
+        name="salon_profile_creator_step10",
+    ),
+    path(
+        "salon_profile_creator_finalStep/",
+        salon_profile_creator_finalStep,
+        name="salon_profile_creator_finalStep",
+    ),
+    path("salon_profile/", SalonProfileView.as_view(), name="salon_profile"),
+    path("catalog/", CatalogView.as_view(), name="catalog"),
+    path("service_menu/", ServiceMenuView.as_view(), name="service_menu"),
+    path("add_service/", AddServicesView.as_view(), name="add_service"),
+    path("request_service/", RequestServiceView.as_view(), name="request_service"),
+    path(
+        "edit_service/<int:service_id>/", EditServiceView.as_view(), name="edit_service"
+    ),
+    path(
+        "archieve_service/<int:service_id>/", archieve_service, name="archieve_service"
+    ),
+    path("remove_service/<int:service_id>/", remove_service, name="remove_service"),
+    path("membership/", membership, name="membership"),
+    path("products/", products, name="products"),
+    path("stocktakes/", stocktakes, name="stocktakes"),
+    path("team_managment/", team_managment, name="team_managment"),
+    path("team_member/", TeamMemberView.as_view(), name="team_member"),
+    path(
+        "team_member/invite/",
+        ManagerCreateStylistInviteView.as_view(),
+        name="create_stylist_invite",
+    ),
+    path(
+        "team_member/invites/<int:membership_id>/cancel/",
+        ManagerCancelStylistInviteView.as_view(),
+        name="cancel_stylist_invite",
+    ),
+    path(
+        "team_member/requests/<int:membership_id>/",
+        ManagerMembershipRequestActionView.as_view(),
+        name="membership_request_action",
+    ),
+    path(
+        "stylist_overview/<int:stylist_id>/",
+        StylistOverviewView.as_view(),
+        name="stylist_overview",
+    ),
+    path("add_stylist/", AddStylistView.as_view(), name="add_stylist"),
+    path(
+        "edit_stylist/<int:stylist_id>/", EditStylistView.as_view(), name="edit_stylist"
+    ),
+    path("api/services/", get_services_list, name="services_list"),
+    path("scheduled_shifts/", ScheduledShiftsView.as_view(), name="scheduled_shifts"),
+    path(
+        "scheduled_shifts/schedule-requests/<int:request_id>/",
+        ManagerStaffScheduleRequestActionView.as_view(),
+        name="staff_schedule_request_action",
+    ),
+    path(
+        "scheduled_shifts/leave-requests/<int:request_id>/",
+        ManagerStaffLeaveRequestActionView.as_view(),
+        name="staff_leave_request_action",
+    ),
+    path(
+        "schedule/edit-day/stylist/<int:stylist_pk>/salon/<int:salon_pk>/date/<str:date_iso>/",
+        EditStylistDayScheduleView.as_view(),
+        name="edit_day_schedule",
+    ),
+    path(
+        "schedule/delete-day/stylist/<int:stylist_id>/date/<str:date_iso>/",
+        DeleteDayScheduleView.as_view(),
+        name="delete_day_schedule",
+    ),
+    path(
+        "schedule/set-regular/stylist/<int:stylist_id>/salon/<int:salon_id>/",
+        SetRegularShiftsView.as_view(),
+        name="set_regular_shifts",
+    ),
+    path(
+        "schedule/add-time-off/stylist/<int:stylist_id>/date/<str:date_iso>/salon/<int:salon_id>/",
+        AddTimeOffView.as_view(),
+        name="add_time_off",
+    ),
+    path("calendar/salon/<int:salon_id>/", calendar_view, name="appointment_calendar"),
+    path(
+        "calendar/salon/<int:salon_id>/add-booking/",
+        DashboardManualBookingView.as_view(),
+        name="add_booking",
+    ),
+    path(
+        "calendar/salon/<int:salon_id>/add-booking/availability/",
+        DashboardManualBookingAvailabilityView.as_view(),
+        name="manual_booking_availability",
+    ),
+    path(
+        "calendar/salon/<int:salon_id>/appointment/<int:appointment_id>/",
+        ManagerAppointmentDetailView.as_view(),
+        name="appointment_detail",
+    ),
+    path(
+        "calendar/salon/<int:salon_id>/appointment/<int:appointment_id>/action/",
+        ManagerAppointmentActionView.as_view(),
+        name="appointment_action",
+    ),
+    path(
+        "appointment/<int:appointment_id>/",
+        AppointmentDetailView.as_view(),
+        name="appointment_detail_legacy",
+    ),
+    path("reports/salon/<int:salon_id>/", reports_view, name="reports_dashboard"),
+    path(
+        "api/calendar-data/salon/<int:salon_id>/",
+        get_calendar_data,
+        name="api_get_calendar_data",
+    ),
+    path("manager_profile/", ManagerProfileView.as_view(), name="manager_profile"),
+    path("settings/", WorkspaceSettingsHubView.as_view(), name="workspace_settings"),
+    path(
+        "settings/communications/",
+        ManagerCommunicationSettingsView.as_view(),
+        name="manager_communication_settings",
+    ),
+    path("settings/finance/", SalonFinanceHubView.as_view(), name="finance_hub"),
+    path("settings/payout/", SalonPayoutSettingsView.as_view(), name="payout_settings"),
+    path(
+        "settings/finance/materials/",
+        SalonFinanceMaterialSettingsView.as_view(),
+        name="finance_materials",
+    ),
+    path(
+        "settings/finance/withdraw/",
+        SalonFinanceWithdrawView.as_view(),
+        name="finance_withdraw",
+    ),
+    path(
+        "settings/finance/withdraw/<int:withdrawal_id>/cancel/",
+        SalonFinanceWithdrawCancelView.as_view(),
+        name="finance_withdraw_cancel",
+    ),
+    path(
+        "settings/finance/coupons/",
+        SalonCouponManagementView.as_view(),
+        name="finance_coupons",
+    ),
+    path(
+        "settings/finance/coupons/<int:coupon_id>/toggle/",
+        SalonCouponToggleView.as_view(),
+        name="finance_coupon_toggle",
+    ),
+    path(
+        "settings/finance/coupons/<int:coupon_id>/edit/",
+        SalonCouponUpdateView.as_view(),
+        name="finance_coupon_update",
+    ),
+    path(
+        "settings/finance/coupons/<int:coupon_id>/delete/",
+        SalonCouponDeleteView.as_view(),
+        name="finance_coupon_delete",
+    ),
+    path(
+        "settings/finance/baskets/",
+        SalonDiscountBasketManagementView.as_view(),
+        name="finance_baskets",
+    ),
+    path(
+        "settings/finance/baskets/<int:basket_id>/edit/",
+        SalonDiscountBasketUpdateView.as_view(),
+        name="finance_basket_update",
+    ),
+    path(
+        "settings/finance/baskets/<int:basket_id>/toggle/",
+        SalonDiscountBasketToggleView.as_view(),
+        name="finance_basket_toggle",
+    ),
+    path(
+        "settings/finance/baskets/<int:basket_id>/delete/",
+        SalonDiscountBasketDeleteView.as_view(),
+        name="finance_basket_delete",
+    ),
+    path(
+        "settings/finance/campaigns/",
+        SalonDiscountCampaignManagementView.as_view(),
+        name="finance_campaigns",
+    ),
+    path(
+        "settings/finance/campaigns/<int:campaign_id>/edit/",
+        SalonDiscountCampaignUpdateView.as_view(),
+        name="finance_campaign_update",
+    ),
+    path(
+        "settings/finance/campaigns/<int:campaign_id>/toggle/",
+        SalonDiscountCampaignToggleView.as_view(),
+        name="finance_campaign_toggle",
+    ),
+    path(
+        "settings/finance/campaigns/<int:campaign_id>/delete/",
+        SalonDiscountCampaignDeleteView.as_view(),
+        name="finance_campaign_delete",
+    ),
+    path(
+        "toggle_service_status/<int:service_id>/",
+        toggle_service_status,
+        name="toggle_service_status",
+    ),
+    path(
+        "toggle_stylist_status/<int:stylist_id>/",
+        toggle_stylist_status,
+        name="toggle_stylist_status",
+    ),
+    path(
+        "settings/finance/reports/",
+        SalonFinanceReportsView.as_view(),
+        name="finance_reports",
+    ),
+    path(
+        "settings/finance/reports/export/",
+        SalonFinanceReportsExportCsvView.as_view(),
+        name="finance_reports_export",
+    ),
+    path(
+        "settings/platform-finance/",
+        PlatformFinanceAdminReportView.as_view(),
+        name="platform_finance",
+    ),
+    path(
+        "settings/platform-finance/export/",
+        PlatformFinanceAdminReportExportCsvView.as_view(),
+        name="platform_finance_export",
+    ),
+    path(
+        "settings/finance/cost-center/",
+        SalonCostCenterView.as_view(),
+        name="finance_cost_center",
+    ),
+    path(
+        "settings/finance/profit-report/",
+        SalonProfitReportView.as_view(),
+        name="finance_profit_report",
+    ),
+    path(
+        "calendar/salon/<int:salon_id>/appointment/<int:appointment_id>/materials/",
+        AppointmentMaterialUsageView.as_view(),
+        name="appointment_material_usage",
+    ),
+    path(
+        "settings/finance/stylist-wallets/",
+        SalonStylistWalletsView.as_view(),
+        name="finance_stylist_wallets",
+    ),
+    path(
+        "calendar/salon/<int:salon_id>/appointment/<int:appointment_id>/finance/finalize/",
+        ManagerFinalizeAppointmentFinanceView.as_view(),
+        name="appointment_finance_finalize",
+    ),
+    path(
+        "stylist/finance/withdrawals/",
+        StylistWithdrawalRequestsView.as_view(),
+        name="stylist_withdrawals",
+    ),
+    path(
+        "settings/finance/stylist-withdrawals/",
+        ManagerStylistWithdrawalRequestsView.as_view(),
+        name="finance_stylist_withdrawals",
+    ),
+    path(
+        "team_member/<int:stylist_id>/end-collaboration/",
+        ManagerEndStylistCollaborationView.as_view(),
+        name="end_stylist_collaboration",
+    ),
+]

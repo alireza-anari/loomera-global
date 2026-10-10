@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "module": "apps/payments/gateways.py",
+  "executable_ast_sha256": "a069426eeb823f6b35e71669b65fe5d79fc712edc0e9639e84b6d6aabb03f2e0",
+  "documented_objects": {
+    "GatewayInitResult": {
+      "kind": "class",
+      "docstring_sha256": "4c231565d9acb762509b511a50c5a5ca200fd2055a5db7e3a1080462ac7704dd"
+    },
+    "GatewayVerifyResult": {
+      "kind": "class",
+      "docstring_sha256": "2b102d71fba863fe21e52eeb7fb115dbbe6bb0b044a7c5ce819d015dbae3820c"
+    },
+    "initiate_payment": {
+      "kind": "function",
+      "docstring_sha256": "a975e892cb3f0bab6f6c403cca9146db530fdcd30a512c6cd051eda15d869c55"
+    },
+    "verify_payment": {
+      "kind": "function",
+      "docstring_sha256": "d3155053a75e5d2f9c6eba5a6824a559622f2982e9ee6bf8c40e57bf6f65d3b3"
+    }
+  }
+}

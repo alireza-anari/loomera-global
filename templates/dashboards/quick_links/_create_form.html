@@ -1,0 +1,544 @@
+<section
+  id="create-quick-link"
+  class="scroll-mt-28 overflow-hidden rounded-[28px] border border-loomera-borderSoft bg-white/95 shadow-lm-card lg:scroll-mt-36"
+  data-manager-quick-link-create
+>
+  <header class="border-b border-loomera-borderSoft px-4 py-4 sm:px-5 lg:px-6">
+    <div class="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+      <div class="flex min-w-0 items-start gap-3">
+        <span class="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-loomera-primarySoft text-loomera-primaryText">
+          <i class="fa-solid fa-plus" aria-hidden="true"></i>
+        </span>
+        <div class="min-w-0">
+          <p class="text-[11px] font-black text-loomera-primaryText">ساخت لینک</p>
+          <h2 class="mt-1 text-base font-black text-loomera-textPrimary sm:text-lg">لینک رزرو جدید</h2>
+          <p class="mt-2 max-w-3xl text-xs leading-6 text-loomera-textMuted sm:text-sm sm:leading-7">
+            نوع مسیر و محل استفاده را مشخص کن؛ در لینک‌های زمان‌دار فقط زمان‌های واقعاً آزاد متخصص نمایش داده می‌شود.
+          </p>
+        </div>
+      </div>
+
+      <span
+        class="inline-flex min-h-9 shrink-0 items-center justify-center rounded-full bg-loomera-bgSubtle px-3 py-2 text-[11px] font-black text-loomera-textSecondary"
+        data-quick-link-readiness-badge
+      >
+        در حال تکمیل
+      </span>
+    </div>
+
+    <div class="mt-4 h-1.5 overflow-hidden rounded-full bg-loomera-bgSubtle">
+      <div
+        class="h-full rounded-full bg-loomera-primary transition-all"
+        style="width: 20%"
+        data-quick-link-readiness-bar
+      ></div>
+    </div>
+  </header>
+
+  <div class="space-y-5 p-4 sm:p-5 lg:p-6">
+    {% if quick_link_create_workspace.errors %}
+      <div class="rounded-[22px] border border-loomera-danger/20 bg-loomera-dangerSoft px-4 py-3 text-sm leading-7 text-loomera-danger">
+        {% for error in quick_link_create_workspace.errors %}
+          <p>{{ error }}</p>
+        {% endfor %}
+      </div>
+    {% endif %}
+
+    {% if quick_link_create_workspace.generated_link %}
+      <section class="rounded-[24px] border border-loomera-success/20 bg-loomera-successSoft/55 p-4 sm:p-5">
+        <p class="text-xs font-black text-loomera-success">
+          لینک با موفقیت ساخته شد
+        </p>
+
+        <div
+          class="mt-3 break-all rounded-2xl border border-loomera-success/20 bg-white px-4 py-3 text-left text-xs leading-6 text-loomera-textSecondary"
+          dir="ltr"
+          data-created-quick-link-value
+        >{{ quick_link_create_workspace.generated_link }}</div>
+
+        <div class="mt-3 flex flex-wrap gap-2">
+          <button
+            type="button"
+            class="rounded-full bg-loomera-primary px-4 py-2.5 text-xs font-black text-white"
+            data-manager-copy-quick-link
+            data-copy-target="[data-created-quick-link-value]"
+          >
+            کپی لینک
+          </button>
+
+          <a
+            href="{{ quick_link_create_workspace.generated_link }}"
+            target="_blank"
+            rel="noopener"
+            class="rounded-full border border-loomera-success/20 bg-white px-4 py-2.5 text-xs font-black text-loomera-success"
+          >
+            بازکردن لینک
+          </a>
+        </div>
+      </section>
+    {% endif %}
+
+    <form
+      method="post"
+      action="{% url 'dashboards:quick_links' %}"
+      class="grid min-w-0 gap-4 lg:grid-cols-2"
+      data-quick-link-form
+      data-options-url="{{ quick_link_create_workspace.options_url }}"
+      data-selected-service="{{ quick_link_create_workspace.selected_service }}"
+      data-selected-stylist="{{ quick_link_create_workspace.selected_stylist }}"
+      data-selected-date="{{ quick_link_create_workspace.selected_date_iso }}"
+      data-selected-time="{{ quick_link_create_workspace.selected_time }}"
+    >
+      {% csrf_token %}
+
+      <div>
+        <label for="quick-link-mode" class="mb-2 block text-sm font-black text-loomera-textPrimary">
+          نوع لینک
+        </label>
+
+        <select
+          id="quick-link-mode"
+          name="quick_link_mode"
+          required
+          data-quick-link-mode
+          class="w-full rounded-2xl border border-loomera-borderSoft bg-white px-4 py-3 text-sm font-bold text-loomera-textPrimary outline-none focus:border-loomera-primary/40 focus:ring-4 focus:ring-loomera-primary/10"
+        >
+          {% for option in quick_link_create_workspace.mode_options %}
+            <option
+              value="{{ option.value }}"
+              {% if quick_link_create_workspace.current_mode == option.value %}selected{% endif %}
+            >
+              {{ option.label }}
+            </option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <div>
+        <label for="quick-link-placement" class="mb-2 block text-sm font-black text-loomera-textPrimary">
+          محل استفاده
+        </label>
+
+        <select
+          id="quick-link-placement"
+          name="placement"
+          required
+          class="w-full rounded-2xl border border-loomera-borderSoft bg-white px-4 py-3 text-sm font-bold text-loomera-textPrimary outline-none focus:border-loomera-primary/40 focus:ring-4 focus:ring-loomera-primary/10"
+        >
+          {% for value, label in quick_link_create_workspace.placement_options %}
+            <option
+              value="{{ value }}"
+              {% if quick_link_create_workspace.selected_placement == value %}selected{% endif %}
+            >
+              {{ label }}
+            </option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <div data-quick-link-service-wrap>
+        <label for="quick-link-service" class="mb-2 block text-sm font-black text-loomera-textPrimary">
+          خدمت
+        </label>
+
+        <select
+          id="quick-link-service"
+          name="service_id"
+          data-quick-link-service
+          class="w-full rounded-2xl border border-loomera-borderSoft bg-white px-4 py-3 text-sm font-bold text-loomera-textPrimary outline-none focus:border-loomera-primary/40 focus:ring-4 focus:ring-loomera-primary/10"
+        >
+          <option value="">انتخاب خدمت</option>
+
+          {% for service in quick_link_create_workspace.services %}
+            <option
+              value="{{ service.pk }}"
+              {% if quick_link_create_workspace.selected_service == service.pk|stringformat:"s" %}selected{% endif %}
+            >
+              {{ service.service_name }}
+            </option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <div data-quick-link-stylist-wrap>
+        <label for="quick-link-stylist" class="mb-2 block text-sm font-black text-loomera-textPrimary">
+          متخصص
+        </label>
+
+        <select
+          id="quick-link-stylist"
+          name="stylist_id"
+          data-quick-link-stylist
+          class="w-full rounded-2xl border border-loomera-borderSoft bg-white px-4 py-3 text-sm font-bold text-loomera-textPrimary outline-none focus:border-loomera-primary/40 focus:ring-4 focus:ring-loomera-primary/10"
+        >
+          <option value="">انتخاب متخصص</option>
+
+          {% for stylist in quick_link_create_workspace.stylists %}
+            <option
+              value="{{ stylist.pk }}"
+              {% if quick_link_create_workspace.selected_stylist == stylist.pk|stringformat:"s" %}selected{% endif %}
+            >
+              {{ stylist.get_fullName }}
+            </option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <div data-quick-link-date-wrap>
+        <label for="quick-link-date" class="mb-2 block text-sm font-black text-loomera-textPrimary">
+          تاریخ آزاد
+        </label>
+
+        <select
+          id="quick-link-date"
+          name="appointment_date"
+          data-quick-link-date
+          disabled
+          class="w-full rounded-2xl border border-loomera-borderSoft bg-white px-4 py-3 text-sm font-bold text-loomera-textPrimary outline-none focus:border-loomera-primary/40 focus:ring-4 focus:ring-loomera-primary/10 disabled:cursor-not-allowed disabled:opacity-60"
+        >
+          <option value="">ابتدا خدمت و متخصص را انتخاب کن</option>
+        </select>
+      </div>
+
+      <div data-quick-link-time-wrap>
+        <label for="quick-link-time" class="mb-2 block text-sm font-black text-loomera-textPrimary">
+          ساعت آزاد
+        </label>
+
+        <select
+          id="quick-link-time"
+          name="appointment_time"
+          data-quick-link-time
+          disabled
+          class="w-full rounded-2xl border border-loomera-borderSoft bg-white px-4 py-3 text-sm font-bold text-loomera-textPrimary outline-none focus:border-loomera-primary/40 focus:ring-4 focus:ring-loomera-primary/10 disabled:cursor-not-allowed disabled:opacity-60"
+        >
+          <option value="">ابتدا یک تاریخ آزاد را انتخاب کن</option>
+        </select>
+
+        <p class="mt-2 text-xs leading-6 text-loomera-textMuted">
+          فقط روزها و ساعت‌هایی نمایش داده می‌شوند که همین متخصص برای همین خدمت واقعاً قابل رزرو است.
+        </p>
+        <p class="mt-2 hidden text-xs leading-6 text-amber-700" data-quick-link-time-empty>
+          در ۴۵ روز آینده برای این ترکیب زمان آزادی پیدا نشد.
+        </p>
+        <p class="mt-2 hidden text-xs leading-6 text-loomera-textMuted" data-quick-link-loading>
+          در حال بررسی برنامه و نوبت‌های ثبت‌شده…
+        </p>
+      </div>
+
+      <div>
+        <label for="quick-link-title" class="mb-2 block text-sm font-black text-loomera-textPrimary">
+          عنوان لینک
+        </label>
+
+        <input
+          id="quick-link-title"
+          type="text"
+          name="quick_link_title"
+          value="{{ quick_link_create_workspace.selected_title }}"
+          {% if quick_link_create_workspace.title_max_length %}maxlength="{{ quick_link_create_workspace.title_max_length }}"{% endif %}
+          placeholder="مثلاً لیبل آینه سالن یا کمپین اینستاگرام"
+          class="w-full rounded-2xl border border-loomera-borderSoft bg-white px-4 py-3 text-sm font-bold text-loomera-textPrimary outline-none placeholder:text-loomera-textMuted focus:border-loomera-primary/40 focus:ring-4 focus:ring-loomera-primary/10"
+        >
+      </div>
+
+      <div>
+        <label for="quick-link-campaign" class="mb-2 block text-sm font-black text-loomera-textPrimary">
+          نام کمپین
+        </label>
+
+        <input
+          id="quick-link-campaign"
+          type="text"
+          name="campaign_name"
+          value="{{ quick_link_create_workspace.campaign_name }}"
+          {% if quick_link_create_workspace.campaign_name_max_length %}maxlength="{{ quick_link_create_workspace.campaign_name_max_length }}"{% endif %}
+          placeholder="مثلاً نصب لیبل‌های مرداد"
+          class="w-full rounded-2xl border border-loomera-borderSoft bg-white px-4 py-3 text-sm font-bold text-loomera-textPrimary outline-none placeholder:text-loomera-textMuted focus:border-loomera-primary/40 focus:ring-4 focus:ring-loomera-primary/10"
+        >
+      </div>
+
+      <div class="lg:col-span-2">
+        <label for="quick-link-note" class="mb-2 block text-sm font-black text-loomera-textPrimary">
+          یادداشت داخلی
+        </label>
+
+        <textarea
+          id="quick-link-note"
+          name="internal_note"
+          rows="3"
+          {% if quick_link_create_workspace.internal_note_max_length %}maxlength="{{ quick_link_create_workspace.internal_note_max_length }}"{% endif %}
+          placeholder="این یادداشت فقط در داشبورد دیده می‌شود؛ مثلاً محل نصب یا مسئول پیگیری."
+          class="w-full resize-y rounded-2xl border border-loomera-borderSoft bg-white px-4 py-3 text-sm font-bold leading-7 text-loomera-textPrimary outline-none placeholder:text-loomera-textMuted focus:border-loomera-primary/40 focus:ring-4 focus:ring-loomera-primary/10"
+        >{{ quick_link_create_workspace.internal_note }}</textarea>
+      </div>
+
+      <label class="lm-provider-switch-row lg:col-span-2 flex cursor-pointer items-center justify-between gap-4 rounded-[22px] border border-loomera-borderSoft bg-loomera-bgSubtle/65 px-4 py-4">
+        <span class="min-w-0">
+          <span class="block text-sm font-black text-loomera-textPrimary">لینک دائمی</span>
+          <span class="mt-1 block text-xs leading-6 text-loomera-textMuted">برای لیبل آینه، استند، کارت نوبت و لینک‌های ثابت شبکه‌های اجتماعی فعال کن.</span>
+        </span>
+        <span class="flex shrink-0 items-center gap-2">
+          <input type="checkbox" name="is_permanent" class="lm-provider-switch-input sr-only" role="switch" {% if quick_link_create_workspace.is_permanent %}checked{% endif %}>
+          <span class="lm-provider-switch-track" aria-hidden="true"><span class="lm-provider-switch-thumb"></span></span>
+          <span class="lm-provider-switch-state text-xs font-black text-loomera-textMuted"><span class="lm-provider-switch-state-off">موقت</span><span class="lm-provider-switch-state-on text-loomera-primaryText">دائمی</span></span>
+        </span>
+      </label>
+
+      <div class="lg:col-span-2 flex flex-wrap items-center gap-3 border-t border-loomera-borderSoft pt-4">
+        <button
+          type="submit"
+          class="inline-flex min-h-11 items-center justify-center gap-2 rounded-2xl bg-loomera-primary px-5 py-2.5 text-sm font-black text-white shadow-lm-soft transition hover:bg-loomera-primaryHover"
+        >
+          <i class="fa-solid fa-wand-magic-sparkles text-xs" aria-hidden="true"></i>
+          ساخت لینک رزرو
+        </button>
+
+        <p
+          class="text-xs leading-6 text-loomera-textMuted"
+          data-quick-link-readiness-description
+        >
+          فیلدهای لازم بر اساس نوع لینک کنترل می‌شوند.
+        </p>
+      </div>
+    </form>
+  </div>
+</section>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const form = document.querySelector("[data-quick-link-form]");
+    if (!form) return;
+
+    const modeInput = form.querySelector("[data-quick-link-mode]");
+    const serviceInput = form.querySelector("[data-quick-link-service]");
+    const stylistInput = form.querySelector("[data-quick-link-stylist]");
+    const dateInput = form.querySelector("[data-quick-link-date]");
+    const timeInput = form.querySelector("[data-quick-link-time]");
+    const serviceWrap = form.querySelector("[data-quick-link-service-wrap]");
+    const stylistWrap = form.querySelector("[data-quick-link-stylist-wrap]");
+    const dateWrap = form.querySelector("[data-quick-link-date-wrap]");
+    const timeWrap = form.querySelector("[data-quick-link-time-wrap]");
+    const timeEmpty = form.querySelector("[data-quick-link-time-empty]");
+    const loadingLabel = form.querySelector("[data-quick-link-loading]");
+    const badge = document.querySelector("[data-quick-link-readiness-badge]");
+    const bar = document.querySelector("[data-quick-link-readiness-bar]");
+    const description = document.querySelector("[data-quick-link-readiness-description]");
+
+    const optionsUrl = form.dataset.optionsUrl || "";
+    const initialSelectedStylist = form.dataset.selectedStylist || "";
+    const initialSelectedDate = form.dataset.selectedDate || "";
+    const initialSelectedTime = form.dataset.selectedTime || "";
+    const allStylists = Array.from(stylistInput?.options || []).slice(1).map((option) => ({
+      id: option.value,
+      name: option.textContent
+    }));
+
+    let availabilityByDate = new Map();
+    let requestSerial = 0;
+
+    const modeRequirements = {
+      salon: { service: false, stylist: false, datetime: false },
+      service: { service: true, stylist: false, datetime: false },
+      stylist: { service: false, stylist: true, datetime: false },
+      service_stylist: { service: true, stylist: true, datetime: false },
+      service_stylist_time: { service: true, stylist: true, datetime: true }
+    };
+
+    const setSelectPlaceholder = (select, label, disabled = true) => {
+      if (!select) return;
+      select.innerHTML = "";
+      const option = document.createElement("option");
+      option.value = "";
+      option.textContent = label;
+      select.appendChild(option);
+      select.disabled = disabled;
+    };
+
+    const populateStylists = (items, selectedValue = "") => {
+      if (!stylistInput) return;
+      setSelectPlaceholder(
+        stylistInput,
+        items.length ? "انتخاب متخصص" : "متخصصی برای این خدمت ثبت نشده",
+        false
+      );
+      items.forEach((item) => {
+        const option = document.createElement("option");
+        option.value = String(item.id);
+        option.textContent = item.name;
+        if (String(item.id) === String(selectedValue)) option.selected = true;
+        stylistInput.appendChild(option);
+      });
+    };
+
+    const renderTimes = (selectedValue = "") => {
+      const dateValue = dateInput?.value || "";
+      const times = availabilityByDate.get(dateValue) || [];
+      setSelectPlaceholder(
+        timeInput,
+        dateValue
+          ? (times.length ? "انتخاب ساعت آزاد" : "برای این روز ساعت آزادی نیست")
+          : "ابتدا یک تاریخ آزاد را انتخاب کن",
+        !dateValue || !times.length
+      );
+      times.forEach((timeValue) => {
+        const option = document.createElement("option");
+        option.value = timeValue;
+        option.textContent = timeValue;
+        if (timeValue === selectedValue) option.selected = true;
+        timeInput.appendChild(option);
+      });
+    };
+
+    const renderAvailability = (days, selectedDate = "", selectedTime = "", showEmpty = true) => {
+      availabilityByDate = new Map();
+      setSelectPlaceholder(
+        dateInput,
+        days.length ? "انتخاب تاریخ آزاد" : "در ۴۵ روز آینده زمان آزادی نیست",
+        !days.length
+      );
+      days.forEach((day) => {
+        availabilityByDate.set(day.value, Array.isArray(day.times) ? day.times : []);
+        const option = document.createElement("option");
+        option.value = day.value;
+        option.textContent = day.label;
+        if (day.value === selectedDate) option.selected = true;
+        dateInput.appendChild(option);
+      });
+      if (selectedDate && availabilityByDate.has(selectedDate)) {
+        dateInput.value = selectedDate;
+      }
+      timeEmpty?.classList.toggle("hidden", !showEmpty || days.length !== 0);
+      renderTimes(selectedTime);
+    };
+
+    const fetchOptions = async ({ includeAvailability = false, preserveInitial = false } = {}) => {
+      const serviceId = serviceInput?.value || "";
+      const stylistId = stylistInput?.value || "";
+
+      if (!optionsUrl || !serviceId) {
+        renderAvailability([], "", "", false);
+        return;
+      }
+
+      const serial = ++requestSerial;
+      loadingLabel?.classList.remove("hidden");
+
+      try {
+        const url = new URL(optionsUrl, window.location.origin);
+        url.searchParams.set("service_id", serviceId);
+        if (includeAvailability && stylistId) {
+          url.searchParams.set("stylist_id", stylistId);
+        }
+
+        const response = await fetch(url.toString(), {
+          headers: { "X-Requested-With": "XMLHttpRequest" },
+          credentials: "same-origin"
+        });
+        const data = await response.json();
+        if (serial !== requestSerial) return;
+        if (!response.ok) throw new Error(data.error || "دریافت گزینه‌های رزرو ممکن نشد.");
+
+        const wantedStylist = preserveInitial ? initialSelectedStylist : stylistId;
+        populateStylists(data.stylists || [], wantedStylist);
+
+        if (includeAvailability) {
+          renderAvailability(
+            data.availability || [],
+            preserveInitial ? initialSelectedDate : "",
+            preserveInitial ? initialSelectedTime : ""
+          );
+        } else {
+          renderAvailability([], "", "", false);
+        }
+      } catch (error) {
+        if (serial !== requestSerial) return;
+        renderAvailability([], "", "", false);
+        timeEmpty?.classList.remove("hidden");
+        if (timeEmpty) {
+          timeEmpty.textContent = window.LoomeraFeedback?.safeMessage?.(error.message, "error") || "بررسی زمان‌های آزاد ممکن نشد.";
+        }
+      } finally {
+        if (serial === requestSerial) loadingLabel?.classList.add("hidden");
+      }
+    };
+
+    const updateProgress = () => {
+      const requirements = modeRequirements[modeInput?.value || "service"] || modeRequirements.service;
+      const requiredInputs = [];
+      if (requirements.service) requiredInputs.push(serviceInput);
+      if (requirements.stylist) requiredInputs.push(stylistInput);
+      if (requirements.datetime) requiredInputs.push(dateInput, timeInput);
+
+      const completeCount = requiredInputs.filter((input) => Boolean(input?.value)).length;
+      const totalCount = requiredInputs.length;
+      const percentage = totalCount === 0 ? 100 : Math.round((completeCount / totalCount) * 100);
+      const ready = percentage >= 100;
+
+      if (badge) badge.textContent = ready ? "آماده ساخت" : `${completeCount} از ${totalCount}`;
+      if (bar) bar.style.width = `${Math.max(percentage, 12)}%`;
+      if (description) {
+        description.textContent = ready
+          ? "اطلاعات لازم کامل است و لینک قابل ساخت است."
+          : "فیلدهای ضروری این نوع لینک را کامل کن.";
+      }
+    };
+
+    const updateMode = async ({ preserveInitial = false } = {}) => {
+      const mode = modeInput?.value || "service";
+      const requirements = modeRequirements[mode] || modeRequirements.service;
+
+      serviceWrap?.classList.toggle("hidden", !requirements.service);
+      stylistWrap?.classList.toggle("hidden", !requirements.stylist);
+      dateWrap?.classList.toggle("hidden", !requirements.datetime);
+      timeWrap?.classList.toggle("hidden", !requirements.datetime);
+
+      if (serviceInput) serviceInput.required = requirements.service;
+      if (stylistInput) stylistInput.required = requirements.stylist;
+      if (dateInput) dateInput.required = requirements.datetime;
+      if (timeInput) timeInput.required = requirements.datetime;
+
+      if (mode === "stylist") {
+        populateStylists(allStylists, preserveInitial ? initialSelectedStylist : stylistInput?.value || "");
+        renderAvailability([], "", "", false);
+      } else if (mode === "service_stylist" || mode === "service_stylist_time") {
+        await fetchOptions({
+          includeAvailability: mode === "service_stylist_time" && Boolean(stylistInput?.value),
+          preserveInitial
+        });
+        if (mode === "service_stylist_time" && stylistInput?.value && !availabilityByDate.size) {
+          await fetchOptions({ includeAvailability: true, preserveInitial });
+        }
+      } else {
+        renderAvailability([], "", "", false);
+      }
+
+      updateProgress();
+    };
+
+    modeInput?.addEventListener("change", () => updateMode());
+
+    serviceInput?.addEventListener("change", async () => {
+      if (["service_stylist", "service_stylist_time"].includes(modeInput?.value || "")) {
+        populateStylists([], "");
+        await fetchOptions({ includeAvailability: false });
+      }
+      updateProgress();
+    });
+
+    stylistInput?.addEventListener("change", async () => {
+      if ((modeInput?.value || "") === "service_stylist_time") {
+        await fetchOptions({ includeAvailability: Boolean(stylistInput.value) });
+      }
+      updateProgress();
+    });
+
+    dateInput?.addEventListener("change", () => {
+      renderTimes();
+      updateProgress();
+    });
+    timeInput?.addEventListener("change", updateProgress);
+
+    updateMode({ preserveInitial: true });
+  });
+</script>

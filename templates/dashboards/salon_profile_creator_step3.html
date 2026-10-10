@@ -1,0 +1,161 @@
+{% extends "dashboard_template.html" %}
+{% load static salons_filters %}
+
+{% block title %}ساعت کاری مجموعه{% endblock %}
+
+{% block body_attrs %}
+data-page="dashboard-layout"
+data-dashboard-page="salon-working-hours-step"
+{% endblock %}
+
+{% block head %}
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr@4.6.13/dist/flatpickr.min.css">
+  <style>
+    .lm-working-day summary::-webkit-details-marker { display: none; }
+    .lm-working-day[open] { border-color: rgba(115, 92, 190, .22); box-shadow: 0 12px 34px rgba(46, 42, 60, .07); }
+    .lm-working-day-chevron i { transition: transform .2s ease; }
+    .lm-working-day[open] .lm-working-day-chevron i { transform: rotate(180deg); }
+
+    .lm-day-switch-label {
+      display: inline-flex; min-height: 44px; align-items: center; gap: 8px; cursor: pointer;
+      border: 1px solid var(--lm-border-soft, #E7E2EF); border-radius: 16px; background: #fff;
+      padding: 6px 9px; transition: .2s ease;
+    }
+    .lm-day-switch-input { position: absolute; width: 1px; height: 1px; opacity: 0; pointer-events: none; }
+    .lm-day-switch-track {
+      position: relative; display: inline-flex; width: 46px; height: 26px; flex: 0 0 auto;
+      align-items: center; border-radius: 999px; background: #E9E6EF; transition: .2s ease;
+    }
+    .lm-day-switch-thumb {
+      position: absolute; right: 3px; width: 20px; height: 20px; border-radius: 999px;
+      background: white; box-shadow: 0 2px 8px rgba(46, 42, 60, .18); transition: transform .2s ease;
+    }
+    .lm-day-switch-input:checked + .lm-day-switch-track { background: #735CBE; }
+    .lm-day-switch-input:checked + .lm-day-switch-track .lm-day-switch-thumb { transform: translateX(-20px); }
+    .lm-day-switch-input:focus-visible + .lm-day-switch-track { outline: 3px solid rgba(115, 92, 190, .18); outline-offset: 2px; }
+    .lm-day-switch-status { min-width: 38px; font-size: 11px; font-weight: 900; color: #777184; text-align: center; }
+    .lm-day-switch-input:checked ~ .lm-day-switch-status { color: #654CB1; }
+
+    .flatpickr-calendar.noCalendar {
+      width: min(320px, calc(100vw - 24px)); border: 1px solid rgba(115, 92, 190, .15);
+      border-radius: 22px; overflow: hidden; box-shadow: 0 20px 60px rgba(46, 42, 60, .18);
+      font-family: inherit; direction: ltr;
+    }
+    .flatpickr-calendar.noCalendar .flatpickr-time { height: 64px; max-height: 64px; border: 0; }
+    .flatpickr-calendar.noCalendar .flatpickr-time input,
+    .flatpickr-calendar.noCalendar .flatpickr-time .flatpickr-am-pm {
+      font-family: inherit; font-weight: 800; color: #2E2A3C;
+    }
+    .flatpickr-calendar.noCalendar .flatpickr-time input:hover,
+    .flatpickr-calendar.noCalendar .flatpickr-time input:focus { background: #F6F2FF; }
+    .flatpickr-calendar.noCalendar .numInputWrapper span { border-color: rgba(115, 92, 190, .12); }
+
+    /* Mobile save bar sits directly above the dashboard bottom navigation. */
+    .lm-working-hours-savebar {
+      bottom: var(--lm-bottom-nav-space, 4.75rem) !important;
+    }
+    @media (min-width: 1024px) {
+      .lm-working-hours-savebar {
+        bottom: 0 !important;
+      }
+    }
+  </style>
+{% endblock %}
+
+{% block content %}
+  {% url 'dashboards:salon_profile_creator_step2' as step2_url %}
+  {% url 'dashboards:salon_profile' as salon_profile_url %}
+
+  <section class="mx-auto min-w-0 max-w-5xl space-y-4" data-working-hours-step-page>
+    <header class="rounded-[28px] border border-loomera-borderSoft bg-white/95 p-4 shadow-lm-card sm:p-6">
+      <span class="inline-flex items-center gap-2 rounded-full bg-loomera-primarySoft px-3 py-1.5 text-[11px] font-black text-loomera-primaryText">
+        <i class="fa-regular fa-clock text-[10px]" aria-hidden="true"></i>
+        {% if profile_edit_mode %}پروفایل مجموعه / ساعات کاری{% else %}مرحله ۳ از ۳{% endif %}
+      </span>
+      <h1 class="mt-4 text-xl font-black leading-8 text-loomera-textPrimary sm:text-3xl">ساعت کاری مجموعه</h1>
+
+    </header>
+
+    <form method="post" id="workingHoursForm" class="space-y-4" novalidate>
+      {% csrf_token %}
+
+      {% if form.non_field_errors %}
+        <div class="rounded-[22px] border border-loomera-danger/20 bg-loomera-dangerSoft px-4 py-3 text-sm font-bold leading-7 text-loomera-danger">
+          {% for error in form.non_field_errors %}<div>{{ error }}</div>{% endfor %}
+        </div>
+      {% endif %}
+
+      <section class="rounded-[28px] border border-loomera-primary/15 bg-loomera-primarySoft/35 p-4 shadow-lm-card sm:p-5">
+        <div class="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+          <div>
+            <p class="text-[11px] font-black text-loomera-primaryText">تنظیم سریع</p>
+            <h2 class="mt-1 text-base font-black text-loomera-textPrimary sm:text-lg">یک ساعت برای همه روزها</h2>
+            <p class="mt-1 text-xs leading-6 text-loomera-textMuted">ساعت رایج مجموعه را یک‌بار انتخاب کن؛ بعد فقط روزهای متفاوت را جدا ویرایش کن.</p>
+          </div>
+          <span class="inline-flex items-center gap-2 self-start rounded-full bg-white px-3 py-2 text-xs font-black text-loomera-primaryText shadow-sm">
+            <i class="fa-solid fa-wand-magic-sparkles text-[10px]" aria-hidden="true"></i>
+            شروع سریع
+          </span>
+        </div>
+
+        <div class="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-[1fr_1fr_auto]">
+          <div>
+            <label for="working_hours_bulk_open" class="mb-2 block text-xs font-black text-loomera-textMuted">شروع</label>
+            <div class="relative">
+              <input id="working_hours_bulk_open" type="text" data-lm-time-picker autocomplete="off" placeholder="09:00" class="lm-time-field w-full rounded-[20px] border border-white bg-white px-4 py-3.5 pl-12 text-sm font-black text-loomera-textPrimary outline-none shadow-sm transition focus:border-loomera-primary/30 focus:ring-4 focus:ring-loomera-primary/10">
+              <button type="button" data-time-trigger data-target-input="working_hours_bulk_open" class="absolute left-2 top-1/2 inline-flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-xl text-loomera-primaryText transition hover:bg-loomera-primarySoft" aria-label="انتخاب ساعت شروع مشترک"><i class="fa-regular fa-clock" aria-hidden="true"></i></button>
+            </div>
+          </div>
+          <div>
+            <label for="working_hours_bulk_close" class="mb-2 block text-xs font-black text-loomera-textMuted">پایان</label>
+            <div class="relative">
+              <input id="working_hours_bulk_close" type="text" data-lm-time-picker autocomplete="off" placeholder="20:00" class="lm-time-field w-full rounded-[20px] border border-white bg-white px-4 py-3.5 pl-12 text-sm font-black text-loomera-textPrimary outline-none shadow-sm transition focus:border-loomera-primary/30 focus:ring-4 focus:ring-loomera-primary/10">
+              <button type="button" data-time-trigger data-target-input="working_hours_bulk_close" class="absolute left-2 top-1/2 inline-flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-xl text-loomera-primaryText transition hover:bg-loomera-primarySoft" aria-label="انتخاب ساعت پایان مشترک"><i class="fa-regular fa-clock" aria-hidden="true"></i></button>
+            </div>
+          </div>
+          <button type="button" data-working-hours-apply-all class="inline-flex min-h-12 items-center justify-center gap-2 self-end rounded-2xl bg-loomera-primary px-5 py-3 text-sm font-black text-white shadow-lm-soft">
+            <i class="fa-regular fa-copy text-xs" aria-hidden="true"></i>
+            اعمال روی همه روزها
+          </button>
+        </div>
+        <div data-working-hours-apply-all-feedback class="mt-3 hidden rounded-2xl border px-4 py-3 text-xs font-bold"></div>
+      </section>
+
+      <section class="rounded-[28px] border border-loomera-borderSoft bg-white/95 p-4 shadow-lm-card sm:p-5">
+        <div class="mb-4 flex items-start justify-between gap-3">
+          <div>
+            <h2 class="text-base font-black text-loomera-textPrimary sm:text-lg">روزهای هفته</h2>
+            <p class="mt-1 text-xs leading-6 text-loomera-textMuted">روی هر روز بزن تا ساعت همان روز باز شود. روز تعطیل را با Switch خاموش کن.</p>
+          </div>
+
+        </div>
+
+        <div class="space-y-3" data-working-days-list>
+          {% include "dashboards/partials/onboarding_working_day.html" with day_num=1 day_name="شنبه" day_initial="ش" active=form.day_1_active open_time=form.day_1_open_time close_time=form.day_1_close_time open_by_default=True %}
+          {% include "dashboards/partials/onboarding_working_day.html" with day_num=2 day_name="یکشنبه" day_initial="ی" active=form.day_2_active open_time=form.day_2_open_time close_time=form.day_2_close_time %}
+          {% include "dashboards/partials/onboarding_working_day.html" with day_num=3 day_name="دوشنبه" day_initial="د" active=form.day_3_active open_time=form.day_3_open_time close_time=form.day_3_close_time %}
+          {% include "dashboards/partials/onboarding_working_day.html" with day_num=4 day_name="سه‌شنبه" day_initial="س" active=form.day_4_active open_time=form.day_4_open_time close_time=form.day_4_close_time %}
+          {% include "dashboards/partials/onboarding_working_day.html" with day_num=5 day_name="چهارشنبه" day_initial="چ" active=form.day_5_active open_time=form.day_5_open_time close_time=form.day_5_close_time %}
+          {% include "dashboards/partials/onboarding_working_day.html" with day_num=6 day_name="پنج‌شنبه" day_initial="پ" active=form.day_6_active open_time=form.day_6_open_time close_time=form.day_6_close_time %}
+          {% include "dashboards/partials/onboarding_working_day.html" with day_num=7 day_name="جمعه" day_initial="ج" active=form.day_7_active open_time=form.day_7_open_time close_time=form.day_7_close_time %}
+        </div>
+      </section>
+
+      <div data-mobile-primary-action class="lm-working-hours-savebar fixed inset-x-0 z-[60] border-t border-loomera-borderSoft bg-white/96 px-3 py-2 shadow-[0_-12px_34px_rgba(46,42,60,0.10)] backdrop-blur sm:px-5 lg:sticky lg:inset-x-auto lg:z-20 lg:rounded-[22px] lg:border lg:p-2.5 lg:shadow-lm-elevated">
+        <div class="mx-auto flex w-full max-w-5xl justify-end">
+          <button type="submit" class="inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-2xl bg-loomera-primary px-5 py-2.5 text-sm font-black text-white shadow-[0_10px_24px_rgba(115,92,190,0.18)] transition hover:opacity-95 sm:w-auto sm:min-w-36">
+            <i class="fa-solid fa-floppy-disk text-xs" aria-hidden="true"></i>
+            <span>ذخیره</span>
+          </button>
+        </div>
+      </div>
+      <div class="block h-16 lg:h-2" aria-hidden="true"></div>
+    </form>
+  </section>
+{% endblock %}
+
+{% block js %}
+  {{ block.super }}
+  <script src="https://cdn.jsdelivr.net/npm/flatpickr@4.6.13/dist/flatpickr.min.js"></script>
+  <script type="module" src="{% static 'js/pages/salon_working_hours_step.js' %}"></script>
+{% endblock %}

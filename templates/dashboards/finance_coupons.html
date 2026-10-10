@@ -1,0 +1,105 @@
+{% extends "dashboard_template.html" %}
+{% load static humanize jalali_filters %}
+{% block title %}کدهای تخفیف{% endblock %}
+
+{% block content %}
+  {% url 'dashboards:finance_coupons' as finance_coupons_url %}
+  <section class="min-w-0 max-w-full space-y-4 overflow-visible lg:space-y-5" data-dashboard-workspace-root data-discount-page="coupons">
+    <section class="relative overflow-hidden rounded-[30px] border border-loomera-borderSoft bg-white/95 p-4 shadow-lm-card sm:p-6 lg:p-7" aria-labelledby="coupon-page-title">
+      <div class="pointer-events-none absolute inset-x-0 top-0 h-40 bg-[radial-gradient(circle_at_top_right,rgba(115,92,190,0.16),transparent_44%),linear-gradient(180deg,rgba(245,240,255,0.88),rgba(255,255,255,0))]" aria-hidden="true"></div>
+      <div class="relative flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+        <div class="min-w-0">
+          <p class="text-[11px] font-black text-loomera-primaryText">تخفیف‌ها</p>
+          <h1 id="coupon-page-title" class="mt-2 text-2xl font-black text-loomera-textPrimary sm:text-3xl">کدهای تخفیف</h1>
+          <p class="mt-2 max-w-3xl text-sm leading-7 text-loomera-textSecondary">کدی بساز که مشتری هنگام رزرو وارد کند. درصد تخفیف، سقف مبلغ و بازه اعتبار همان‌جا مشخص می‌شود.</p>
+        </div>
+        <a href="{{ finance_coupons_url }}?tab=form" class="inline-flex min-h-11 shrink-0 items-center justify-center gap-2 rounded-full bg-loomera-primary px-5 py-3 text-sm font-black text-white shadow-sm transition hover:-translate-y-0.5 hover:shadow-lm-card">
+          <svg viewBox="0 0 24 24" class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
+          ساخت کد
+        </a>
+      </div>
+    </section>
+
+    {% include "dashboards/partials/finance/workspace_nav.html" with active="discounts" %}
+    {% include "dashboards/partials/finance/discount_nav.html" with active_discount="codes" %}
+
+    <section id="coupon-section-list" class="scroll-mt-28 overflow-hidden rounded-[28px] border border-loomera-borderSoft bg-white/95 shadow-lm-card lg:scroll-mt-36" data-dashboard-workspace-panel data-lm-direct-section data-lm-task-panel="finance-coupons" data-lm-task-key="list" data-lm-task-label="مدیریت کدها" data-lm-task-default data-lm-task-order="1" data-discount-management>
+      <header class="border-b border-loomera-borderSoft p-4 sm:p-5 lg:p-6">
+        <div class="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
+          <div>
+            <p class="text-[11px] font-black text-loomera-primaryText">{{ discount_stats.total }} کد ثبت‌شده</p>
+            <h2 class="mt-1 text-base font-black text-loomera-textPrimary sm:text-lg">وضعیت کدها</h2>
+            <p class="mt-1 text-xs leading-6 text-loomera-textMuted">«فعال» بودن با «در حال اجرا» فرق دارد؛ تاریخ شروع و پایان هم در وضعیت نهایی اثر دارند.</p>
+          </div>
+          <label class="relative block w-full lg:max-w-sm">
+            <span class="sr-only">جستجوی کد تخفیف</span>
+            <svg viewBox="0 0 24 24" class="pointer-events-none absolute right-4 top-1/2 h-4 w-4 -translate-y-1/2 text-loomera-textMuted" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+            <input type="search" data-discount-search placeholder="جستجو در کد یا توضیحات" class="w-full rounded-2xl border border-loomera-borderSoft bg-white py-3 pr-11 pl-4 text-sm outline-none transition focus:border-loomera-primary/30 focus:ring-2 focus:ring-loomera-primary/10">
+          </label>
+        </div>
+        <div class="mt-4">{% include "dashboards/partials/finance/discount_status_strip.html" %}</div>
+      </header>
+
+      <div class="space-y-3 p-4 sm:p-5 lg:p-6">
+        {% for item in coupons %}
+          <article data-discount-card data-discount-state="{% if not item.is_active %}inactive{% elif item.start_date > discount_now %}scheduled{% elif item.end_date < discount_now %}ended{% else %}running{% endif %}" class="rounded-[24px] border border-loomera-borderSoft bg-white p-4 transition hover:border-loomera-primary/25 hover:shadow-lm-soft">
+            <div class="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+              <div class="min-w-0">
+                <div class="flex flex-wrap items-center gap-2">
+                  <strong dir="ltr" class="rounded-full bg-loomera-primarySoft px-3 py-1.5 text-sm font-black tracking-wide text-loomera-primaryText">{{ item.coupon_code }}</strong>
+                  <span class="text-sm font-black text-loomera-textPrimary">{{ item.discount }}٪ تخفیف</span>
+                  {% include "dashboards/partials/finance/discount_state_badge.html" with item=item %}
+                </div>
+                <p class="mt-2 text-xs font-bold leading-6 text-loomera-textMuted">{{ item.start_date|date:"Y-m-d"|jalali }} تا {{ item.end_date|date:"Y-m-d"|jalali }}{% if item.max_discount_amount %} · تا سقف {{ item.max_discount_amount|intcomma }} تومان{% else %} · بدون سقف مبلغ{% endif %}</p>
+                {% if item.description %}<p class="mt-2 line-clamp-2 text-xs leading-6 text-loomera-textSecondary">{{ item.description }}</p>{% endif %}
+              </div>
+              <div class="flex shrink-0 flex-wrap items-center gap-2">
+                <a href="{{ finance_coupons_url }}?edit={{ item.id }}" class="inline-flex min-h-9 items-center rounded-full border border-loomera-borderSoft bg-white px-3 py-2 text-xs font-black text-loomera-textSecondary transition hover:bg-loomera-primarySoft hover:text-loomera-primaryText">{% if item.end_date < discount_now %}ویرایش و تمدید{% else %}ویرایش{% endif %}</a>
+                <form method="post" action="{% url 'dashboards:finance_coupon_toggle' item.id %}">{% csrf_token %}<button type="submit" class="inline-flex min-h-9 items-center rounded-full px-3 py-2 text-xs font-black transition {% if item.is_active %}bg-loomera-bgSubtle text-loomera-textSecondary{% else %}bg-loomera-primarySoft text-loomera-primaryText{% endif %}">{% if item.is_active %}غیرفعال کن{% else %}فعال کن{% endif %}</button></form>
+              </div>
+            </div>
+          </article>
+        {% empty %}
+          <div class="rounded-[24px] border border-dashed border-loomera-borderSoft bg-loomera-bgSubtle/70 p-6 text-center">
+            <p class="text-sm font-black text-loomera-textPrimary">هنوز کد تخفیفی نداری</p>
+            <p class="mt-2 text-xs leading-6 text-loomera-textMuted">اگر می‌خواهی مشتری یک کد را هنگام رزرو وارد کند، اولین کد را بساز.</p>
+            <a href="{{ finance_coupons_url }}?tab=form" class="mt-4 inline-flex rounded-full bg-loomera-primary px-4 py-2.5 text-xs font-black text-white">ساخت اولین کد</a>
+          </div>
+        {% endfor %}
+        <div data-discount-filter-empty hidden class="rounded-[24px] border border-dashed border-loomera-borderSoft bg-loomera-bgSubtle/70 p-6 text-center text-sm font-bold text-loomera-textMuted">موردی با این جستجو یا وضعیت پیدا نشد.</div>
+      </div>
+    </section>
+
+    <section id="coupon-section-form" class="scroll-mt-28 overflow-hidden rounded-[28px] border border-loomera-borderSoft bg-white/95 shadow-lm-card lg:scroll-mt-36" data-dashboard-workspace-panel data-lm-direct-section data-lm-task-panel="finance-coupons" data-lm-task-key="form" data-lm-task-label="{% if editing_coupon %}ویرایش کد{% else %}ساخت کد{% endif %}" data-lm-task-order="2">
+      <header class="border-b border-loomera-borderSoft px-4 py-4 sm:px-5 lg:px-6">
+        <p class="text-[11px] font-black text-loomera-primaryText">{% if editing_coupon %}ویرایش{% else %}کد جدید{% endif %}</p>
+        <h2 class="mt-1 text-base font-black text-loomera-textPrimary sm:text-lg">{% if editing_coupon %}{{ editing_coupon.coupon_code }} را ویرایش کن{% else %}کد تخفیف جدید بساز{% endif %}</h2>
+        <p class="mt-1 text-xs leading-6 text-loomera-textMuted">کد برای مشتری قابل مشاهده و ورود است؛ توضیحات داخلی فقط برای مدیریت خودت است.</p>
+      </header>
+      <form method="post" action="{{ form_action_url }}" class="space-y-5 p-4 sm:p-5 lg:p-6" data-coupon-form>
+        {% csrf_token %}
+        {% if form.errors %}
+          <div class="rounded-2xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm leading-7 text-rose-700" role="alert"><strong class="font-black">فرم کامل نیست.</strong> موارد مشخص‌شده را اصلاح کن.{% if form.non_field_errors %}<div class="mt-2 font-bold">{{ form.non_field_errors|join:'، ' }}</div>{% endif %}</div>
+        {% endif %}
+        <div class="grid gap-4 md:grid-cols-2">
+          <div class="md:col-span-2"><label class="mb-2 block text-sm font-black text-loomera-textPrimary">{{ form.coupon_code.label }}</label>{{ form.coupon_code }}<p class="mt-2 text-xs leading-6 text-loomera-textMuted">کوتاه و قابل خواندن؛ مثل <span dir="ltr">WELCOME20</span>.</p>{% if form.coupon_code.errors %}<p class="mt-2 text-xs font-bold text-rose-600">{{ form.coupon_code.errors|join:'، ' }}</p>{% endif %}</div>
+          <div><label class="mb-2 block text-sm font-black text-loomera-textPrimary">{{ form.discount.label }}</label>{{ form.discount }}{% if form.discount.errors %}<p class="mt-2 text-xs font-bold text-rose-600">{{ form.discount.errors|join:'، ' }}</p>{% endif %}</div>
+          <div><label class="mb-2 block text-sm font-black text-loomera-textPrimary">{{ form.max_discount_amount.label }}</label>{{ form.max_discount_amount }}<p class="mt-2 text-xs leading-6 text-loomera-textMuted">صفر یعنی سقف مبلغ ندارد.</p>{% if form.max_discount_amount.errors %}<p class="mt-2 text-xs font-bold text-rose-600">{{ form.max_discount_amount.errors|join:'، ' }}</p>{% endif %}</div>
+          <div><label class="mb-2 block text-sm font-black text-loomera-textPrimary">{{ form.start_date.label }}</label>{{ form.start_date }}{% if form.start_date.errors %}<p class="mt-2 text-xs font-bold text-rose-600">{{ form.start_date.errors|join:'، ' }}</p>{% endif %}</div>
+          <div><label class="mb-2 block text-sm font-black text-loomera-textPrimary">{{ form.end_date.label }}</label>{{ form.end_date }}{% if form.end_date.errors %}<p class="mt-2 text-xs font-bold text-rose-600">{{ form.end_date.errors|join:'، ' }}</p>{% endif %}</div>
+          <div class="md:col-span-2"><label class="mb-2 block text-sm font-black text-loomera-textPrimary">{{ form.description.label }}</label>{{ form.description }}{% if form.description.errors %}<p class="mt-2 text-xs font-bold text-rose-600">{{ form.description.errors|join:'، ' }}</p>{% endif %}</div>
+        </div>
+        <label class="flex cursor-pointer items-start gap-3 rounded-2xl border border-loomera-borderSoft bg-loomera-bgSubtle/60 p-4"><span class="pt-0.5">{{ form.is_active }}</span><span><strong class="block text-sm font-black text-loomera-textPrimary">برای استفاده آماده باشد</strong><span class="mt-1 block text-xs leading-6 text-loomera-textMuted">اگر تاریخ شروع در آینده باشد، کد از همان تاریخ اجرا می‌شود. خاموش‌کردن این گزینه کد را تا فعال‌سازی دستی متوقف می‌کند.</span></span></label>
+        <div class="flex flex-col-reverse gap-2 border-t border-loomera-borderSoft pt-5 sm:flex-row sm:justify-end">
+          <a href="{{ finance_coupons_url }}?tab=list" class="inline-flex min-h-11 items-center justify-center rounded-full border border-loomera-borderSoft bg-white px-5 py-3 text-sm font-black text-loomera-textSecondary">{% if editing_coupon %}لغو ویرایش{% else %}بازگشت به کدها{% endif %}</a>
+          <button type="submit" class="inline-flex min-h-11 items-center justify-center rounded-full bg-loomera-primary px-5 py-3 text-sm font-black text-white shadow-sm">{% if editing_coupon %}ذخیره تغییرات{% else %}ساخت کد تخفیف{% endif %}</button>
+        </div>
+      </form>
+    </section>
+  </section>
+{% endblock %}
+
+{% block js %}
+  {{ block.super }}
+  <script src="{% static 'js/pages/finance_discounts.js' %}"></script>
+{% endblock %}

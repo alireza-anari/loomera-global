@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% load jalali_extras %}
+{% block title %}پروفایل من{% endblock %}
+{% block content %}
+<main class="min-h-dvh bg-loomera-bg pb-28 text-loomera-textPrimary">
+  <div class="mx-auto w-full max-w-4xl space-y-4 px-4 py-5 sm:px-6 lg:py-8">
+    <header class="rounded-[28px] border border-loomera-borderSoft bg-white p-5 shadow-lm-card">
+      <a href="{% url 'accounts:customer_panel' %}" class="inline-flex min-h-10 items-center gap-2 rounded-full border border-loomera-borderSoft px-3 py-2 text-xs font-black text-loomera-textSecondary"><i class="fa-solid fa-arrow-right text-[10px]"></i>حساب من</a>
+      <div class="mt-4 flex items-center gap-4">
+        {% if customer.profile_image %}<img src="{{ customer.profile_image.url }}" class="h-20 w-20 rounded-3xl object-cover" alt="">{% else %}<span class="flex h-20 w-20 items-center justify-center rounded-3xl bg-loomera-primarySoft text-xl font-black text-loomera-primary">{{ customer.user.name|slice:":1" }}{{ customer.user.family|slice:":1" }}</span>{% endif %}
+        <div class="min-w-0 flex-1"><p class="text-xs font-black text-loomera-primary">پروفایل شخصی</p><h1 class="mt-1 truncate text-2xl font-black">{{ customer.user.name }} {{ customer.user.family }}</h1><p class="mt-1 text-sm text-loomera-textMuted">اطلاعات هویتی این حساب؛ آدرس‌ها در بخش مستقل مدیریت می‌شوند.</p></div>
+        <a href="{% url 'accounts:customer_update_profile' %}" class="hidden rounded-full bg-loomera-primary px-5 py-3 text-sm font-black text-white sm:inline-flex">ویرایش</a>
+      </div>
+    </header>
+
+    <section class="rounded-[28px] border border-loomera-borderSoft bg-white p-5 shadow-lm-card">
+      <div class="grid gap-3 sm:grid-cols-2">
+        <div class="rounded-2xl bg-loomera-bgSubtle p-4"><p class="text-xs font-bold text-loomera-textMuted">شماره موبایل ورود</p><p class="mt-2 text-sm font-black" dir="ltr">{{ customer.user.mobile_number }}</p><p class="mt-1 text-[11px] text-loomera-textMuted">برای امنیت حساب از این صفحه قابل تغییر نیست.</p></div>
+        <div class="rounded-2xl bg-loomera-bgSubtle p-4"><p class="text-xs font-bold text-loomera-textMuted">ایمیل</p><p class="mt-2 truncate text-sm font-black">{{ customer.user.email|default:"ثبت نشده" }}</p></div>
+        <div class="rounded-2xl bg-loomera-bgSubtle p-4"><p class="text-xs font-bold text-loomera-textMuted">تاریخ تولد</p><p class="mt-2 text-sm font-black">{% if customer.birth_date %}{{ customer.birth_date|jalali_date }}{% else %}ثبت نشده{% endif %}</p></div>
+        <a href="{% url 'accounts:customer_addresses' %}" class="flex items-center justify-between rounded-2xl border border-loomera-borderSoft p-4 transition hover:bg-loomera-primarySoft/30"><span><p class="text-xs font-bold text-loomera-textMuted">آدرس‌های من</p><p class="mt-2 text-sm font-black">مدیریت آدرس‌ها</p></span><i class="fa-solid fa-chevron-left text-xs text-loomera-primary"></i></a>
+      </div>
+      <a href="{% url 'accounts:customer_update_profile' %}" class="mt-4 inline-flex w-full items-center justify-center rounded-full bg-loomera-primary px-5 py-3 text-sm font-black text-white sm:hidden">ویرایش پروفایل</a>
+    </section>
+  </div>
+</main>
+{% endblock %}

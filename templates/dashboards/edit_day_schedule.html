@@ -1,0 +1,182 @@
+{% extends "dashboard_template.html" %}
+{% block title %}ویرایش برنامه روز{% endblock %}
+{% block body_attrs %}data-page="edit-day-schedule"{% endblock %}
+
+{% block content %}
+  <section class="min-w-0 max-w-full space-y-4 overflow-visible lg:space-y-5" data-dashboard-workspace-root data-dashboard-page="edit-day-schedule" data-edit-day-page data-direct-edit-page data-date-iso="{{ date_iso }}">
+    <section class="min-w-0 rounded-[24px] border border-loomera-borderSoft bg-white/95 p-4 shadow-lm-card sm:p-5" aria-labelledby="edit-day-title">
+      <div class="flex min-w-0 flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <div class="min-w-0">
+          <h1 id="edit-day-title" class="text-xl font-black leading-8 tracking-tight text-loomera-textPrimary sm:text-2xl">
+            ویرایش برنامه روز {{ stylist.get_fullName }}
+          </h1>
+          <p class="mt-1 text-xs leading-6 text-loomera-textMuted">
+            تغییرات فقط برای <span data-jalali-date-label>{{ page_title_date }}</span> اعمال می‌شود.
+          </p>
+        </div>
+
+        <a href="{{ back_url }}" class="inline-flex min-h-10 shrink-0 items-center justify-center gap-2 self-start rounded-xl border border-loomera-borderSoft bg-white px-3 py-2 text-xs font-bold text-loomera-textSecondary transition hover:border-loomera-primary/30 hover:bg-loomera-primarySoft/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-loomera-primary/30 sm:self-auto">
+          <i class="fa-solid fa-arrow-right text-[10px] text-loomera-primaryText" aria-hidden="true"></i>
+          <span>بازگشت به برنامه کاری</span>
+        </a>
+      </div>
+    </section>
+
+
+
+    <form method="post" class="space-y-4 pb-24 lg:pb-4" data-edit-day-form data-direct-edit-form data-can-schedule="{% if can_schedule %}true{% else %}false{% endif %}">
+      {% csrf_token %}
+
+
+      <section id="edit-day-section-shifts" class="group scroll-mt-28 overflow-hidden rounded-[28px] border border-loomera-borderSoft bg-white/95 shadow-lm-card lg:scroll-mt-36">
+        <div class="flex items-center justify-between gap-3 border-b border-loomera-borderSoft bg-white/96 px-4 py-3 shadow-sm backdrop-blur transition hover:bg-loomera-primarySoft/25 sm:px-5 lg:px-6 lg:py-4">
+          <div class="min-w-0">
+            <p class="text-[11px] font-black text-loomera-primaryText">ردیف‌های برنامه</p>
+            <h2 class="mt-1 truncate text-base font-black text-loomera-textPrimary sm:text-lg">بازه‌های کاری این روز</h2>
+          </div>
+        </div>
+
+        <div class="p-4 sm:p-5 lg:p-6">
+          <div class="mb-5 flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
+            <div class="min-w-0">
+              <h3 class="text-base font-black text-loomera-textPrimary">تعریف بازه‌های مستقل</h3>
+
+            </div>
+
+            <div class="flex flex-wrap items-center gap-3">
+              <span class="inline-flex items-center rounded-full bg-loomera-bgSubtle px-3 py-2 text-xs font-black text-loomera-textSecondary">
+                <span data-shift-count>{{ initial_shift_rows|length }}</span>
+                <span class="mr-1">ردیف</span>
+              </span>
+
+              <button type="button" data-add-shift-row {% if not can_schedule %}disabled{% endif %} class="inline-flex min-h-11 items-center gap-2 rounded-full px-4 py-2 text-sm font-black transition {% if can_schedule %}bg-loomera-primary text-white shadow-[0_14px_30px_rgba(115,92,190,0.18)] hover:-translate-y-0.5 hover:shadow-lm-card{% else %}cursor-not-allowed bg-loomera-bgSubtle text-loomera-textMuted{% endif %}">
+                <i class="fa-solid fa-plus text-xs" aria-hidden="true"></i>
+                <span>افزودن ردیف جدید</span>
+              </button>
+            </div>
+          </div>
+
+          {% if not can_schedule %}
+            <div class="mb-5 rounded-[24px] border border-loomera-warning/25 bg-loomera-warningSoft px-4 py-4 text-sm leading-7 text-loomera-warning">
+              مجموعه در این روز تعطیل است یا ساعت کاری فعالی ندارد؛ بنابراین امکان افزودن یا ذخیره برنامه کاری برای این روز وجود ندارد.
+            </div>
+          {% endif %}
+
+          <div id="emptyShiftState" class="{% if initial_shift_rows %}hidden{% endif %} rounded-[24px] border border-dashed border-loomera-borderSoft bg-loomera-bgSubtle/70 px-4 py-6 text-center text-sm leading-7 text-loomera-textMuted">
+            برای این روز هنوز ردیفی وجود ندارد. می‌توانی ردیف جدید اضافه کنی یا با ذخیره فرم خالی، برنامه این روز را بدون شیفت نگه داری.
+          </div>
+
+          <div class="space-y-4" data-shift-rows>
+            {% for row in initial_shift_rows %}
+              <article class="rounded-[26px] border border-loomera-borderSoft bg-loomera-bgSubtle/60 p-4 transition hover:border-loomera-primary/25 hover:bg-white hover:shadow-lm-soft" data-shift-row>
+                <div class="mb-4 flex items-start justify-between gap-3">
+                  <div class="min-w-0">
+                    <p class="text-sm font-black text-loomera-textPrimary">ردیف شیفت</p>
+                    <p class="mt-1 text-xs leading-5 text-loomera-textMuted" data-row-status>زمان شروع و پایان را برای این بازه مشخص کن. انتخاب خدمت اختیاری است.</p>
+                  </div>
+
+                  <button type="button" data-remove-shift-row class="inline-flex shrink-0 items-center gap-2 rounded-full border border-loomera-danger/20 bg-white px-3 py-2 text-xs font-black text-loomera-danger transition hover:bg-loomera-dangerSoft/60">
+                    <i class="fa-solid fa-trash text-[10px]" aria-hidden="true"></i>
+                    <span>حذف</span>
+                  </button>
+                </div>
+
+                <div class="grid gap-4 md:grid-cols-3">
+                  <label class="block">
+                    <span class="mb-2 block text-xs font-black text-loomera-textMuted">شروع</span>
+                    <select name="shifts[{{ row.index }}][start_time]" data-shift-start class="w-full rounded-2xl border border-loomera-borderSoft bg-white px-4 py-3 text-sm font-bold text-loomera-textPrimary outline-none transition focus:border-loomera-primary/40 focus:ring-4 focus:ring-loomera-primary/10">
+                      <option value="">انتخاب شروع</option>
+                      {% for option in time_options %}
+                        <option value="{{ option }}" {% if row.start_time == option %}selected{% endif %}>{{ option }}</option>
+                      {% endfor %}
+                    </select>
+                  </label>
+
+                  <label class="block">
+                    <span class="mb-2 block text-xs font-black text-loomera-textMuted">پایان</span>
+                    <select name="shifts[{{ row.index }}][end_time]" data-shift-end class="w-full rounded-2xl border border-loomera-borderSoft bg-white px-4 py-3 text-sm font-bold text-loomera-textPrimary outline-none transition focus:border-loomera-primary/40 focus:ring-4 focus:ring-loomera-primary/10">
+                      <option value="">انتخاب پایان</option>
+                      {% for option in time_options %}
+                        <option value="{{ option }}" {% if row.end_time == option %}selected{% endif %}>{{ option }}</option>
+                      {% endfor %}
+                    </select>
+                  </label>
+
+                  <label class="block">
+                    <span class="mb-2 block text-xs font-black text-loomera-textMuted">خدمت</span>
+                    <select name="shifts[{{ row.index }}][service_id]" data-shift-service class="w-full rounded-2xl border border-loomera-borderSoft bg-white px-4 py-3 text-sm font-bold text-loomera-textPrimary outline-none transition focus:border-loomera-primary/40 focus:ring-4 focus:ring-loomera-primary/10">
+                      <option value="">انتخاب خدمت</option>
+                      {% for service in available_services %}
+                        <option value="{{ service.id }}" {% if row.service_id|stringformat:"s" == service.id|stringformat:"s" %}selected{% endif %}>{{ service.service_name }}</option>
+                      {% endfor %}
+                    </select>
+                  </label>
+                </div>
+              </article>
+            {% endfor %}
+          </div>
+
+          <template data-shift-template>
+            <article class="rounded-[26px] border border-loomera-borderSoft bg-loomera-bgSubtle/60 p-4 transition hover:border-loomera-primary/25 hover:bg-white hover:shadow-lm-soft" data-shift-row>
+              <div class="mb-4 flex items-start justify-between gap-3">
+                <div class="min-w-0">
+                  <p class="text-sm font-black text-loomera-textPrimary">ردیف شیفت</p>
+                  <p class="mt-1 text-xs leading-5 text-loomera-textMuted" data-row-status>زمان شروع و پایان را برای این بازه مشخص کن. انتخاب خدمت اختیاری است.</p>
+                </div>
+
+                <button type="button" data-remove-shift-row class="inline-flex shrink-0 items-center gap-2 rounded-full border border-loomera-danger/20 bg-white px-3 py-2 text-xs font-black text-loomera-danger transition hover:bg-loomera-dangerSoft/60">
+                  <i class="fa-solid fa-trash text-[10px]" aria-hidden="true"></i>
+                  <span>حذف</span>
+                </button>
+              </div>
+
+              <div class="grid gap-4 md:grid-cols-3">
+                <label class="block">
+                  <span class="mb-2 block text-xs font-black text-loomera-textMuted">شروع</span>
+                  <select name="shifts[__index__][start_time]" data-shift-start class="w-full rounded-2xl border border-loomera-borderSoft bg-white px-4 py-3 text-sm font-bold text-loomera-textPrimary outline-none transition focus:border-loomera-primary/40 focus:ring-4 focus:ring-loomera-primary/10">
+                    <option value="">انتخاب شروع</option>
+                    {% for option in time_options %}
+                      <option value="{{ option }}">{{ option }}</option>
+                    {% endfor %}
+                  </select>
+                </label>
+
+                <label class="block">
+                  <span class="mb-2 block text-xs font-black text-loomera-textMuted">پایان</span>
+                  <select name="shifts[__index__][end_time]" data-shift-end class="w-full rounded-2xl border border-loomera-borderSoft bg-white px-4 py-3 text-sm font-bold text-loomera-textPrimary outline-none transition focus:border-loomera-primary/40 focus:ring-4 focus:ring-loomera-primary/10">
+                    <option value="">انتخاب پایان</option>
+                    {% for option in time_options %}
+                      <option value="{{ option }}">{{ option }}</option>
+                    {% endfor %}
+                  </select>
+                </label>
+
+                <label class="block">
+                  <span class="mb-2 block text-xs font-black text-loomera-textMuted">خدمت</span>
+                  <select name="shifts[__index__][service_id]" data-shift-service class="w-full rounded-2xl border border-loomera-borderSoft bg-white px-4 py-3 text-sm font-bold text-loomera-textPrimary outline-none transition focus:border-loomera-primary/40 focus:ring-4 focus:ring-loomera-primary/10">
+                    <option value="">انتخاب خدمت</option>
+                    {% for service in available_services %}
+                      <option value="{{ service.id }}">{{ service.service_name }}</option>
+                    {% endfor %}
+                  </select>
+                </label>
+              </div>
+            </article>
+          </template>
+        </div>
+      </section>
+
+
+
+      <div class="hidden" aria-hidden="true"><span data-incomplete-count>۰</span><span data-invalid-count>۰</span><span data-readiness-tab-badge>۰٪</span><span data-review-message></span></div>
+      <div data-mobile-primary-action class="lm-dashboard-sticky-action sticky z-30 rounded-[20px] border border-loomera-borderSoft bg-white/95 p-2.5 shadow-[0_14px_34px_rgba(46,42,60,0.14)] backdrop-blur" data-direct-edit-savebar>
+        <div class="flex items-center justify-between gap-3">
+          <p class="min-w-0 text-[11px] font-black text-loomera-textPrimary" data-direct-edit-status>تغییری ذخیره نشده</p>
+          <button type="submit" {% if not can_schedule %}disabled{% endif %} class="inline-flex min-h-10 shrink-0 items-center justify-center gap-2 rounded-full px-4 py-2 text-xs font-black {% if can_schedule %}bg-loomera-primary text-white shadow-lm-soft{% else %}cursor-not-allowed bg-loomera-bgSubtle text-loomera-textMuted{% endif %}"><i class="fa-solid fa-floppy-disk text-[10px]" aria-hidden="true"></i><span>ذخیره برنامه روز</span></button>
+        </div>
+      </div>
+    </form>
+
+
+  </section>
+{% endblock %}

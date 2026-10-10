@@ -1,0 +1,214 @@
+{% extends "dashboard_template.html" %}
+{% load jalali_filters jalali_extras %}
+
+{% block title %}پول مجموعه{% endblock %}
+
+{% block content %}
+<section class="min-w-0 max-w-full space-y-4 overflow-visible lg:space-y-5" data-dashboard-workspace-root data-dashboard-page="finance-money">
+  <section class="relative overflow-hidden rounded-[32px] border border-loomera-borderSoft bg-white/95 p-4 shadow-lm-card sm:p-6 lg:p-7">
+    <div class="pointer-events-none absolute inset-x-0 top-0 h-44 bg-[radial-gradient(circle_at_top_right,rgba(115,92,190,0.15),transparent_42%),linear-gradient(180deg,rgba(245,240,255,0.96),rgba(255,255,255,0))]" aria-hidden="true"></div>
+    <div class="relative min-w-0">
+      <span class="inline-flex items-center gap-2 rounded-full bg-loomera-primarySoft px-3 py-1.5 text-[11px] font-black text-loomera-primaryText">
+        <span class="h-4 w-4" aria-hidden="true">{% include "partials/dashboard/nav_icon.html" with key="finance_wallet" %}</span>
+        پول مجموعه
+      </span>
+      <h1 class="mt-4 text-2xl font-black leading-9 text-loomera-textPrimary sm:text-3xl lg:text-4xl">موجودی، برداشت و حساب پرداخت</h1>
+      <p class="mt-2 max-w-3xl text-sm leading-7 text-loomera-textSecondary">اینجا می‌بینی چه مبلغی آماده برداشت است، چه پولی هنوز در انتظار آزادشدن است و برداشت‌های مجموعه به کدام حساب واریز می‌شوند.</p>
+    </div>
+
+    <div class="relative mt-5 grid grid-cols-2 gap-2 sm:gap-3 xl:grid-cols-4" aria-label="خلاصه پول مجموعه">
+      <article class="rounded-[22px] border border-loomera-borderSoft bg-white p-3 sm:p-4">
+        <p class="text-[10px] font-bold leading-5 text-loomera-textMuted sm:text-xs">قابل برداشت</p>
+        <p class="mt-1.5 break-words text-sm font-black text-loomera-success sm:text-lg">{{ wallet.available_balance|floatformat:0 }} تومان</p>
+      </article>
+      <article class="rounded-[22px] border border-loomera-borderSoft bg-white p-3 sm:p-4">
+        <p class="text-[10px] font-bold leading-5 text-loomera-textMuted sm:text-xs">در انتظار آزادشدن</p>
+        <p class="mt-1.5 break-words text-sm font-black text-loomera-textPrimary sm:text-lg">{{ wallet.pending_balance|floatformat:0 }} تومان</p>
+      </article>
+      <article class="rounded-[22px] border border-loomera-borderSoft bg-white p-3 sm:p-4">
+        <p class="text-[10px] font-bold leading-5 text-loomera-textMuted sm:text-xs">درخواست برداشت در انتظار</p>
+        <p class="mt-1.5 text-sm font-black text-loomera-textPrimary sm:text-lg">{{ pending_withdrawal_count }} مورد</p>
+      </article>
+      <article class="rounded-[22px] border {% if payout_destination_ready %}border-loomera-success/20 bg-loomera-successSoft/45{% else %}border-loomera-warning/20 bg-loomera-warningSoft/45{% endif %} p-3 sm:p-4">
+        <p class="text-[10px] font-bold leading-5 text-loomera-textMuted sm:text-xs">حساب مقصد برداشت</p>
+        <p class="mt-1.5 text-sm font-black {% if payout_destination_ready %}text-loomera-success{% else %}text-loomera-warning{% endif %} sm:text-lg">{% if payout_destination_ready %}آماده{% else %}نیازمند تکمیل{% endif %}</p>
+      </article>
+    </div>
+  </section>
+
+  {% include "dashboards/partials/finance/workspace_nav.html" with active="money" %}
+
+  <div class="lm-task-tabs-anchor" data-lm-task-tabs-anchor="payout" data-lm-task-tabs-label="بخش‌های پول مجموعه" aria-label="بخش‌های پول مجموعه"></div>
+
+  <section id="finance-wallet" class="scroll-mt-28 overflow-hidden rounded-[28px] border border-loomera-borderSoft bg-white/95 shadow-lm-card lg:scroll-mt-36" data-dashboard-workspace-panel data-lm-direct-section data-lm-task-panel="payout" data-lm-task-key="wallet" data-lm-task-label="برداشت" data-lm-task-default data-lm-task-order="1">
+    <header data-lm-direct-section-header class="border-b border-loomera-borderSoft px-4 py-4 sm:px-5 lg:px-6">
+      <p class="text-[11px] font-black text-loomera-primaryText">برداشت وجه</p>
+      <h2 class="mt-1 text-base font-black text-loomera-textPrimary sm:text-lg">درخواست برداشت از موجودی آماده</h2>
+      <p class="mt-1 text-xs leading-6 text-loomera-textMuted">مبلغ درخواست‌شده به حسابی که در «اطلاعات پرداخت» ثبت کرده‌ای واریز می‌شود.</p>
+    </header>
+
+    <div class="grid gap-5 p-4 sm:p-5 lg:grid-cols-[minmax(0,.9fr)_minmax(0,1.1fr)] lg:p-6">
+      <div class="min-w-0">
+        {% if payout_destination_ready %}
+          <div class="mb-4 rounded-[22px] border border-loomera-borderSoft bg-loomera-bgSubtle/60 p-4">
+            <div class="flex items-start justify-between gap-3">
+              <div class="min-w-0">
+                <p class="text-[11px] font-black text-loomera-primaryText">حساب مقصد</p>
+                <p class="mt-1 truncate text-sm font-black text-loomera-textPrimary">{{ salon.payout_account_holder_name }}</p>
+                <p class="mt-1 truncate text-xs text-loomera-textMuted" dir="ltr">{{ salon.payout_iban }}</p>
+                {% if salon.payout_bank_name %}<p class="mt-1 text-xs text-loomera-textMuted">{{ salon.payout_bank_name }}</p>{% endif %}
+              </div>
+              <span class="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-loomera-successSoft text-loomera-success"><i class="fa-solid fa-building-columns text-xs" aria-hidden="true"></i></span>
+            </div>
+            <p class="mt-3 border-t border-loomera-borderSoft pt-3 text-[11px] leading-6 text-loomera-textMuted">برای تغییر مقصد، از تب «اطلاعات پرداخت» استفاده کن؛ لازم نیست هنگام هر برداشت دوباره شبا را وارد کنی.</p>
+          </div>
+
+          <form method="post" action="{% url 'dashboards:finance_withdraw' %}" class="space-y-4 rounded-[24px] border border-loomera-borderSoft bg-white p-4 shadow-lm-soft">
+            {% csrf_token %}
+            {% if withdraw_form.non_field_errors %}<div class="rounded-2xl bg-loomera-dangerSoft p-3 text-sm text-loomera-danger">{{ withdraw_form.non_field_errors }}</div>{% endif %}
+            <div>
+              <label class="mb-2 block text-sm font-black text-loomera-textPrimary" for="{{ withdraw_form.amount.id_for_label }}">مبلغ برداشت</label>
+              {{ withdraw_form.amount }}
+              {% if withdraw_form.amount.errors %}<p class="mt-1 text-xs font-bold text-loomera-danger">{{ withdraw_form.amount.errors|join:'، ' }}</p>{% endif %}
+              <p class="mt-2 text-[11px] leading-6 text-loomera-textMuted">حداقل {{ min_amount|floatformat:0 }} و حداکثر {{ max_amount|floatformat:0 }} تومان؛ سقف واقعی به موجودی قابل برداشت محدود است.</p>
+            </div>
+            {% if withdraw_form.iban.errors or withdraw_form.account_holder_name.errors or withdraw_form.bank_name.errors %}
+              <div class="rounded-2xl bg-loomera-dangerSoft p-3 text-xs leading-6 text-loomera-danger">اطلاعات حساب مقصد معتبر نیست. ابتدا تب «اطلاعات پرداخت» را اصلاح کن.</div>
+            {% endif %}
+            <button type="submit" class="inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-full bg-loomera-primary px-5 py-3 text-sm font-black text-white shadow-sm sm:w-auto">ثبت درخواست برداشت</button>
+          </form>
+        {% else %}
+          <div class="rounded-[24px] border border-loomera-warning/20 bg-loomera-warningSoft/55 p-5">
+            <span class="inline-flex h-11 w-11 items-center justify-center rounded-2xl bg-white text-loomera-warning shadow-sm"><i class="fa-solid fa-building-columns" aria-hidden="true"></i></span>
+            <h3 class="mt-4 text-base font-black text-loomera-textPrimary">اول حساب مقصد برداشت را کامل کن</h3>
+            <p class="mt-2 text-sm leading-7 text-loomera-textSecondary">برای ثبت برداشت، شماره شبا و نام صاحب حساب لازم است. این اطلاعات را یک‌بار در تب «اطلاعات پرداخت» ثبت می‌کنی و در برداشت‌های بعدی دوباره از تو پرسیده نمی‌شود.</p>
+          </div>
+        {% endif %}
+      </div>
+
+      <div class="min-w-0">
+        <div class="flex items-center justify-between gap-3">
+          <div><p class="text-[11px] font-black text-loomera-primaryText">پیگیری برداشت</p><h3 class="mt-1 text-base font-black text-loomera-textPrimary">درخواست‌های اخیر</h3></div>
+          <span class="rounded-full bg-loomera-bgSubtle px-3 py-1 text-[11px] font-black text-loomera-textMuted">{{ recent_withdrawals|length }} مورد اخیر</span>
+        </div>
+        <div class="mt-4 space-y-2.5">
+          {% for item in recent_withdrawals %}
+            <article class="rounded-[22px] border border-loomera-borderSoft bg-white p-3.5">
+              <div class="flex items-start justify-between gap-3">
+                <div class="min-w-0"><strong class="block text-sm font-black text-loomera-textPrimary">{{ item.amount|floatformat:0 }} تومان</strong><span class="mt-1 block text-[11px] text-loomera-textMuted">{{ item.account_holder_name }}{% if item.bank_name %} • {{ item.bank_name }}{% endif %}</span></div>
+                <span class="rounded-full px-2.5 py-1 text-[10px] font-black {% if item.status == 'approved' %}bg-loomera-successSoft text-loomera-success{% elif item.status == 'rejected' or item.status == 'cancelled' %}bg-loomera-dangerSoft text-loomera-danger{% else %}bg-loomera-warningSoft text-loomera-warning{% endif %}">{{ item.get_status_display }}</span>
+              </div>
+              {% if item.status == 'pending' %}
+                <form method="post" action="{% url 'dashboards:finance_withdraw_cancel' item.id %}" class="mt-3">
+                  {% csrf_token %}<input type="hidden" name="next" value="{% url 'dashboards:payout_settings' %}">
+                  <button class="rounded-full border border-loomera-warning/20 bg-white px-3 py-1.5 text-xs font-black text-loomera-warning">لغو درخواست</button>
+                </form>
+              {% endif %}
+            </article>
+          {% empty %}
+            <div class="rounded-[22px] border border-dashed border-loomera-borderSoft bg-loomera-bgSubtle/60 p-5 text-center text-sm leading-7 text-loomera-textMuted">هنوز درخواست برداشتی ثبت نشده است.</div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <form method="post" class="space-y-4" data-payout-settings-form>
+    {% csrf_token %}
+    {% if form.non_field_errors %}<div class="rounded-2xl bg-loomera-dangerSoft p-3 text-sm text-loomera-danger">{{ form.non_field_errors }}</div>{% endif %}
+
+    <section id="finance-payment" class="scroll-mt-28 overflow-hidden rounded-[28px] border border-loomera-borderSoft bg-white/95 shadow-lm-card lg:scroll-mt-36" data-dashboard-workspace-panel data-lm-direct-section data-lm-task-panel="payout" data-lm-task-key="payment" data-lm-task-label="اطلاعات پرداخت" data-lm-task-order="2">
+      <header data-lm-direct-section-header class="border-b border-loomera-borderSoft px-4 py-4 sm:px-5 lg:px-6">
+        <p class="text-[11px] font-black text-loomera-primaryText">حساب مقصد</p>
+        <h2 class="mt-1 text-base font-black text-loomera-textPrimary sm:text-lg">اطلاعات پرداخت مجموعه</h2>
+        <p class="mt-1 text-xs leading-6 text-loomera-textMuted">این حساب مقصد تمام برداشت‌های مجموعه است؛ فقط وقتی حساب عوض شد آن را ویرایش کن.</p>
+      </header>
+      <div class="p-4 sm:p-5 lg:p-6">
+        <div class="mb-5 flex items-center gap-3 rounded-[22px] border {% if salon.payout_profile_complete %}border-loomera-success/20 bg-loomera-successSoft/45{% else %}border-loomera-warning/20 bg-loomera-warningSoft/45{% endif %} p-4">
+          <span class="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-white {% if salon.payout_profile_complete %}text-loomera-success{% else %}text-loomera-warning{% endif %} shadow-sm"><i class="fa-solid {% if salon.payout_profile_complete %}fa-circle-check{% else %}fa-circle-exclamation{% endif %}" aria-hidden="true"></i></span>
+          <div class="min-w-0"><p class="text-sm font-black text-loomera-textPrimary">{% if salon.payout_profile_complete %}اطلاعات پرداخت کامل است{% else %}اطلاعات پرداخت نیاز به تکمیل دارد{% endif %}</p><p class="mt-1 text-xs leading-6 text-loomera-textMuted">نام صاحب حساب، شبا و شماره تماس مسئول مالی برای پیگیری پرداخت‌ها استفاده می‌شوند.</p></div>
+        </div>
+
+        <div class="grid gap-4 sm:grid-cols-2">
+          {% for field in form %}
+            {% if field.name == 'payout_account_holder_name' or field.name == 'payout_iban' or field.name == 'payout_bank_name' or field.name == 'payout_contact_mobile' %}
+              <div>
+                <label class="mb-2 block text-sm font-black text-loomera-textPrimary" for="{{ field.id_for_label }}">{{ field.label }}</label>
+                {{ field }}
+                {% if field.help_text %}<p class="mt-1 text-[11px] leading-5 text-loomera-textMuted">{{ field.help_text }}</p>{% endif %}
+                {% if field.errors %}<p class="mt-1 text-xs text-loomera-danger">{{ field.errors|join:'، ' }}</p>{% endif %}
+              </div>
+            {% endif %}
+          {% endfor %}
+        </div>
+
+        <div class="mt-5 flex justify-end rounded-[22px] border border-loomera-borderSoft bg-white/95 p-3 shadow-lm-card">
+          <button type="submit" class="inline-flex min-h-11 w-full items-center justify-center rounded-full bg-loomera-primary px-5 py-3 text-sm font-black text-white sm:w-auto">ذخیره اطلاعات پرداخت</button>
+        </div>
+      </div>
+    </section>
+
+    <section id="finance-rules" class="scroll-mt-28 overflow-hidden rounded-[28px] border border-loomera-borderSoft bg-white/95 shadow-lm-card lg:scroll-mt-36" data-dashboard-workspace-panel data-lm-direct-section data-lm-task-panel="payout" data-lm-task-key="rules" data-lm-task-label="قوانین مالی" data-lm-task-order="3">
+      <header data-lm-direct-section-header class="border-b border-loomera-borderSoft px-4 py-4 sm:px-5 lg:px-6">
+        <p class="text-[11px] font-black text-loomera-primaryText">قواعد مالی رزرو</p>
+        <h2 class="mt-1 text-base font-black text-loomera-textPrimary sm:text-lg">لغو، بازگشت وجه و آزادشدن درآمد</h2>
+        <p class="mt-1 text-xs leading-6 text-loomera-textMuted">این تنظیمات مشخص می‌کنند مشتری تا چه زمانی می‌تواند لغو کند، چه مقدار پول برگردد و درآمد مجموعه چه زمانی قابل برداشت شود.</p>
+      </header>
+      <div class="p-4 sm:p-5 lg:p-6">
+        <div class="grid gap-4 sm:grid-cols-3">
+          {% for field in form %}
+            {% if field.name == 'cancellation_window_hours' or field.name == 'cancellation_refund_percent' or field.name == 'payout_delay_days' %}
+              <div>
+                <label class="mb-2 block text-sm font-black text-loomera-textPrimary" for="{{ field.id_for_label }}">{{ field.label }}</label>
+                {{ field }}
+                {% if field.help_text %}<p class="mt-1 text-[11px] leading-5 text-loomera-textMuted">{{ field.help_text }}</p>{% endif %}
+                {% if field.errors %}<p class="mt-1 text-xs text-loomera-danger">{{ field.errors|join:'، ' }}</p>{% endif %}
+              </div>
+            {% endif %}
+          {% endfor %}
+        </div>
+        <div class="mt-4">
+          <label class="mb-2 block text-sm font-black text-loomera-textPrimary" for="{{ form.cancellation_policy_note.id_for_label }}">{{ form.cancellation_policy_note.label }}</label>
+          {{ form.cancellation_policy_note }}
+          {% if form.cancellation_policy_note.help_text %}<p class="mt-1 text-[11px] leading-5 text-loomera-textMuted">{{ form.cancellation_policy_note.help_text }}</p>{% endif %}
+          {% if form.cancellation_policy_note.errors %}<p class="mt-1 text-xs text-loomera-danger">{{ form.cancellation_policy_note.errors|join:'، ' }}</p>{% endif %}
+        </div>
+        <div class="mt-5 flex justify-end rounded-[22px] border border-loomera-borderSoft bg-white/95 p-3 shadow-lm-card">
+          <button type="submit" class="inline-flex min-h-11 w-full items-center justify-center rounded-full bg-loomera-primary px-5 py-3 text-sm font-black text-white sm:w-auto">ذخیره قوانین مالی</button>
+        </div>
+      </div>
+    </section>
+  </form>
+
+  <section id="finance-history" class="scroll-mt-28 overflow-hidden rounded-[28px] border border-loomera-borderSoft bg-white/95 shadow-lm-card lg:scroll-mt-36" data-dashboard-workspace-panel data-lm-direct-section data-lm-task-panel="payout" data-lm-task-key="history" data-lm-task-label="سابقه" data-lm-task-order="4">
+    <header data-lm-direct-section-header class="flex items-start justify-between gap-3 border-b border-loomera-borderSoft px-4 py-4 sm:px-5 lg:px-6">
+      <div><p class="text-[11px] font-black text-loomera-primaryText">آخرین فعالیت‌ها</p><h2 class="mt-1 text-base font-black text-loomera-textPrimary sm:text-lg">پول مجموعه چه زمانی تغییر کرده؟</h2><p class="mt-1 text-xs leading-6 text-loomera-textMuted">آخرین تغییرات موجودی و ثبت‌های تسویه را اینجا مرور کن؛ برای جزئیات کامل وارد گزارش تراکنش‌ها شو.</p></div>
+      <a href="{% url 'dashboards:finance_reports' %}" class="shrink-0 rounded-full border border-loomera-borderSoft bg-white px-3 py-2 text-xs font-black text-loomera-primaryText">گزارش کامل</a>
+    </header>
+    <div class="grid gap-5 p-4 sm:p-5 lg:grid-cols-2 lg:p-6">
+      <div>
+        <h3 class="text-sm font-black text-loomera-textPrimary">تغییرات موجودی</h3>
+        <div class="mt-3 space-y-2.5">
+          {% for tx in recent_wallet_transactions %}
+            <article class="rounded-[20px] border border-loomera-borderSoft bg-loomera-bgSubtle/55 p-3.5">
+              <div class="flex items-start justify-between gap-3"><div class="min-w-0"><strong class="block truncate text-xs font-black text-loomera-textPrimary">{{ tx.get_transaction_type_display }}</strong><span class="mt-1 block text-[10px] text-loomera-textMuted">{{ tx.created_at|jalali_datetime }}{% if tx.order %} • {{ tx.order.order_number }}{% endif %}</span></div><div class="text-left text-[10px] leading-5 text-loomera-textSecondary"><div>در انتظار: {{ tx.pending_delta }} تومان</div><div>قابل برداشت: {{ tx.available_delta }} تومان</div></div></div>
+              {% if tx.description %}<p class="mt-2 text-[11px] leading-5 text-loomera-textMuted">{{ tx.description }}</p>{% endif %}
+            </article>
+          {% empty %}<p class="rounded-[20px] border border-dashed border-loomera-borderSoft p-5 text-center text-sm text-loomera-textMuted">هنوز سابقه‌ای ثبت نشده است.</p>{% endfor %}
+        </div>
+      </div>
+      <div>
+        <h3 class="text-sm font-black text-loomera-textPrimary">تسویه‌های اخیر</h3>
+        <div class="mt-3 space-y-2.5">
+          {% for item in recent_settlements %}
+            <article class="rounded-[20px] border border-loomera-borderSoft bg-loomera-bgSubtle/55 p-3.5">
+              <div class="flex items-start justify-between gap-3"><div><strong class="block text-xs font-black text-loomera-textPrimary">{{ item.order.order_number }}</strong><span class="mt-1 block text-[10px] text-loomera-textMuted">{{ item.get_payout_state_display }}</span></div><strong class="text-xs font-black text-loomera-textPrimary">{{ item.net_amount_due_to_salon|floatformat:0 }} تومان</strong></div>
+              {% if item.payout_hold_reason %}<p class="mt-2 text-[11px] leading-5 text-loomera-warning">{{ item.payout_hold_reason }}</p>{% endif %}
+            </article>
+          {% empty %}<p class="rounded-[20px] border border-dashed border-loomera-borderSoft p-5 text-center text-sm text-loomera-textMuted">هنوز تسویه‌ای ثبت نشده است.</p>{% endfor %}
+        </div>
+      </div>
+    </div>
+  </section>
+</section>
+{% endblock %}

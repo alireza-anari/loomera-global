@@ -1,0 +1,141 @@
+{% extends "dashboard_template.html" %}
+{% load static %}
+{% block title %}ثبت نوبت{% endblock %}
+{% block body_attrs %}data-page="manual-booking"{% endblock %}
+
+{% block head %}
+  {{ block.super }}
+  <style>
+    @media (min-width:1024px){
+      body[data-page="manual-booking"] [data-manual-booking-layout]{display:grid;grid-template-columns:minmax(0,1fr)340px;align-items:start}
+      body[data-page="manual-booking"] [data-booking-preview-column]{position:sticky;top:var(--lm-dashboard-workspace-offset,156px);align-self:start}
+    }
+  </style>
+{% endblock %}
+
+{% block content %}
+  <section class="min-w-0 max-w-full space-y-4 pb-20 lg:pb-0" data-manual-booking-page>
+    <header class="rounded-[28px] border border-loomera-borderSoft bg-white/95 p-4 shadow-lm-card sm:p-5">
+      <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <div class="min-w-0">
+          <a href="{{ back_url }}" class="inline-flex min-h-10 items-center gap-2 rounded-full border border-loomera-borderSoft bg-white px-3 text-xs font-black text-loomera-textSecondary shadow-sm"><i class="fa-solid fa-arrow-right text-[10px]" aria-hidden="true"></i> نوبت‌ها</a>
+          <h1 id="manual-booking-title" class="mt-3 text-xl font-black text-loomera-textPrimary sm:text-2xl">ثبت نوبت جدید</h1>
+          <p class="mt-1 text-sm leading-7 text-loomera-textMuted">مشتری، خدمت و متخصص را انتخاب کن؛ سپس یکی از زمان‌های آزاد واقعی را ثبت کن.</p>
+        </div>
+        <span class="inline-flex w-fit items-center gap-2 rounded-full bg-loomera-primarySoft px-3 py-2 text-xs font-black text-loomera-primaryText"><i class="fa-solid fa-wallet text-[10px]" aria-hidden="true"></i> پرداخت در مجموعه • بدون کارمزد</span>
+      </div>
+    </header>
+
+    <section class="grid min-w-0 gap-4 lg:grid-cols-[minmax(0,1fr)_340px] lg:items-start" data-manual-booking-layout>
+      <form method="post" id="manualBookingForm" class="min-w-0 space-y-4">
+        {% csrf_token %}
+        {% if manual_booking_form.non_field_errors %}<div class="rounded-[22px] border border-loomera-danger/20 bg-loomera-dangerSoft px-4 py-3 text-sm leading-7 text-loomera-danger">{{ manual_booking_form.non_field_errors }}</div>{% endif %}
+
+        <div data-lm-task-tabs-anchor="manual-booking" data-lm-task-tabs-label="بخش‌های ثبت نوبت"></div>
+
+        <section id="manual-booking-section-identity" class="rounded-[26px] border border-loomera-borderSoft bg-white/95 p-4 shadow-lm-card sm:p-5" data-lm-task-panel="manual-booking" data-lm-task-key="identity" data-lm-task-label="مشتری و خدمت" data-lm-task-default data-lm-task-order="1">
+          <div class="mb-4"><h2 class="text-base font-black text-loomera-textPrimary">مشتری و خدمت</h2><p class="mt-1 text-xs leading-6 text-loomera-textMuted">ابتدا مشخص کن این نوبت برای چه کسی و چه خدمتی است.</p></div>
+
+          <div class="space-y-4">
+            <div>
+              <div class="mb-2 flex items-center justify-between gap-3"><label class="text-sm font-black text-loomera-textPrimary" for="customerAutocomplete">مشتری</label><a href="{{ add_customer_url }}?next={{ request.path|urlencode }}" class="text-xs font-black text-loomera-primaryText">+ مشتری جدید</a></div>
+              <div class="relative" data-autocomplete-root="customer">
+                <input type="text" id="customerAutocomplete" autocomplete="off" placeholder="نام یا موبایل مشتری" class="w-full rounded-[20px] border border-loomera-borderSoft bg-white px-4 py-3 text-sm text-loomera-textPrimary outline-none transition focus:border-loomera-primary/30 focus:ring-2 focus:ring-loomera-primary/10">
+                <input type="hidden" name="customer" id="id_customer" value="{{ manual_booking_form.data.customer|default:'' }}">
+                <div id="customerSuggestions" class="absolute left-0 right-0 top-[calc(100%+.5rem)] z-40 hidden max-h-72 overflow-y-auto rounded-[22px] border border-loomera-borderSoft bg-white shadow-lm-elevated"></div>
+              </div>
+              {% if manual_booking_form.customer.errors %}<p class="mt-2 text-xs text-loomera-danger">{{ manual_booking_form.customer.errors.0 }}</p>{% endif %}
+            </div>
+
+            <div class="grid gap-4 sm:grid-cols-2">
+              <div>
+                <label class="mb-2 block text-sm font-black text-loomera-textPrimary" for="serviceAutocomplete">خدمت</label>
+                <div class="relative" data-autocomplete-root="service">
+                  <input type="text" id="serviceAutocomplete" autocomplete="off" placeholder="نام خدمت" class="w-full rounded-[20px] border border-loomera-borderSoft bg-white px-4 py-3 text-sm text-loomera-textPrimary outline-none transition focus:border-loomera-primary/30 focus:ring-2 focus:ring-loomera-primary/10">
+                  <input type="hidden" name="service" id="id_service" value="{{ manual_booking_form.data.service|default:'' }}">
+                  <div id="serviceSuggestions" class="absolute left-0 right-0 top-[calc(100%+.5rem)] z-40 hidden max-h-72 overflow-y-auto rounded-[22px] border border-loomera-borderSoft bg-white shadow-lm-elevated"></div>
+                </div>
+                {% if manual_booking_form.service.errors %}<p class="mt-2 text-xs text-loomera-danger">{{ manual_booking_form.service.errors.0 }}</p>{% endif %}
+              </div>
+
+              <div>
+                <label class="mb-2 block text-sm font-black text-loomera-textPrimary" for="stylistAutocomplete">متخصص</label>
+                <div class="relative" data-autocomplete-root="stylist">
+                  <input type="text" id="stylistAutocomplete" autocomplete="off" placeholder="متخصص ارائه‌دهنده" class="w-full rounded-[20px] border border-loomera-borderSoft bg-white px-4 py-3 text-sm text-loomera-textPrimary outline-none transition focus:border-loomera-primary/30 focus:ring-2 focus:ring-loomera-primary/10">
+                  <input type="hidden" name="stylist" id="id_stylist" value="{{ manual_booking_form.data.stylist|default:'' }}">
+                  <div id="stylistSuggestions" class="absolute left-0 right-0 top-[calc(100%+.5rem)] z-40 hidden max-h-72 overflow-y-auto rounded-[22px] border border-loomera-borderSoft bg-white shadow-lm-elevated"></div>
+                </div>
+                {% if manual_booking_form.stylist.errors %}<p class="mt-2 text-xs text-loomera-danger">{{ manual_booking_form.stylist.errors.0 }}</p>{% endif %}
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section id="manual-booking-section-time" class="rounded-[26px] border border-loomera-borderSoft bg-white/95 p-4 shadow-lm-card sm:p-5" data-lm-task-panel="manual-booking" data-lm-task-key="time" data-lm-task-label="تاریخ و ساعت" data-lm-task-order="2">
+          <div class="mb-4"><h2 class="text-base font-black text-loomera-textPrimary">تاریخ و ساعت</h2><p class="mt-1 text-xs leading-6 text-loomera-textMuted">فقط زمان‌هایی نمایش داده می‌شوند که با برنامه متخصص و رزروهای قبلی تداخل ندارند.</p></div>
+
+          {# Keep the legacy JS contract id without exposing an unrestricted date picker. #}
+          <input type="text" id="manualBookingDatePicker" class="sr-only" tabindex="-1" aria-hidden="true" autocomplete="off">
+          <input type="hidden" name="appointment_date" id="id_appointment_date" value="{{ manual_booking_form.data.appointment_date|default:'' }}">
+          {% if manual_booking_form.appointment_date.errors %}<p class="mt-2 text-xs text-loomera-danger">{{ manual_booking_form.appointment_date.errors.0 }}</p>{% endif %}
+
+          <section class="mt-4 rounded-[22px] border border-loomera-borderSoft bg-loomera-bgSubtle/45">
+            <header class="flex min-h-12 items-center justify-between gap-3 px-4 py-3">
+              <div class="min-w-0">
+                <h3 id="manualBookingMonthTitle" class="truncate text-sm font-black text-loomera-textPrimary">روزهای آزاد متخصص</h3>
+                <span id="manualBookingCalendarHint" class="mt-1 block truncate text-xs text-loomera-textMuted">ابتدا خدمت و متخصص را انتخاب کن</span>
+              </div>
+              <i class="fa-regular fa-calendar-check text-sm text-loomera-primary" aria-hidden="true"></i>
+            </header>
+            <div class="border-t border-loomera-borderSoft p-3">
+              <div id="manualBookingCalendar" class="grid grid-cols-2 gap-2 sm:grid-cols-3 xl:grid-cols-4"></div>
+              <button type="button" id="manualBookingMoreDates" class="mt-3 hidden min-h-10 w-full items-center justify-center rounded-2xl border border-loomera-borderSoft bg-white px-4 text-xs font-black text-loomera-primaryText">تاریخ‌های آزاد بیشتر</button>
+            </div>
+          </section>
+
+          <div class="mt-5">
+            <div class="flex items-center justify-between gap-3"><label class="text-sm font-black text-loomera-textPrimary">ساعت شروع</label><span id="manualBookingSelectedDateLabel" class="truncate text-xs text-loomera-textMuted"></span></div>
+            <input type="hidden" name="start_time" id="id_start_time" value="{{ manual_booking_form.data.start_time|default:'' }}">
+            <div id="manualBookingTimeSlots" class="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-3 xl:grid-cols-4"></div>
+            {% if manual_booking_form.start_time.errors %}<p class="mt-2 text-xs text-loomera-danger">{{ manual_booking_form.start_time.errors.0 }}</p>{% endif %}
+          </div>
+        </section>
+
+        <details id="manual-booking-section-submit" class="group rounded-[24px] border border-loomera-borderSoft bg-white/95 shadow-lm-soft" data-lm-task-panel="manual-booking" data-lm-task-key="notes" data-lm-task-label="یادداشت" data-lm-task-order="3">
+          <summary class="flex min-h-14 cursor-pointer list-none items-center justify-between gap-3 px-4 py-3 sm:px-5"><div><h2 class="text-sm font-black text-loomera-textPrimary">یادداشت داخلی — اختیاری</h2><p class="mt-1 text-xs text-loomera-textMuted">برای پذیرش یا تیم</p></div><i class="fa-solid fa-chevron-down text-xs text-loomera-textMuted transition group-open:rotate-180" aria-hidden="true"></i></summary>
+          <div class="border-t border-loomera-borderSoft p-4 sm:p-5"><label class="sr-only" for="id_notes">یادداشت داخلی</label>{{ manual_booking_form.notes }}{% if manual_booking_form.notes.errors %}<p class="mt-2 text-xs text-loomera-danger">{{ manual_booking_form.notes.errors.0 }}</p>{% endif %}</div>
+        </details>
+      </form>
+
+      <aside id="manual-booking-section-preview" class="min-w-0" data-booking-preview-column>
+        <section class="rounded-[26px] border border-loomera-borderSoft bg-white/95 p-4 shadow-lm-card sm:p-5" data-booking-preview-card>
+          <h2 id="manual-booking-summary-title" class="text-base font-black text-loomera-textPrimary">خلاصه نوبت</h2>
+          <dl class="mt-4 space-y-3 text-sm">
+            <div class="rounded-2xl bg-loomera-bgSubtle p-3"><dt class="text-xs text-loomera-textMuted">مشتری</dt><dd id="manualBookingSummaryCustomer" class="mt-1 truncate font-black text-loomera-textPrimary">انتخاب نشده</dd></div>
+            <div class="grid grid-cols-2 gap-2">
+              <div class="rounded-2xl bg-loomera-bgSubtle p-3"><dt class="text-xs text-loomera-textMuted">خدمت</dt><dd id="manualBookingSummaryService" class="mt-1 truncate font-black text-loomera-textPrimary">انتخاب نشده</dd></div>
+              <div class="rounded-2xl bg-loomera-bgSubtle p-3"><dt class="text-xs text-loomera-textMuted">متخصص</dt><dd id="manualBookingSummaryStylist" class="mt-1 truncate font-black text-loomera-textPrimary">انتخاب نشده</dd></div>
+            </div>
+            <div class="grid grid-cols-2 gap-2">
+              <div class="rounded-2xl bg-loomera-bgSubtle p-3"><dt class="text-xs text-loomera-textMuted">تاریخ</dt><dd id="manualBookingSummaryDate" class="mt-1 truncate font-black text-loomera-textPrimary">—</dd></div>
+              <div class="rounded-2xl bg-loomera-bgSubtle p-3"><dt class="text-xs text-loomera-textMuted">ساعت</dt><dd id="manualBookingSummaryTime" class="mt-1 truncate font-black text-loomera-textPrimary">—</dd></div>
+            </div>
+            <div class="rounded-2xl bg-loomera-primarySoft p-3"><dt class="text-xs font-bold text-loomera-primaryText">آمادگی ثبت</dt><dd id="manualBookingSummaryStatus" class="mt-1 text-xs font-black leading-6 text-loomera-primaryText">برای ثبت، همه مراحل را کامل کن.</dd></div>
+          </dl>
+          <button type="submit" form="manualBookingForm" class="mt-4 hidden min-h-12 w-full items-center justify-center gap-2 rounded-2xl bg-loomera-primary px-5 text-sm font-black text-white shadow-[0_18px_38px_rgba(115,92,190,.18)] lg:inline-flex"><i class="fa-solid fa-calendar-check text-xs" aria-hidden="true"></i> ثبت نوبت</button>
+        </section>
+      </aside>
+    </section>
+
+    <div data-mobile-primary-action class="fixed inset-x-3 bottom-[calc(env(safe-area-inset-bottom,0px)+5.25rem)] z-40 lg:hidden">
+      <button type="submit" form="manualBookingForm" class="inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-2xl bg-loomera-primary px-5 text-sm font-black text-white shadow-lm-elevated"><i class="fa-solid fa-calendar-check text-xs" aria-hidden="true"></i> ثبت نوبت</button>
+    </div>
+
+    <div id="manualBookingData" class="hidden" data-salon-id="{{ manual_booking_salon.id }}" data-availability-url="{% url 'dashboards:manual_booking_availability' salon_id=manual_booking_salon.id %}"></div>
+    {{ manual_booking_customers_json|json_script:"manualBookingCustomersData" }}
+    {{ manual_booking_services_json|json_script:"manualBookingServicesData" }}
+    {{ manual_booking_stylists_json|json_script:"manualBookingStylistsData" }}
+  </section>
+{% endblock %}
+
+{% block js %}<script src="{% static 'js/jalali_date.js' %}"></script>{% endblock %}

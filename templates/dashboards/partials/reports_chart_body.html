@@ -1,0 +1,47 @@
+{% if reports_dashboard.chart.is_empty %}
+  {% include "dashboards/components/empty_state.html" with icon="fa-solid fa-chart-line" title="برای این بازه داده‌ای وجود ندارد" description="بازه یا فیلترها را تغییر بده تا روند درآمد و رزروها نمایش داده شود." %}
+{% else %}
+  <div class="space-y-3" data-reports-trend-chart>
+    <div class="grid grid-cols-2 gap-2">
+      {% for item in reports_dashboard.chart.summary %}
+        {% if forloop.counter <= 2 %}
+          <div class="rounded-2xl bg-loomera-bgSubtle px-3 py-2.5">
+            <span class="text-[9px] font-bold text-loomera-textMuted">{{ item.label }}</span>
+            <strong class="mt-1 block truncate text-xs font-black text-loomera-textPrimary">{{ item.value }}</strong>
+          </div>
+        {% endif %}
+      {% endfor %}
+    </div>
+
+    <div class="rounded-[20px] border border-loomera-borderSoft bg-white p-3">
+      <div class="mb-2 flex items-center gap-3 text-[9px] font-black text-loomera-textMuted">
+        <span class="inline-flex items-center gap-1.5">
+          <span class="h-2 w-2 rounded-full bg-loomera-primary"></span>
+          درآمد
+        </span>
+        <span class="inline-flex items-center gap-1.5">
+          <span class="h-2 w-2 rounded-sm border border-loomera-primary/30 bg-loomera-primarySoft"></span>
+          رزرو
+        </span>
+      </div>
+
+      <canvas data-reports-trend-canvas
+              style="display:block;width:100%;height:260px;"
+              role="img"
+              aria-label="نمودار روند درآمد و تعداد رزروها"></canvas>
+
+      <div hidden>
+        {% for item in reports_dashboard.chart.bars %}
+          <span data-report-trend-point
+                data-label="{{ item.label|escape }}"
+                data-revenue="{{ item.revenue }}"
+                data-appointments="{{ item.appointments }}"></span>
+        {% endfor %}
+      </div>
+
+      <p class="mt-1 text-[9px] leading-5 text-loomera-textMuted">
+        خط بنفش روند درآمد و ستون‌های کم‌رنگ تعداد رزروهای هر بازه را نشان می‌دهند.
+      </p>
+    </div>
+  </div>
+{% endif %}

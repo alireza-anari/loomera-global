@@ -1,0 +1,262 @@
+{% extends "dashboard_template.html" %}
+{% load static %}
+
+{% block title %}ثبت نوبت{% endblock %}
+{% block body_attrs %}data-page="stylist-add-booking"{% endblock %}
+
+{% block head %}
+  {{ block.super }}
+  <link rel="stylesheet" href="{% static 'css/pages/stylist_workspace.css' %}">
+{% endblock %}
+
+{% block content %}
+  {% url 'dashboards:stylist_appointments' as stylist_appointments_url %}
+
+  <section class="min-w-0 max-w-full space-y-4 overflow-visible lm-stylist-workspace"
+           data-dashboard-workspace-root
+           data-dashboard-page="stylist-add-booking"
+           data-stylist-booking-availability-url="{% url 'dashboards:stylist_quick_link_options' %}">
+
+    <header class="rounded-[24px] border border-loomera-borderSoft bg-white px-4 py-3.5 shadow-lm-card sm:px-5 sm:py-4">
+      <div class="flex items-center justify-between gap-3">
+        <div class="min-w-0">
+          <p class="text-[11px] font-black text-loomera-primaryText">نوبت شخصی</p>
+          <h1 class="mt-1 text-xl font-black text-loomera-textPrimary sm:text-2xl">ثبت نوبت</h1>
+        </div>
+
+        <a href="{{ stylist_appointments_url }}"
+           class="inline-flex min-h-10 shrink-0 items-center justify-center gap-2 rounded-full border border-loomera-borderSoft bg-white px-4 py-2 text-xs font-black text-loomera-textSecondary transition hover:border-loomera-primary/25 hover:bg-loomera-primarySoft/35 hover:text-loomera-primaryText">
+          <i class="fa-regular fa-calendar-check text-[11px]" aria-hidden="true"></i>
+          <span>نوبت‌های من</span>
+        </a>
+      </div>
+    </header>
+
+    <section id="stylist-add-booking-section-form"
+             class="group scroll-mt-28 overflow-visible rounded-[28px] border border-loomera-borderSoft bg-white/95 shadow-lm-card lg:scroll-mt-36 lm-stylist-form-shell"
+             data-dashboard-workspace-panel
+             data-lm-direct-section>
+
+      <header data-lm-direct-section-header
+              class="border-b border-loomera-borderSoft bg-white/95 px-4 py-3.5 sm:px-5 lg:px-6">
+        <div class="flex items-center gap-3">
+          <span class="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-loomera-primarySoft text-loomera-primaryText">
+            <i class="fa-regular fa-calendar-plus" aria-hidden="true"></i>
+          </span>
+          <div class="min-w-0">
+            <h2 class="text-base font-black text-loomera-textPrimary sm:text-lg">اطلاعات نوبت</h2>
+            <p class="mt-0.5 text-xs leading-6 text-loomera-textMuted">مشتری، خدمت و زمان نوبت را مشخص کن.</p>
+          </div>
+        </div>
+      </header>
+
+      <div class="p-4 sm:p-5 lg:p-6">
+        <form method="post" class="space-y-4" id="stylistAddBookingForm">
+          {% csrf_token %}
+
+          {% if form.non_field_errors %}
+            <div class="rounded-[22px] border border-rose-200 bg-rose-50 px-4 py-3 text-sm font-bold leading-7 text-rose-700" role="alert">
+              {% for error in form.non_field_errors %}
+                <p>{{ error }}</p>
+              {% endfor %}
+            </div>
+          {% endif %}
+
+          <div class="lm-task-tabs-anchor"
+               data-lm-task-tabs-anchor="stylist-add-booking-form"
+               data-lm-task-tabs-label="بخش‌های ثبت نوبت"
+               aria-label="بخش‌های ثبت نوبت"></div>
+
+          <section class="overflow-hidden rounded-[24px] border border-loomera-borderSoft bg-white shadow-lm-soft"
+                   data-lm-task-panel="stylist-add-booking-form"
+                   data-lm-task-key="customer"
+                   data-lm-task-label="مشتری و خدمت"
+                   data-lm-task-default
+                   data-lm-task-order="1">
+
+            <header class="border-b border-loomera-borderSoft bg-loomera-bgSubtle/55 px-4 py-3 sm:px-5">
+              <div class="flex items-center gap-3">
+                <span class="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-white text-loomera-primaryText shadow-sm">
+                  <i class="fa-solid fa-user-check text-xs" aria-hidden="true"></i>
+                </span>
+                <div class="min-w-0">
+                  <h3 class="text-sm font-black text-loomera-textPrimary">مشتری و خدمت</h3>
+                  <p class="mt-0.5 text-[11px] leading-5 text-loomera-textMuted">از مشتری‌ها و خدمات فعال همین مجموعه انتخاب کن.</p>
+                </div>
+              </div>
+            </header>
+
+            <div class="grid gap-4 p-4 sm:p-5 md:grid-cols-2">
+              <div>
+                <label for="{{ form.customer.id_for_label }}" class="mb-2 flex items-center gap-2 text-sm font-black text-loomera-textPrimary">
+                  <i class="fa-regular fa-user text-xs text-loomera-primaryText" aria-hidden="true"></i>
+                  {{ form.customer.label }}
+                </label>
+
+                {{ form.customer }}
+
+                {% if form.customer.errors %}
+                  <div class="mt-2 rounded-xl bg-rose-50 px-3 py-2 text-xs font-bold leading-6 text-rose-600">
+                    {% for error in form.customer.errors %}<p>{{ error }}</p>{% endfor %}
+                  </div>
+                {% endif %}
+
+                <div class="mt-2 flex flex-wrap items-center justify-between gap-2">
+                  <span class="text-[11px] leading-5 text-loomera-textMuted">مشتری در فهرست نیست؟</span>
+                  <a href="{{ add_customer_url }}"
+                     class="inline-flex min-h-8 items-center gap-1.5 rounded-full bg-loomera-primarySoft px-3 py-1.5 text-[11px] font-black text-loomera-primaryText transition hover:bg-loomera-primary hover:text-white">
+                    <i class="fa-solid fa-user-plus text-[9px]" aria-hidden="true"></i>
+                    افزودن مشتری
+                  </a>
+                </div>
+              </div>
+
+              <div>
+                <label for="{{ form.service.id_for_label }}" class="mb-2 flex items-center gap-2 text-sm font-black text-loomera-textPrimary">
+                  <i class="fa-solid fa-scissors text-xs text-loomera-primaryText" aria-hidden="true"></i>
+                  {{ form.service.label }}
+                </label>
+
+                {{ form.service }}
+
+                {% if form.service.errors %}
+                  <div class="mt-2 rounded-xl bg-rose-50 px-3 py-2 text-xs font-bold leading-6 text-rose-600">
+                    {% for error in form.service.errors %}<p>{{ error }}</p>{% endfor %}
+                  </div>
+                {% endif %}
+
+                <p class="mt-2 text-[11px] leading-5 text-loomera-textMuted">مدت و مبلغ نوبت از تنظیمات همین خدمت محاسبه می‌شود.</p>
+              </div>
+            </div>
+          </section>
+
+          <section class="overflow-hidden rounded-[24px] border border-loomera-borderSoft bg-white shadow-lm-soft"
+                   data-lm-task-panel="stylist-add-booking-form"
+                   data-lm-task-key="time"
+                   data-lm-task-label="زمان نوبت"
+                   data-lm-task-order="2">
+
+            <header class="border-b border-loomera-borderSoft bg-loomera-bgSubtle/55 px-4 py-3 sm:px-5">
+              <div class="flex items-center gap-3">
+                <span class="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-white text-loomera-primaryText shadow-sm">
+                  <i class="fa-regular fa-clock text-xs" aria-hidden="true"></i>
+                </span>
+                <div class="min-w-0">
+                  <h3 class="text-sm font-black text-loomera-textPrimary">زمان نوبت</h3>
+                  <p class="mt-0.5 text-[11px] leading-5 text-loomera-textMuted">فقط تاریخ‌ها و ساعت‌های آزاد قابل انتخاب هستند.</p>
+                </div>
+              </div>
+            </header>
+
+            <div class="grid gap-4 p-4 sm:p-5 md:grid-cols-2">
+              <div>
+                <label for="stylistAvailableDate" class="mb-2 flex items-center gap-2 text-sm font-black text-loomera-textPrimary">
+                  <i class="fa-regular fa-calendar text-xs text-loomera-primaryText" aria-hidden="true"></i>
+                  {{ form.appointment_date.label }}
+                </label>
+
+                <input type="hidden"
+                       name="{{ form.appointment_date.html_name }}"
+                       id="{{ form.appointment_date.id_for_label }}"
+                       value="{{ form.appointment_date.value|default_if_none:'' }}"
+                       data-stylist-booking-date-value>
+
+                <div class="relative">
+                  <select id="stylistAvailableDate"
+                          class="w-full appearance-none rounded-2xl border border-slate-200 bg-white px-4 py-3 pl-10 text-sm font-bold text-slate-800 outline-none transition focus:border-loomera-primary/30 focus:ring-2 focus:ring-loomera-primary/10 disabled:cursor-not-allowed disabled:bg-loomera-bgSubtle disabled:text-loomera-textMuted"
+                          data-stylist-booking-date
+                          required
+                          disabled>
+                    <option value="">ابتدا خدمت را انتخاب کن</option>
+                  </select>
+                  <span class="pointer-events-none absolute inset-y-0 left-4 flex items-center text-loomera-textMuted" aria-hidden="true">
+                    <i class="fa-solid fa-chevron-down text-[10px]"></i>
+                  </span>
+                </div>
+
+                {% if form.appointment_date.errors %}
+                  <div class="mt-2 rounded-xl bg-rose-50 px-3 py-2 text-xs font-bold leading-6 text-rose-600">
+                    {% for error in form.appointment_date.errors %}<p>{{ error }}</p>{% endfor %}
+                  </div>
+                {% endif %}
+              </div>
+
+              <div>
+                <label for="stylistAvailableTime" class="mb-2 flex items-center gap-2 text-sm font-black text-loomera-textPrimary">
+                  <i class="fa-regular fa-clock text-xs text-loomera-primaryText" aria-hidden="true"></i>
+                  {{ form.start_time.label }}
+                </label>
+
+                <input type="hidden"
+                       name="{{ form.start_time.html_name }}"
+                       id="{{ form.start_time.id_for_label }}"
+                       value="{{ form.start_time.value|default_if_none:'' }}"
+                       data-stylist-booking-time-value>
+
+                <div class="relative">
+                  <select id="stylistAvailableTime"
+                          class="w-full appearance-none rounded-2xl border border-slate-200 bg-white px-4 py-3 pl-10 text-sm font-bold text-slate-800 outline-none transition focus:border-loomera-primary/30 focus:ring-2 focus:ring-loomera-primary/10 disabled:cursor-not-allowed disabled:bg-loomera-bgSubtle disabled:text-loomera-textMuted"
+                          data-stylist-booking-time
+                          required
+                          disabled>
+                    <option value="">ابتدا تاریخ آزاد را انتخاب کن</option>
+                  </select>
+                  <span class="pointer-events-none absolute inset-y-0 left-4 flex items-center text-loomera-textMuted" aria-hidden="true">
+                    <i class="fa-solid fa-chevron-down text-[10px]"></i>
+                  </span>
+                </div>
+
+                {% if form.start_time.errors %}
+                  <div class="mt-2 rounded-xl bg-rose-50 px-3 py-2 text-xs font-bold leading-6 text-rose-600">
+                    {% for error in form.start_time.errors %}<p>{{ error }}</p>{% endfor %}
+                  </div>
+                {% endif %}
+              </div>
+
+              <div class="md:col-span-2" data-stylist-booking-availability-status>
+                <div class="rounded-[18px] border border-loomera-borderSoft bg-loomera-bgSubtle/55 px-3.5 py-2.5 text-[11px] font-bold leading-6 text-loomera-textMuted">
+                  بعد از انتخاب خدمت، تاریخ‌ها و ساعت‌های آزاد همان خدمت نمایش داده می‌شوند.
+                </div>
+              </div>
+
+              <div class="md:col-span-2">
+                <label for="{{ form.notes.id_for_label }}" class="mb-2 flex items-center gap-2 text-sm font-black text-loomera-textPrimary">
+                  <i class="fa-regular fa-note-sticky text-xs text-loomera-primaryText" aria-hidden="true"></i>
+                  {{ form.notes.label }}
+                </label>
+
+                {{ form.notes }}
+
+                {% if form.notes.errors %}
+                  <div class="mt-2 rounded-xl bg-rose-50 px-3 py-2 text-xs font-bold leading-6 text-rose-600">
+                    {% for error in form.notes.errors %}<p>{{ error }}</p>{% endfor %}
+                  </div>
+                {% endif %}
+
+                <p class="mt-2 text-[11px] leading-5 text-loomera-textMuted">یادداشت فقط برای پیگیری داخلی استفاده می‌شود.</p>
+              </div>
+            </div>
+          </section>
+
+          <div class="rounded-[20px] border border-loomera-borderSoft bg-white p-3 shadow-[0_10px_28px_rgba(46,42,60,0.08)]">
+            <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+              <p class="min-w-0 text-[11px] leading-5 text-loomera-textMuted">این نوبت برای خودت در مجموعه فعال ثبت می‌شود.</p>
+
+              <button type="submit"
+                      class="inline-flex min-h-10 w-full shrink-0 items-center justify-center gap-2 rounded-full bg-loomera-primary px-5 py-2 text-sm font-black text-white shadow-[0_10px_22px_rgba(115,92,190,0.16)] transition hover:opacity-95 sm:w-auto">
+                <i class="fa-solid fa-check text-[10px]" aria-hidden="true"></i>
+                ثبت نوبت
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </section>
+
+  </section>
+{% endblock %}
+
+{% block js %}
+  {{ block.super }}
+  <script type="module" src="{% static 'js/pages/stylist_add_booking.js' %}"></script>
+{% endblock %}

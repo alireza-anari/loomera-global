@@ -1,0 +1,180 @@
+{% extends "dashboard_template.html" %}
+{% load static salons_filters %}
+{% block title %}ثبت مرخصی{% endblock %}
+{% block body_attrs %}data-page="add-time-off"{% endblock %}
+
+{% block head %}
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr@4.6.13/dist/flatpickr.min.css">
+  <style>
+    .flatpickr-calendar.noCalendar {
+      width: min(320px, calc(100vw - 24px));
+      border: 1px solid rgba(115, 92, 190, .15);
+      border-radius: 22px;
+      overflow: hidden;
+      box-shadow: 0 20px 60px rgba(46, 42, 60, .18);
+      font-family: inherit;
+      direction: ltr;
+    }
+    .flatpickr-calendar.noCalendar .flatpickr-time { height: 64px; max-height: 64px; border: 0; }
+    .flatpickr-calendar.noCalendar .flatpickr-time input,
+    .flatpickr-calendar.noCalendar .flatpickr-time .flatpickr-am-pm {
+      font-family: inherit;
+      font-weight: 800;
+      color: #2E2A3C;
+    }
+    .flatpickr-calendar.noCalendar .flatpickr-time input:hover,
+    .flatpickr-calendar.noCalendar .flatpickr-time input:focus { background: #F6F2FF; }
+    .flatpickr-calendar.noCalendar .numInputWrapper span { border-color: rgba(115, 92, 190, .12); }
+  </style>
+{% endblock %}
+
+{% block content %}
+  <section class="min-w-0 max-w-full space-y-4 overflow-visible lg:space-y-5" data-dashboard-workspace-root data-dashboard-page="add-time-off" data-direct-edit-page>
+    <section class="min-w-0 rounded-[24px] border border-loomera-borderSoft bg-white/95 p-4 shadow-lm-card sm:p-5" aria-labelledby="add-time-off-title">
+      <div class="flex min-w-0 flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <div class="min-w-0">
+          <h1 id="add-time-off-title" class="text-xl font-black leading-8 tracking-tight text-loomera-textPrimary sm:text-2xl">
+            ثبت مرخصی برای {{ stylist.get_fullName }}
+          </h1>
+          <p class="mt-1 text-xs leading-6 text-loomera-textMuted">
+            مرخصی تمام‌روز یا ساعتی را برای {{ jalali_date_display }} مشخص کن.
+          </p>
+        </div>
+
+        <a href="{{ back_url }}" class="inline-flex min-h-10 shrink-0 items-center justify-center gap-2 self-start rounded-xl border border-loomera-borderSoft bg-white px-3 py-2 text-xs font-bold text-loomera-textSecondary transition hover:border-loomera-primary/30 hover:bg-loomera-primarySoft/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-loomera-primary/30 sm:self-auto">
+          <i class="fa-solid fa-arrow-right text-[10px] text-loomera-primaryText" aria-hidden="true"></i>
+          <span>بازگشت به شیفت‌ها</span>
+        </a>
+      </div>
+    </section>
+
+
+
+    <form method="post" class="space-y-4 pb-24 lg:pb-4" data-time-off-form data-direct-edit-form>
+      {% csrf_token %}
+
+      {% for hidden in form.hidden_fields %}
+        {{ hidden }}
+      {% endfor %}
+
+      <div data-lm-task-tabs-anchor="manager-time-off" data-lm-task-tabs-label="بخش‌های مرخصی"></div>
+
+      <div>
+        <section id="timeoff-section-form" class="group scroll-mt-28 overflow-hidden rounded-[28px] border border-loomera-borderSoft bg-white/95 shadow-lm-card lg:scroll-mt-36" data-lm-task-panel="manager-time-off" data-lm-task-key="request" data-lm-task-label="ثبت مرخصی" data-lm-task-default data-lm-task-order="1">
+          <div class="flex items-center justify-between gap-3 border-b border-loomera-borderSoft bg-white/96 px-4 py-3 shadow-sm backdrop-blur transition hover:bg-loomera-primarySoft/25 sm:px-5 lg:px-6 lg:py-4">
+            <div class="min-w-0">
+              <p class="text-[11px] font-black text-loomera-primaryText">فرم مرخصی</p>
+              <h2 class="mt-1 truncate text-base font-black text-loomera-textPrimary sm:text-lg">نوع و بازه مرخصی</h2>
+            </div>
+          </div>
+
+          <div class="p-4 sm:p-5 lg:p-6">
+            {% if form.non_field_errors %}
+              <div class="mb-4 rounded-2xl border border-loomera-danger/20 bg-loomera-dangerSoft px-4 py-3 text-sm leading-7 text-loomera-danger">
+                {{ form.non_field_errors }}
+              </div>
+            {% endif %}
+
+            <div class="space-y-5">
+              <div>
+                <label class="mb-2 block text-xs font-black text-loomera-textMuted" for="{{ form.reason_choice.id_for_label }}">{{ form.reason_choice.label }}</label>
+                {{ form.reason_choice }}
+                {% if form.reason_choice.errors %}
+                  <p class="mt-2 text-xs leading-6 text-loomera-danger">{{ form.reason_choice.errors|join:"، " }}</p>
+                {% endif %}
+              </div>
+
+              <div class="rounded-[24px] border border-loomera-borderSoft bg-loomera-bgSubtle/70 p-4">
+                <label class="lm-provider-switch-row flex cursor-pointer items-center justify-between gap-3">
+                  <span class="text-sm font-black text-loomera-textPrimary">مرخصی تمام‌روز</span>
+                  <span class="flex items-center gap-2">
+                    <input type="checkbox" data-all-day-toggle class="lm-provider-switch-input sr-only" role="switch">
+                    <span class="lm-provider-switch-track" aria-hidden="true"><span class="lm-provider-switch-thumb"></span></span>
+                    <span class="lm-provider-switch-state text-xs font-black text-loomera-textMuted"><span class="lm-provider-switch-state-off">غیرفعال</span><span class="lm-provider-switch-state-on text-loomera-primaryText">فعال</span></span>
+                  </span>
+                </label>
+
+                <p class="mt-3 text-sm leading-7 text-loomera-textMuted" data-time-off-hint>
+                  اگر مرخصی تمام‌روز باشد، ساعت شروع و پایان خالی می‌مانند و همه شیفت‌های این روز حذف می‌شوند.
+                </p>
+              </div>
+
+              <div class="grid gap-4 md:grid-cols-2">
+                <div>
+                  <label class="mb-2 block text-xs font-black text-loomera-textMuted" for="time_off_start_picker">{{ form.start_time.label }}</label>
+                  <div class="relative">
+                    {{ form.start_time|add_class:"sr-only" }}
+                    <input id="time_off_start_picker" type="text" data-time-off-picker data-select-target="{{ form.start_time.id_for_label }}" autocomplete="off" placeholder="انتخاب ساعت" class="lm-time-field w-full rounded-[20px] border border-loomera-borderSoft bg-white px-4 py-3.5 pl-12 text-sm font-black text-loomera-textPrimary outline-none transition focus:border-loomera-primary/40 focus:ring-4 focus:ring-loomera-primary/10 disabled:cursor-not-allowed disabled:bg-loomera-bgSubtle disabled:text-loomera-textMuted">
+                    <button type="button" data-time-off-picker-trigger data-target-input="time_off_start_picker" class="absolute left-2 top-1/2 inline-flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-xl text-loomera-primaryText transition hover:bg-loomera-primarySoft disabled:cursor-not-allowed disabled:text-loomera-textMuted" aria-label="انتخاب ساعت شروع"><i class="fa-regular fa-clock" aria-hidden="true"></i></button>
+                  </div>
+                  {% if form.start_time.errors %}
+                    <p class="mt-2 text-xs leading-6 text-loomera-danger">{{ form.start_time.errors|join:"، " }}</p>
+                  {% endif %}
+                </div>
+
+                <div>
+                  <label class="mb-2 block text-xs font-black text-loomera-textMuted" for="time_off_end_picker">{{ form.end_time.label }}</label>
+                  <div class="relative">
+                    {{ form.end_time|add_class:"sr-only" }}
+                    <input id="time_off_end_picker" type="text" data-time-off-picker data-select-target="{{ form.end_time.id_for_label }}" autocomplete="off" placeholder="انتخاب ساعت" class="lm-time-field w-full rounded-[20px] border border-loomera-borderSoft bg-white px-4 py-3.5 pl-12 text-sm font-black text-loomera-textPrimary outline-none transition focus:border-loomera-primary/40 focus:ring-4 focus:ring-loomera-primary/10 disabled:cursor-not-allowed disabled:bg-loomera-bgSubtle disabled:text-loomera-textMuted">
+                    <button type="button" data-time-off-picker-trigger data-target-input="time_off_end_picker" class="absolute left-2 top-1/2 inline-flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-xl text-loomera-primaryText transition hover:bg-loomera-primarySoft disabled:cursor-not-allowed disabled:text-loomera-textMuted" aria-label="انتخاب ساعت پایان"><i class="fa-regular fa-clock" aria-hidden="true"></i></button>
+                  </div>
+                  {% if form.end_time.errors %}
+                    <p class="mt-2 text-xs leading-6 text-loomera-danger">{{ form.end_time.errors|join:"، " }}</p>
+                  {% endif %}
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section id="timeoff-section-impact" class="group scroll-mt-28 overflow-hidden rounded-[28px] border border-loomera-borderSoft bg-white/95 shadow-lm-card lg:scroll-mt-36" data-lm-task-panel="manager-time-off" data-lm-task-key="impact" data-lm-task-label="اثر روی برنامه" data-lm-task-order="2">
+          <div class="flex items-center justify-between gap-3 border-b border-loomera-borderSoft bg-white/96 px-4 py-3 shadow-sm backdrop-blur transition hover:bg-loomera-primarySoft/25 sm:px-5 lg:px-6 lg:py-4">
+            <div class="min-w-0">
+              <p class="text-[11px] font-black text-loomera-primaryText">اثر روی برنامه</p>
+              <h2 class="mt-1 truncate text-base font-black text-loomera-textPrimary sm:text-lg">شیفت‌های ثبت‌شده این روز</h2>
+            </div>
+          </div>
+
+          <div class="p-4 sm:p-5 lg:p-6">
+            <div class="mb-4">
+              <p class="max-w-2xl text-xs leading-6 text-loomera-textMuted">شیفت‌های فعلی این تاریخ را مرور کن؛ مرخصی تمام‌روز همه بازه‌های کاری همان روز را تحت تأثیر قرار می‌دهد و مرخصی ساعتی فقط با بازه‌های هم‌پوشان درگیر می‌شود.</p>
+            </div>
+
+            <div class="space-y-3">
+              {% for shift in existing_shifts %}
+                <article class="rounded-[22px] border border-loomera-borderSoft bg-loomera-bgSubtle/60 p-4">
+                  <div class="flex min-w-0 items-center justify-between gap-3">
+                    <p class="min-w-0 truncate text-sm font-black text-loomera-textPrimary">{{ shift.service_name }}</p>
+                    <span class="inline-flex shrink-0 items-center rounded-full bg-white px-3 py-1 text-[11px] font-bold text-loomera-textSecondary shadow-sm">
+                      {{ shift.time_label }}
+                    </span>
+                  </div>
+                </article>
+              {% empty %}
+                <div class="rounded-[24px] border border-dashed border-loomera-borderSoft bg-loomera-bgSubtle/70 px-4 py-6 text-center text-sm leading-7 text-loomera-textMuted">
+                  برای این روز هنوز شیفتی ثبت نشده است؛ ثبت مرخصی فقط وضعیت عدم حضور را ثبت می‌کند.
+                </div>
+              {% endfor %}
+            </div>
+          </div>
+        </section>
+      </div>
+
+
+
+      <div class="hidden" aria-hidden="true"><span data-time-off-summary-range>همه روز</span><span data-time-off-submit-title></span><span data-time-off-submit-desc></span></div>
+      <div data-mobile-primary-action class="lm-dashboard-sticky-action sticky z-30 rounded-[20px] border border-loomera-borderSoft bg-white/95 p-2.5 shadow-[0_14px_34px_rgba(46,42,60,0.14)] backdrop-blur" data-direct-edit-savebar>
+        <div class="flex items-center justify-between gap-3">
+          <p class="min-w-0 text-[11px] font-black text-loomera-textPrimary" data-direct-edit-status>تغییری ذخیره نشده</p>
+          <button type="submit" class="inline-flex min-h-10 shrink-0 items-center justify-center gap-2 rounded-full bg-loomera-primary px-4 py-2 text-xs font-black text-white shadow-lm-soft"><i class="fa-solid fa-floppy-disk text-[10px]" aria-hidden="true"></i><span>ثبت مرخصی</span></button>
+        </div>
+      </div>
+    </form>
+  </section>
+{% endblock %}
+
+{% block js %}
+  {{ block.super }}
+  <script src="https://cdn.jsdelivr.net/npm/flatpickr@4.6.13/dist/flatpickr.min.js"></script>
+{% endblock %}

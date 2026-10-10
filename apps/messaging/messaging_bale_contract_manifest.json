@@ -1,0 +1,104 @@
+{
+  "schema_version": 1,
+  "sources": [
+    "apps/bale_bot/client.py",
+    "apps/bale_bot/services.py",
+    "apps/bale_bot/views.py",
+    "apps/messaging/actions.py",
+    "apps/messaging/notification_delivery.py",
+    "apps/messaging/services.py"
+  ],
+  "symbols": [
+    {
+      "source": "apps/bale_bot/views.py",
+      "qualname": "BaleWebhookView.post",
+      "kind": "method",
+      "executable_sha256": "a2939182ff91bbf9a462b205bb9fad4d2f1eb4cea1e3ffc2d6365d76226e280c",
+      "documentation_sha256": "eb2793364afc3d6abad3af0acedde8b30163c3129d1ac4f0465d6c8e9fb00b53"
+    },
+    {
+      "source": "apps/bale_bot/services.py",
+      "qualname": "record_bale_webhook_update",
+      "kind": "function",
+      "executable_sha256": "b898e0fbe74e9ef7fb1a10641aa12668b5e7bcf91e32b08e4b7be2f82081e09e",
+      "documentation_sha256": "01311c02026c3a4ae082726b13715a0205a4ee3f3b90aa4c957957f721c20458"
+    },
+    {
+      "source": "apps/bale_bot/services.py",
+      "qualname": "reprocess_bale_webhook_event",
+      "kind": "function",
+      "executable_sha256": "2381b414e483f51e4cffcaf9da305ee5ff2cc3f8791999d87a7b44b73e1309c8",
+      "documentation_sha256": "2b0e7786dab1eadf862228be1e20ee722111a2015046d18e39f171bec9f8096c"
+    },
+    {
+      "source": "apps/messaging/services.py",
+      "qualname": "connect_identity_with_raw_token",
+      "kind": "function",
+      "executable_sha256": "69484b6c814e42320c28715524e7c4abe05e4e8eaf94379255440993ac911fc7",
+      "documentation_sha256": "55e579d2efcb0a23572dd901d70fb492fe8c97d6f8512e18d214dc97b9673eb7"
+    },
+    {
+      "source": "apps/messaging/services.py",
+      "qualname": "record_webhook_event",
+      "kind": "function",
+      "executable_sha256": "10b89a1d839d76960593e33d7c69242b57aa77ac6e4079490029b455447c84f9",
+      "documentation_sha256": "60e9b83247e490cdaa8d8f6f3aa9921271ce6fb3b053f87119f44824806b2042"
+    },
+    {
+      "source": "apps/messaging/services.py",
+      "qualname": "log_message",
+      "kind": "function",
+      "executable_sha256": "bd1d9e527c248488b829858003636ad9e35f038053dcbcba398de1c8f39104a7",
+      "documentation_sha256": "77dc54b523c8f3747f33595202231805e8b3bec36284690a84d5d4146f33d551"
+    },
+    {
+      "source": "apps/messaging/actions.py",
+      "qualname": "issue_action_token",
+      "kind": "function",
+      "executable_sha256": "a7d3cff0cb997d751b50d4df68b29ed18333add79df04d683e1ea73e9581e5f4",
+      "documentation_sha256": "f89cee541de6227dc436c917cea6a83566d727030cd4c1f23ccee4381f0e50ef"
+    },
+    {
+      "source": "apps/messaging/actions.py",
+      "qualname": "dispatch_messaging_action_callback",
+      "kind": "function",
+      "executable_sha256": "1c71182f2c127a09f651f08733caecf66c38c4632405dfc9e57d054e3f6836d9",
+      "documentation_sha256": "a53ddb3556e95ba665fcbf97356447430e4571aa2c410632d13e1211a5457001"
+    },
+    {
+      "source": "apps/bale_bot/client.py",
+      "qualname": "BaleBotClient.request",
+      "kind": "method",
+      "executable_sha256": "d1b7efa557dff762ac72ee8e1df617431568ca3bd170e10ed3a528c68ac754f3",
+      "documentation_sha256": "3ee86eec6672496d0da14ef69fd2b4e85c3a4c66a15c6f925a75fad7138621e3"
+    },
+    {
+      "source": "apps/bale_bot/client.py",
+      "qualname": "BaleBotClient.send_message",
+      "kind": "method",
+      "executable_sha256": "a425ea38c50ba7daf19340b5d438fb2b4624866b9299af5485b330ebab2d3d51",
+      "documentation_sha256": "3dff64bc06830413c34f7f783f3f4bf4ed88e5987d820e2594e5623d77a42d84"
+    },
+    {
+      "source": "apps/messaging/notification_delivery.py",
+      "qualname": "build_actionable_reply_markup",
+      "kind": "function",
+      "executable_sha256": "e059ea57a13df427201c519aa1d545387b8cb0779d491fd973e9bcf96f781c4c",
+      "documentation_sha256": "37a756fd32e4054e70cc96ce4b56b4634188d4d65d75dab7207f251259d0b783"
+    },
+    {
+      "source": "apps/messaging/notification_delivery.py",
+      "qualname": "messaging_delivery_preference_enabled",
+      "kind": "function",
+      "executable_sha256": "853b204e8e2a1331d625d3103e170cd361f37bcf55953a7ca9668303f8794bae",
+      "documentation_sha256": "ce2c8b124ce2879b95515fbea61297c134485e35f0210a99ba00080848ca0c41"
+    },
+    {
+      "source": "apps/messaging/notification_delivery.py",
+      "qualname": "deliver_simple_notification",
+      "kind": "function",
+      "executable_sha256": "60a2a6a8fe5ccb25f4b15b53a3c7da0bd628927d9df640a0922d230d8cce4617",
+      "documentation_sha256": "1aba566d2c7b2803186c83df82e55c3236053882b234cfe38b39041fcde83669"
+    }
+  ]
+}

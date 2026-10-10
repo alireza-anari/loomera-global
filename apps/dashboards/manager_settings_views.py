@@ -1,0 +1,286 @@
+from __future__ import annotations
+
+from urllib.parse import urlencode
+
+from django.contrib import messages
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.shortcuts import redirect, render
+from django.urls import reverse
+from django.views import View
+
+from apps.dashboards.layout import build_dashboard_context
+from apps.messaging.constants import MessagingConnectionStatus, MessagingProviderKey
+from apps.messaging.models import MessagingAccountConnection, MessagingProvider
+from apps.messaging.preferences import (
+    STREAM_MARKETING,
+    STREAM_OPERATIONAL,
+    normalize_bool,
+    set_stream_enabled,
+    stream_enabled,
+)
+from apps.messaging.services import ensure_default_providers, messaging_enabled, provider_allowed
+from apps.notifications.models import NotificationAudienceRole, NotificationChannel
+from apps.salons.membership import get_active_salon_for_stylist
+from apps.messaging.links import loomi_provider_links
+
+
+class ManagerCommunicationSettingsView(LoginRequiredMixin, View):
+    """Manager/stylist notification and messenger configuration for Beta."""
+
+    template_name = "dashboards/manager_communication_settings.html"
+    audience_role = NotificationAudienceRole.MANAGER
+    communication_role_label = "مدیر"
+    communication_owner_label = "مدیر مجموعه"
+    communication_description = (
+        "مشخص کن چه پیام‌هایی را در بله و تلگرام دریافت کنی و اتصال هر پیام‌رسان "
+        "را از همین صفحه مدیریت کن."
+    )
+    redirect_name = "dashboards:manager_communication_settings"
+    settings_return_name = "dashboards:workspace_settings"
+    notification_center_name = "dashboards:notifications_center"
+    success_message = "تنظیم اعلان‌های مدیر ذخیره شد."
+    loomi_share_title = "لومی در پیام‌رسان‌ها"
+    loomi_share_description = "این لینک را می‌توانید در بیو اینستاگرام، شبکه‌های اجتماعی یا برای مشتریان ارسال کنید تا مستقیماً با لومی درباره مجموعه شما گفتگو کنند."
+
+    def _loomi_share_targets(self, request):
+        from apps.salons.models import Salon
+        # Ownership comes exclusively from the authenticated manager, not URL IDs
+        # or the currently selected salon in a multi-salon dashboard session.
+        return [("salon", salon, salon.salon_name) for salon in
+                Salon.objects.filter(salon_manager=request.user.salon_manager_profile,
+                                     is_active=True).order_by("salon_name", "id")]
+
+    def _loomi_share_context(self, request):
+        from apps.messaging.loomi import loomi_messaging_enabled
+        cards = []
+        if (request.user.is_active and messaging_enabled()
+                and any(loomi_messaging_enabled(key) for key in ("telegram", "bale"))):
+            for scope, target, label in self._loomi_share_targets(request):
+                links = loomi_provider_links(scope, target)
+                if links:
+                    cards.append({"label": label, "links": links})
+        return {"loomi_share_cards": cards, "loomi_share_title": self.loomi_share_title,
+                "loomi_share_description": self.loomi_share_description}
+
+    provider_specs = (
+        (
+            "bale",
+            MessagingProviderKey.BALE,
+            NotificationChannel.BALE.value,
+        ),
+        (
+            "telegram",
+            MessagingProviderKey.TELEGRAM,
+            NotificationChannel.TELEGRAM.value,
+        ),
+    )
+
+    def dispatch(self, request, *args, **kwargs):
+        if not hasattr(request.user, "salon_manager_profile"):
+            return redirect("dashboards:salon_manager_dashboard")
+        return super().dispatch(request, *args, **kwargs)
+
+    def _provider(self, provider_key):
+        ensure_default_providers()
+        return MessagingProvider.objects.filter(key=provider_key).first()
+
+    def _provider_ready(self, provider, provider_key):
+        return bool(
+            messaging_enabled()
+            and provider is not None
+            and provider.is_active
+            and provider_allowed(provider_key)
+        )
+
+    def _active_connection(self, request, provider_key):
+        return (
+            MessagingAccountConnection.objects.select_related("provider", "identity")
+            .filter(
+                user=request.user,
+                provider__key=provider_key,
+                status=MessagingConnectionStatus.ACTIVE,
+            )
+            .order_by("-connected_at", "-id")
+            .first()
+        )
+
+    def _connect_url(self, request, provider_key):
+        connect_url = reverse(
+            "messaging:provider_quick_connect",
+            kwargs={"provider_key": str(provider_key)},
+        )
+        return f"{connect_url}?{urlencode({'next': request.path})}"
+
+    def _provider_context(
+        self,
+        *,
+        request,
+        prefix,
+        provider_key,
+        channel,
+    ):
+        provider = self._provider(provider_key)
+        connection = self._active_connection(request, provider_key)
+        return {
+            f"{prefix}_ready": self._provider_ready(provider, provider_key),
+            f"{prefix}_connection": connection,
+            f"{prefix}_connected": bool(connection),
+            f"{prefix}_connect_url": self._connect_url(request, provider_key),
+            f"{prefix}_operational": stream_enabled(
+                user=request.user,
+                channel=channel,
+                stream=STREAM_OPERATIONAL,
+                audience_role=self.audience_role,
+            ),
+            f"{prefix}_marketing": stream_enabled(
+                user=request.user,
+                channel=channel,
+                stream=STREAM_MARKETING,
+                audience_role=self.audience_role,
+            ),
+        }
+
+    def _dashboard_context(self, request):
+        from apps.accounts.services.access import managed_salons
+
+        if managed_salons(request.user).count() > 1:
+            # All owned-salon share links are authorized in _loomi_share_targets.
+            # Never build the legacy dashboard context: it silently picks the
+            # manager's first salon and can display unrelated operational data.
+            chooser_url = reverse("accounts:workspace_choose")
+            header = {
+                "salon_name": "مدیریت چند سالن",
+                "manager_name": request.user.get_fullName(),
+                "notifications_count": 0,
+            }
+            safe_shell = {
+                "dashboard_nav_items": [],
+                "dashboard_sidebar_sections": [],
+                "dashboard_sidebar_items": [],
+                "dashboard_mobile_nav_items": [],
+                "dashboard_quick_actions": [],
+                "dashboard_header": header,
+                "page_meta": {"title": "اعلان‌ها و ارتباطات", "icon": "fa-regular fa-bell"},
+                "page_title": "اعلان‌ها و ارتباطات",
+                "dashboard_role": "manager",
+                "dashboard_profile_url": chooser_url,
+                "dashboard_notifications": {"audience_role": "manager", "unread_count": 0, "tabs": [], "dropdown_items": []},
+                "dashboard_has_workspace_switch": True,
+                "dashboard_workspace_modes": [{
+                    "key": "workspace", "label": "انتخاب سالن و نقش",
+                    "url": chooser_url, "icon": "fa-solid fa-arrows-rotate",
+                    "description": "بازگشت به انتخاب محیط فعالیت", "is_active": False,
+                }],
+                "request": request,
+            }
+            return {"_dashboard_shell_context": safe_shell, **safe_shell}
+
+        return build_dashboard_context(
+            request.user,
+            nav_active="home",
+            sidebar_active="settings",
+            page_title="اعلان‌ها و ارتباطات",
+            request_path=request.path,
+        )
+
+    def _context(self, request):
+        context = self._dashboard_context(request)
+        context.update(self._loomi_share_context(request))
+        context.update(
+            {
+                "hide_dashboard_header": True,
+                "hide_dashboard_top_nav": True,
+                "page_meta": {
+                    "title": "اعلان‌ها و ارتباطات",
+                    "description": self.communication_description,
+                    "icon": "fa-regular fa-bell",
+                    "badges": [],
+                    "primary_action": {
+                        "label": "بازگشت به تنظیمات",
+                        "url": reverse(self.settings_return_name),
+                    },
+                },
+                "messaging_privacy_url": reverse("messaging:privacy"),
+                "notification_center_url": reverse(self.notification_center_name),
+                "settings_return_url": reverse(self.settings_return_name),
+                "communication_role_label": self.communication_role_label,
+                "communication_owner_label": self.communication_owner_label,
+                "communication_description": self.communication_description,
+            }
+        )
+        for prefix, provider_key, channel in self.provider_specs:
+            context.update(
+                self._provider_context(
+                    request=request,
+                    prefix=prefix,
+                    provider_key=provider_key,
+                    channel=channel,
+                )
+            )
+        return context
+
+    def get(self, request, *args, **kwargs):
+        return render(request, self.template_name, self._context(request))
+
+    def post(self, request, *args, **kwargs):
+        for prefix, _provider_key, channel in self.provider_specs:
+            set_stream_enabled(
+                user=request.user,
+                channel=channel,
+                stream=STREAM_OPERATIONAL,
+                enabled=normalize_bool(request.POST.get(f"{prefix}_operational")),
+                audience_role=self.audience_role,
+            )
+            set_stream_enabled(
+                user=request.user,
+                channel=channel,
+                stream=STREAM_MARKETING,
+                enabled=normalize_bool(request.POST.get(f"{prefix}_marketing")),
+                audience_role=self.audience_role,
+            )
+
+        messages.success(request, self.success_message)
+        return redirect(self.redirect_name)
+
+
+class StylistCommunicationSettingsView(ManagerCommunicationSettingsView):
+    """Stylist-facing Bale/Telegram preferences using shared messaging primitives."""
+
+    audience_role = NotificationAudienceRole.STYLIST
+    communication_role_label = "متخصص"
+    communication_owner_label = "متخصص"
+    communication_description = (
+        "مشخص کن چه پیام‌هایی را برای نقش متخصص در بله و تلگرام دریافت کنی و "
+        "اتصال هر پیام‌رسان را از همین صفحه مدیریت کن."
+    )
+    redirect_name = "dashboards:stylist_communication_settings"
+    settings_return_name = "dashboards:stylist_settings"
+    notification_center_name = "dashboards:stylist_notifications"
+    success_message = "تنظیم اعلان‌های متخصص ذخیره شد."
+    loomi_share_title = "لینک لومی من"
+    loomi_share_description = "این لینک را می‌توانید در بیو اینستاگرام یا برای مشتریان ارسال کنید تا درباره خدمات شما با لومی گفتگو کنند."
+
+    def _loomi_share_targets(self, request):
+        from apps.messaging.loomi import _resolve_target
+        stylist = _resolve_target("stylist", request.user.stylist.pk)
+        if stylist is None:
+            return []
+        return [("stylist", stylist, stylist.professional_display_name)]
+
+    def dispatch(self, request, *args, **kwargs):
+        if not hasattr(request.user, "stylist"):
+            return redirect("dashboards:stylist_dashboard")
+        return LoginRequiredMixin.dispatch(self, request, *args, **kwargs)
+
+    def _dashboard_context(self, request):
+        salon = get_active_salon_for_stylist(request.user, request=request)
+        stylist = request.user.stylist
+        return build_dashboard_context(
+            request.user,
+            sidebar_active="my_settings",
+            page_title="اعلان‌ها و ارتباطات",
+            request_path=request.path,
+            role="stylist",
+            salon_override=salon,
+            stylist_override=stylist,
+        )

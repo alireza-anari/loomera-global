@@ -1,0 +1,72 @@
+{% extends "dashboard_template.html" %}
+{% load salons_filters %}
+
+{% block title %}{% if profile_edit_mode %}نام و تماس مجموعه{% else %}شروع ساخت مجموعه{% endif %}{% endblock %}
+
+{% block head %}
+  <style>
+    .lm-onboarding-savebar {
+      bottom: var(--lm-bottom-nav-space, 4.75rem) !important;
+    }
+    @media (min-width: 1024px) {
+      .lm-onboarding-savebar { bottom: 0 !important; }
+    }
+  </style>
+{% endblock %}
+
+{% block content %}
+  {% url 'dashboards:salon_manager_dashboard' as dashboard_url %}
+  {% url 'dashboards:salon_profile' as salon_profile_url %}
+
+  <section class="mx-auto min-w-0 max-w-3xl space-y-4" data-salon-step-one-page>
+    <header class="rounded-[28px] border border-loomera-borderSoft bg-white/95 p-4 shadow-lm-card sm:p-6">
+      <span class="inline-flex items-center gap-2 rounded-full bg-loomera-primarySoft px-3 py-1.5 text-[11px] font-black text-loomera-primaryText">
+        <i class="fa-solid fa-store text-[10px]" aria-hidden="true"></i>
+        {% if profile_edit_mode %}پروفایل مجموعه / اطلاعات اصلی{% else %}مرحله ۱ از ۳{% endif %}
+      </span>
+      <h1 class="mt-4 text-xl font-black leading-8 text-loomera-textPrimary sm:text-3xl">نام و شماره‌های تماس مجموعه</h1>
+      <p class="mt-2 text-sm leading-7 text-loomera-textSecondary">{% if profile_edit_mode %}نام و شماره‌های تماس مجموعه را مدیریت کن؛ شماره ثابت باید همراه کد شهر باشد.{% else %}نام مجموعه و هر دو شماره تماس را ثبت کن؛ شماره ثابت را همراه کد شهر وارد کن.{% endif %}</p>
+    </header>
+
+    <form method="post" class="rounded-[28px] border border-loomera-borderSoft bg-white/95 p-4 shadow-lm-card sm:p-6" data-step-one-form>
+      {% csrf_token %}
+
+      {% if form.non_field_errors %}
+        <div class="mb-4 rounded-[20px] border border-loomera-danger/20 bg-loomera-dangerSoft px-4 py-3 text-sm leading-7 text-loomera-danger">
+          {% for error in form.non_field_errors %}<p>{{ error }}</p>{% endfor %}
+        </div>
+      {% endif %}
+
+      <div class="grid gap-4 lg:grid-cols-2">
+        <div>
+          <label for="{{ form.salon_name.id_for_label }}" class="mb-2 block text-xs font-black text-loomera-textSecondary">نام مجموعه</label>
+          {{ form.salon_name|add_class:"w-full rounded-[22px] border border-loomera-borderSoft bg-loomera-bgSubtle/70 px-4 py-3.5 text-sm font-bold text-loomera-textPrimary outline-none transition placeholder:text-loomera-textMuted focus:border-loomera-primary/40 focus:bg-white focus:ring-4 focus:ring-loomera-primary/10" }}
+          {% for error in form.salon_name.errors %}<span class="mt-2 block text-xs font-bold text-loomera-danger">{{ error }}</span>{% endfor %}
+        </div>
+
+        <div>
+          <label for="{{ form.mobile_phone.id_for_label }}" class="mb-2 block text-xs font-black text-loomera-textSecondary">شماره همراه مجموعه</label>
+          {{ form.mobile_phone|add_class:"w-full rounded-[22px] border border-loomera-borderSoft bg-loomera-bgSubtle/70 px-4 py-3.5 text-left text-sm font-bold text-loomera-textPrimary outline-none transition placeholder:text-loomera-textMuted focus:border-loomera-primary/40 focus:bg-white focus:ring-4 focus:ring-loomera-primary/10" }}
+          {% for error in form.mobile_phone.errors %}<span class="mt-2 block text-xs font-bold text-loomera-danger">{{ error }}</span>{% endfor %}
+        </div>
+
+        <div class="lg:col-start-2">
+          <label for="{{ form.landline_phone.id_for_label }}" class="mb-2 block text-xs font-black text-loomera-textSecondary">شماره ثابت با کد شهر</label>
+          {{ form.landline_phone|add_class:"w-full rounded-[22px] border border-loomera-borderSoft bg-loomera-bgSubtle/70 px-4 py-3.5 text-left text-sm font-bold text-loomera-textPrimary outline-none transition placeholder:text-loomera-textMuted focus:border-loomera-primary/40 focus:bg-white focus:ring-4 focus:ring-loomera-primary/10" }}
+          <p class="mt-2 text-xs leading-6 text-loomera-textMuted">کد شهر الزامی است؛ مثال: ۰۲۱۱۲۳۴۵۶۷۸</p>
+          {% for error in form.landline_phone.errors %}<span class="mt-2 block text-xs font-bold text-loomera-danger">{{ error }}</span>{% endfor %}
+        </div>
+      </div>
+
+      <div data-mobile-primary-action class="lm-onboarding-savebar fixed inset-x-0 z-[60] border-t border-loomera-borderSoft bg-white/96 px-3 py-2 shadow-[0_-12px_34px_rgba(46,42,60,0.10)] backdrop-blur sm:px-5 lg:sticky lg:inset-x-auto lg:z-20 lg:rounded-[22px] lg:border lg:p-2.5 lg:shadow-lm-elevated">
+        <div class="mx-auto flex w-full max-w-3xl justify-end">
+          <button type="submit" class="inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-2xl bg-loomera-primary px-5 py-2.5 text-sm font-black text-white shadow-[0_10px_24px_rgba(115,92,190,0.18)] transition hover:opacity-95 sm:w-auto sm:min-w-36">
+            <i class="fa-solid fa-floppy-disk text-xs" aria-hidden="true"></i>
+            <span>ذخیره</span>
+          </button>
+        </div>
+      </div>
+      <div class="block h-16 lg:h-2" aria-hidden="true"></div>
+    </form>
+  </section>
+{% endblock %}

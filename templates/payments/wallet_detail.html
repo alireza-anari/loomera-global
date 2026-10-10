@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% load humanize jalali_filters %}
+{% block title %}کیف پول{% endblock %}
+{% block content %}
+<main class="min-h-dvh bg-loomera-bg pb-28 text-loomera-textPrimary">
+  <div class="mx-auto w-full max-w-5xl space-y-4 px-4 py-5 sm:px-6 lg:py-8">
+    <header class="rounded-[28px] border border-loomera-borderSoft bg-white p-5 shadow-lm-card">
+      <a href="{% url 'accounts:customer_panel' %}" class="inline-flex min-h-10 items-center gap-2 rounded-full border border-loomera-borderSoft px-3 py-2 text-xs font-black text-loomera-textSecondary"><i class="fa-solid fa-arrow-right text-[10px]"></i>حساب من</a>
+      <div class="mt-4 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between"><div><p class="text-xs font-black text-loomera-primary">کیف پول</p><h1 class="mt-1 text-2xl font-black">موجودی و گردش مالی</h1><p class="mt-1 text-sm leading-7 text-loomera-textMuted">موجودی و تراکنش‌های ثبت‌شده‌ی حساب را اینجا ببین.</p></div><div class="rounded-[22px] bg-loomera-primarySoft px-5 py-4"><p class="text-xs font-black text-loomera-textMuted">موجودی فعلی</p><p class="mt-1 text-2xl font-black text-loomera-primary">{{ wallet.balance|default:0|intcomma }} <span class="text-xs">تومان</span></p></div></div>
+    </header>
+    {% include "payments/partials/customer_wallet_nav.html" with wallet_tab="overview" %}
+
+    {% if not wallet_operations_enabled %}
+      <section class="rounded-[24px] border border-amber-200 bg-amber-50 p-4 text-amber-900 shadow-lm-soft"><div class="flex gap-3"><i class="fa-solid fa-circle-info mt-1"></i><div><p class="text-sm font-black">شارژ و برداشت در نسخه بتا فعال نیست</p><p class="mt-1 text-xs leading-6">فعلاً پرداخت رزروها در مجموعه انجام می‌شود. موجودی و سوابق قبلی کیف پول همچنان قابل مشاهده‌اند.</p></div></div></section>
+    {% else %}
+      <section class="grid grid-cols-2 gap-3"><a href="{% url 'payments:charge' %}" class="rounded-[22px] border border-loomera-borderSoft bg-white p-4 text-center shadow-lm-card"><i class="fa-solid fa-plus text-loomera-primary"></i><strong class="mt-2 block text-sm">شارژ کیف پول</strong></a><a href="{% url 'payments:withdraw' %}" class="rounded-[22px] border border-loomera-borderSoft bg-white p-4 text-center shadow-lm-card"><i class="fa-solid fa-arrow-up-from-bracket text-loomera-primary"></i><strong class="mt-2 block text-sm">درخواست برداشت</strong></a></section>
+    {% endif %}
+
+    <section class="rounded-[28px] border border-loomera-borderSoft bg-white p-5 shadow-lm-card">
+      <div class="flex items-center justify-between gap-3"><div><p class="text-xs font-black text-loomera-primary">آخرین فعالیت‌ها</p><h2 class="mt-1 text-lg font-black">گردش حساب</h2></div><a href="{% url 'payments:transactions' %}" class="rounded-full border border-loomera-borderSoft px-4 py-2 text-xs font-black text-loomera-primary">مشاهده همه</a></div>
+      <div class="mt-4 space-y-2">
+        {% for tx in transactions %}<article class="flex items-center gap-3 rounded-2xl bg-loomera-bgSubtle p-3"><span class="flex h-10 w-10 items-center justify-center rounded-2xl {% if tx.amount >= 0 %}bg-emerald-50 text-emerald-700{% else %}bg-rose-50 text-rose-700{% endif %}"><i class="fa-solid {% if tx.amount >= 0 %}fa-arrow-down{% else %}fa-arrow-up{% endif %}"></i></span><div class="min-w-0 flex-1"><p class="truncate text-sm font-black">{{ tx.get_transaction_type_display }}</p><p class="mt-1 truncate text-xs text-loomera-textMuted">{{ tx.description|default:"تراکنش کیف پول" }}</p></div><div class="text-left"><p class="text-sm font-black {% if tx.amount >= 0 %}text-emerald-700{% else %}text-rose-700{% endif %}">{{ tx.amount|intcomma }} تومان</p><p class="mt-1 text-[11px] text-loomera-textMuted">{{ tx.created_at|date:"Y/m/d" }}</p></div></article>{% empty %}<div class="rounded-2xl border border-dashed border-loomera-borderSoft p-7 text-center text-sm font-bold text-loomera-textMuted">هنوز تراکنشی ثبت نشده است.</div>{% endfor %}
+      </div>
+    </section>
+
+    {% if withdrawal_requests %}<section class="rounded-[28px] border border-loomera-borderSoft bg-white p-5 shadow-lm-card"><div class="flex items-center justify-between"><h2 class="text-lg font-black">آخرین درخواست‌های برداشت</h2>{% if wallet_operations_enabled %}<a href="{% url 'payments:withdraw' %}" class="text-xs font-black text-loomera-primary">مشاهده برداشت‌ها</a>{% endif %}</div><div class="mt-4 space-y-2">{% for item in withdrawal_requests %}<div class="flex items-center justify-between gap-3 rounded-2xl bg-loomera-bgSubtle p-3"><div><p class="text-sm font-black">{{ item.amount|intcomma }} تومان</p><p class="mt-1 text-xs text-loomera-textMuted">{{ item.created_at|date:"Y/m/d" }}</p></div><span class="rounded-full px-3 py-1 text-[11px] font-black {% if item.status == 'pending' %}bg-amber-50 text-amber-800{% elif item.status == 'approved' %}bg-emerald-50 text-emerald-700{% else %}bg-slate-100 text-slate-700{% endif %}">{{ item.get_status_display }}</span></div>{% endfor %}</div></section>{% endif %}
+  </div>
+</main>
+{% endblock %}

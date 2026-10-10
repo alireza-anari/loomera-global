@@ -1,0 +1,137 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}ثبت‌نام مشتری | لومرا{% endblock %}
+{% block body_attrs %}data-page="auth" data-auth-flow="customer-signup"{% endblock %}
+{% block main_class %}lm-signup-main{% endblock %}
+
+{% block head %}
+  <link rel="stylesheet" href="{% static 'css/pages/signup.css' %}">
+{% endblock %}
+
+{% block content %}
+<section class="lm-signup-shell" aria-labelledby="signup-title">
+  <div class="lm-signup-background" aria-hidden="true">
+    <img src="{% static 'branding/auth/customer-signup-hero.png' %}" alt="" class="lm-signup-background-image" loading="eager" decoding="async" fetchpriority="high">
+    <div class="lm-signup-background-softener"></div>
+  </div>
+  <div class="lm-signup-mobile-surface" aria-hidden="true"></div>
+
+  <div class="lm-signup-frame">
+    <div class="lm-signup-panel">
+      <div class="lm-signup-toolbar">
+        <a href="{% url 'salons:home' %}" class="lm-signup-brand-pill" aria-label="صفحه اصلی Loomera">
+          <img src="{% static 'branding/logo/loomera-glyph-mark.png' %}" alt="" class="lm-signup-brand-logo" loading="eager" decoding="async">
+          <span>Loomera</span>
+        </a>
+      </div>
+
+      <section class="lm-signup-card" aria-label="فرم ثبت‌نام مشتری">
+        <header>
+          <h1 id="signup-title" class="lm-signup-title"><span>ثبت‌نام </span><span class="lm-signup-title-brand">مشتری</span></h1>
+          {% if next_url %}
+            <p class="lm-signup-subtitle">بعد از تأیید شماره موبایل، دقیقاً به ادامه رزرو برمی‌گردی.</p>
+          {% else %}
+            <p class="lm-signup-subtitle">حساب مشتری را بساز؛ شماره موبایل در مرحله بعد با کد تأیید می‌شود.</p>
+          {% endif %}
+        </header>
+
+        <form method="post" id="customer-signup-form" class="lm-signup-form" novalidate>
+          {% csrf_token %}
+          {% if next_url %}<input type="hidden" name="next" value="{{ next_url }}">{% endif %}
+          {% if form.non_field_errors %}
+            <div class="rounded-2xl border border-red-200 bg-red-50/90 px-4 py-3 text-sm font-bold leading-7 text-red-700" role="alert">
+              {% for error in form.non_field_errors %}<p>{{ error }}</p>{% endfor %}
+            </div>
+          {% endif %}
+
+          <div class="lm-signup-grid-2">
+            <label class="lm-signup-field" for="id_name">
+              <span class="lm-signup-label">نام</span>
+              <input class="lm-signup-input-solo" type="text" name="name" id="id_name" value="{{ form.name.value|default_if_none:'' }}" autocomplete="given-name" placeholder="نام">
+              {% if form.name.errors %}<small class="lm-signup-error">{{ form.name.errors.0 }}</small>{% endif %}
+            </label>
+            <label class="lm-signup-field" for="id_family">
+              <span class="lm-signup-label">نام خانوادگی</span>
+              <input class="lm-signup-input-solo" type="text" name="family" id="id_family" value="{{ form.family.value|default_if_none:'' }}" autocomplete="family-name" placeholder="نام خانوادگی">
+              {% if form.family.errors %}<small class="lm-signup-error">{{ form.family.errors.0 }}</small>{% endif %}
+            </label>
+          </div>
+
+          <label class="lm-signup-field" for="id_mobile_number">
+            <span class="lm-signup-label">شماره موبایل</span>
+            <span class="lm-signup-control">
+              <span class="lm-signup-control-icon"><i class="fa-solid fa-mobile-screen-button" aria-hidden="true"></i></span>
+              <input class="lm-signup-input" type="tel" name="mobile_number" id="id_mobile_number" value="{{ form.mobile_number.value|default_if_none:'' }}" inputmode="numeric" autocomplete="tel" placeholder="09xxxxxxxxx" dir="ltr" required>
+            </span>
+            {% if form.mobile_number.errors %}<small class="lm-signup-error">{{ form.mobile_number.errors.0 }}</small>{% endif %}
+          </label>
+
+          <label class="lm-signup-field" for="id_password1">
+            <span class="lm-signup-label">رمز عبور</span>
+            <span class="lm-signup-control">
+              <span class="lm-signup-control-icon"><i class="fa-solid fa-key" aria-hidden="true"></i></span>
+              <input class="password-input lm-signup-input" type="password" name="password1" id="id_password1" autocomplete="new-password" placeholder="حداقل ۸ کاراکتر" required>
+              <button type="button" class="toggle-password lm-signup-password-toggle" data-input="id_password1" aria-label="نمایش یا پنهان‌کردن رمز عبور"><i class="fa-solid fa-eye" aria-hidden="true"></i></button>
+            </span>
+            <p data-password-hint class="lm-signup-hint">حداقل ۸ کاراکتر؛ بهتر است از حروف و عدد استفاده کنی.</p>
+            {% if form.password1.errors %}<small class="lm-signup-error">{{ form.password1.errors.0 }}</small>{% endif %}
+          </label>
+
+          <label class="lm-signup-field" for="id_password2">
+            <span class="lm-signup-label">تکرار رمز عبور</span>
+            <span class="lm-signup-control">
+              <span class="lm-signup-control-icon"><i class="fa-solid fa-check-double" aria-hidden="true"></i></span>
+              <input class="lm-signup-input" type="password" name="password2" id="id_password2" autocomplete="new-password" placeholder="رمز عبور را تکرار کن" required>
+              <button type="button" class="toggle-password lm-signup-password-toggle" data-input="id_password2" aria-label="نمایش یا پنهان‌کردن رمز عبور"><i class="fa-solid fa-eye" aria-hidden="true"></i></button>
+            </span>
+            {% if form.password2.errors %}<small class="lm-signup-error">{{ form.password2.errors.0 }}</small>{% endif %}
+          </label>
+
+          <label class="lm-signup-terms" for="id_agree_to_terms">
+            <input type="checkbox" name="agree_to_terms" id="id_agree_to_terms" {% if form.agree_to_terms.value %}checked{% endif %} required>
+            <span>با <a href="{% url 'accounts:terms_of_use' %}">شرایط استفاده</a> و <a href="{% url 'accounts:privacy_policy' %}">حریم خصوصی</a> موافقم.</span>
+          </label>
+          {% if form.agree_to_terms.errors %}<small class="lm-signup-error">{{ form.agree_to_terms.errors.0 }}</small>{% endif %}
+
+          <button type="submit" class="lm-signup-submit"><span>دریافت کد تأیید</span><i class="fa-solid fa-arrow-left text-xs" aria-hidden="true"></i></button>
+        </form>
+
+        <footer class="lm-signup-footer">
+          قبلاً حساب داری؟ <a href="{% url 'accounts:login' %}{{ next_query }}">ورود</a>
+          <span aria-hidden="true"> · </span>
+          برای مجموعه ثبت‌نام می‌کنی؟ <a href="{% url 'accounts:register' %}">ثبت مجموعه</a>
+        </footer>
+      </section>
+    </div>
+  </div>
+</section>
+{% endblock %}
+
+{% block js %}
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    document.querySelectorAll('.toggle-password').forEach(function (btn) {
+      btn.addEventListener('click', function (e) {
+        e.preventDefault();
+        var input = document.getElementById(this.dataset.input);
+        var icon = this.querySelector('i');
+        if (!input || !icon) return;
+        input.type = input.type === 'password' ? 'text' : 'password';
+        icon.classList.toggle('fa-eye');
+        icon.classList.toggle('fa-eye-slash');
+      });
+    });
+    var mobileInput = document.getElementById('id_mobile_number');
+    if (mobileInput) mobileInput.addEventListener('input', function (e) { e.target.value = e.target.value.replace(/[^\d]/g, ''); });
+    var password = document.getElementById('id_password1');
+    var hint = document.querySelector('[data-password-hint]');
+    if (password && hint) {
+      password.addEventListener('input', function () {
+        var v = password.value || '';
+        hint.textContent = v.length >= 8 ? 'طول رمز عبور مناسب است.' : 'حداقل ۸ کاراکتر وارد کن.';
+      });
+    }
+  });
+</script>
+{% endblock %}
