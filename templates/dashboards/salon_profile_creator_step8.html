@@ -1,0 +1,82 @@
+{% extends "dashboard_template.html" %}
+{% load static salons_filters %}
+
+{% block title %}معرفی مجموعه{% endblock %}
+
+{% block body_attrs %}data-page="dashboard-layout"{% endblock %}
+
+{% block content %}
+  {% url 'dashboards:salon_profile_creator_step7' as previous_step_url %}
+  {% url 'dashboards:salon_profile' as salon_profile_url %}
+  {% url 'dashboards:online_booking' as online_booking_url %}
+
+  <section class="min-w-0 max-w-full space-y-4 overflow-visible lg:space-y-5" data-dashboard-workspace-root="salon-profile-description" data-dashboard-page="salon-profile-description-step">
+    <header class="rounded-[28px] border border-loomera-borderSoft bg-white/95 p-4 shadow-lm-card sm:p-6" aria-labelledby="description-step-title">
+      <span class="inline-flex items-center gap-2 rounded-full bg-loomera-primarySoft px-3 py-1.5 text-[11px] font-black text-loomera-primaryText"><i class="fa-regular fa-pen-to-square text-[10px]" aria-hidden="true"></i>پروفایل مجموعه / معرفی</span>
+      <h1 id="description-step-title" class="mt-4 text-xl font-black leading-8 text-loomera-textPrimary sm:text-3xl">معرفی کوتاه مجموعه</h1>
+      <p class="mt-2 max-w-2xl text-sm leading-7 text-loomera-textSecondary">در چند جمله ساده بگو مشتری چه تجربه‌ای از مجموعه شما خواهد داشت.</p>
+    </header>
+
+
+
+    <form method="post" id="salonDescriptionForm" class="space-y-4">
+      {% csrf_token %}
+
+      {% if form.non_field_errors %}
+        <div class="rounded-[24px] border border-loomera-danger/20 bg-loomera-dangerSoft px-4 py-3 text-sm font-bold leading-7 text-loomera-danger">
+          {% for error in form.non_field_errors %}<div>{{ error }}</div>{% endfor %}
+        </div>
+      {% endif %}
+
+
+
+      <section id="description-section-form" class="group scroll-mt-28 overflow-hidden rounded-[28px] border border-loomera-borderSoft bg-white/95 shadow-lm-card lg:scroll-mt-36" data-dashboard-workspace-panel data-lm-direct-section>
+        <header data-lm-direct-section-header class="flex cursor-default list-none items-center justify-between gap-3 border-b border-loomera-borderSoft bg-white/96 px-4 py-3 shadow-sm backdrop-blur transition hover:bg-loomera-primarySoft/25 sm:px-5 lg:px-6 lg:py-4">
+          <div class="min-w-0"><p class="text-[11px] font-black text-loomera-primaryText">متن اصلی</p><h2 class="mt-1 truncate text-base font-black text-loomera-textPrimary sm:text-lg">متن معرفی مجموعه</h2></div>
+</header>
+
+        <div class="p-4 sm:p-5 lg:p-6">
+          <div class="mb-4 flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+            <div class="min-w-0">
+              <label for="{{ form.description.id_for_label }}" class="text-sm font-black text-loomera-textPrimary">توضیحات مجموعه</label>
+              <p class="mt-1 text-xs leading-6 text-loomera-textMuted">حداکثر ۶۰۰ کاراکتر. متن باید برای مشتری قابل فهم و قابل اعتماد باشد.</p>
+            </div>
+</div>
+
+          {{ form.description|add_class:"w-full min-h-[280px] rounded-[26px] border border-loomera-borderSoft bg-loomera-bgSubtle/70 px-4 py-4 text-sm leading-8 text-loomera-textPrimary outline-none transition placeholder:text-loomera-textMuted focus:border-loomera-primary/40 focus:bg-white focus:ring-4 focus:ring-loomera-primary/10" }}
+
+          {% for error in form.description.errors %}
+            <span class="mt-2 block text-xs font-black text-loomera-danger">{{ error }}</span>
+          {% endfor %}
+
+          <div class="mt-3 flex justify-end"><div id="descriptionCounterPill" class="inline-flex shrink-0 items-center gap-2 rounded-full border border-loomera-borderSoft bg-white px-3 py-2 text-xs font-black text-loomera-textSecondary">
+              <i class="fa-regular fa-keyboard text-loomera-primaryText" aria-hidden="true"></i>
+              <span><strong data-description-length-label>۰</strong> / ۶۰۰</span>
+            </div></div>
+
+          <div id="descriptionHintBox" class="mt-4 rounded-2xl border border-loomera-warning/20 bg-loomera-warningSoft px-4 py-3 text-xs font-black leading-6 text-loomera-warning">
+            توضیحات مجموعه را وارد کن؛ محدودیت حداقلی وجود ندارد و حداکثر ۶۰۰ کاراکتر مجاز است.
+          </div>
+        </div>
+      </section>
+
+
+
+
+
+
+          <div class="sticky bottom-3 z-20 flex flex-col-reverse gap-2 rounded-[24px] border border-loomera-borderSoft bg-white/95 p-3 shadow-lm-elevated backdrop-blur sm:flex-row sm:items-center sm:justify-between">
+        <a href="{{ salon_profile_url }}" class="inline-flex min-h-11 items-center justify-center rounded-2xl border border-loomera-borderSoft bg-white px-4 py-3 text-sm font-black text-loomera-textSecondary">بازگشت به پروفایل مجموعه</a>
+        <button type="submit" id="submitDescriptionBtn" class="inline-flex min-h-12 items-center justify-center gap-2 rounded-2xl bg-loomera-primary px-5 py-3 text-sm font-black text-white">ذخیره توضیحات<i class="fa-solid fa-floppy-disk text-xs" aria-hidden="true"></i></button>
+      </div>
+</form>
+  </section>
+{% endblock %}
+
+{% block js %}
+  {{ block.super }}
+  <script type="module">
+    import initSalonDescriptionStep from "{% static 'js/pages/salon_description_step.js' %}";
+    initSalonDescriptionStep();
+  </script>
+{% endblock %}

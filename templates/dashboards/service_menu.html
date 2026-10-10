@@ -1,0 +1,246 @@
+{% extends "dashboard_template.html" %}
+{% block title %}خدمات{% endblock %}
+{% block body_attrs %}data-page="service-menu"{% endblock %}
+
+{% block content %}
+<style>
+  @media (hover: hover) {
+    [data-dashboard-page="service-menu"] :is(button:not(:disabled), a.inline-flex):hover {
+      background-color: rgb(var(--lm-accent-rgb) / 1) !important;
+      border-color: rgb(var(--lm-accent-rgb) / 0.72) !important;
+      color: rgb(var(--lm-text-primary-rgb) / 1) !important;
+      opacity: 1 !important;
+    }
+  }
+</style>
+  {% url 'dashboards:team_member' as team_member_url %}
+
+  <section class="min-w-0 max-w-full space-y-4 lg:space-y-5" data-dashboard-page="service-menu" data-service-menu-page>
+    <header class="rounded-[28px] border border-loomera-borderSoft bg-white/95 p-4 shadow-lm-card sm:p-6">
+      <div class="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+        <div class="min-w-0">
+          <p class="text-[11px] font-black text-loomera-primaryText">مدیریت سالن</p>
+          <h1 class="mt-1 text-2xl font-black leading-9 text-loomera-textPrimary sm:text-3xl">خدمات</h1>
+          <p class="mt-2 max-w-2xl text-sm leading-7 text-loomera-textMuted">
+            خدمت‌ها، قیمت و متخصص ارائه‌دهنده را مدیریت کن. برای اولین رزرو، یک خدمت فعال با قیمت معتبر کافی است.
+          </p>
+        </div>
+
+        <a href="{{ add_service_url }}" class="inline-flex min-h-12 shrink-0 items-center justify-center gap-2 rounded-2xl bg-loomera-primary px-5 py-3 text-sm font-black text-white shadow-lm-soft transition hover:opacity-95">
+          <i class="fa-solid fa-plus text-xs" aria-hidden="true"></i>
+          افزودن خدمت
+        </a>
+      </div>
+
+      <div class="mt-5 flex flex-wrap gap-2 text-xs font-bold">
+        <span class="rounded-full bg-loomera-bgSubtle px-3 py-2 text-loomera-textSecondary">{{ service_workspace.total_services_count }} خدمت</span>
+        <span class="rounded-full bg-emerald-50 px-3 py-2 text-emerald-700">{{ service_workspace.active_services_count }} فعال</span>
+        {% if service_workspace.unassigned_services_count != "۰" %}
+          <button type="button" class="rounded-full bg-amber-50 px-3 py-2 text-amber-700" data-service-filter-shortcut="unassigned">
+            {{ service_workspace.unassigned_services_count }} بدون متخصص
+          </button>
+        {% endif %}
+      </div>
+    </header>
+
+    {% if service_setup_handoff %}
+      <section
+        class="overflow-hidden rounded-[26px] border {% if service_setup_handoff.status_tone == 'success' %}border-emerald-200 bg-emerald-50/90{% else %}border-amber-200 bg-amber-50/90{% endif %} shadow-lm-soft"
+        data-service-setup-handoff
+        aria-labelledby="service-setup-handoff-title"
+      >
+        <div class="flex flex-col gap-4 p-4 sm:p-5 lg:flex-row lg:items-center lg:justify-between">
+          <div class="flex min-w-0 items-start gap-3">
+            <span class="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-white shadow-sm {% if service_setup_handoff.status_tone == 'success' %}text-emerald-700{% else %}text-amber-700{% endif %}">
+              {% if service_setup_handoff.status_tone == 'success' %}
+                <i class="fa-solid fa-calendar-check" aria-hidden="true"></i>
+              {% else %}
+                <i class="fa-solid fa-user-plus" aria-hidden="true"></i>
+              {% endif %}
+            </span>
+
+            <div class="min-w-0">
+              <div class="flex flex-wrap items-center gap-2">
+                <p class="text-[11px] font-black {% if service_setup_handoff.status_tone == 'success' %}text-emerald-700{% else %}text-amber-700{% endif %}">قدم بعدی راه‌اندازی</p>
+                <span class="rounded-full bg-white px-3 py-1 text-[10px] font-black {% if service_setup_handoff.status_tone == 'success' %}text-emerald-700{% else %}text-amber-700{% endif %}">{{ service_setup_handoff.status_label }}</span>
+              </div>
+              <h2 id="service-setup-handoff-title" class="mt-2 break-words text-base font-black leading-7 text-loomera-textPrimary sm:text-lg">{{ service_setup_handoff.title }}</h2>
+              <p class="mt-1 break-words text-sm font-bold text-loomera-textSecondary">{{ service_setup_handoff.service_name }}</p>
+              <p class="mt-2 max-w-3xl text-xs leading-6 text-loomera-textMuted sm:text-sm sm:leading-7">{{ service_setup_handoff.description }}</p>
+            </div>
+          </div>
+
+          <div class="flex shrink-0 flex-col gap-2 sm:flex-row lg:max-w-md lg:flex-wrap lg:justify-end">
+            <a href="{{ service_setup_handoff.primary_url }}" class="inline-flex min-h-11 items-center justify-center gap-2 rounded-2xl bg-loomera-primary px-4 py-3 text-sm font-black text-white shadow-lm-soft transition hover:bg-loomera-primaryHover" data-service-setup-primary>
+              {{ service_setup_handoff.primary_label }}
+              <i class="fa-solid fa-arrow-left text-xs" aria-hidden="true"></i>
+            </a>
+            <a href="{{ service_setup_handoff.secondary_url }}" class="inline-flex min-h-11 items-center justify-center rounded-2xl border border-loomera-borderSoft bg-white px-4 py-3 text-sm font-bold text-loomera-textSecondary transition hover:border-loomera-primary/30 hover:bg-loomera-primarySoft/40" data-service-setup-secondary>{{ service_setup_handoff.secondary_label }}</a>
+            <a href="{{ service_setup_handoff.dismiss_url }}" class="inline-flex min-h-11 items-center justify-center px-3 py-2 text-xs font-bold text-loomera-textMuted transition hover:text-loomera-textPrimary" aria-label="بستن راهنمای قدم بعدی">بعداً انجام می‌دهم</a>
+          </div>
+        </div>
+      </section>
+    {% endif %}
+
+    {% if service_workspace.unassigned_services_count != "۰" %}
+      <section class="rounded-[24px] border border-amber-200 bg-amber-50 p-4 sm:p-5" aria-label="خدمات نیازمند اقدام">
+        <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <div class="min-w-0">
+            <h2 class="text-sm font-black text-amber-900">بعضی خدمات هنوز متخصص ارائه‌دهنده ندارند</h2>
+            <p class="mt-1 text-xs leading-6 text-amber-800">این خدمات تا زمان اتصال به عضو تیم، مسیر رزرو کامل ندارند.</p>
+          </div>
+          <a href="{{ team_member_url }}" class="inline-flex min-h-10 shrink-0 items-center justify-center rounded-full border border-amber-200 bg-white px-4 py-2 text-xs font-black text-amber-800">مدیریت تیم</a>
+        </div>
+      </section>
+    {% endif %}
+
+    <section class="rounded-[28px] border border-loomera-borderSoft bg-white/95 p-4 shadow-lm-card sm:p-5 lg:p-6">
+      <div class="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
+        <label class="relative block min-w-0 flex-1">
+          <span class="sr-only">جستجوی خدمات</span>
+          <i class="fa-solid fa-magnifying-glass pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-xs text-loomera-textMuted" aria-hidden="true"></i>
+          <input type="search" class="w-full rounded-2xl border border-loomera-borderSoft bg-white py-3 pl-4 pr-10 text-sm font-bold text-loomera-textPrimary outline-none transition placeholder:text-loomera-textMuted focus:border-loomera-primary/40 focus:ring-4 focus:ring-loomera-primary/10" placeholder="جستجوی نام خدمت یا گروه" data-service-search>
+        </label>
+
+        <div class="lm-mobile-scroll-strip flex gap-2 overflow-x-auto pb-1" aria-label="فیلتر خدمات">
+          <button type="button" class="lm-app-touch-target shrink-0 rounded-full border border-loomera-primary/20 bg-loomera-primarySoft px-3 py-2 text-xs font-black text-loomera-primaryText" data-service-filter="all">همه</button>
+          <button type="button" class="lm-app-touch-target shrink-0 rounded-full border border-loomera-borderSoft bg-white px-3 py-2 text-xs font-black text-loomera-textSecondary" data-service-filter="active">فعال</button>
+          <button type="button" class="lm-app-touch-target shrink-0 rounded-full border border-loomera-borderSoft bg-white px-3 py-2 text-xs font-black text-loomera-textSecondary" data-service-filter="unassigned">بدون متخصص</button>
+          <button type="button" class="lm-app-touch-target shrink-0 rounded-full border border-loomera-borderSoft bg-white px-3 py-2 text-xs font-black text-loomera-textSecondary" data-service-filter="unpriced">بدون قیمت</button>
+          <button type="button" class="lm-app-touch-target shrink-0 rounded-full border border-loomera-borderSoft bg-white px-3 py-2 text-xs font-black text-loomera-textSecondary" data-service-filter="inactive">غیرفعال</button>
+        </div>
+      </div>
+
+      <p class="mt-3 text-xs text-loomera-textMuted"><strong class="font-black text-loomera-textPrimary" data-visible-service-count>{{ service_workspace.total_services_count }}</strong> خدمت نمایش داده می‌شود.</p>
+
+      <div class="mt-5 space-y-5" data-service-catalog>
+        {% for section in service_sections %}
+          <section data-service-group>
+            <div class="mb-3 flex flex-wrap items-center justify-between gap-2">
+              <div>
+                <h2 class="text-sm font-black text-loomera-textPrimary">{{ section.label }}</h2>
+                <p class="mt-1 text-xs text-loomera-textMuted">{{ section.count_label }} خدمت</p>
+              </div>
+              {% if section.unassigned_count > 0 %}
+                <span class="rounded-full bg-amber-50 px-3 py-1.5 text-[11px] font-black text-amber-700">{{ section.unassigned_count_label }} بدون متخصص</span>
+              {% endif %}
+            </div>
+
+            <div class="grid gap-3 md:grid-cols-2 xl:grid-cols-3">
+              {% for service in section.services %}
+                <details class="lm-compact-record min-w-0"
+                         data-service-card
+                         data-lm-compact-record
+                         data-lm-compact-group="services-{{ forloop.parentloop.counter }}"
+                         data-service-status="{% if service.is_active %}active{% else %}inactive{% endif %}"
+                         data-service-coverage="{% if service.assigned_team_names %}covered{% else %}unassigned{% endif %}"
+                         data-service-priced="{% if service.price_label == 'ثبت نشده' %}unpriced{% else %}priced{% endif %}"
+                         data-service-search-value="{{ service.name }} {{ section.label }} {% for member in service.assigned_team_names %}{{ member }} {% endfor %}">
+                  <summary class="lm-compact-record-summary">
+                    {% if service.image %}
+                      <span class="lm-compact-record-avatar"><img src="{{ service.image.url }}" alt="" class="h-full w-full object-cover"></span>
+                    {% else %}
+                      <span class="lm-compact-record-avatar" aria-hidden="true"><i class="fa-solid fa-scissors"></i></span>
+                    {% endif %}
+                    <span class="min-w-0 flex-1 text-right">
+                      <span class="flex min-w-0 flex-wrap items-center gap-2">
+                        <strong class="min-w-0 line-clamp-2 break-words text-sm font-black leading-6 text-loomera-textPrimary">{{ service.name }}</strong>
+                        <span class="lm-status-chip shrink-0 rounded-full px-2.5 py-1 text-[10px] font-black {{ service.status_badge_class }}">{{ service.status_label }}</span>
+                      </span>
+                      <span class="mt-1 block truncate text-xs text-loomera-textMuted">{{ service.duration_label }} • {{ service.price_label }}</span>
+                    </span>
+                    <span class="lm-compact-record-chevron" aria-hidden="true"><i class="fa-solid fa-chevron-down text-[10px]"></i></span>
+                  </summary>
+                  <div class="lm-compact-record-body">
+                    <div class="flex flex-wrap items-center gap-2 text-[11px] font-bold">
+                      {% if service.assigned_team_names %}<span class="rounded-full bg-emerald-50 px-3 py-1.5 text-emerald-700">{{ service.team_count_label }} متخصص</span>{% else %}<span class="rounded-full bg-amber-50 px-3 py-1.5 text-amber-700">بدون متخصص</span>{% endif %}
+                      {% if service.price_label == 'ثبت نشده' %}<span class="rounded-full bg-amber-50 px-3 py-1.5 text-amber-700">قیمت ناقص</span>{% endif %}
+                    </div>
+                    {% if service.has_future_active_bookings %}<p class="mt-3 rounded-2xl bg-amber-50 px-3 py-2 text-[11px] leading-5 text-amber-800">{{ service.future_active_booking_count_label }} نوبت پیشِ رو دارد؛ فعلاً نمی‌توان وضعیت خدمت را تغییر داد.</p>{% endif %}
+                    {% if service.assigned_team_names %}<p class="mt-3 text-xs leading-6 text-loomera-textMuted"><span class="font-black text-loomera-textSecondary">متخصص‌ها:</span> {{ service.assigned_team_names|join:"، " }}</p>{% endif %}
+                    <div class="mt-3 flex flex-wrap items-center gap-2 border-t border-loomera-borderSoft pt-3">
+                      <a href="{{ service.edit_url }}" class="lm-app-touch-target inline-flex items-center justify-center rounded-full bg-loomera-primary px-4 py-2 text-xs font-black text-white">ویرایش خدمت</a>
+                      {% if not service.is_active or not service.has_future_active_bookings %}<form method="post" action="{{ service.toggle_url }}">{% csrf_token %}<button type="submit" class="lm-app-touch-target rounded-full border border-loomera-borderSoft bg-white px-3 py-2 text-xs font-bold text-loomera-textSecondary">{% if service.is_active %}غیرفعال‌کردن{% else %}فعال‌کردن{% endif %}</button></form>{% endif %}
+                      {% if not service.has_future_active_bookings and not service.has_booking_history %}<form method="post" action="{{ service.remove_url }}" onsubmit="return confirm('از حذف این خدمت مطمئنی؟');">{% csrf_token %}<button type="submit" class="lm-app-touch-target rounded-full border border-loomera-borderSoft bg-white px-3 py-2 text-xs font-bold text-rose-700 transition">حذف</button></form>{% endif %}
+                    </div>
+                  </div>
+                </details>
+              {% endfor %}
+            </div>
+          </section>
+        {% empty %}
+          {% include "dashboards/components/empty_state.html" with icon="fa-solid fa-scissors" title="هنوز خدمتی ثبت نشده است" description="برای شروع رزرو آنلاین، اولین خدمت را بساز." action_label="افزودن اولین خدمت" action_url=add_service_url %}
+        {% endfor %}
+
+        <div class="hidden rounded-[22px] border border-dashed border-loomera-borderSoft bg-loomera-bgSubtle/60 px-4 py-8 text-center text-sm text-loomera-textMuted" data-service-filter-empty>خدمتی با این جستجو یا فیلتر پیدا نشد.</div>
+      </div>
+    </section>
+  </section>
+{% endblock %}
+
+{% block js %}
+  {{ block.super }}
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const root = document.querySelector("[data-service-menu-page]");
+      if (!root) return;
+
+      const searchInput = root.querySelector("[data-service-search]");
+      const filterButtons = Array.from(root.querySelectorAll("[data-service-filter]"));
+      const shortcut = root.querySelector("[data-service-filter-shortcut]");
+      const cards = Array.from(root.querySelectorAll("[data-service-card]"));
+      const groups = Array.from(root.querySelectorAll("[data-service-group]"));
+      const empty = root.querySelector("[data-service-filter-empty]");
+      const count = root.querySelector("[data-visible-service-count]");
+      let activeFilter = "all";
+
+      const fa = (value) => String(value).replace(/\d/g, (digit) => "۰۱۲۳۴۵۶۷۸۹"[Number(digit)]);
+      const matches = (card) => {
+        if (activeFilter === "active") return card.dataset.serviceStatus === "active";
+        if (activeFilter === "inactive") return card.dataset.serviceStatus === "inactive";
+        if (activeFilter === "unassigned") return card.dataset.serviceCoverage === "unassigned";
+        if (activeFilter === "unpriced") return card.dataset.servicePriced === "unpriced";
+        return true;
+      };
+
+      const apply = () => {
+        const query = (searchInput?.value || "").trim().toLowerCase();
+        let shown = 0;
+        cards.forEach((card) => {
+          const haystack = (card.dataset.serviceSearchValue || card.textContent || "").toLowerCase();
+          const visible = matches(card) && (!query || haystack.includes(query));
+          card.classList.toggle("hidden", !visible);
+          if (visible) shown += 1;
+        });
+        groups.forEach((group) => {
+          const visible = Array.from(group.querySelectorAll("[data-service-card]")).some((card) => !card.classList.contains("hidden"));
+          group.classList.toggle("hidden", !visible);
+        });
+        filterButtons.forEach((button) => {
+          const selected = button.dataset.serviceFilter === activeFilter;
+          button.classList.toggle("bg-loomera-primarySoft", selected);
+          button.classList.toggle("text-loomera-primaryText", selected);
+          button.classList.toggle("border-loomera-primary/20", selected);
+          button.classList.toggle("bg-white", !selected);
+          button.classList.toggle("text-loomera-textSecondary", !selected);
+          button.classList.toggle("border-loomera-borderSoft", !selected);
+          button.setAttribute("aria-pressed", selected ? "true" : "false");
+        });
+        empty?.classList.toggle("hidden", shown !== 0 || cards.length === 0);
+        if (count) count.textContent = fa(shown);
+      };
+
+      filterButtons.forEach((button) => button.addEventListener("click", () => {
+        activeFilter = button.dataset.serviceFilter || "all";
+        apply();
+      }));
+      shortcut?.addEventListener("click", () => {
+        activeFilter = "unassigned";
+        apply();
+        searchInput?.scrollIntoView({ behavior: "smooth", block: "center" });
+      });
+      searchInput?.addEventListener("input", apply);
+      apply();
+    });
+  </script>
+{% endblock %}

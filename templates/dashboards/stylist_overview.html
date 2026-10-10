@@ -1,0 +1,245 @@
+{% extends "dashboard_template.html" %}
+{% load jalali_extras %}
+
+{% block title %}پروفایل عضو تیم{% endblock %}
+{% block body_attrs %}data-page="stylist-overview"{% endblock %}
+
+{% block content %}
+  {% url 'dashboards:edit_stylist' stylist.user.id as edit_stylist_url %}
+  {% url 'dashboards:team_member' as team_member_url %}
+
+  <section class="min-w-0 max-w-full space-y-4 overflow-visible lg:space-y-5"
+           data-dashboard-workspace-root
+           data-dashboard-page="stylist-overview">
+
+    <a href="{{ team_member_url }}"
+       class="inline-flex min-h-11 items-center gap-2 rounded-full border border-loomera-borderSoft bg-white px-4 py-2 text-xs font-black text-loomera-textSecondary shadow-lm-soft transition hover:border-loomera-primary/30 hover:text-loomera-primaryText">
+      <i class="fa-solid fa-arrow-right text-[11px]" aria-hidden="true"></i>
+      بازگشت به تیم
+    </a>
+
+    {% include "dashboards/components/page_hero.html" with eyebrow="پروفایل عضو تیم" eyebrow_icon="fa-solid fa-id-badge" title=stylist.get_fullName description="اطلاعات، خدمات، نوبت‌ها و برنامه کاری این عضو را در همین مجموعه بررسی کن." action_label="ویرایش عضو" action_url=edit_stylist_url badges=page_meta.badges %}
+
+    <div data-lm-task-tabs-anchor="stylist-overview" data-lm-task-tabs-label="بخش‌های پروفایل عضو"></div>
+
+    <section id="stylist-overview-section-summary"
+             class="scroll-mt-28 overflow-hidden rounded-[28px] border border-loomera-borderSoft bg-white/95 shadow-lm-card lg:scroll-mt-36"
+             data-dashboard-workspace-panel
+             data-lm-task-panel="stylist-overview"
+             data-lm-task-key="summary"
+             data-lm-task-label="خلاصه"
+             data-lm-task-default
+             data-lm-task-order="1">
+      <div class="p-4 sm:p-5 lg:p-6">
+        <div class="flex flex-col gap-5 lg:flex-row lg:items-start lg:justify-between">
+          <div class="flex min-w-0 items-start gap-4">
+            {% if stylist.profile_image %}
+              <img src="{{ stylist.profile_image.url }}" alt="{{ stylist.get_fullName }}" class="h-20 w-20 shrink-0 rounded-[28px] object-cover shadow-lm-soft">
+            {% else %}
+              <span class="inline-flex h-20 w-20 shrink-0 items-center justify-center rounded-[28px] bg-loomera-primarySoft text-2xl font-black text-loomera-primaryText shadow-lm-soft">
+                {{ stylist.get_fullName|slice:":1" }}
+              </span>
+            {% endif %}
+
+            <div class="min-w-0 pt-1">
+              <div class="flex flex-wrap items-center gap-2">
+                <span class="lm-status-chip inline-flex items-center rounded-full px-3 py-1 text-[11px] font-black {{ stylist_workspace.member_status_badge_class }}">
+                  {{ stylist_workspace.member_status_label }}
+                </span>
+              </div>
+              <p class="mt-3 text-sm font-black text-loomera-textPrimary">{{ stylist.expert|default:"بدون تخصص ثبت‌شده" }}</p>
+              <p class="mt-2 inline-flex items-center gap-2 text-xs font-bold text-loomera-textMuted">
+                <i class="fa-solid fa-phone text-[10px] text-loomera-primaryText" aria-hidden="true"></i>
+                {{ stylist.user.mobile_number|default:"شماره تماس ثبت نشده" }}
+              </p>
+            </div>
+          </div>
+
+          <div class="grid w-full gap-3 sm:grid-cols-2 lg:max-w-xl">
+            <div class="rounded-2xl bg-loomera-bgSubtle px-4 py-4">
+              <p class="text-xs font-bold text-loomera-textMuted">شروع همکاری</p>
+              <p class="mt-2 text-sm font-black text-loomera-textPrimary">{{ stylist_workspace.job_start_label }}</p>
+            </div>
+            <div class="rounded-2xl bg-loomera-bgSubtle px-4 py-4">
+              <p class="text-xs font-bold text-loomera-textMuted">نوع همکاری</p>
+              <p class="mt-2 text-sm font-black text-loomera-textPrimary">{{ stylist_workspace.employment_type_label }}</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="mt-5 border-t border-loomera-borderSoft pt-5">
+          <div class="mb-3 flex items-center justify-between gap-3">
+            <div>
+              <h2 class="text-base font-black text-loomera-textPrimary">عملکرد ماه جاری</h2>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 gap-3 sm:grid-cols-3">
+            <article class="rounded-2xl border border-loomera-borderSoft bg-white p-4">
+              <p class="text-[11px] font-bold text-loomera-textMuted">فروش</p>
+              <p class="mt-2 text-base font-black text-loomera-textPrimary">{{ stats.sales }}</p>
+              <p class="mt-1 text-[10px] font-bold text-loomera-textMuted">{{ stats.sales_change }}٪ نسبت به ماه قبل</p>
+            </article>
+            <article class="rounded-2xl border border-loomera-borderSoft bg-white p-4">
+              <p class="text-[11px] font-bold text-loomera-textMuted">نوبت‌های انجام‌شده</p>
+              <p class="mt-2 text-base font-black text-loomera-textPrimary">{{ stats.appointments }}</p>
+              <p class="mt-1 text-[10px] font-bold text-loomera-textMuted">{{ stats.appointments_change }}٪ نسبت به ماه قبل</p>
+            </article>
+            <article class="rounded-2xl border border-loomera-borderSoft bg-white p-4">
+              <p class="text-[11px] font-bold text-loomera-textMuted">درصد رضایت</p>
+              <p class="mt-2 text-base font-black text-loomera-textPrimary">{% if stats.satisfaction_percent_label == '—' %}—{% else %}{{ stats.satisfaction_percent_label }}٪{% endif %}</p>
+            </article>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="stylist-overview-section-services"
+             class="scroll-mt-28 overflow-hidden rounded-[28px] border border-loomera-borderSoft bg-white/95 shadow-lm-card lg:scroll-mt-36"
+             data-dashboard-workspace-panel
+             data-lm-task-panel="stylist-overview"
+             data-lm-task-key="services"
+             data-lm-task-label="خدمات"
+             data-lm-task-order="2">
+      <header class="border-b border-loomera-borderSoft px-4 py-4 sm:px-5 lg:px-6">
+        <div class="flex flex-wrap items-center justify-between gap-3">
+          <div>
+            <h2 class="text-base font-black text-loomera-textPrimary">خدمات این عضو</h2>
+            <p class="mt-1 text-xs leading-6 text-loomera-textMuted">فقط خدماتی که در همین مجموعه به این متخصص متصل هستند.</p>
+          </div>
+          <span class="inline-flex items-center rounded-full bg-loomera-primarySoft px-3 py-1.5 text-xs font-black text-loomera-primaryText">
+            {{ stylist_workspace.service_count_label }} خدمت
+          </span>
+        </div>
+      </header>
+
+      <div class="space-y-4 p-4 sm:p-5 lg:p-6">
+        {% if service_groups %}
+          <div class="flex flex-wrap gap-2">
+            {% for group in service_groups %}
+              <span class="inline-flex items-center rounded-full bg-loomera-bgSubtle px-3 py-2 text-xs font-black text-loomera-textSecondary">{{ group }}</span>
+            {% endfor %}
+          </div>
+        {% endif %}
+
+        <div class="grid gap-3 md:grid-cols-2 xl:grid-cols-3">
+          {% for service in current_salon_services %}
+            <article class="rounded-[22px] border border-loomera-borderSoft bg-white px-4 py-4 shadow-lm-soft">
+              <p class="text-sm font-black text-loomera-textPrimary">{{ service.service_name }}</p>
+              {% if service.price %}
+                <p class="mt-2 text-xs text-loomera-textMuted">{{ service.price|floatformat:0|fa_digits }} تومان</p>
+              {% endif %}
+            </article>
+          {% empty %}
+            <div class="md:col-span-2 xl:col-span-3">
+              {% include "dashboards/components/empty_state.html" with icon="fa-solid fa-scissors" title="خدمتی برای این عضو ثبت نشده" description="از صفحه ویرایش عضو، خدمات این متخصص را برای مجموعه انتخاب کن." %}
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+    </section>
+
+    <section id="stylist-overview-section-appointments"
+             class="scroll-mt-28 overflow-hidden rounded-[28px] border border-loomera-borderSoft bg-white/95 shadow-lm-card lg:scroll-mt-36"
+             data-dashboard-workspace-panel
+             data-lm-task-panel="stylist-overview"
+             data-lm-task-key="appointments"
+             data-lm-task-label="نوبت‌ها"
+             data-lm-task-order="3">
+      <header class="border-b border-loomera-borderSoft px-4 py-4 sm:px-5 lg:px-6">
+        <div class="flex flex-wrap items-center justify-between gap-3">
+          <div>
+            <h2 class="text-base font-black text-loomera-textPrimary">نوبت‌های آینده</h2>
+            <p class="mt-1 text-xs leading-6 text-loomera-textMuted">رزروهای آینده این متخصص در همین مجموعه.</p>
+          </div>
+          <span class="inline-flex items-center rounded-full bg-loomera-bgSubtle px-3 py-1.5 text-xs font-black text-loomera-textSecondary">
+            {{ stylist_workspace.upcoming_appointments_count }} نوبت
+          </span>
+        </div>
+      </header>
+
+      <div class="grid gap-3 p-4 sm:p-5 md:grid-cols-2 xl:grid-cols-3 lg:p-6">
+        {% for appointment in upcoming_appointments %}
+          <article class="rounded-[22px] border border-loomera-borderSoft bg-white p-4 shadow-lm-soft">
+            <span class="inline-flex items-center rounded-full bg-loomera-bgSubtle px-3 py-1 text-[11px] font-black text-loomera-textSecondary">{{ appointment.service_name }}</span>
+            <p class="mt-3 text-sm font-black text-loomera-textPrimary">{{ appointment.customer_name }}</p>
+            <p class="mt-1 text-xs text-loomera-textMuted">{{ appointment.date_label }} • {{ appointment.time_label }}</p>
+          </article>
+        {% empty %}
+          <div class="md:col-span-2 xl:col-span-3">
+            {% include "dashboards/components/empty_state.html" with icon="fa-regular fa-calendar-check" title="نوبت آینده‌ای ثبت نشده" description="نوبت‌های آینده این متخصص در همین مجموعه اینجا نمایش داده می‌شوند." %}
+          </div>
+        {% endfor %}
+      </div>
+    </section>
+
+    <section id="stylist-overview-section-schedule"
+             class="scroll-mt-28 overflow-hidden rounded-[28px] border border-loomera-borderSoft bg-white/95 shadow-lm-card lg:scroll-mt-36"
+             data-dashboard-workspace-panel
+             data-lm-task-panel="stylist-overview"
+             data-lm-task-key="schedule"
+             data-lm-task-label="برنامه و مرخصی"
+             data-lm-task-order="4">
+      <header class="border-b border-loomera-borderSoft px-4 py-4 sm:px-5 lg:px-6">
+        <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <div>
+            <h2 class="text-base font-black text-loomera-textPrimary">برنامه و مرخصی</h2>
+            <p class="mt-1 text-xs leading-6 text-loomera-textMuted">شیفت‌ها و مرخصی‌های آینده این متخصص را یکجا ببین.</p>
+          </div>
+          <div class="flex flex-wrap gap-2">
+            <a href="{{ stylist_workspace.scheduled_shifts_url }}" class="inline-flex min-h-10 items-center justify-center gap-2 rounded-full border border-loomera-borderSoft bg-white px-4 py-2 text-xs font-black text-loomera-textSecondary transition hover:border-loomera-primary/30 hover:text-loomera-primaryText">
+              <i class="fa-regular fa-calendar-days" aria-hidden="true"></i>
+              مدیریت شیفت‌ها و مرخصی
+            </a>
+            <a href="{{ stylist_workspace.set_regular_shifts_url }}" class="inline-flex min-h-10 items-center justify-center gap-2 rounded-full bg-loomera-primarySoft px-4 py-2 text-xs font-black text-loomera-primaryText transition hover:bg-loomera-primary/15">
+              <i class="fa-solid fa-repeat" aria-hidden="true"></i>
+              شیفت منظم
+            </a>
+          </div>
+        </div>
+      </header>
+
+      <div class="grid gap-5 p-4 sm:p-5 xl:grid-cols-2 lg:p-6">
+        <div>
+          <div class="mb-3 flex items-center justify-between gap-3">
+            <h3 class="text-sm font-black text-loomera-textPrimary">شیفت‌های نزدیک</h3>
+            <span class="text-xs font-black text-loomera-textMuted">{{ stylist_workspace.schedule_count }}</span>
+          </div>
+          <div class="space-y-3">
+            {% for row in schedule_rows %}
+              <article class="rounded-[22px] border border-loomera-borderSoft bg-white p-4 shadow-lm-soft">
+                <div class="flex items-center justify-between gap-3">
+                  <p class="text-sm font-black text-loomera-textPrimary">{{ row.date_label }}</p>
+                  <span class="text-xs font-bold text-loomera-textMuted">{{ row.time_label }}</span>
+                </div>
+                <p class="mt-2 text-sm text-loomera-textSecondary">{{ row.service_name }}</p>
+              </article>
+            {% empty %}
+              {% include "dashboards/components/empty_state.html" with icon="fa-regular fa-clock" title="شیفت آینده‌ای ثبت نشده" description="برای نمایش ظرفیت این متخصص، برنامه کاری آینده را تنظیم کن." %}
+            {% endfor %}
+          </div>
+        </div>
+
+        <div>
+          <div class="mb-3 flex items-center justify-between gap-3">
+            <h3 class="text-sm font-black text-loomera-textPrimary">مرخصی‌های آینده</h3>
+            <span class="text-xs font-black text-loomera-textMuted">{{ stylist_workspace.upcoming_time_off_count }}</span>
+          </div>
+          <div class="space-y-3">
+            {% for item in upcoming_time_offs %}
+              <article class="rounded-[22px] border border-loomera-borderSoft bg-white p-4 shadow-lm-soft">
+                <div class="flex items-center justify-between gap-3">
+                  <p class="text-sm font-black text-loomera-textPrimary">{{ item.date_label }}</p>
+                  <span class="text-xs font-bold text-loomera-textMuted">{{ item.time_label }}</span>
+                </div>
+                <p class="mt-2 text-sm text-loomera-textSecondary">{{ item.reason }}</p>
+              </article>
+            {% empty %}
+              {% include "dashboards/components/empty_state.html" with icon="fa-regular fa-calendar-minus" title="مرخصی آینده‌ای ثبت نشده" description="مرخصی‌های تاییدشده آینده این متخصص اینجا نمایش داده می‌شوند." %}
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+    </section>
+  </section>
+{% endblock %}

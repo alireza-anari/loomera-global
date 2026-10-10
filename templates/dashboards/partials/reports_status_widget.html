@@ -1,0 +1,40 @@
+{% if reports_dashboard.status_breakdown.is_empty %}
+  {% include "dashboards/components/empty_state.html" with icon="fa-solid fa-chart-pie" title="برای این بازه رزروی وجود ندارد" description="با ثبت رزرو، ترکیب وضعیت‌ها اینجا به‌صورت نمودار نمایش داده می‌شود." %}
+{% else %}
+  <div class="space-y-3" data-reports-status-chart>
+    <div class="mx-auto w-full max-w-[240px]">
+      <canvas data-reports-status-canvas
+              style="display:block;width:100%;height:220px;"
+              role="img"
+              aria-label="نمودار دایره‌ای وضعیت رزروها"></canvas>
+    </div>
+
+    <div hidden>
+      {% for item in reports_dashboard.status_breakdown.items %}
+        {% if item.count %}
+          <span data-report-status-point
+                data-label="{{ item.label|escape }}"
+                data-count="{{ item.count }}"
+                data-color="{{ item.color }}"></span>
+        {% endif %}
+      {% endfor %}
+    </div>
+
+    <div class="grid grid-cols-2 gap-2">
+      {% for item in reports_dashboard.status_breakdown.items %}
+        {% if item.count %}
+          <div class="rounded-[14px] bg-loomera-bgSubtle px-2.5 py-2">
+            <div class="flex items-center gap-1.5">
+              <span class="h-2 w-2 shrink-0 rounded-full" style="background-color:{{ item.color }}"></span>
+              <span class="min-w-0 flex-1 truncate text-[9px] font-black text-loomera-textSecondary">{{ item.label }}</span>
+            </div>
+            <div class="mt-1 flex items-end justify-between gap-2">
+              <strong class="text-xs font-black text-loomera-textPrimary">{{ item.count_label }}</strong>
+              <span class="text-[9px] font-black text-loomera-textMuted">{{ item.share_label }}</span>
+            </div>
+          </div>
+        {% endif %}
+      {% endfor %}
+    </div>
+  </div>
+{% endif %}

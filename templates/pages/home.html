@@ -1,0 +1,359 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}لومرا | زیبایی، ساده‌تر{% endblock %}
+{% block body_attrs %}data-page="loomera-home"{% endblock %}
+
+{% block head %}
+  {{ block.super }}
+  <link rel="stylesheet" href="{% static 'css/pages/home_reference.css' %}">
+{% endblock %}
+
+{% block content %}
+<main class="lm-home" data-lm-home>
+
+  <!-- HERO -->
+  <section class="lm-home-hero lm-reveal">
+    <div class="lm-home-container lm-hero-grid">
+
+      <div class="lm-hero-copy">
+        <span class="lm-kicker">
+          <i class="fa-solid fa-sparkles" aria-hidden="true"></i>
+          پلتفرم هوشمند زیبایی و مدیریت سالن
+        </span>
+
+        <h1>
+          زیبایی، ساده‌تر
+          <br>
+          وقتی <em>همه‌چیز</em>
+          <br>
+          سر جای خودش است
+        </h1>
+
+        <p>
+          <span class="lm-brand-secondary">لومرا</span> مشتری‌ها، متخصص‌ها و سالن‌ها را در یک پلتفرم هوشمند
+          به هم متصل می‌کند تا تجربه‌ای بهتر برای همه بسازد.
+        </p>
+
+        <div class="lm-hero-actions">
+          <a href="{% url 'accounts:customer_signup' %}" class="lm-btn lm-btn-primary">
+            شروع رایگان
+          </a>
+          <button
+            type="button"
+            class="lm-btn lm-btn-ghost lm-intro-video-trigger"
+            data-lm-intro-video-open
+            aria-haspopup="dialog"
+            aria-controls="loomera-intro-video-dialog"
+          >
+            ببین چطور کار می‌کند
+            <i class="fa-regular fa-circle-play" aria-hidden="true"></i>
+          </button>
+        </div>
+      </div>
+
+      <div class="lm-hero-media" aria-label="نمونه تجربه رزرو در لومرا">
+        <div class="lm-phone-glow"></div>
+        <img
+          src="{% static 'images/home/home-hero-v8.webp' %}"
+          alt="نمونه رابط رزرو لومرا"
+          class="lm-hero-phone"
+        >
+      </div>
+
+    </div>
+  </section>
+
+
+  <!-- AUDIENCES -->
+  <section id="loomera-audiences" class="lm-home-section lm-reveal">
+    <div class="lm-home-container lm-section-panel">
+
+      <header class="lm-section-heading">
+        <h2>یک رزرو. سه تجربه. <em>یک جریان هماهنگ.</em></h2>
+      </header>
+
+      <div class="lm-audience-grid">
+
+        <article class="lm-audience-card lm-audience-customer">
+          <div class="lm-audience-copy">
+            <span class="lm-audience-icon">
+              <i class="fa-regular fa-user" aria-hidden="true"></i>
+            </span>
+            <h3>مشتری</h3>
+            <p>راحت پیدا کن<br>مطمئن انتخاب کن<br>سریع رزرو کن</p>
+          </div>
+          <img src="{% static 'images/home/audience-customer.webp' %}" alt="مشتری لومرا">
+        </article>
+
+        <article class="lm-audience-card lm-audience-stylist">
+          <div class="lm-audience-copy">
+            <span class="lm-audience-icon">
+              <i class="fa-solid fa-scissors" aria-hidden="true"></i>
+            </span>
+            <h3>متخصص</h3>
+            <p>برنامه‌ات را ببین<br>مشتری‌هایت را مدیریت کن<br>روی کارت تمرکز کن</p>
+          </div>
+          <img src="{% static 'images/home/audience-stylist.webp' %}" alt="متخصص لومرا">
+        </article>
+
+        <article class="lm-audience-card lm-audience-manager">
+          <div class="lm-audience-copy">
+            <span class="lm-audience-icon">
+              <i class="fa-solid fa-briefcase" aria-hidden="true"></i>
+            </span>
+            <h3>مدیر سالن</h3>
+            <p>تیم، نوبت‌ها و عملکرد<br>سالن را از یکجا<br>مدیریت کن</p>
+          </div>
+          <img src="{% static 'images/home/audience-manager.webp' %}" alt="مدیر سالن لومرا">
+        </article>
+
+      </div>
+    </div>
+  </section>
+
+
+  <!-- PRODUCT EXPERIENCES -->
+  <section class="lm-home-section lm-product-section lm-reveal">
+    <div class="lm-home-container">
+
+      <header class="lm-section-heading lm-product-heading">
+        <span class="lm-section-eyebrow">ساده برای هر نقش</span>
+        <h2>هرکس فقط چیزی را می‌بیند که <em>برای کار خودش لازم دارد</em></h2>
+        <p>
+          مسیر رزرو مشتری، برنامه متخصص و مدیریت سالن جدا و روشن طراحی شده‌اند
+          تا کارهای روزمره بدون شلوغی و رفت‌وبرگشت انجام شوند.
+        </p>
+      </header>
+
+      <div class="lm-product-showcase-grid">
+
+        <article class="lm-product-showcase lm-product-customer">
+          <div class="lm-product-copy">
+            <span class="lm-product-badge">
+              <i class="fa-regular fa-user" aria-hidden="true"></i>
+              تجربه مشتری
+            </span>
+            <h3>از انتخاب خدمت تا رزرو، همه‌چیز روشن است</h3>
+            <p>
+              مشتری سالن و خدمت مناسب را پیدا می‌کند، متخصص را انتخاب می‌کند
+              و در همان مسیر، زمان آزاد را می‌بیند و رزرو را تکمیل می‌کند.
+            </p>
+            <div class="lm-product-points">
+              <span><i class="fa-solid fa-magnifying-glass"></i> جستجو و کشف</span>
+              <span><i class="fa-solid fa-scissors"></i> انتخاب خدمت</span>
+              <span><i class="fa-regular fa-calendar-check"></i> رزرو نهایی</span>
+            </div>
+          </div>
+
+          <div class="lm-product-screen lm-product-screen-mobile">
+            <img
+              src="{% static 'images/home/customer-experience-v8.webp' %}"
+              alt="نمای تجربه رزرو مشتری در لومرا"
+            >
+          </div>
+        </article>
+
+
+        <article class="lm-product-showcase lm-product-stylist">
+          <div class="lm-product-copy">
+            <span class="lm-product-badge">
+              <i class="fa-solid fa-scissors" aria-hidden="true"></i>
+              پنل متخصص
+            </span>
+            <h3>روز کاری منظم، بدون رفت‌وآمد بین چند ابزار</h3>
+            <p>
+              متخصص بدون جابه‌جایی بین چند ابزار، برنامه امروز، مراجعین پیش‌رو،
+              خدمات و عملکرد خودش را از یک داشبورد می‌بیند.
+            </p>
+            <div class="lm-product-points">
+              <span><i class="fa-regular fa-clock"></i> برنامه امروز</span>
+              <span><i class="fa-regular fa-user"></i> مراجعین</span>
+              <span><i class="fa-solid fa-chart-line"></i> عملکرد</span>
+            </div>
+          </div>
+
+          <div class="lm-product-screen lm-product-screen-dashboard">
+            <img
+              src="{% static 'images/home/stylist-experience-v8.webp' %}"
+              alt="نمای داشبورد متخصص لومرا"
+            >
+          </div>
+        </article>
+
+
+        <article class="lm-product-showcase lm-product-manager">
+          <div class="lm-product-copy">
+            <span class="lm-product-badge">
+              <i class="fa-solid fa-briefcase" aria-hidden="true"></i>
+              داشبورد مدیر سالن
+            </span>
+            <h3>همه‌ی سالن، در یک نگاه</h3>
+            <p>
+              مدیر سالن وضعیت نوبت‌ها، درآمد، متخصص‌ها، خدمات و کانال‌های رزرو
+              را در یک نمای منسجم دنبال می‌کند.
+            </p>
+            <div class="lm-product-points">
+              <span><i class="fa-solid fa-users"></i> تیم و متخصصان</span>
+              <span><i class="fa-solid fa-chart-pie"></i> گزارش‌ها</span>
+              <span><i class="fa-regular fa-calendar"></i> نوبت‌ها</span>
+            </div>
+          </div>
+
+          <div class="lm-product-screen lm-product-screen-dashboard">
+            <img
+              src="{% static 'images/home/manager-experience-v8.webp' %}"
+              alt="نمای داشبورد مدیر سالن لومرا"
+            >
+          </div>
+        </article>
+
+      </div>
+    </div>
+  </section>
+
+
+  <!-- FLOW -->
+  <section class="lm-home-section lm-reveal">
+    <div class="lm-home-container lm-flow-panel">
+      <header class="lm-section-heading">
+        <h2>یک جریان هماهنگ از اولین کلیک تا بازگشت مشتری</h2>
+      </header>
+
+      <div class="lm-flow">
+        <article>
+          <span><i class="fa-solid fa-magnifying-glass"></i></span>
+          <strong>کشف</strong>
+          <small>جستجو و پیدا کردن بهترین گزینه</small>
+        </article>
+
+        <i class="fa-solid fa-chevron-left lm-flow-separator"></i>
+
+        <article>
+          <span><i class="fa-regular fa-heart"></i></span>
+          <strong>انتخاب</strong>
+          <small>بررسی خدمات، متخصص و زمان</small>
+        </article>
+
+        <i class="fa-solid fa-chevron-left lm-flow-separator"></i>
+
+        <article>
+          <span><i class="fa-regular fa-calendar-check"></i></span>
+          <strong>رزرو</strong>
+          <small>انتخاب زمان و ثبت نوبت</small>
+        </article>
+
+        <i class="fa-solid fa-chevron-left lm-flow-separator"></i>
+
+        <article>
+          <span><i class="fa-solid fa-scissors"></i></span>
+          <strong>ارائه خدمت</strong>
+          <small>تجربه حرفه‌ای در سالن</small>
+        </article>
+
+        <i class="fa-solid fa-chevron-left lm-flow-separator"></i>
+
+        <article>
+          <span><i class="fa-solid fa-chart-simple"></i></span>
+          <strong>مدیریت</strong>
+          <small>مدیریت تیم و نوبت‌ها</small>
+        </article>
+
+        <i class="fa-solid fa-chevron-left lm-flow-separator"></i>
+
+        <article>
+          <span><i class="fa-regular fa-user"></i></span>
+          <strong>بازگشت مشتری</strong>
+          <small>تجربه بهتر و وفاداری</small>
+        </article>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- FINAL CTA -->
+  <section class="lm-home-section lm-home-final lm-reveal">
+    <div class="lm-home-container lm-final-panel">
+      <header class="lm-section-heading">
+        <h2><span class="lm-brand-secondary">لومرا</span> برای تو از کجا شروع می‌شود؟</h2>
+        <p>نقش خودت را انتخاب کن تا با بهترین تجربه برای همان مسیر شروع کنی.</p>
+      </header>
+
+      <div class="lm-final-grid">
+        <a href="{% url 'accounts:customer_signup' %}" class="lm-final-option">
+          <span><i class="fa-regular fa-user"></i></span>
+          <div>
+            <strong>مشتری هستم</strong>
+            <small>سالن و متخصص مناسب را پیدا و رزرو می‌کنم</small>
+          </div>
+          <i class="fa-solid fa-arrow-left"></i>
+        </a>
+
+        <a href="{% url 'accounts:stylist_signup' %}" class="lm-final-option">
+          <span><i class="fa-solid fa-scissors"></i></span>
+          <div>
+            <strong>متخصص هستم</strong>
+            <small>برنامه و نوبت‌هایم را ساده‌تر مدیریت می‌کنم</small>
+          </div>
+          <i class="fa-solid fa-arrow-left"></i>
+        </a>
+
+        <a href="{% url 'accounts:register' %}" class="lm-final-option">
+          <span><i class="fa-solid fa-briefcase"></i></span>
+          <div>
+            <strong>مدیر سالن هستم</strong>
+            <small>تیم، نوبت‌ها و عملکرد سالن را یکجا می‌بینم</small>
+          </div>
+          <i class="fa-solid fa-arrow-left"></i>
+        </a>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<dialog
+  id="loomera-intro-video-dialog"
+  class="lm-intro-video-dialog"
+  aria-labelledby="loomera-intro-video-title"
+>
+  <div class="lm-intro-video-shell">
+
+    <h2 id="loomera-intro-video-title" class="sr-only">
+      معرفی لومرا و نحوه کار با پلتفرم
+    </h2>
+
+    <button
+      type="button"
+      class="lm-intro-video-close"
+      data-lm-intro-video-close
+      aria-label="بستن ویدیو"
+    >
+      <i class="fa-solid fa-xmark" aria-hidden="true"></i>
+    </button>
+
+    <video
+      class="lm-intro-video-player"
+      data-lm-intro-video
+      controls
+      playsinline
+      preload="metadata"
+      poster="{% static 'videos/loomera-intro-poster.webp' %}"
+    >
+      <source
+        src="{% static 'videos/loomera-intro-web.mp4' %}"
+        type="video/mp4"
+      >
+
+      مرورگر شما از پخش این ویدیو پشتیبانی نمی‌کند.
+    </video>
+
+  </div>
+</dialog>
+
+{% endblock %}
+
+{% block js %}
+  {{ block.super }}
+  <script src="{% static 'js/pages/home_reference.js' %}" defer></script>
+{% endblock %}

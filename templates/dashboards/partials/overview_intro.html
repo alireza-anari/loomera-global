@@ -1,0 +1,156 @@
+{% if not dashboard_home.has_salon %}
+  <section class="mx-auto max-w-4xl rounded-[28px] border border-dashed border-loomera-borderSoft bg-white p-6 text-center shadow-lm-soft sm:p-8" data-dashboard-home="empty-state">
+    <span class="mx-auto inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-loomera-primarySoft text-loomera-primaryText">
+      <i class="fa-regular fa-building" aria-hidden="true"></i>
+    </span>
+    <h1 class="mt-4 text-xl font-black text-loomera-textPrimary sm:text-2xl">هنوز مجموعه‌ای برای مدیریت نداری</h1>
+    <p class="mx-auto mt-2 max-w-xl text-sm leading-7 text-loomera-textMuted">برای شروع، اطلاعات اولیه مجموعه را ثبت کن.</p>
+    {% if dashboard_home.salon_profile_url and dashboard_home.salon_profile_url != '#' %}
+      <a href="{{ dashboard_home.salon_profile_url }}" class="mt-5 inline-flex min-h-12 items-center justify-center gap-2 rounded-2xl bg-loomera-primary px-5 py-3 text-sm font-black text-white shadow-lm-soft">
+        <span>ساخت مجموعه</span>
+        <i class="fa-solid fa-arrow-left text-xs" aria-hidden="true"></i>
+      </a>
+    {% endif %}
+  </section>
+{% else %}
+  <div class="min-w-0 max-w-full space-y-4 sm:space-y-5" data-dashboard-home="manager" data-dashboard-home-mode="{{ dashboard_home.mode }}">
+    {% if dashboard_home.mode == 'setup' %}
+      <section class="overflow-hidden rounded-[28px] border border-loomera-primary/20 bg-white shadow-lm-card" data-dashboard-setup-mode>
+        <div class="p-4 sm:p-5 lg:p-6">
+          <div class="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+            <div class="min-w-0 flex-1">
+              <div class="flex flex-wrap items-center gap-2">
+                <span class="inline-flex items-center gap-2 rounded-full bg-loomera-primarySoft px-3 py-1.5 text-[11px] font-black text-loomera-primaryText">
+                  <i class="fa-solid fa-list-check text-[10px]" aria-hidden="true"></i>
+                  <span>راه‌اندازی سالن</span>
+                </span>
+                <span class="text-xs font-bold text-loomera-textMuted">{{ dashboard_home.manager.setup.percent_label }}</span>
+              </div>
+              <h1 class="mt-3 text-xl font-black leading-tight text-loomera-textPrimary sm:text-2xl">{{ dashboard_home.manager.salon_name }}</h1>
+            </div>
+          </div>
+
+          <div class="mt-4 h-2 overflow-hidden rounded-full bg-loomera-bgSubtle" aria-hidden="true">
+            <div class="h-full rounded-full bg-loomera-primary transition-all" style="width: {{ dashboard_home.manager.setup.percent }}%;"></div>
+          </div>
+
+          {% if dashboard_home.manager.setup.next_action %}
+            <div class="mt-4 rounded-[22px] border border-loomera-primary/20 bg-loomera-primarySoft/55 p-4" data-dashboard-primary-task data-dashboard-setup-priority>
+              <p class="text-[11px] font-black text-loomera-primaryText">قدم بعدی</p>
+              <div class="mt-2 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                <div class="min-w-0">
+                  <h2 class="text-base font-black leading-7 text-loomera-textPrimary">{{ dashboard_home.manager.setup.next_action.title }}</h2>
+                  <p class="mt-1 max-w-2xl text-xs leading-6 text-loomera-textMuted">{{ dashboard_home.manager.setup.next_action.description }}</p>
+                </div>
+                {% if dashboard_home.manager.setup.next_action.action_url and dashboard_home.manager.setup.next_action.action_url != '#' %}
+                  <a href="{{ dashboard_home.manager.setup.next_action.action_url }}" data-dashboard-setup-primary-action class="inline-flex min-h-11 shrink-0 items-center justify-center gap-2 rounded-2xl bg-loomera-primary px-4 py-2.5 text-sm font-black text-white shadow-lm-soft">
+                    <span>{{ dashboard_home.manager.setup.next_action.action_label }}</span>
+                    <i class="fa-solid fa-arrow-left text-xs" aria-hidden="true"></i>
+                  </a>
+                {% endif %}
+              </div>
+            </div>
+          {% endif %}
+        </div>
+
+        <details class="group border-t border-loomera-borderSoft bg-loomera-bgSubtle/45">
+          <summary class="flex min-h-11 cursor-pointer list-none items-center justify-between gap-3 px-4 py-3 text-xs font-black text-loomera-textSecondary sm:px-5 lg:px-6">
+            <span>مسیر کامل راه‌اندازی</span>
+            <i class="fa-solid fa-chevron-down text-[10px] text-loomera-primaryText transition group-open:rotate-180" aria-hidden="true"></i>
+          </summary>
+          <div class="grid gap-2 border-t border-loomera-borderSoft p-4 sm:grid-cols-2 lg:grid-cols-3">
+            {% for item in dashboard_home.manager.setup.items %}
+              {% if item.is_done %}
+                <div class="flex min-h-11 items-center gap-2 rounded-2xl bg-emerald-50/70 px-3 py-2">
+                  <i class="fa-solid fa-check text-[10px] text-emerald-700" aria-hidden="true"></i>
+                  <span class="text-xs font-bold text-loomera-textSecondary">{{ item.title }}</span>
+                </div>
+              {% else %}
+                <a href="{{ item.action_url }}" class="flex min-h-11 items-center gap-2 rounded-2xl border border-loomera-borderSoft bg-white px-3 py-2 transition hover:border-loomera-primary/30">
+                  <i class="fa-solid fa-arrow-left text-[10px] text-loomera-primaryText" aria-hidden="true"></i>
+                  <span class="text-xs font-black text-loomera-textPrimary">{{ item.title }}</span>
+                </a>
+              {% endif %}
+            {% endfor %}
+          </div>
+        </details>
+      </section>
+    {% else %}
+      <section class="rounded-[28px] border border-loomera-borderSoft bg-white p-4 shadow-lm-card sm:p-5" data-dashboard-operational-mode>
+        <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+          <div class="min-w-0">
+            <p class="text-xs font-bold text-loomera-textMuted">{{ dashboard_home.manager.daily.date_label }}</p>
+            <h1 class="mt-1 text-xl font-black text-loomera-textPrimary sm:text-2xl">{{ dashboard_home.manager.salon_name }}</h1>
+            <div class="mt-3 flex flex-wrap gap-2 text-xs font-black">
+              <a href="{{ dashboard_home.manager.daily.calendar_url }}" class="rounded-full bg-loomera-primarySoft px-3 py-1.5 text-loomera-primaryText">{{ dashboard_home.manager.daily.appointments_today_label }} نوبت امروز</a>
+              {% if dashboard_home.manager.daily.attention_count %}
+                <span class="rounded-full bg-amber-50 px-3 py-1.5 text-amber-700">{{ dashboard_home.manager.daily.attention_count_label }} نیازمند اقدام</span>
+              {% endif %}
+            </div>
+          </div>
+          <div class="flex flex-wrap gap-2">
+            {% for action in dashboard_home.manager.quick_actions %}
+              {% if action.is_available != False and action.url and action.url != '#' %}
+                <a href="{{ action.url }}" class="inline-flex min-h-11 items-center justify-center gap-2 rounded-2xl px-4 py-2.5 text-xs font-black {% if action.style == 'primary' %}bg-loomera-primary text-white shadow-lm-soft{% else %}border border-loomera-borderSoft bg-white text-loomera-textSecondary{% endif %}">
+                  <i class="{{ action.icon }} text-[11px]" aria-hidden="true"></i>
+                  <span>{{ action.label }}</span>
+                </a>
+              {% endif %}
+            {% endfor %}
+          </div>
+        </div>
+      </section>
+    {% endif %}
+
+    {% if dashboard_home.manager.daily.attention_items %}
+      <section class="rounded-[24px] border border-amber-200 bg-amber-50/55 p-4 shadow-lm-soft" aria-labelledby="dashboard-attention-title">
+        <div class="flex items-center justify-between gap-3">
+          <h2 id="dashboard-attention-title" class="text-sm font-black text-amber-900">نیازمند اقدام</h2>
+        </div>
+        <div class="mt-3 grid gap-2 md:grid-cols-2 xl:grid-cols-3">
+          {% for item in dashboard_home.manager.daily.attention_items %}
+            <a href="{{ item.url }}" class="flex min-h-14 items-center gap-3 rounded-[18px] border border-amber-200 bg-white/85 p-3">
+              <span class="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-amber-100 text-amber-700"><i class="{{ item.icon }} text-xs" aria-hidden="true"></i></span>
+              <span class="min-w-0 flex-1 text-sm font-black text-loomera-textPrimary">{{ item.title }}</span>
+              <strong class="shrink-0 text-base font-black text-amber-800">{{ item.count_label }}</strong>
+            </a>
+          {% endfor %}
+        </div>
+      </section>
+    {% endif %}
+
+    {% if not dashboard_home.today.is_empty %}
+      <section class="rounded-[28px] border border-loomera-borderSoft bg-white p-4 shadow-lm-card sm:p-5" aria-labelledby="dashboard-today-title">
+        <div class="flex items-center justify-between gap-3">
+          <h2 id="dashboard-today-title" class="text-base font-black text-loomera-textPrimary">نوبت‌های امروز</h2>
+          <a href="{{ dashboard_home.manager.daily.calendar_url }}" class="text-xs font-black text-loomera-primaryText">همه نوبت‌ها</a>
+        </div>
+        <div class="mt-3">{% include "dashboards/partials/today_widget.html" %}</div>
+      </section>
+    {% elif dashboard_home.manager.daily.next_appointment %}
+      <section class="rounded-[26px] border border-loomera-borderSoft bg-white p-4 shadow-lm-card sm:p-5" aria-labelledby="dashboard-next-appointment-title">
+        <div class="flex items-center justify-between gap-3">
+          <h2 id="dashboard-next-appointment-title" class="text-base font-black text-loomera-textPrimary">نوبت بعدی</h2>
+          <a href="{{ dashboard_home.manager.daily.calendar_url }}" class="text-xs font-black text-loomera-primaryText">تقویم</a>
+        </div>
+        <a href="{{ dashboard_home.manager.daily.next_appointment.detail_url }}" class="mt-3 flex flex-col gap-3 rounded-[20px] bg-loomera-bgSubtle p-4 sm:flex-row sm:items-center sm:justify-between">
+          <div class="min-w-0">
+            <h3 class="text-sm font-black text-loomera-textPrimary">{{ dashboard_home.manager.daily.next_appointment.customer_name }}</h3>
+            <p class="mt-1 text-xs text-loomera-textSecondary">{{ dashboard_home.manager.daily.next_appointment.service_name }} · {{ dashboard_home.manager.daily.next_appointment.stylist_name }}</p>
+          </div>
+          <div class="shrink-0 text-left sm:text-right">
+            <strong class="text-sm font-black text-loomera-textPrimary">{{ dashboard_home.manager.daily.next_appointment.time }}</strong>
+            <span class="mr-2 text-[11px] text-loomera-textMuted">{{ dashboard_home.manager.daily.next_appointment.full_date_label }}</span>
+          </div>
+        </a>
+      </section>
+    {% else %}
+      <section class="rounded-[26px] border border-dashed border-loomera-borderSoft bg-white p-5 text-center shadow-lm-soft">
+        <h2 class="text-sm font-black text-loomera-textPrimary">نوبتی در پیش نیست</h2>
+        {% if dashboard_home.mode == 'operational' %}
+          <a href="{{ dashboard_home.manager.daily.add_booking_url }}" class="mt-3 inline-flex min-h-10 items-center justify-center gap-2 rounded-2xl bg-loomera-primary px-4 py-2 text-xs font-black text-white"><i class="fa-solid fa-plus text-[10px]" aria-hidden="true"></i><span>ثبت نوبت</span></a>
+        {% endif %}
+      </section>
+    {% endif %}
+  </div>
+{% endif %}

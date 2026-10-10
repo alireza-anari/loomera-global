@@ -1,0 +1,327 @@
+{% extends "dashboard_template.html" %}
+{% load salons_filters %}
+{% block title %}ویرایش عضو تیم{% endblock %}
+{% block body_attrs %}data-page="edit-stylist"{% endblock %}
+
+{% block content %}
+  {% url 'dashboards:team_member' as team_member_url %}
+
+  <section class="min-w-0 max-w-full space-y-4 overflow-visible lg:space-y-5" data-dashboard-page="edit-stylist" data-dashboard-workspace-root data-direct-edit-page>
+    <header class="rounded-[28px] border border-loomera-borderSoft bg-white/95 p-4 shadow-lm-card sm:p-6">
+      <div class="flex items-start justify-between gap-4">
+        <div class="min-w-0">
+          <p class="text-[11px] font-black text-loomera-primaryText">تیم</p>
+          <h1 class="mt-1 text-2xl font-black leading-9 text-loomera-textPrimary sm:text-3xl">ویرایش {{ stylist.get_fullName }}</h1>
+          <p class="mt-2 max-w-2xl text-sm leading-7 text-loomera-textMuted">
+            اطلاعات عضو، خدمات قابل ارائه و دسترسی‌های همکاری را از همین صفحه مدیریت کن.
+          </p>
+        </div>
+        <a href="{{ edit_stylist_workspace.team_member_url|default:team_member_url }}" class="hidden min-h-11 shrink-0 items-center justify-center rounded-full border border-loomera-borderSoft bg-white px-4 py-2 text-xs font-black text-loomera-textSecondary sm:inline-flex">بازگشت به تیم</a>
+      </div>
+    </header>
+
+    <form id="team-member-main-form" method="post" enctype="multipart/form-data" class="space-y-4" novalidate data-direct-edit-form>
+      {% csrf_token %}
+
+      {% if user_form.non_field_errors or profile_form.non_field_errors or job_form.non_field_errors or emergency_form.non_field_errors %}
+        <div class="rounded-[22px] border border-rose-200 bg-rose-50 p-4 text-sm leading-7 text-rose-700" role="alert">
+          {{ user_form.non_field_errors }}{{ profile_form.non_field_errors }}{{ job_form.non_field_errors }}{{ emergency_form.non_field_errors }}
+        </div>
+      {% endif %}
+
+      <div data-lm-task-tabs-anchor="edit-stylist" data-lm-task-tabs-label="بخش‌های ویرایش عضو"></div>
+
+      <section class="rounded-[28px] border border-loomera-borderSoft bg-white/95 shadow-lm-card"
+               data-lm-task-panel="edit-stylist" data-lm-task-key="identity" data-lm-task-label="اطلاعات اصلی" data-lm-task-order="1" data-lm-task-default>
+        <header class="border-b border-loomera-borderSoft bg-white/96 px-4 py-4 sm:px-5 lg:px-6">
+          <p class="text-[11px] font-black text-loomera-primaryText">اطلاعات ضروری</p>
+          <h2 class="mt-1 text-lg font-black text-loomera-textPrimary">مشخصات اصلی عضو</h2>
+          <p class="mt-1 text-xs leading-6 text-loomera-textMuted">نام، نام خانوادگی و شماره موبایل اطلاعات پایه این عضو هستند.</p>
+        </header>
+
+        <div class="p-4 sm:p-5 lg:p-6">
+          {% if edit_stylist_workspace.personal_fields_locked %}
+            <div class="mb-4 rounded-[22px] border border-amber-200 bg-amber-50 px-4 py-4 text-sm leading-7 text-amber-800">
+              <p class="font-black">اطلاعات شخصی این متخصص توسط سالن قابل ویرایش نیست.</p>
+              <p class="mt-1">{{ edit_stylist_workspace.personal_fields_lock_message }}</p>
+            </div>
+          {% endif %}
+
+          <div class="grid gap-4 md:grid-cols-2">
+            <label class="block">
+              <span class="mb-2 block text-xs font-black text-loomera-textSecondary">نام</span>
+              {{ user_form.name|add_class:"w-full rounded-2xl border border-loomera-borderSoft bg-white px-4 py-3 text-sm font-bold text-loomera-textPrimary outline-none transition focus:border-loomera-primary/40 focus:ring-4 focus:ring-loomera-primary/10" }}
+              {% for error in user_form.name.errors %}<span class="mt-2 block text-xs font-bold text-rose-600">{{ error }}</span>{% endfor %}
+            </label>
+
+            <label class="block">
+              <span class="mb-2 block text-xs font-black text-loomera-textSecondary">نام خانوادگی</span>
+              {{ user_form.family|add_class:"w-full rounded-2xl border border-loomera-borderSoft bg-white px-4 py-3 text-sm font-bold text-loomera-textPrimary outline-none transition focus:border-loomera-primary/40 focus:ring-4 focus:ring-loomera-primary/10" }}
+              {% for error in user_form.family.errors %}<span class="mt-2 block text-xs font-bold text-rose-600">{{ error }}</span>{% endfor %}
+            </label>
+
+            <label class="block md:col-span-2">
+              <span class="mb-2 block text-xs font-black text-loomera-textSecondary">شماره موبایل</span>
+              {{ user_form.mobile_number|add_class:"w-full rounded-2xl border border-loomera-borderSoft bg-white px-4 py-3 text-left text-sm font-bold text-loomera-textPrimary outline-none transition focus:border-loomera-primary/40 focus:ring-4 focus:ring-loomera-primary/10" }}
+              {% for error in user_form.mobile_number.errors %}<span class="mt-2 block text-xs font-bold text-rose-600">{{ error }}</span>{% endfor %}
+            </label>
+          </div>
+        </div>
+      </section>
+
+      <section class="rounded-[28px] border border-loomera-borderSoft bg-white/95 shadow-lm-card"
+               data-lm-task-panel="edit-stylist" data-lm-task-key="services" data-lm-task-label="خدمات" data-lm-task-order="2">
+        <header class="flex flex-col gap-3 border-b border-loomera-borderSoft bg-white/96 px-4 py-4 sm:px-5 lg:flex-row lg:items-start lg:justify-between lg:px-6">
+          <div>
+            <p class="text-[11px] font-black text-loomera-primaryText">خدمات قابل ارائه</p>
+            <h2 class="mt-1 text-lg font-black text-loomera-textPrimary">خدمات این متخصص</h2>
+            <p class="mt-1 text-xs leading-6 text-loomera-textMuted">هر خدمتی که این عضو ارائه می‌دهد روشن کن. خاموش‌کردن یک خدمت فقط اتصال همین عضو به همان خدمت را تغییر می‌دهد.</p>
+          </div>
+          <span class="self-start rounded-full bg-loomera-primarySoft px-3 py-1.5 text-[11px] font-black text-loomera-primaryText"><span data-selected-services-count>{{ edit_stylist_workspace.selected_services_count_label }}</span> فعال</span>
+        </header>
+
+        <div class="p-4 lg:p-6">
+          {% if service_group_cards %}
+            <div class="space-y-4">
+              {% for group in service_group_cards %}
+                <section class="rounded-[22px] border border-loomera-borderSoft bg-loomera-bgSubtle/45 p-3" data-service-group data-lm-direct-section>
+                  <header data-lm-direct-section-header class="flex items-center justify-between gap-3 px-1 py-1">
+                    <div class="min-w-0">
+                      <h3 class="text-sm font-black text-loomera-textPrimary">{{ group.title }}</h3>
+                      <p class="mt-1 text-xs text-loomera-textMuted">{{ group.services_count_label }} خدمت</p>
+                    </div>
+                  </header>
+
+                  <div class="mt-3 grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
+                    {% for service in group.services %}
+                      <article class="lm-provider-card rounded-[20px] border border-loomera-borderSoft bg-white p-3" data-service-switch-card>
+                        <label class="lm-provider-switch-row flex cursor-pointer items-center justify-between gap-3">
+                          <span class="min-w-0 flex-1">
+                            <span class="block text-sm font-black leading-6 text-loomera-textPrimary">{{ service.service_name }}</span>
+                          </span>
+                          <span class="flex shrink-0 items-center gap-2.5">
+                            <input type="checkbox" name="selected_services" value="{{ service.id }}" class="lm-provider-switch-input sr-only" role="switch" data-service-checkbox {% if service.id|stringformat:"s" in selected_service_ids %}checked{% endif %}>
+                            <span class="lm-provider-switch-track" aria-hidden="true"><span class="lm-provider-switch-thumb"></span></span>
+                            <span class="lm-provider-switch-state text-xs font-black">
+                              <span class="lm-provider-switch-state-off text-loomera-textMuted">غیرفعال</span>
+                              <span class="lm-provider-switch-state-on text-loomera-primaryText">فعال</span>
+                            </span>
+                          </span>
+                        </label>
+                      </article>
+                    {% endfor %}
+                  </div>
+                </section>
+              {% endfor %}
+            </div>
+          {% else %}
+            <div class="rounded-[22px] border border-dashed border-loomera-borderSoft bg-loomera-bgSubtle/60 px-4 py-6 text-center">
+              <p class="text-sm font-black text-loomera-textPrimary">هنوز خدمتی برای اتصال وجود ندارد</p>
+              <p class="mt-1 text-xs leading-6 text-loomera-textMuted">ابتدا خدمات مجموعه را ثبت کن؛ سپس می‌توانی آن‌ها را برای این عضو فعال کنی.</p>
+              <a href="{{ edit_stylist_workspace.service_menu_url }}" class="mt-3 inline-flex min-h-10 items-center justify-center rounded-full border border-loomera-borderSoft bg-white px-4 py-2 text-xs font-black text-loomera-primaryText">مدیریت خدمات</a>
+            </div>
+          {% endif %}
+        </div>
+      </section>
+
+      <section class="rounded-[28px] border border-loomera-borderSoft bg-white/95 shadow-lm-card"
+               data-lm-task-panel="edit-stylist" data-lm-task-key="details" data-lm-task-label="اطلاعات تکمیلی" data-lm-task-order="3">
+        <header class="border-b border-loomera-borderSoft bg-white/96 px-4 py-4 sm:px-5 lg:px-6">
+          <p class="text-[11px] font-black text-loomera-primaryText">جزئیات تکمیلی</p>
+          <h2 class="mt-1 text-lg font-black text-loomera-textPrimary">پروفایل و اطلاعات همکاری</h2>
+          <p class="mt-1 text-xs leading-6 text-loomera-textMuted">ایمیل، پروفایل حرفه‌ای، اطلاعات شغلی و تماس اضطراری این عضو را اینجا مدیریت کن.</p>
+        </header>
+
+        <div class="space-y-4 p-4 sm:p-5 lg:p-6">
+          {% if edit_stylist_workspace.personal_fields_locked %}
+            <div class="rounded-[22px] border border-amber-200 bg-amber-50 px-4 py-4 text-sm leading-7 text-amber-800">
+              <p>{{ edit_stylist_workspace.personal_fields_lock_message }}</p>
+              <p class="mt-1">{{ edit_stylist_workspace.start_date_lock_message }}</p>
+            </div>
+          {% endif %}
+
+          <section class="rounded-[22px] border border-loomera-borderSoft bg-loomera-bgSubtle/45 p-4">
+            <h3 class="text-sm font-black text-loomera-textPrimary">ایمیل</h3>
+            <label class="mt-3 block">
+              <span class="sr-only">ایمیل</span>
+              {{ user_form.email|add_class:"w-full rounded-2xl border border-loomera-borderSoft bg-white px-4 py-3 text-left text-sm font-bold text-loomera-textPrimary outline-none transition focus:border-loomera-primary/40 focus:ring-4 focus:ring-loomera-primary/10" }}
+              {% for error in user_form.email.errors %}<span class="mt-2 block text-xs font-bold text-rose-600">{{ error }}</span>{% endfor %}
+            </label>
+          </section>
+
+          {% include "dashboards/components/form_card.html" with form=profile_form title="پروفایل حرفه‌ای" subtitle="تخصص، توضیحات و تصویر پروفایل عضو." accent="fa-regular fa-id-card" open_form="false" %}
+          {% include "dashboards/components/form_card.html" with form=job_form title="اطلاعات همکاری با سالن" subtitle="تاریخ شروع، پایان و نوع همکاری با همین مجموعه." accent="fa-solid fa-briefcase" open_form="false" %}
+          {% include "dashboards/components/form_card.html" with form=emergency_form title="تماس اضطراری" subtitle="در صورت نیاز اطلاعات تماس اضطراری عضو را به‌روز کن." accent="fa-solid fa-phone" open_form="false" %}
+        </div>
+      </section>
+
+      <section class="rounded-[28px] border border-loomera-borderSoft bg-white/95 shadow-lm-card"
+               data-lm-task-panel="edit-stylist" data-lm-task-key="permissions" data-lm-task-label="دسترسی‌ها" data-lm-task-order="4">
+        <header class="border-b border-loomera-borderSoft bg-white/96 px-4 py-4 sm:px-5 lg:px-6">
+          <p class="text-[11px] font-black text-loomera-primaryText">اختیاری و پیشرفته</p>
+          <h2 class="mt-1 text-lg font-black text-loomera-textPrimary">دسترسی‌های همکاری</h2>
+          <p class="mt-1 text-xs leading-6 text-loomera-textMuted">این تنظیمات فقط روی همکاری همین متخصص با همین مجموعه اثر می‌گذارد.</p>
+        </header>
+
+        <div class="p-4 sm:p-5 lg:p-6">
+          <div class="grid gap-3 md:grid-cols-2 xl:grid-cols-3">
+            <label class="lm-provider-card flex cursor-pointer items-center justify-between gap-4 rounded-[22px] border border-loomera-borderSoft bg-white p-4 shadow-lm-soft">
+              <span class="min-w-0">
+                <span class="block text-sm font-black text-loomera-textPrimary">ثبت مستقیم نوبت</span>
+                <span class="mt-1 block text-xs leading-6 text-loomera-textMuted">روشن: نوبت را مستقیم ثبت کند. خاموش: نوبت به‌صورت درخواست در انتظار تأیید مدیر ثبت شود.</span>
+              </span>
+              <span class="flex shrink-0 items-center gap-2">
+                <input type="checkbox" name="can_create_own_bookings" class="lm-provider-switch-input sr-only" role="switch" {% if not membership_permissions or membership_permissions.can_create_own_bookings %}checked{% endif %}>
+                <span class="lm-provider-switch-track" aria-hidden="true"><span class="lm-provider-switch-thumb"></span></span>
+              </span>
+            </label>
+
+            <label class="lm-provider-card flex cursor-pointer items-center justify-between gap-4 rounded-[22px] border border-loomera-borderSoft bg-white p-4 shadow-lm-soft">
+              <span class="min-w-0">
+                <span class="block text-sm font-black text-loomera-textPrimary">مشاهده مشتریان خود</span>
+                <span class="mt-1 block text-xs leading-6 text-loomera-textMuted">فقط مشتری‌های مرتبط با خودش را در همین مجموعه ببیند.</span>
+              </span>
+              <span class="flex shrink-0 items-center gap-2">
+                <input type="checkbox" name="can_view_own_clients" class="lm-provider-switch-input sr-only" role="switch" {% if not membership_permissions or membership_permissions.can_view_own_clients %}checked{% endif %}>
+                <span class="lm-provider-switch-track" aria-hidden="true"><span class="lm-provider-switch-thumb"></span></span>
+              </span>
+            </label>
+
+            <label class="lm-provider-card flex cursor-pointer items-center justify-between gap-4 rounded-[22px] border border-loomera-borderSoft bg-white p-4 shadow-lm-soft">
+              <span class="min-w-0">
+                <span class="block text-sm font-black text-loomera-textPrimary">اجرای مراحل نوبت</span>
+                <span class="mt-1 block text-xs leading-6 text-loomera-textMuted">تایید، رد، شروع و پایان مراحل عملیاتی نوبت.</span>
+              </span>
+              <span class="flex shrink-0 items-center gap-2">
+                <input type="checkbox" name="can_complete_appointments" class="lm-provider-switch-input sr-only" role="switch" {% if not membership_permissions or membership_permissions.can_complete_appointments %}checked{% endif %}>
+                <span class="lm-provider-switch-track" aria-hidden="true"><span class="lm-provider-switch-thumb"></span></span>
+              </span>
+            </label>
+
+            <label class="lm-provider-card flex cursor-pointer items-center justify-between gap-4 rounded-[22px] border border-loomera-borderSoft bg-white p-4 shadow-lm-soft">
+              <span class="min-w-0">
+                <span class="block text-sm font-black text-loomera-textPrimary">مشاهده شماره تماس مشتری</span>
+                <span class="mt-1 block text-xs leading-6 text-loomera-textMuted">شماره تماس مشتری داخل داشبورد متخصص نمایش داده شود.</span>
+              </span>
+              <span class="flex shrink-0 items-center gap-2">
+                <input type="checkbox" name="can_view_client_phone" class="lm-provider-switch-input sr-only" role="switch" {% if membership_permissions and membership_permissions.can_view_client_phone %}checked{% endif %}>
+                <span class="lm-provider-switch-track" aria-hidden="true"><span class="lm-provider-switch-thumb"></span></span>
+              </span>
+            </label>
+
+            <label class="lm-provider-card flex cursor-pointer items-center justify-between gap-4 rounded-[22px] border border-loomera-borderSoft bg-white p-4 shadow-lm-soft">
+              <span class="min-w-0">
+                <span class="block text-sm font-black text-loomera-textPrimary">مشاهده مالی خود</span>
+                <span class="mt-1 block text-xs leading-6 text-loomera-textMuted">سهم و وضعیت مالی خودش را در همین مجموعه ببیند.</span>
+              </span>
+              <span class="flex shrink-0 items-center gap-2">
+                <input type="checkbox" name="can_view_own_finance" class="lm-provider-switch-input sr-only" role="switch" {% if not membership_permissions or membership_permissions.can_view_own_finance %}checked{% endif %}>
+                <span class="lm-provider-switch-track" aria-hidden="true"><span class="lm-provider-switch-thumb"></span></span>
+              </span>
+            </label>
+
+            <label class="lm-provider-card flex cursor-pointer items-center justify-between gap-4 rounded-[22px] border border-loomera-borderSoft bg-white p-4 shadow-lm-soft">
+              <span class="min-w-0">
+                <span class="block text-sm font-black text-loomera-textPrimary">درخواست برداشت سهم</span>
+                <span class="mt-1 block text-xs leading-6 text-loomera-textMuted">برای سهم همین مجموعه درخواست پرداخت ثبت کند.</span>
+              </span>
+              <span class="flex shrink-0 items-center gap-2">
+                <input type="checkbox" name="can_request_payout" class="lm-provider-switch-input sr-only" role="switch" {% if not membership_permissions or membership_permissions.can_request_payout %}checked{% endif %}>
+                <span class="lm-provider-switch-track" aria-hidden="true"><span class="lm-provider-switch-thumb"></span></span>
+              </span>
+            </label>
+
+            <label class="lm-provider-card flex cursor-pointer items-center justify-between gap-4 rounded-[22px] border border-loomera-borderSoft bg-white p-4 shadow-lm-soft">
+              <span class="min-w-0">
+                <span class="block text-sm font-black text-loomera-textPrimary">تأیید مستقیم مرخصی</span>
+                <span class="mt-1 block text-xs leading-6 text-loomera-textMuted">برای همین مجموعه تأیید مستقیم مرخصی ارسال کند.</span>
+              </span>
+              <span class="flex shrink-0 items-center gap-2">
+                <input type="checkbox" name="can_request_leave" class="lm-provider-switch-input sr-only" role="switch" {% if not membership_permissions or membership_permissions.can_request_leave %}checked{% endif %}>
+                <span class="lm-provider-switch-track" aria-hidden="true"><span class="lm-provider-switch-thumb"></span></span>
+              </span>
+            </label>
+
+            <label class="lm-provider-card flex cursor-pointer items-center justify-between gap-4 rounded-[22px] border border-loomera-borderSoft bg-white p-4 shadow-lm-soft">
+              <span class="min-w-0">
+                <span class="block text-sm font-black text-loomera-textPrimary">ثبت مستقیم برنامه کاری</span>
+                <span class="mt-1 block text-xs leading-6 text-loomera-textMuted">روشن: برنامه کاری بدون تأیید موردی ثبت شود. خاموش: برنامه برای تأیید مدیر ارسال شود.</span>
+              </span>
+              <span class="flex shrink-0 items-center gap-2">
+                <input type="checkbox" name="can_manage_own_schedule" class="lm-provider-switch-input sr-only" role="switch" {% if membership_permissions and membership_permissions.can_manage_own_schedule %}checked{% endif %}>
+                <span class="lm-provider-switch-track" aria-hidden="true"><span class="lm-provider-switch-thumb"></span></span>
+              </span>
+            </label>
+
+            <label class="lm-provider-card flex cursor-pointer items-center justify-between gap-4 rounded-[22px] border border-loomera-borderSoft bg-white p-4 shadow-lm-soft">
+              <span class="min-w-0">
+                <span class="block text-sm font-black text-loomera-textPrimary">مدیریت نمونه‌کار خود</span>
+                <span class="mt-1 block text-xs leading-6 text-loomera-textMuted">نمونه‌کارهای خودش را مدیریت کند.</span>
+              </span>
+              <span class="flex shrink-0 items-center gap-2">
+                <input type="checkbox" name="can_manage_own_portfolio" class="lm-provider-switch-input sr-only" role="switch" {% if not membership_permissions or membership_permissions.can_manage_own_portfolio %}checked{% endif %}>
+                <span class="lm-provider-switch-track" aria-hidden="true"><span class="lm-provider-switch-thumb"></span></span>
+              </span>
+            </label>
+
+            <label class="lm-provider-card flex cursor-pointer items-center justify-between gap-4 rounded-[22px] border border-loomera-borderSoft bg-white p-4 shadow-lm-soft">
+              <span class="min-w-0">
+                <span class="block text-sm font-black text-loomera-textPrimary">انتشار مستقیم مقاله</span>
+                <span class="mt-1 block text-xs leading-6 text-loomera-textMuted">روشن: مقاله پس از ارسال مستقیم منتشر شود. خاموش: مقاله برای بررسی و تأیید مدیر ارسال شود.</span>
+              </span>
+              <span class="flex shrink-0 items-center gap-2">
+                <input type="checkbox" name="can_submit_posts" class="lm-provider-switch-input sr-only" role="switch" {% if membership_permissions and membership_permissions.can_submit_posts %}checked{% endif %}>
+                <span class="lm-provider-switch-track" aria-hidden="true"><span class="lm-provider-switch-thumb"></span></span>
+              </span>
+            </label>
+
+            <label class="lm-provider-card flex cursor-pointer items-center justify-between gap-4 rounded-[22px] border border-loomera-borderSoft bg-white p-4 shadow-lm-soft">
+              <span class="min-w-0">
+                <span class="block text-sm font-black text-loomera-textPrimary">انتشار مستقیم استوری</span>
+                <span class="mt-1 block text-xs leading-6 text-loomera-textMuted">روشن: استوری پس از ارسال مستقیم منتشر شود. خاموش: استوری برای بررسی و تأیید مدیر ارسال شود.</span>
+              </span>
+              <span class="flex shrink-0 items-center gap-2">
+                <input type="checkbox" name="can_submit_stories" class="lm-provider-switch-input sr-only" role="switch" {% if membership_permissions and membership_permissions.can_submit_stories %}checked{% endif %}>
+                <span class="lm-provider-switch-track" aria-hidden="true"><span class="lm-provider-switch-thumb"></span></span>
+              </span>
+            </label>
+          </div>
+
+          <div class="mt-5 rounded-[22px] border border-amber-200 bg-amber-50 px-4 py-4 text-sm leading-7 text-amber-800">
+            این تنظیمات فقط برای همکاری همین متخصص با همین مجموعه ذخیره می‌شود و روی سالن‌های دیگر متخصص اثر نمی‌گذارد.
+          </div>
+        </div>
+      </section>
+
+      <div data-mobile-primary-action class="lm-dashboard-sticky-action fixed inset-x-3 bottom-0 z-30 rounded-[24px] border border-loomera-borderSoft bg-white/95 p-3 shadow-lm-elevated backdrop-blur sm:inset-x-5 lg:sticky lg:inset-x-auto lg:bottom-3 lg:z-20" data-direct-edit-savebar>
+        <div class="flex items-center justify-between gap-3">
+          <p class="hidden text-xs font-bold leading-6 text-loomera-textMuted lg:block" data-direct-edit-status>تغییرات هر چهار تب با همین دکمه ذخیره می‌شود.</p>
+          <button type="submit" class="inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-2xl bg-loomera-primary px-6 py-3 text-sm font-black text-white shadow-lm-soft lg:w-auto">
+            <i class="fa-solid fa-floppy-disk text-xs" aria-hidden="true"></i>
+            ذخیره تغییرات
+          </button>
+        </div>
+      </div>
+      <div class="block h-24 lg:hidden" aria-hidden="true"></div>
+    </form>
+  </section>
+{% endblock %}
+
+{% block js %}
+  {{ block.super }}
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const root = document.querySelector('[data-dashboard-page="edit-stylist"]');
+      if (!root) return;
+      const boxes = Array.from(root.querySelectorAll("[data-service-checkbox]"));
+      const counters = Array.from(root.querySelectorAll("[data-selected-services-count]"));
+      const fa = (value) => String(value).replace(/\d/g, (digit) => "۰۱۲۳۴۵۶۷۸۹"[Number(digit)]);
+      const refresh = () => {
+        const selected = boxes.filter((box) => box.checked).length;
+        counters.forEach((counter) => { counter.textContent = fa(selected); });
+      };
+      boxes.forEach((box) => box.addEventListener("change", refresh));
+      refresh();
+    });
+  </script>
+{% endblock %}

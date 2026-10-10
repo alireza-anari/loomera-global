@@ -1,0 +1,51 @@
+<section data-magazine-stories-section aria-labelledby="favorite-stories-title">
+  <div class="mb-3 flex items-center justify-between gap-3">
+    <h2 id="favorite-stories-title" class="text-lg font-black text-loomera-textPrimary">
+      از مجموعه‌های مورد علاقه
+    </h2>
+    <a href="{% url 'articles:story_explore' %}?scope=favorites" class="inline-flex items-center gap-1 text-xs font-black text-loomera-primary">
+      مشاهده همه
+      <i class="fa-solid fa-arrow-left text-[10px]" aria-hidden="true"></i>
+    </a>
+  </div>
+
+  {% if favorite_stories %}
+    <div class="-mx-4 flex gap-3 overflow-x-auto px-4 pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden" role="list">
+      {% for story in favorite_stories %}
+        <button
+          type="button"
+          class="group w-20 shrink-0 text-center"
+          data-story-open
+          data-story-id="{{ story.id }}"
+          aria-label="مشاهده استوری {{ story.title }}"
+          role="listitem"
+        >
+          <span class="mx-auto block rounded-full bg-gradient-to-br from-loomera-primary via-loomera-secondary to-loomera-accent p-[2px] transition group-hover:scale-105">
+            <span class="block h-16 w-16 overflow-hidden rounded-full border-[3px] border-white bg-loomera-primarySoft">
+              {% if story.cover_image %}
+                <img src="{{ story.cover_image.url }}" alt="{{ story.title }}" class="h-full w-full object-cover">
+              {% elif story.salon.logo %}
+                <img src="{{ story.salon.logo.url }}" alt="{{ story.salon.salon_name }}" class="h-full w-full object-cover">
+              {% else %}
+                <span class="flex h-full w-full items-center justify-center text-lg text-loomera-primary">
+                  <i class="fa-solid fa-spa" aria-hidden="true"></i>
+                </span>
+              {% endif %}
+            </span>
+          </span>
+          <span class="mt-2 block truncate text-[11px] font-black text-loomera-textPrimary">
+            {{ story.salon.salon_name }}
+          </span>
+        </button>
+      {% endfor %}
+    </div>
+  {% else %}
+    <a
+      href="{% url 'salons:show_salons' %}"
+      class="flex items-center justify-between gap-3 rounded-2xl border border-loomera-borderSoft bg-white px-4 py-3 text-xs font-bold text-loomera-textSecondary"
+    >
+      <span>مجموعه‌های محبوبت را ذخیره کن تا استوری‌هایشان اینجا باشد.</span>
+      <i class="fa-solid fa-arrow-left shrink-0 text-loomera-primary" aria-hidden="true"></i>
+    </a>
+  {% endif %}
+</section>

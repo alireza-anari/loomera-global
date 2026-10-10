@@ -1,0 +1,142 @@
+name: Deploy Loomera Staging to Liara
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: loomera-staging-deployment
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    name: Deploy staging
+
+    if: github.ref == 'refs/heads/staging'
+
+    environment: staging
+
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Configure Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Install Liara CLI
+        run: npm install --global @liara/cli@9
+
+      - name: Validate staging deployment target
+        env:
+          LIARA_TOKEN: ${{ secrets.LIARA_API_TOKEN }}
+          LIARA_APP_NAME: ${{ vars.LIARA_APP_NAME }}
+          BALE_BOT_TOKEN: ${{ secrets.BALE_BOT_TOKEN }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_WEBHOOK_SECRET: ${{ secrets.TELEGRAM_WEBHOOK_SECRET }}
+        run: |
+          set -euo pipefail
+          if [ -z "$LIARA_TOKEN" ]; then
+            echo "::error::LIARA_API_TOKEN is not configured."
+            exit 1
+          fi
+
+          if [ -z "$LIARA_APP_NAME" ]; then
+            echo "::error::LIARA_APP_NAME is not configured."
+            exit 1
+          fi
+
+          if [ "$LIARA_APP_NAME" != "loomera-staging" ]; then
+            echo "::error::Staging deployment target must be loomera-staging."
+            exit 1
+          fi
+          if [ -z "$BALE_BOT_TOKEN" ]; then
+            echo "::error::BALE_BOT_TOKEN is not configured in staging environment."
+            exit 1
+          fi
+          if [ -z "$TELEGRAM_BOT_TOKEN" ]; then
+            echo "::error::TELEGRAM_BOT_TOKEN is not configured in staging environment."
+            exit 1
+          fi
+          if [ -z "$TELEGRAM_WEBHOOK_SECRET" ]; then
+            echo "::error::TELEGRAM_WEBHOOK_SECRET is not configured in staging environment."
+            exit 1
+          fi
+
+          echo "Staging deployment target validated."
+
+      - name: Sync staging messaging secrets to Liara
+        env:
+          LIARA_TOKEN: ${{ secrets.LIARA_API_TOKEN }}
+          LIARA_APP_NAME: ${{ vars.LIARA_APP_NAME }}
+          BALE_BOT_TOKEN: ${{ secrets.BALE_BOT_TOKEN }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_WEBHOOK_SECRET: ${{ secrets.TELEGRAM_WEBHOOK_SECRET }}
+        run: |
+          set -euo pipefail
+          liara env set \
+            --app="$LIARA_APP_NAME" \
+            --api-token="$LIARA_TOKEN" \
+            --force \
+            "BALE_BOT_TOKEN=$BALE_BOT_TOKEN"
+
+          liara env set \
+            --app="$LIARA_APP_NAME" \
+            --api-token="$LIARA_TOKEN" \
+            --force \
+            "TELEGRAM_BOT_TOKEN=$TELEGRAM_BOT_TOKEN"
+
+          liara env set \
+            --app="$LIARA_APP_NAME" \
+            --api-token="$LIARA_TOKEN" \
+            --force \
+            "TELEGRAM_WEBHOOK_SECRET=$TELEGRAM_WEBHOOK_SECRET"
+
+          echo "Staging messaging secrets synced to Liara."
+
+      - name: Prepare staging PostgreSQL dependency
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+
+          path = Path('requirements.txt')
+          text = path.read_text(encoding='utf-8')
+
+          old = 'psycopg2==2.9.10'
+          new = 'psycopg2-binary==2.9.10'
+
+          if text.count(old) != 1:
+              raise SystemExit(
+                  f'Expected exactly one {old!r} in requirements.txt'
+              )
+
+          if new in text:
+              raise SystemExit(
+                  f'{new!r} already exists unexpectedly'
+              )
+
+          path.write_text(
+              text.replace(old, new, 1),
+              encoding='utf-8',
+          )
+
+          print('STAGING_PSYCOPG2_BINARY_READY')
+          PY
+
+      - name: Deploy to Liara
+        env:
+          LIARA_TOKEN: ${{ secrets.LIARA_API_TOKEN }}
+          LIARA_APP_NAME: ${{ vars.LIARA_APP_NAME }}
+        run: |
+          liara deploy \
+            --app="$LIARA_APP_NAME" \
+            --api-token="$LIARA_TOKEN" \
+            --build-location=iran \
+            --no-app-logs

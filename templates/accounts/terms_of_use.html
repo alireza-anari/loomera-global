@@ -1,0 +1,192 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}شرایط استفاده از لومرا{% endblock %}
+{% block meta_description %}قواعد حساب، رزرو، قیمت و پرداخت، لغو، محتوا و مسئولیت کاربران و مجموعه‌ها در لومرا را به زبان ساده بخوان.{% endblock %}
+{% block body_attrs %}data-page="terms-of-use"{% endblock %}
+
+{% block content %}
+{# LEGAL REVIEW REQUIRED: پیش از لانچ عمومی، نام و نوع شخصیت حقوقی بهره‌بردار، شناسه/شماره ثبت، نشانی پستی و راه تماس رسمی باید در نسخه نهایی درج شود. #}
+{# LEGAL REVIEW REQUIRED: انطباق دقیق حق انصراف/استرداد وجه با ماهیت خدمات وقت‌دار زیبایی و استثناهای قانونی باید توسط مشاور حقوقی نهایی شود. #}
+<main class="min-h-dvh bg-loomera-bg pb-28 text-loomera-textPrimary lg:pb-16">
+  <header class="sticky top-0 z-30 border-b border-loomera-borderSoft bg-white/90 px-4 py-3 shadow-sm backdrop-blur lg:hidden">
+    <div class="flex items-center gap-3">
+      <a href="{% url 'help_center:legal_index' %}" class="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-loomera-borderSoft bg-white text-loomera-textPrimary shadow-sm transition active:scale-95" aria-label="بازگشت به قوانین و مقررات">
+        <i class="fa-solid fa-chevron-right text-sm" aria-hidden="true"></i>
+      </a>
+      <div class="min-w-0 flex-1">
+        <h1 class="truncate text-base font-black text-loomera-textPrimary">شرایط استفاده</h1>
+        <p class="mt-1 truncate text-xs font-semibold text-loomera-textMuted">نسخه ۱.۳ آزمایشی • آخرین به‌روزرسانی ۱۴۰۵/۰۶/۱۳</p>
+      </div>
+    </div>
+  </header>
+
+  <div class="mx-auto grid w-full max-w-6xl grid-cols-1 gap-6 px-4 pt-5 lg:grid-cols-[minmax(0,1fr)_320px] lg:px-6 lg:pt-8 xl:px-0">
+    <div class="min-w-0 space-y-5">
+      <section class="overflow-hidden rounded-[2rem] border border-loomera-borderSoft bg-white shadow-lm-card">
+        <div class="relative isolate p-5 lg:p-7">
+          <div class="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_top_right,rgba(115,92,190,0.16),transparent_34%),linear-gradient(135deg,rgba(238,232,250,0.92),rgba(255,255,255,0.98))]"></div>
+          <div class="flex flex-col gap-5 md:flex-row md:items-center md:justify-between">
+            <div class="min-w-0">
+              <div class="mb-3 inline-flex items-center gap-2 rounded-full border border-loomera-primary/15 bg-white/75 px-3 py-1 text-xs font-black text-loomera-primary shadow-sm backdrop-blur">
+                <i class="fa-solid fa-file-contract text-[11px]" aria-hidden="true"></i>
+                <span>قواعد استفاده، بدون متن پیچیده</span>
+              </div>
+              <h2 class="text-2xl font-black leading-9 lg:text-4xl lg:leading-[3.2rem]">شرایط استفاده از لومرا</h2>
+              <p class="mt-2 max-w-2xl text-sm font-semibold leading-7 text-loomera-textMuted">این صفحه می‌گوید هنگام ساخت حساب، رزرو، پرداخت، لغو یا استفاده حرفه‌ای از لومرا چه چیزهایی مهم است و مسئولیت هر طرف کجاست.</p>
+            </div>
+            <a href="{% url 'help_center:legal_index' %}" class="hidden w-full shrink-0 items-center justify-center gap-2 rounded-full border border-loomera-borderSoft bg-white px-5 py-3 text-sm font-black text-loomera-textPrimary shadow-sm transition hover:border-loomera-primary/30 hover:bg-loomera-primarySoft/40 sm:w-auto lg:inline-flex">
+              <i class="fa-solid fa-scale-balanced text-xs" aria-hidden="true"></i><span>قوانین و مقررات</span>
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <section class="grid gap-3 sm:grid-cols-3" aria-label="شرایط استفاده در یک نگاه">
+        <div class="rounded-[1.5rem] border border-loomera-borderSoft bg-white p-4 shadow-lm-soft"><p class="text-xs font-black text-loomera-primary">رزرو شفاف</p><p class="mt-2 text-xs font-semibold leading-6 text-loomera-textMuted">قبل از تأیید، خدمت، ارائه‌دهنده، زمان، مبلغ و روش پرداخت را بررسی کن.</p></div>
+        <div class="rounded-[1.5rem] border border-loomera-borderSoft bg-white p-4 shadow-lm-soft"><p class="text-xs font-black text-loomera-primary">خدمت حضوری</p><p class="mt-2 text-xs font-semibold leading-6 text-loomera-textMuted">لومرا ابزار جستجو، رزرو و مدیریت است؛ خدمت حضوری را مجموعه یا متخصص ارائه می‌کند.</p></div>
+        <div class="rounded-[1.5rem] border border-loomera-borderSoft bg-white p-4 shadow-lm-soft"><p class="text-xs font-black text-loomera-primary">حقوق قانونی</p><p class="mt-2 text-xs font-semibold leading-6 text-loomera-textMuted">هیچ بند این صفحه حقوقی را که قانون برای مصرف‌کننده حفظ کرده از بین نمی‌برد؛ اگر تعارضی باشد، قانون مقدم است.</p></div>
+      </section>
+
+      <section class="rounded-[2rem] border border-loomera-borderSoft bg-white p-4 shadow-lm-card lg:p-5" aria-labelledby="terms-content-title">
+        <div class="mb-5">
+          <p class="text-xs font-black text-loomera-primary">جزئیات شرایط</p>
+          <h2 id="terms-content-title" class="mt-2 text-xl font-black">از حساب تا رزرو و پشتیبانی</h2>
+        </div>
+        <div class="space-y-3">
+          <article id="scope" class="rounded-[1.5rem] border border-loomera-borderSoft bg-loomera-surface p-4 shadow-lm-soft scroll-mt-28">
+            <h3 class="text-sm font-black">۱. این شرایط برای چه کسی است؟</h3>
+            <p class="mt-2 text-sm font-semibold leading-7 text-loomera-textMuted">برای هر کسی که از وب‌سایت یا قابلیت‌های لومرا استفاده می‌کند؛ از مشتری تا مدیر مجموعه و متخصص. بعضی قابلیت‌ها فقط برای نقش مشخص نمایش داده می‌شوند و استفاده از آن‌ها به همان سطح دسترسی محدود است.</p>
+          </article>
+
+          <article id="platform-role" class="rounded-[1.5rem] border border-loomera-borderSoft bg-loomera-surface p-4 shadow-lm-soft scroll-mt-28">
+            <h3 class="text-sm font-black">۲. لومرا چه کاری انجام می‌دهد و چه کاری را انجام نمی‌دهد؟</h3>
+            <div class="mt-2 space-y-2 text-sm font-semibold leading-7 text-loomera-textMuted">
+              <p>لومرا برای پیدا کردن مجموعه و خدمت، انتخاب متخصص و زمان، ثبت و پیگیری رزرو و مدیریت عملیات مجموعه ابزار فراهم می‌کند.</p>
+              <p>خدمت حضوری زیبایی یا مراقبتی را خود مجموعه یا متخصص ارائه می‌کند. کیفیت اجرای خدمت، مجوزهای حرفه‌ای و الزامات صنفی و بهداشتی مربوط به همان خدمت بر عهده ارائه‌دهنده آن است؛ بدون اینکه این توضیح مسئولیت‌های قانونی خود لومرا را در بخش‌هایی که مستقیماً ارائه می‌کند حذف کند.</p>
+            </div>
+          </article>
+
+          <article id="account" class="rounded-[1.5rem] border border-loomera-borderSoft bg-loomera-surface p-4 shadow-lm-soft scroll-mt-28">
+            <h3 class="text-sm font-black">۳. حساب و امنیت</h3>
+            <p class="mt-2 text-sm font-semibold leading-7 text-loomera-textMuted">اطلاعات حساب را درست و به‌روز نگه دار و رمز، کد تأیید یا دسترسی حساب را در اختیار دیگران نگذار. رزرو و تغییراتی که از حساب انجام می‌شود روی همان حساب ثبت می‌شود. اگر فکر می‌کنی شخص دیگری به حسابت دسترسی پیدا کرده، سریع رمز را تغییر بده و موضوع را به پشتیبانی گزارش کن.</p>
+          </article>
+
+          <article id="before-booking" class="rounded-[1.5rem] border border-loomera-primary/15 bg-loomera-primarySoft/55 p-4 shadow-lm-soft scroll-mt-28">
+            <h3 class="text-sm font-black">۴. قبل از تأیید رزرو، این موارد را بررسی کن</h3>
+            <ul class="mt-2 grid gap-2 text-sm font-semibold leading-7 text-loomera-textMuted sm:grid-cols-2">
+              <li>• نام مجموعه و در صورت انتخاب، متخصص</li>
+              <li>• خدمت یا خدمات انتخاب‌شده</li>
+              <li>• تاریخ و ساعت</li>
+              <li>• مبلغ، تخفیف و هزینه‌ای که نمایش داده می‌شود</li>
+              <li>• روش پرداخت</li>
+              <li>• هر شرط مؤثری که برای همان رزرو نمایش داده می‌شود</li>
+            </ul>
+            <p class="mt-3 text-sm font-semibold leading-7 text-loomera-textMuted">اگر اطلاعات مهمی مبهم است، پیش از تأیید از مجموعه یا پشتیبانی سؤال کن. اطلاعات مؤثر بر تصمیم کاربر باید روشن و قابل فهم ارائه شود.</p>
+          </article>
+
+          <article id="booking" class="rounded-[1.5rem] border border-loomera-borderSoft bg-loomera-surface p-4 shadow-lm-soft scroll-mt-28">
+            <h3 class="text-sm font-black">۵. چه زمانی رزرو ثبت شده است؟</h3>
+            <p class="mt-2 text-sm font-semibold leading-7 text-loomera-textMuted">رزرو را زمانی ثبت‌شده بدان که جریان رزرو کامل شده و نوبت در حساب تو ایجاد شده باشد. زمان‌های قابل رزرو بر اساس ظرفیت ثبت‌شده در سیستم نمایش داده می‌شوند و ممکن است هنگام تأیید نهایی دوباره بررسی شوند. «نوبت‌های من» و جزئیات همان نوبت، مرجع پیگیری وضعیت رزرو است.</p>
+          </article>
+
+          <article id="payment" class="rounded-[1.5rem] border border-loomera-borderSoft bg-loomera-surface p-4 shadow-lm-soft scroll-mt-28">
+            <h3 class="text-sm font-black">۶. قیمت و پرداخت</h3>
+            <div class="mt-2 space-y-2 text-sm font-semibold leading-7 text-loomera-textMuted">
+              <p>در تنظیم فعلی محصول، روش اصلی پرداخت خدمت «پرداخت در مجموعه» است؛ مگر اینکه در همان جریان رزرو روش دیگری به‌طور روشن نمایش داده شود.</p>
+              <p>مبلغی که پیش از تأیید نمایش داده می‌شود مبنای ثبت همان رزرو است. اگر در محل و با درخواست مشتری، خدمت یا دامنه کار تغییر کند، هزینه اضافه باید پیش از انجام بخش اضافه برای مشتری روشن شود.</p>
+              <p>اگر پرداخت آنلاین برای یک جریان فعال باشد و نتیجه تراکنش «در انتظار بررسی» یا نامشخص شود، پرداخت را دوباره تکرار نکن؛ وضعیت همان تراکنش را پیگیری کن تا از پرداخت تکراری جلوگیری شود.</p>
+            </div>
+          </article>
+
+          <article id="cancellation" class="rounded-[1.5rem] border border-loomera-borderSoft bg-loomera-surface p-4 shadow-lm-soft scroll-mt-28">
+            <h3 class="text-sm font-black">۷. لغو، تغییر زمان و عدم مراجعه</h3>
+            <div class="mt-2 space-y-2 text-sm font-semibold leading-7 text-loomera-textMuted">
+              <p>اگر وضعیت نوبت اجازه بدهد، لغو یا تغییر زمان از جزئیات همان نوبت انجام می‌شود. اگر گزینه مربوط را نمی‌بینی، موضوع را با مجموعه پیگیری کن.</p>
+              <p>در نسخه فعلی لومرا، جریمه خودکار لغو یا عدم مراجعه از مشتری دریافت نمی‌شود. اگر در آینده چنین قابلیتی فعال شود، مبلغ، زمان‌بندی و شرط آن باید پیش از تأیید رزرو به‌طور روشن نمایش داده شود.</p>
+              <p>حقوق قانونی مربوط به انصراف، فسخ یا استرداد وجه به ماهیت خدمت و شرایط همان معامله بستگی دارد. این شرایط جایگزین حقوقی که قانون برای مصرف‌کننده حفظ کرده نیست و در صورت تعارض، قانون لازم‌الاجرا مقدم است.</p>
+            </div>
+          </article>
+
+          <article id="salon-stylist" class="rounded-[1.5rem] border border-loomera-borderSoft bg-loomera-surface p-4 shadow-lm-soft scroll-mt-28">
+            <h3 class="text-sm font-black">۸. مسئولیت مدیر مجموعه و متخصص</h3>
+            <div class="mt-2 space-y-2 text-sm font-semibold leading-7 text-loomera-textMuted">
+              <p>اطلاعات مجموعه، خدمات، قیمت‌ها، برنامه کاری و اعضای تیم باید تا حدی که توسط مدیر یا متخصص مدیریت می‌شوند، درست و به‌روز نگه داشته شوند.</p>
+              <p>ارائه‌دهنده خدمت حضوری باید الزامات حرفه‌ای، صنفی، بهداشتی و قانونی مربوط به همان فعالیت را رعایت کند و از انتشار اطلاعات یا تصویر مشتری بدون اجازه لازم خودداری کند.</p>
+            </div>
+          </article>
+
+          <article id="content" class="rounded-[1.5rem] border border-loomera-borderSoft bg-loomera-surface p-4 shadow-lm-soft scroll-mt-28">
+            <h3 class="text-sm font-black">۹. محتوا، تصویر و نظر</h3>
+            <p class="mt-2 text-sm font-semibold leading-7 text-loomera-textMuted">فقط محتوایی را منتشر کن که حق استفاده یا انتشارش را داری. تصویر یا اطلاعات قابل‌شناسایی دیگران بدون اجازه لازم نباید منتشر شود. نظر و بازخورد باید درباره تجربه واقعی باشد و نباید شامل تهدید، توهین، اطلاعات شخصی دیگران، تبلیغ نامرتبط یا ادعای آگاهانه خلاف واقع باشد.</p>
+          </article>
+
+          <article id="prohibited" class="rounded-[1.5rem] border border-loomera-borderSoft bg-loomera-surface p-4 shadow-lm-soft scroll-mt-28">
+            <h3 class="text-sm font-black">۱۰. چه استفاده‌هایی مجاز نیست؟</h3>
+            <p class="mt-2 text-sm font-semibold leading-7 text-loomera-textMuted">جعل هویت، رزرو ساختگی یا آزاردهنده، دسترسی به اطلاعات کاربر یا مجموعه دیگر بدون مجوز، سوءاستفاده مالی، محتوای مخرب، استخراج انبوه داده، دور زدن کنترل‌های امنیتی و هر استفاده خلاف قوانین لازم‌الاجرا مجاز نیست.</p>
+          </article>
+
+          <article id="communications" class="rounded-[1.5rem] border border-loomera-borderSoft bg-loomera-surface p-4 shadow-lm-soft scroll-mt-28">
+            <h3 class="text-sm font-black">۱۱. اعلان‌ها و پیام‌های تبلیغاتی</h3>
+            <p class="mt-2 text-sm font-semibold leading-7 text-loomera-textMuted">پیام‌های لازم برای ورود، امنیت، رزرو یا درخواست جاری از پیام‌های بازاریابی جدا هستند. دریافت پیشنهادها و پیام‌های تبلیغاتی را می‌توانی از تنظیمات ارتباطات کنترل کنی و انتخابت را بعداً هم تغییر بدهی.</p>
+          </article>
+
+          <article id="availability" class="rounded-[1.5rem] border border-loomera-borderSoft bg-loomera-surface p-4 shadow-lm-soft scroll-mt-28">
+            <h3 class="text-sm font-black">۱۲. نسخه آزمایشی و دسترسی به سرویس</h3>
+            <p class="mt-2 text-sm font-semibold leading-7 text-loomera-textMuted">در دوره آزمایشی ممکن است بعضی قابلیت‌ها محدود، در حال تکمیل یا موقتاً غیرفعال باشند. اختلال اینترنت، نگهداری فنی یا سرویس‌های زیرساختی هم می‌تواند دسترسی را موقتاً مختل کند. این توضیح به معنی سلب مسئولیت قانونی در مواردی که قانون تکلیفی تعیین کرده نیست.</p>
+          </article>
+
+          <article id="suspension" class="rounded-[1.5rem] border border-loomera-borderSoft bg-loomera-surface p-4 shadow-lm-soft scroll-mt-28">
+            <h3 class="text-sm font-black">۱۳. محدودکردن دسترسی یا حذف حساب</h3>
+            <p class="mt-2 text-sm font-semibold leading-7 text-loomera-textMuted">در صورت خطر امنیتی، سوءاستفاده، اطلاعات جعلی، نقض حقوق دیگران یا الزام قانونی ممکن است دسترسی مرتبط به‌صورت متناسب محدود شود. برای حذف حساب، اگر نوبت فعال، همکاری فعال یا مانده مالی وجود داشته باشد ابتدا باید همان مورد تعیین تکلیف شود. نحوه ناشناس‌سازی و نگهداری بعضی سوابق در سیاست حفظ حریم خصوصی توضیح داده شده است.</p>
+          </article>
+
+          <article id="ip" class="rounded-[1.5rem] border border-loomera-borderSoft bg-loomera-surface p-4 shadow-lm-soft scroll-mt-28">
+            <h3 class="text-sm font-black">۱۴. حقوق نرم‌افزار و محتوای کاربران</h3>
+            <p class="mt-2 text-sm font-semibold leading-7 text-loomera-textMuted">کد، طراحی و محتوای اختصاصی لومرا متعلق به صاحبان قانونی آن است. مالکیت محتوایی که کاربر یا مجموعه بارگذاری می‌کند برای صاحب همان محتوا باقی می‌ماند؛ اما برای ذخیره، پردازش و نمایش آن در حد لازم برای ارائه همان قابلیت، اجازه لازم به لومرا داده می‌شود.</p>
+          </article>
+
+          <article id="support" class="rounded-[1.5rem] border border-loomera-borderSoft bg-loomera-surface p-4 shadow-lm-soft scroll-mt-28">
+            <h3 class="text-sm font-black">۱۵. اگر اختلاف یا مشکلی پیش آمد</h3>
+            <div class="mt-2 space-y-2 text-sm font-semibold leading-7 text-loomera-textMuted">
+              <p>برای خطای فنی، مشکل حساب، وضعیت رزرو یا داده‌ای که در پلتفرم ثبت شده از پشتیبانی لومرا استفاده کن. برای کیفیت یا اجرای خدمت حضوری، مبلغی که در محل دریافت شده یا رفتار ارائه‌دهنده، ابتدا موضوع را با همان مجموعه مطرح کن؛ اگر موضوع به عملکرد پلتفرم هم مربوط است، پشتیبانی لومرا را در جریان بگذار.</p>
+              <p>این شرایط در چارچوب قوانین و مقررات لازم‌الاجرای جمهوری اسلامی ایران تفسیر می‌شود. بندهای این صفحه نباید به‌گونه‌ای خوانده شوند که حقوق قانونی مصرف‌کننده یا تکالیف قانونی طرفین را حذف کنند.</p>
+            </div>
+          </article>
+
+          <article id="updates" class="rounded-[1.5rem] border border-loomera-borderSoft bg-loomera-surface p-4 shadow-lm-soft scroll-mt-28">
+            <h3 class="text-sm font-black">۱۶. اگر شرایط تغییر کند</h3>
+            <p class="mt-2 text-sm font-semibold leading-7 text-loomera-textMuted">نسخه و تاریخ جدید در همین صفحه ثبت می‌شود. اگر تغییر مهمی روی تصمیم کاربر، هزینه، نحوه استفاده یا حقوق و تعهدات اثر بگذارد، باید به شکل مناسب و روشن اطلاع‌رسانی شود و در جایی که قانون یا ماهیت تغییر لازم می‌کند، تأیید تازه گرفته شود.</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="rounded-[2rem] border border-loomera-borderSoft bg-white p-5 shadow-lm-card">
+        <h2 class="text-base font-black">سؤال درباره یک بند یا یک رزرو داری؟</h2>
+        <p class="mt-2 text-sm font-semibold leading-7 text-loomera-textMuted">برای سؤال درباره حساب، رزرو یا شرایط استفاده، پشتیبانی را باز کن. اگر دنبال روش انجام یک کار هستی، مرکز راهنما سریع‌تر به جواب می‌رساندت.</p>
+        <div class="mt-4 flex flex-wrap gap-2">
+          <a href="{% url 'support' %}" class="inline-flex rounded-full bg-loomera-primary px-5 py-3 text-sm font-black text-white">پشتیبانی</a>
+          <a href="{% url 'help_center:home' %}" class="inline-flex rounded-full border border-loomera-borderSoft bg-white px-5 py-3 text-sm font-black text-loomera-textPrimary">مرکز راهنما</a>
+          <a href="{% url 'accounts:privacy_policy' %}" class="inline-flex rounded-full border border-loomera-borderSoft bg-white px-5 py-3 text-sm font-black text-loomera-textPrimary">حریم خصوصی</a>
+          <a href="{% url 'help_center:legal_index' %}" class="inline-flex rounded-full border border-loomera-borderSoft bg-white px-5 py-3 text-sm font-black text-loomera-textPrimary">همه قوانین</a>
+        </div>
+      </section>
+    </div>
+
+    <aside class="hidden lg:block">
+      <div class="sticky top-24 space-y-4">
+        <section class="rounded-[2rem] border border-loomera-borderSoft bg-white p-4 shadow-lm-card">
+          <p class="text-xs font-black text-loomera-textMuted">دسترسی سریع</p>
+          <nav class="mt-3 grid gap-2 text-sm font-bold">
+            <a href="#before-booking" class="flex items-center justify-between rounded-2xl px-3 py-3 text-loomera-textSecondary transition hover:bg-loomera-primarySoft hover:text-loomera-primary"><span>قبل از رزرو</span><i class="fa-solid fa-chevron-left text-[10px]" aria-hidden="true"></i></a>
+            <a href="#payment" class="flex items-center justify-between rounded-2xl px-3 py-3 text-loomera-textSecondary transition hover:bg-loomera-primarySoft hover:text-loomera-primary"><span>قیمت و پرداخت</span><i class="fa-solid fa-chevron-left text-[10px]" aria-hidden="true"></i></a>
+            <a href="#cancellation" class="flex items-center justify-between rounded-2xl px-3 py-3 text-loomera-textSecondary transition hover:bg-loomera-primarySoft hover:text-loomera-primary"><span>لغو و تغییر زمان</span><i class="fa-solid fa-chevron-left text-[10px]" aria-hidden="true"></i></a>
+            <a href="#communications" class="flex items-center justify-between rounded-2xl px-3 py-3 text-loomera-textSecondary transition hover:bg-loomera-primarySoft hover:text-loomera-primary"><span>پیام‌ها و تبلیغات</span><i class="fa-solid fa-chevron-left text-[10px]" aria-hidden="true"></i></a>
+            <a href="#support" class="flex items-center justify-between rounded-2xl px-3 py-3 text-loomera-textSecondary transition hover:bg-loomera-primarySoft hover:text-loomera-primary"><span>اختلاف و پشتیبانی</span><i class="fa-solid fa-chevron-left text-[10px]" aria-hidden="true"></i></a>
+          </nav>
+        </section>
+      </div>
+    </aside>
+  </div>
+</main>
+{% endblock %}

@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}کشف مجموعه‌ها{% endblock %}
+{% block body_attrs %}data-page="show_salons"{% endblock %}
+{% block content %}
+<main class="min-h-dvh bg-loomera-bg pb-24 text-loomera-textPrimary" data-show-salons-page>
+  <header class="border-b border-loomera-borderSoft bg-white/92 px-4 py-3 backdrop-blur lg:border-0 lg:bg-transparent lg:px-0 lg:py-0">
+    <div class="mx-auto flex w-full max-w-7xl items-center gap-3 lg:mt-8 lg:rounded-[28px] lg:border lg:border-loomera-borderSoft lg:bg-white lg:p-6 lg:shadow-lm-card">
+      <div class="min-w-0 flex-1"><p class="text-xs font-black text-loomera-primary">کشف و رزرو</p><h1 class="mt-1 text-lg font-black lg:text-2xl">مجموعه مناسب را پیدا کن</h1><p class="mt-1 hidden text-sm text-loomera-textMuted lg:block">از تجربه‌های قبلی شروع کن یا با جستجو و دسته‌بندی خدمات گزینه جدیدی پیدا کن.</p></div>
+      <a href="{% url 'search:search_page' %}" class="inline-flex min-h-10 items-center justify-center gap-2 rounded-full bg-loomera-primary px-4 py-2 text-xs font-black text-white lg:px-5 lg:py-3 lg:text-sm"><i class="fa-solid fa-magnifying-glass"></i><span>جستجو</span></a>
+    </div>
+  </header>
+
+  <div class="mx-auto w-full max-w-7xl space-y-6 px-4 pt-5 sm:px-6 lg:pt-6 xl:px-0">
+    {% if book_again_orders %}
+      <section data-scroll-section class="rounded-[28px] border border-loomera-borderSoft bg-white p-5 shadow-lm-card" aria-labelledby="book-again-title"><div class="mb-4 flex items-end justify-between gap-3"><div><p class="text-xs font-black text-loomera-primary">رزرو دوباره</p><h2 id="book-again-title" class="mt-1 text-xl font-black">همان تجربه قبلی</h2><p class="mt-1 text-xs leading-6 text-loomera-textMuted">خدمت‌هایی که قبلاً رزرو کرده‌ای، بدون جستجوی دوباره.</p></div><a href="{% url 'orders:appointments' %}" class="shrink-0 rounded-full border border-loomera-borderSoft px-4 py-2 text-xs font-black text-loomera-primary">نوبت‌های من</a></div><div data-scroll-rail class="-mx-4 flex snap-x gap-3 overflow-x-auto px-4 pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">{% for order in book_again_orders|slice:":8" %}<div class="w-[18rem] shrink-0 snap-start">{% include "components/book_again_card.html" with item=order %}</div>{% endfor %}</div></section>
+    {% endif %}
+
+    {% if for_you_salons %}
+      <section data-scroll-section class="rounded-[28px] border border-loomera-borderSoft bg-white p-5 shadow-lm-card" aria-labelledby="for-you-title"><div class="mb-4 flex items-end justify-between gap-3"><div><p class="text-xs font-black text-loomera-primary">برای تو</p><h2 id="for-you-title" class="mt-1 text-xl font-black">مجموعه‌های آشنا</h2><p class="mt-1 text-xs leading-6 text-loomera-textMuted">علاقه‌مندی‌ها و مجموعه‌هایی که قبلاً دیده‌ای.</p></div><a href="{% url 'csf:favorite_salons' %}" class="shrink-0 rounded-full border border-loomera-borderSoft px-4 py-2 text-xs font-black text-loomera-primary">علاقه‌مندی‌ها</a></div><div data-scroll-rail class="-mx-4 flex snap-x gap-3 overflow-x-auto px-4 pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">{% for salon in for_you_salons %}<div class="w-[18rem] shrink-0 snap-start">{% include "components/salon_card.html" with salon=salon %}</div>{% endfor %}</div></section>
+    {% endif %}
+
+    {% if discover_salons %}
+      <section data-scroll-section class="rounded-[28px] border border-loomera-borderSoft bg-white p-5 shadow-lm-card" aria-labelledby="discover-more-title"><div class="mb-4 flex items-end justify-between gap-3"><div><p class="text-xs font-black text-loomera-primary">کشف بیشتر</p><h2 id="discover-more-title" class="mt-1 text-xl font-black">پیشنهادهای لومرا</h2><p class="mt-1 text-xs leading-6 text-loomera-textMuted">ترکیبی از مجموعه‌های محبوب، تازه، برتر و دارای پیشنهاد.</p></div><a href="{% url 'search:search_page' %}" class="shrink-0 rounded-full border border-loomera-borderSoft px-4 py-2 text-xs font-black text-loomera-primary">همه نتایج</a></div><div data-scroll-rail class="-mx-4 flex snap-x gap-3 overflow-x-auto px-4 pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">{% for salon in discover_salons %}<div class="w-[18rem] shrink-0 snap-start">{% include "components/salon_card.html" with salon=salon %}</div>{% endfor %}</div></section>
+    {% endif %}
+
+    {% if service_groups %}
+      <section class="rounded-[28px] border border-loomera-borderSoft bg-white p-5 shadow-lm-card"><div><p class="text-xs font-black text-loomera-primary">از خدمت شروع کن</p><h2 class="mt-1 text-xl font-black">چه خدمتی می‌خواهی؟</h2></div><div class="mt-4 -mx-4 flex snap-x gap-3 overflow-x-auto px-4 pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden lg:mx-0 lg:grid lg:grid-cols-[repeat(auto-fit,minmax(8rem,1fr))] lg:px-0">{% for group in service_groups %}<a href="{% if group.id %}{% url 'services:group_services' group.id %}{% elif group.pk %}{% url 'services:group_services' group.pk %}{% else %}{% url 'services:all_services' %}{% endif %}" class="min-w-[128px] snap-start rounded-[22px] border border-loomera-borderSoft bg-loomera-bgSubtle p-4 text-center transition hover:border-loomera-primary/30 lg:min-w-0"><span class="mx-auto flex h-12 w-12 items-center justify-center overflow-hidden rounded-2xl bg-white text-loomera-primary shadow-sm">{% if group.card_image_url %}<img src="{{ group.card_image_url }}" class="h-full w-full object-cover" alt="">{% elif group.group_image %}<img src="{% url 'services:group_service_image' group.id %}" class="h-full w-full object-cover" alt="">{% elif group.icon %}<i class="{{ group.icon }}"></i>{% else %}<i class="fa-solid fa-spa"></i>{% endif %}</span><strong class="mt-3 block truncate text-xs">{% firstof group.group_title group.label group.title "خدمات" %}</strong></a>{% endfor %}</div></section>
+    {% endif %}
+
+    {% if not book_again_orders and not for_you_salons and not discover_salons %}<section class="rounded-[28px] border border-dashed border-loomera-borderSoft bg-white p-9 text-center shadow-lm-soft"><i class="fa-solid fa-store text-2xl text-loomera-primary"></i><h2 class="mt-4 text-lg font-black">هنوز مجموعه‌ای برای نمایش نیست</h2><a href="{% url 'search:search_page' %}" class="mt-4 inline-flex rounded-full bg-loomera-primary px-5 py-3 text-sm font-black text-white">جستجو</a></section>{% endif %}
+  </div>
+</main>
+{% endblock %}

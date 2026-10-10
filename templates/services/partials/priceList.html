@@ -1,0 +1,69 @@
+{% load humanize %}
+
+{% if service_price_list %}
+  <div class="divide-y divide-loomera-borderSoft">
+    {% for item in service_price_list %}
+      <a
+        href="{% url 'search:search_page' %}?q={{ item.stylist_fullName|urlencode }}&q_type=stylist&q_id={{ item.stylist_id }}&services={{ service.id }}"
+        class="group flex items-center gap-3 py-3 first:pt-0 last:pb-0"
+      >
+        <div class="h-12 w-12 shrink-0 overflow-hidden rounded-full bg-loomera-primarySoft text-loomera-primary">
+          {% if item.stylist_image %}
+            <img
+              src="{{ item.stylist_image.url }}"
+              alt="{{ item.stylist_fullName }}"
+              class="h-full w-full object-cover"
+            >
+          {% else %}
+            <span class="flex h-full w-full items-center justify-center">
+              <i class="fa-regular fa-user" aria-hidden="true"></i>
+            </span>
+          {% endif %}
+        </div>
+
+        <div class="min-w-0 flex-1">
+          <div class="flex items-center gap-2">
+            <p class="truncate text-sm font-black text-loomera-textPrimary">
+              {{ item.stylist_fullName }}
+            </p>
+
+            {% if item.score %}
+              <span class="inline-flex shrink-0 items-center gap-1 text-[10px] font-black text-loomera-textMuted">
+                {{ item.score }}
+                <i class="fa-solid fa-star text-[9px] text-yellow-400" aria-hidden="true"></i>
+              </span>
+            {% endif %}
+          </div>
+
+          <p class="mt-1 truncate text-[11px] font-bold text-loomera-textMuted">
+            {% if item.stylist_expert %}
+              {{ item.stylist_expert }}
+            {% else %}
+              متخصص این خدمت
+            {% endif %}
+            {% if item.active_salons_count %}
+              · {{ item.active_salons_count|intcomma }} مجموعه
+            {% endif %}
+          </p>
+        </div>
+
+        <div class="shrink-0 text-left">
+          {% if item.price %}
+            <p class="text-sm font-black text-loomera-textPrimary">{{ item.price|intcomma }}</p>
+            <p class="text-[10px] font-bold text-loomera-textMuted">تومان</p>
+          {% else %}
+            <p class="text-[11px] font-black text-loomera-textMuted">قیمت متغیر</p>
+          {% endif %}
+        </div>
+
+        <i class="fa-solid fa-chevron-left shrink-0 text-[9px] text-loomera-textMuted transition group-hover:text-loomera-primary" aria-hidden="true"></i>
+      </a>
+    {% endfor %}
+  </div>
+{% else %}
+  <div class="rounded-2xl border border-dashed border-loomera-borderSoft bg-white p-6 text-center">
+    <p class="text-sm font-black text-loomera-textPrimary">
+      هنوز متخصص فعالی برای این خدمت ثبت نشده است.
+    </p>
+  </div>
+{% endif %}

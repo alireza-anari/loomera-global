@@ -1,0 +1,119 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}ورود به لومرا{% endblock %}
+{% block body_attrs %}data-page="auth" data-auth-flow="login"{% endblock %}
+{% block main_class %}lm-login-main{% endblock %}
+
+{% block head %}
+  <link rel="stylesheet" href="{% static 'css/pages/login.css' %}">
+{% endblock %}
+
+{% block content %}
+<section class="lm-login-visual-shell isolate bg-loomera-bg text-loomera-textPrimary" aria-labelledby="login-title">
+  {# Desktop artwork: the login card is intentionally placed over the quiet/right side of the composition. #}
+  <div class="lm-login-visual-background pointer-events-none -z-10" aria-hidden="true">
+    <img
+      src="{% static 'branding/auth/login-desktop-hero.png' %}"
+      alt=""
+      class="lm-login-visual-background-image"
+      loading="eager"
+      decoding="async"
+      fetchpriority="high"
+    >
+    <div class="lm-login-visual-background-softener"></div>
+  </div>
+
+  {# Mobile keeps the existing lightweight Loomera surface instead of aggressively cropping the desktop artwork. #}
+  <div class="lm-login-mobile-surface pointer-events-none -z-10" aria-hidden="true">
+    <div class="absolute inset-x-0 top-0 h-80 bg-[radial-gradient(circle_at_80%_10%,rgba(115,92,190,0.14),transparent_35%),radial-gradient(circle_at_15%_30%,rgba(167,200,161,0.18),transparent_32%)]"></div>
+  </div>
+
+  <div class="lm-login-visual-frame">
+    <div class="lm-login-visual-panel">
+      <div class="lm-login-visual-toolbar">
+        <a href="{% url 'salons:home' %}" class="lm-login-visual-pill" aria-label="صفحه اصلی Loomera">
+          <img src="{% static 'branding/logo/loomera-glyph-mark.png' %}" alt="" class="lm-login-visual-logo" loading="eager" decoding="async">
+          <span>Loomera</span>
+        </a>
+      </div>
+
+      <section class="lm-login-visual-card" aria-label="فرم ورود">
+        <header>
+          <h1 id="login-title" class="lm-login-title"><span>ورود به </span><span class="lm-login-title-brand">لومرا</span></h1>
+          {% if next_url %}
+            <p class="lm-login-return-copy mt-2">برای ادامه رزرو وارد حساب مشتری شو؛ بعد از ورود به همین مرحله برمی‌گردی.</p>
+          {% endif %}
+        </header>
+
+        <form method="post" class="lm-login-form" novalidate>
+          {% csrf_token %}
+          {% if next_url %}<input type="hidden" name="next" value="{{ next_url }}">{% endif %}
+          {% if form.non_field_errors %}
+            <div class="rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm font-bold leading-7 text-red-700" role="alert">
+              {% for error in form.non_field_errors %}<p>{{ error }}</p>{% endfor %}
+            </div>
+          {% endif %}
+
+          <label class="lm-login-field" for="id_mobile_number">
+            <span class="lm-login-field-label">شماره موبایل</span>
+            <span class="lm-login-control">
+              <span class="lm-login-control-icon"><i class="fa-solid fa-mobile-screen-button" aria-hidden="true"></i></span>
+              <input class="lm-login-input" type="text" name="mobile_number" id="id_mobile_number" value="{{ form.mobile_number.value|default_if_none:'' }}" inputmode="numeric" autocomplete="tel" placeholder="09xxxxxxxxx" dir="ltr">
+            </span>
+            {% if form.mobile_number.errors %}<small class="mt-2 block text-xs font-bold text-red-600">{{ form.mobile_number.errors.0 }}</small>{% endif %}
+          </label>
+
+          <label class="lm-login-field" for="id_password">
+            <span class="lm-login-field-label">رمز عبور</span>
+            <span class="lm-login-control">
+              <span class="lm-login-control-icon"><i class="fa-solid fa-key" aria-hidden="true"></i></span>
+              <input class="lm-login-input" type="password" name="password" id="id_password" autocomplete="current-password" placeholder="رمز عبور">
+              <button type="button" class="toggle-password lm-login-password-toggle" data-input="id_password" aria-label="نمایش یا پنهان‌کردن رمز عبور"><i class="fa-solid fa-eye" aria-hidden="true"></i></button>
+            </span>
+            {% if form.password.errors %}<small class="mt-2 block text-xs font-bold text-red-600">{{ form.password.errors.0 }}</small>{% endif %}
+          </label>
+
+          <div class="lm-login-forgot-row">
+            <a href="{% url 'accounts:remember_password' %}{{ next_query }}" class="lm-login-forgot">رمز عبور را فراموش کرده‌ام</a>
+          </div>
+
+          <button type="submit" class="lm-login-submit">
+            <span>ورود</span>
+            <i class="fa-solid fa-arrow-left text-xs" aria-hidden="true"></i>
+          </button>
+        </form>
+
+        <footer class="lm-login-footer">
+          <p class="lm-login-footer-copy">حساب نداری؟</p>
+          <div class="lm-login-footer-links">
+            <a href="{% url 'accounts:customer_signup' %}{{ next_query }}" class="lm-login-footer-link">مشتری</a>
+            <a href="{% url 'accounts:stylist_signup' %}" class="lm-login-footer-link">متخصص</a>
+            <a href="{% url 'accounts:register' %}" class="lm-login-footer-link">ثبت مجموعه</a>
+          </div>
+        </footer>
+      </section>
+    </div>
+  </div>
+</section>
+{% endblock %}
+
+{% block js %}
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    document.querySelectorAll('.toggle-password').forEach(function (btn) {
+      btn.addEventListener('click', function (e) {
+        e.preventDefault();
+        var input = document.getElementById(this.dataset.input);
+        var icon = this.querySelector('i');
+        if (!input || !icon) return;
+        input.type = input.type === 'password' ? 'text' : 'password';
+        icon.classList.toggle('fa-eye');
+        icon.classList.toggle('fa-eye-slash');
+      });
+    });
+    var mobileInput = document.getElementById('id_mobile_number');
+    if (mobileInput) mobileInput.addEventListener('input', function (e) { e.target.value = e.target.value.replace(/[^\d]/g, ''); });
+  });
+</script>
+{% endblock %}

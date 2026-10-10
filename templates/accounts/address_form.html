@@ -1,0 +1,126 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}{% if mode == 'edit' %}ویرایش آدرس{% else %}افزودن آدرس{% endif %}{% endblock %}
+{% block body_attrs %}data-page="address-form"{% endblock %}
+
+{% block content %}
+<main class="min-h-dvh bg-loomera-bg pb-20 text-loomera-textPrimary">
+  <header class="border-b border-loomera-borderSoft bg-white">
+    <div class="mx-auto w-full max-w-3xl px-4 py-5 sm:px-6 sm:py-7 xl:px-0">
+      <a
+        href="{% url 'accounts:customer_addresses' %}"
+        class="inline-flex items-center gap-2 text-xs font-black text-loomera-primary"
+      >
+        <i class="fa-solid fa-arrow-right text-[10px]" aria-hidden="true"></i>
+        آدرس‌های من
+      </a>
+
+      <h1 class="mt-2 text-2xl font-black text-loomera-textPrimary sm:text-3xl">
+        {% if mode == 'edit' %}ویرایش آدرس{% else %}افزودن آدرس جدید{% endif %}
+      </h1>
+    </div>
+  </header>
+
+  <section class="mx-auto mt-5 w-full max-w-3xl px-4 sm:mt-7 sm:px-6 xl:px-0">
+    <form
+      id="customerAddressForm"
+      method="post"
+      class="rounded-[1.5rem] border border-loomera-borderSoft bg-white p-4 sm:p-6"
+      novalidate
+    >
+      {% csrf_token %}
+
+      {% if form.non_field_errors %}
+        <div class="mb-5 rounded-2xl border border-red-100 bg-red-50 px-4 py-3 text-sm font-bold leading-7 text-red-600" role="alert">
+          {{ form.non_field_errors }}
+        </div>
+      {% endif %}
+
+      <div class="grid gap-4 sm:grid-cols-2">
+        <label class="block sm:col-span-2">
+          <span class="mb-2 block text-xs font-black text-loomera-textPrimary">{{ form.title.label }}</span>
+          <span class="block [&_input]:w-full [&_input]:rounded-2xl [&_input]:border [&_input]:border-loomera-borderSoft [&_input]:bg-loomera-bgSubtle [&_input]:px-4 [&_input]:py-3.5 [&_input]:text-sm [&_input]:font-semibold [&_input]:text-loomera-textPrimary [&_input]:outline-none [&_input]:transition [&_input]:placeholder:text-loomera-textMuted/70 [&_input:focus]:border-loomera-primary/40 [&_input:focus]:bg-white [&_input:focus]:ring-4 [&_input:focus]:ring-loomera-primary/10">
+            {{ form.title }}
+          </span>
+          {% if form.title.errors %}<span class="mt-2 block text-xs font-bold text-red-600">{{ form.title.errors.0 }}</span>{% endif %}
+        </label>
+
+        <label class="block sm:col-span-2">
+          <span class="mb-2 block text-xs font-black text-loomera-textPrimary">{{ form.city.label }}</span>
+          <span class="block [&_input]:w-full [&_input]:rounded-2xl [&_input]:border [&_input]:border-loomera-borderSoft [&_input]:bg-loomera-bgSubtle [&_input]:px-4 [&_input]:py-3.5 [&_input]:text-sm [&_input]:font-semibold [&_input]:text-loomera-textPrimary [&_input]:outline-none [&_input]:transition [&_input]:placeholder:text-loomera-textMuted/70 [&_input:focus]:border-loomera-primary/40 [&_input:focus]:bg-white [&_input:focus]:ring-4 [&_input:focus]:ring-loomera-primary/10">
+            {{ form.city }}
+          </span>
+          {% if form.city.errors %}<span class="mt-2 block text-xs font-bold text-red-600">{{ form.city.errors.0 }}</span>{% endif %}
+        </label>
+
+        <label class="block sm:col-span-2">
+          <span class="mb-2 block text-xs font-black text-loomera-textPrimary">{{ form.address_line.label }}</span>
+          <span class="block [&_textarea]:min-h-[112px] [&_textarea]:w-full [&_textarea]:resize-none [&_textarea]:rounded-2xl [&_textarea]:border [&_textarea]:border-loomera-borderSoft [&_textarea]:bg-loomera-bgSubtle [&_textarea]:px-4 [&_textarea]:py-3.5 [&_textarea]:text-sm [&_textarea]:font-semibold [&_textarea]:leading-7 [&_textarea]:text-loomera-textPrimary [&_textarea]:outline-none [&_textarea]:transition [&_textarea]:placeholder:text-loomera-textMuted/70 [&_textarea:focus]:border-loomera-primary/40 [&_textarea:focus]:bg-white [&_textarea:focus]:ring-4 [&_textarea:focus]:ring-loomera-primary/10">
+            {{ form.address_line }}
+          </span>
+          {% if form.address_line.errors %}<span class="mt-2 block text-xs font-bold text-red-600">{{ form.address_line.errors.0 }}</span>{% endif %}
+        </label>
+
+        <label class="block">
+          <span class="mb-2 block text-xs font-black text-loomera-textPrimary">{{ form.plaque.label }}</span>
+          <span class="block [&_input]:w-full [&_input]:rounded-2xl [&_input]:border [&_input]:border-loomera-borderSoft [&_input]:bg-loomera-bgSubtle [&_input]:px-4 [&_input]:py-3.5 [&_input]:text-sm [&_input]:font-semibold [&_input]:text-loomera-textPrimary [&_input]:outline-none [&_input]:transition [&_input]:placeholder:text-loomera-textMuted/70 [&_input:focus]:border-loomera-primary/40 [&_input:focus]:bg-white [&_input:focus]:ring-4 [&_input:focus]:ring-loomera-primary/10">
+            {{ form.plaque }}
+          </span>
+          {% if form.plaque.errors %}<span class="mt-2 block text-xs font-bold text-red-600">{{ form.plaque.errors.0 }}</span>{% endif %}
+        </label>
+
+        <label class="block">
+          <span class="mb-2 block text-xs font-black text-loomera-textPrimary">{{ form.unit.label }}</span>
+          <span class="block [&_input]:w-full [&_input]:rounded-2xl [&_input]:border [&_input]:border-loomera-borderSoft [&_input]:bg-loomera-bgSubtle [&_input]:px-4 [&_input]:py-3.5 [&_input]:text-sm [&_input]:font-semibold [&_input]:text-loomera-textPrimary [&_input]:outline-none [&_input]:transition [&_input]:placeholder:text-loomera-textMuted/70 [&_input:focus]:border-loomera-primary/40 [&_input:focus]:bg-white [&_input:focus]:ring-4 [&_input:focus]:ring-loomera-primary/10">
+            {{ form.unit }}
+          </span>
+          {% if form.unit.errors %}<span class="mt-2 block text-xs font-bold text-red-600">{{ form.unit.errors.0 }}</span>{% endif %}
+        </label>
+
+        <label class="block">
+          <span class="mb-2 block text-xs font-black text-loomera-textPrimary">{{ form.postal_code.label }}</span>
+          <span class="block [&_input]:w-full [&_input]:rounded-2xl [&_input]:border [&_input]:border-loomera-borderSoft [&_input]:bg-loomera-bgSubtle [&_input]:px-4 [&_input]:py-3.5 [&_input]:text-sm [&_input]:font-semibold [&_input]:text-loomera-textPrimary [&_input]:outline-none [&_input]:transition [&_input]:placeholder:text-loomera-textMuted/70 [&_input:focus]:border-loomera-primary/40 [&_input:focus]:bg-white [&_input:focus]:ring-4 [&_input:focus]:ring-loomera-primary/10 [&_input]:[direction:ltr]">
+            {{ form.postal_code }}
+          </span>
+          {% if form.postal_code.errors %}<span class="mt-2 block text-xs font-bold text-red-600">{{ form.postal_code.errors.0 }}</span>{% endif %}
+        </label>
+
+        <label class="block">
+          <span class="mb-2 block text-xs font-black text-loomera-textPrimary">{{ form.phone_number.label }}</span>
+          <span class="block [&_input]:w-full [&_input]:rounded-2xl [&_input]:border [&_input]:border-loomera-borderSoft [&_input]:bg-loomera-bgSubtle [&_input]:px-4 [&_input]:py-3.5 [&_input]:text-sm [&_input]:font-semibold [&_input]:text-loomera-textPrimary [&_input]:outline-none [&_input]:transition [&_input]:placeholder:text-loomera-textMuted/70 [&_input:focus]:border-loomera-primary/40 [&_input:focus]:bg-white [&_input:focus]:ring-4 [&_input:focus]:ring-loomera-primary/10 [&_input]:[direction:ltr]">
+            {{ form.phone_number }}
+          </span>
+          {% if form.phone_number.errors %}<span class="mt-2 block text-xs font-bold text-red-600">{{ form.phone_number.errors.0 }}</span>{% endif %}
+        </label>
+      </div>
+
+      <label class="mt-5 flex cursor-pointer items-center gap-3 rounded-2xl border border-loomera-borderSoft bg-loomera-bgSubtle px-4 py-3">
+        <span class="shrink-0 [&_input]:h-5 [&_input]:w-5 [&_input]:rounded [&_input]:border-loomera-border [&_input]:text-loomera-primary [&_input]:focus:ring-loomera-primary/30">
+          {{ form.is_default }}
+        </span>
+        <span class="text-sm font-black text-loomera-textPrimary">
+          {{ form.is_default.label }}
+        </span>
+      </label>
+
+      <div class="mt-6 flex flex-col-reverse gap-2 border-t border-loomera-borderSoft pt-4 sm:flex-row sm:justify-end">
+        <a
+          href="{% url 'accounts:customer_addresses' %}"
+          class="inline-flex min-h-11 items-center justify-center rounded-full border border-loomera-borderSoft bg-white px-5 text-sm font-black text-loomera-textSecondary"
+        >
+          انصراف
+        </a>
+
+        <button
+          type="submit"
+          class="inline-flex min-h-11 items-center justify-center gap-2 rounded-full bg-loomera-primary px-6 text-sm font-black text-white transition hover:bg-loomera-primaryHover"
+        >
+          <i class="fa-solid fa-check text-xs" aria-hidden="true"></i>
+          {% if mode == 'edit' %}ذخیره تغییرات{% else %}ثبت آدرس{% endif %}
+        </button>
+      </div>
+    </form>
+  </section>
+</main>
+{% endblock %}

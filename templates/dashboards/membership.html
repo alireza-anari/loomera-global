@@ -1,0 +1,265 @@
+{% extends "dashboard_template.html" %}
+{% block title %}عضویت{% endblock %}
+
+{% block content %}
+  {% url 'dashboards:online_booking' as online_booking_url %}
+  {% url 'dashboards:catalog' as catalog_url %}
+  {% url 'dashboards:finance_withdraw' as finance_withdraw_url %}
+  {% url 'dashboards:salon_profile' as salon_profile_url %}
+
+  <section class="min-w-0 max-w-full space-y-4 overflow-visible lg:space-y-5" data-dashboard-workspace-root data-dashboard-page="membership">
+    <section class="relative min-w-0 overflow-hidden rounded-[30px] border border-loomera-borderSoft bg-white/95 p-4 shadow-lm-card sm:rounded-[34px] sm:p-6 lg:p-7" aria-labelledby="membership-title">
+      <div class="pointer-events-none absolute inset-x-0 top-0 h-44 bg-[radial-gradient(circle_at_top_right,rgba(115,92,190,0.18),transparent_44%),linear-gradient(180deg,rgba(245,240,255,0.96),rgba(255,255,255,0))]" aria-hidden="true"></div>
+
+      <div class="relative min-w-0">
+        <div class="min-w-0 rounded-[26px] border border-white/80 bg-white/90 p-4 shadow-lm-soft backdrop-blur sm:p-5 lg:p-6">
+          <div class="flex min-w-0 flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+            <div class="min-w-0">
+              <span class="inline-flex max-w-full items-center gap-2 rounded-full border border-loomera-primary/10 bg-loomera-primarySoft px-3 py-1.5 text-[11px] font-black text-loomera-primaryText">
+                <i class="fa-solid fa-crown text-[10px]" aria-hidden="true"></i>
+                <span class="truncate">مالی و طرح‌ها</span>
+              </span>
+
+              <h1 id="membership-title" class="mt-4 text-xl font-black leading-8 tracking-tight text-loomera-textPrimary sm:text-3xl lg:text-4xl">
+                عضویت و پلن‌های مجموعه
+              </h1>
+              <p class="mt-3 max-w-3xl text-sm leading-7 text-loomera-textSecondary sm:text-[15px]">
+                طرح فعلی و قابلیت‌های در دسترس مجموعه را ببین.
+              </p>
+            </div>
+
+            <span class="hidden h-14 w-14 shrink-0 items-center justify-center rounded-3xl bg-loomera-primary text-white shadow-[0_18px_42px_rgba(115,92,190,0.22)] sm:inline-flex">
+              <i class="fa-solid fa-layer-group text-lg" aria-hidden="true"></i>
+            </span>
+          </div>
+
+          <div class="mt-6 grid min-w-0 gap-3 sm:grid-cols-3">
+            <a href="{{ online_booking_url }}" class="inline-flex min-h-12 min-w-0 items-center justify-center gap-2 rounded-2xl bg-loomera-primary px-4 py-3 text-sm font-black text-white shadow-[0_18px_38px_rgba(115,92,190,0.20)] transition hover:-translate-y-0.5 hover:shadow-lm-card focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-loomera-primary/30">
+              <i class="fa-solid fa-globe text-xs" aria-hidden="true"></i>
+              <span class="truncate">رزرو آنلاین</span>
+            </a>
+            <a href="{{ catalog_url }}" class="inline-flex min-h-12 min-w-0 items-center justify-center gap-2 rounded-2xl border border-loomera-borderSoft bg-white px-4 py-3 text-sm font-bold text-loomera-textSecondary transition hover:-translate-y-0.5 hover:border-loomera-primary/30 hover:bg-loomera-primarySoft/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-loomera-primary/30">
+              <i class="fa-solid fa-book-open text-xs text-loomera-primaryText" aria-hidden="true"></i>
+              <span class="truncate">کاتالوگ</span>
+            </a>
+            <a href="{{ finance_withdraw_url }}" class="inline-flex min-h-12 min-w-0 items-center justify-center gap-2 rounded-2xl border border-loomera-borderSoft bg-white px-4 py-3 text-sm font-bold text-loomera-textSecondary transition hover:-translate-y-0.5 hover:border-loomera-primary/30 hover:bg-loomera-primarySoft/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-loomera-primary/30">
+              <i class="fa-solid fa-wallet text-xs text-loomera-primaryText" aria-hidden="true"></i>
+              <span class="truncate">مالی مجموعه</span>
+            </a>
+          </div>
+        </div>
+
+
+
+      </div>
+    </section>
+
+
+
+
+
+    <section id="membership-section-plans" class="group scroll-mt-28 overflow-hidden rounded-[28px] border border-loomera-borderSoft bg-white/95 shadow-lm-card lg:scroll-mt-36" data-dashboard-workspace-panel data-lm-direct-section data-lm-task-panel="membership" data-lm-task-key="plans" data-lm-task-label="پلن‌ها" data-lm-task-default data-lm-task-order="1">
+      <header data-lm-direct-section-header class="flex cursor-default list-none items-center justify-between gap-3 border-b border-loomera-borderSoft bg-white/96 px-4 py-3 shadow-sm backdrop-blur transition hover:bg-loomera-primarySoft/25 sm:px-5 lg:px-6 lg:py-4">
+        <div class="min-w-0">
+          <p class="text-[11px] font-black text-loomera-primaryText">پلن و دسترسی</p>
+          <h2 class="mt-1 truncate text-base font-black text-loomera-textPrimary sm:text-lg">پلن‌های عضویت</h2>
+        </div>
+</header>
+
+      <div class="p-4 sm:p-5 lg:p-6">
+        <div class="mb-4 flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
+          <label class="relative block min-w-0 flex-1">
+            <span class="sr-only">جستجوی پلن‌ها</span>
+            <i class="fa-solid fa-magnifying-glass pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-xs text-loomera-textMuted" aria-hidden="true"></i>
+            <input type="search" class="w-full rounded-2xl border border-loomera-borderSoft bg-white py-3 pl-4 pr-10 text-sm font-bold text-loomera-textPrimary outline-none transition placeholder:text-loomera-textMuted focus:border-loomera-primary/40 focus:ring-4 focus:ring-loomera-primary/10" placeholder="جستجو در پلن‌ها و قابلیت‌ها" data-membership-plan-search>
+          </label>
+          <div class="flex gap-2 overflow-x-auto pb-1" aria-label="فیلتر سریع پلن‌ها">
+            <button type="button" class="shrink-0 rounded-full border border-loomera-primary/20 bg-loomera-primarySoft px-3 py-2 text-xs font-black text-loomera-primaryText" data-membership-plan-filter="all">همه</button>
+            <button type="button" class="shrink-0 rounded-full border border-loomera-borderSoft bg-white px-3 py-2 text-xs font-black text-loomera-textSecondary" data-membership-plan-filter="current">پلن فعلی</button>
+            <button type="button" class="shrink-0 rounded-full border border-loomera-borderSoft bg-white px-3 py-2 text-xs font-black text-loomera-textSecondary" data-membership-plan-filter="future">بعداً</button>
+          </div>
+        </div>
+
+        <div class="grid gap-4 lg:grid-cols-2" data-membership-plan-grid>
+          {% for card in membership_workspace.plan_cards %}
+            <article class="rounded-[26px] border {% if card.is_current %}border-loomera-primary/30 bg-loomera-primarySoft/20{% else %}border-loomera-borderSoft bg-white{% endif %} p-4 shadow-lm-soft transition hover:-translate-y-0.5 hover:shadow-lm-card sm:p-5" data-membership-plan-card data-membership-plan-status="{% if card.is_current %}current{% else %}future{% endif %}" data-membership-search-value="{{ card.title }} {{ card.description }} {{ card.badge }} {{ card.included|join:' ' }}">
+              <div class="flex items-start justify-between gap-4">
+                <div class="min-w-0">
+                  <h3 class="text-lg font-black text-loomera-textPrimary">{{ card.title }}</h3>
+                  <p class="mt-2 text-sm leading-7 text-loomera-textSecondary">{{ card.description }}</p>
+                </div>
+                <span class="shrink-0 rounded-full px-3 py-1 text-xs font-black {% if card.is_current %}bg-loomera-primarySoft text-loomera-primaryText{% else %}bg-loomera-bgSubtle text-loomera-textSecondary{% endif %}">{{ card.badge }}</span>
+              </div>
+              <ul class="mt-4 grid gap-2 text-sm text-loomera-textSecondary">
+                {% for item in card.included %}
+                  <li class="rounded-2xl border border-loomera-borderSoft bg-white px-4 py-3 leading-7">{{ item }}</li>
+                {% empty %}
+                  <li class="rounded-2xl border border-dashed border-loomera-borderSoft bg-white px-4 py-3 leading-7 text-loomera-textMuted">قابلیتی برای این پلن ثبت نشده است.</li>
+                {% endfor %}
+              </ul>
+            </article>
+          {% empty %}
+            <div class="rounded-[24px] border border-dashed border-loomera-borderSoft bg-loomera-bgSubtle/70 px-4 py-6 text-center text-sm leading-7 text-loomera-textMuted lg:col-span-2">پلنی برای نمایش ثبت نشده است.</div>
+          {% endfor %}
+          <div class="hidden rounded-[24px] border border-dashed border-loomera-borderSoft bg-loomera-bgSubtle/70 px-4 py-6 text-center text-sm leading-7 text-loomera-textMuted lg:col-span-2" data-membership-plan-empty>پلنی با این جستجو یا فیلتر پیدا نشد.</div>
+        </div>
+      </div>
+    </section>
+
+
+
+    <div class="grid min-w-0 gap-4 xl:grid-cols-[minmax(0,0.95fr)_minmax(0,1.05fr)]">
+      <details id="membership-section-billing" class="group scroll-mt-28 overflow-hidden rounded-[28px] border border-loomera-borderSoft bg-white/95 shadow-lm-card lg:scroll-mt-36" data-dashboard-workspace-panel data-lm-task-panel="membership" data-lm-task-key="billing" data-lm-task-label="صورتحساب" data-lm-task-order="2">
+        <summary class="flex cursor-pointer list-none items-center justify-between gap-3 border-b border-loomera-borderSoft bg-white/96 px-4 py-3 shadow-sm backdrop-blur transition hover:bg-loomera-primarySoft/25 sm:px-5 lg:px-6 lg:py-4">
+          <div class="min-w-0">
+            <p class="text-[11px] font-black text-loomera-primaryText">شفافیت مالی</p>
+            <h2 class="mt-1 truncate text-base font-black text-loomera-textPrimary sm:text-lg">صورتحساب و وضعیت عضویت</h2>
+          </div>
+          <span class="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-loomera-primarySoft text-loomera-primary transition group-open:rotate-180"><i class="fa-solid fa-chevron-down text-xs" aria-hidden="true"></i></span>
+        </summary>
+        <div class="p-4 sm:p-5 lg:p-6">
+          <div class="rounded-[24px] border border-loomera-primary/15 bg-loomera-primarySoft/35 p-4">
+            <div class="flex items-start gap-3">
+              <span class="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-white text-loomera-primaryText shadow-sm"><i class="fa-solid fa-circle-info" aria-hidden="true"></i></span>
+              <div class="min-w-0">
+                <h3 class="text-sm font-black text-loomera-textPrimary">صورتحساب خودکار هنوز فعال نیست</h3>
+                <p class="mt-2 text-sm leading-7 text-loomera-textSecondary">صورتحساب، تمدید خودکار و تغییر پلن هنوز فعال نشده‌اند.</p>
+              </div>
+            </div>
+          </div>
+
+          <ul class="mt-4 space-y-3 text-sm text-loomera-textSecondary">
+            {% for item in membership_workspace.billing_placeholders %}
+              <li class="rounded-[20px] border border-loomera-borderSoft bg-loomera-bgSubtle/70 px-4 py-4 leading-7">{{ item }}</li>
+            {% empty %}
+              <li class="rounded-[20px] border border-dashed border-loomera-borderSoft bg-loomera-bgSubtle/70 px-4 py-4 leading-7 text-loomera-textMuted">توضیحی برای صورتحساب ثبت نشده است.</li>
+            {% endfor %}
+          </ul>
+        </div>
+      </details>
+
+      <details id="membership-section-capabilities" class="group scroll-mt-28 overflow-hidden rounded-[28px] border border-loomera-borderSoft bg-white/95 shadow-lm-card lg:scroll-mt-36" data-dashboard-workspace-panel data-lm-task-panel="membership" data-lm-task-key="capabilities" data-lm-task-label="امکانات پلن" data-lm-task-order="3">
+        <summary class="flex cursor-pointer list-none items-center justify-between gap-3 border-b border-loomera-borderSoft bg-white/96 px-4 py-3 shadow-sm backdrop-blur transition hover:bg-loomera-primarySoft/25 sm:px-5 lg:px-6 lg:py-4">
+          <div class="min-w-0">
+            <p class="text-[11px] font-black text-loomera-primaryText">محدوده قابلیت‌ها</p>
+            <h2 class="mt-1 truncate text-base font-black text-loomera-textPrimary sm:text-lg">بخش‌های داخل طرح فعلی</h2>
+          </div>
+          <span class="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-loomera-primarySoft text-loomera-primary transition group-open:rotate-180"><i class="fa-solid fa-chevron-down text-xs" aria-hidden="true"></i></span>
+        </summary>
+        <div class="p-4 sm:p-5 lg:p-6">
+          <p class="text-xs leading-6 text-loomera-textMuted">امکانات پلن فعلی و قابلیت‌های در دسترس را اینجا می‌بینی.</p>
+          <ul class="mt-4 space-y-3 text-sm text-loomera-textSecondary">
+            {% for item in membership_workspace.included_surfaces %}
+              <li class="rounded-[20px] border border-loomera-borderSoft bg-loomera-bgSubtle/70 px-4 py-4 leading-7">{{ item }}</li>
+            {% empty %}
+              <li class="rounded-[20px] border border-dashed border-loomera-borderSoft bg-loomera-bgSubtle/70 px-4 py-4 leading-7 text-loomera-textMuted">سطحی برای پلن فعلی ثبت نشده است.</li>
+            {% endfor %}
+          </ul>
+
+          <div class="mt-5 grid gap-4 md:grid-cols-2">
+            {% for group in membership_workspace.capability_groups %}
+              <article class="rounded-[22px] border border-loomera-borderSoft bg-loomera-bgSubtle/70 p-4">
+                <h3 class="text-sm font-black text-loomera-textPrimary">{{ group.title }}</h3>
+                <ul class="mt-3 space-y-2 text-sm text-loomera-textSecondary">
+                  {% for item in group.items %}
+                    <li class="rounded-2xl bg-white px-3 py-3 leading-7">{{ item }}</li>
+                  {% empty %}
+                    <li class="rounded-2xl border border-dashed border-loomera-borderSoft bg-white px-3 py-3 leading-7 text-loomera-textMuted">موردی تعریف نشده است.</li>
+                  {% endfor %}
+                </ul>
+              </article>
+            {% empty %}
+              <div class="rounded-[24px] border border-dashed border-loomera-borderSoft bg-loomera-bgSubtle/70 px-4 py-6 text-center text-sm leading-7 text-loomera-textMuted md:col-span-2">گروه قابلیتی برای نمایش وجود ندارد.</div>
+            {% endfor %}
+          </div>
+        </div>
+      </details>
+    </div>
+
+
+  </section>
+{% endblock %}
+
+{% block js %}
+  {{ block.super }}
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const setActiveButton = (buttons, activeValue, attrName) => {
+        buttons.forEach((button) => {
+          const active = button.dataset[attrName] === activeValue;
+          button.classList.toggle("border-loomera-primary/20", active);
+          button.classList.toggle("bg-loomera-primarySoft", active);
+          button.classList.toggle("text-loomera-primaryText", active);
+          button.classList.toggle("border-loomera-borderSoft", !active);
+          button.classList.toggle("bg-white", !active);
+          button.classList.toggle("text-loomera-textSecondary", !active);
+          button.setAttribute("aria-pressed", active ? "true" : "false");
+        });
+      };
+
+      const setupFilterGroup = ({
+        cardSelector,
+        filterSelector,
+        searchSelector,
+        emptySelector,
+        statusDatasetKey,
+        filterDatasetKey,
+      }) => {
+        const cards = Array.from(document.querySelectorAll(cardSelector));
+        const filters = Array.from(document.querySelectorAll(filterSelector));
+        const searchInput = document.querySelector(searchSelector);
+        const emptyState = document.querySelector(emptySelector);
+        let activeFilter = "all";
+
+        if (!cards.length && !filters.length && !searchInput) return;
+
+        const apply = () => {
+          const query = (searchInput?.value || "").trim().toLowerCase();
+          let visibleCount = 0;
+
+          cards.forEach((card) => {
+            const status = (card.dataset[statusDatasetKey] || "").trim();
+            const haystack = (card.dataset.membershipSearchValue || card.textContent || "").toLowerCase();
+            const matchesFilter = activeFilter === "all" || status === activeFilter;
+            const matchesSearch = !query || haystack.includes(query);
+            const visible = matchesFilter && matchesSearch;
+            card.classList.toggle("hidden", !visible);
+            if (visible) visibleCount += 1;
+          });
+
+          emptyState?.classList.toggle("hidden", visibleCount !== 0);
+          setActiveButton(filters, activeFilter, filterDatasetKey);
+          window.LoomeraDashboardWorkspace?.refresh?.(document.querySelector('[data-dashboard-workspace-root]'));
+        };
+
+        filters.forEach((button) => {
+          button.addEventListener("click", () => {
+            activeFilter = button.dataset[filterDatasetKey] || "all";
+            apply();
+          });
+        });
+
+        searchInput?.addEventListener("input", apply);
+        apply();
+      };
+
+      setupFilterGroup({
+        cardSelector: "[data-membership-plan-card]",
+        filterSelector: "[data-membership-plan-filter]",
+        searchSelector: "[data-membership-plan-search]",
+        emptySelector: "[data-membership-plan-empty]",
+        statusDatasetKey: "membershipPlanStatus",
+        filterDatasetKey: "membershipPlanFilter",
+      });
+
+      setupFilterGroup({
+        cardSelector: "[data-membership-readiness-card]",
+        filterSelector: "[data-membership-readiness-filter]",
+        searchSelector: "[data-membership-readiness-search]",
+        emptySelector: "[data-membership-readiness-empty]",
+        statusDatasetKey: "membershipReadinessStatus",
+        filterDatasetKey: "membershipReadinessFilter",
+      });
+    });
+  </script>
+{% endblock %}

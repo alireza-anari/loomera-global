@@ -1,0 +1,186 @@
+{% if appointment_management.schedule_board.is_empty %}
+  <div role="status">
+    {% include "dashboards/components/empty_state.html" with icon="fa-regular fa-calendar-xmark" title="برای این روز نوبتی ثبت نشده" description="در تاریخ انتخاب‌شده هنوز رزروی وجود ندارد یا فیلترها داده‌ای برنگردانده‌اند." action_label="بازگشت به امروز" action_url=appointment_management.focus_navigation.today_url %}
+  </div>
+{% else %}
+  <div class="min-w-0 max-w-full" data-calendar-board="{{ calendar_mode|default:'responsive' }}">
+
+    {# ------------------------------------------------------------------ #}
+    {# Mobile: compact team schedule                                      #}
+    {# ------------------------------------------------------------------ #}
+    <div class="space-y-3 lg:hidden" role="list" aria-label="برنامه روزانه متخصص‌ها">
+      {% for column in appointment_management.schedule_board.columns %}
+        <details class="group overflow-hidden rounded-[24px] border border-loomera-borderSoft bg-white shadow-lm-soft"
+                 role="listitem"
+                 {% if column.appointments %}open{% endif %}>
+          <summary class="flex min-w-0 cursor-pointer list-none items-center justify-between gap-3 p-3.5 marker:hidden">
+            <div class="flex min-w-0 items-center gap-3">
+              <span class="relative inline-flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-2xl bg-loomera-primarySoft text-xs font-black text-loomera-primaryText">
+                {% if column.avatar_url %}
+                  <img src="{{ column.avatar_url }}"
+                       alt="{{ column.name }}"
+                       class="h-full w-full object-cover"
+                       loading="lazy"
+                       decoding="async">
+                {% else %}
+                  {{ column.initials }}
+                {% endif %}
+                {% if column.count %}
+                  <span class="absolute bottom-0 right-0 h-2.5 w-2.5 rounded-full border-2 border-white"
+                        style="background: {{ column.color }};"></span>
+                {% endif %}
+              </span>
+
+              <div class="min-w-0">
+                <a href="{{ column.profile_url }}"
+                   class="block truncate text-sm font-black text-loomera-textPrimary">
+                  {{ column.name }}
+                </a>
+                <p class="mt-0.5 truncate text-[11px] text-loomera-textMuted">{{ column.expertise }}</p>
+              </div>
+            </div>
+
+            <div class="flex shrink-0 items-center gap-2">
+              <span class="inline-flex items-center rounded-full bg-loomera-bgSubtle px-2.5 py-1.5 text-[10px] font-black text-loomera-textSecondary">
+                {{ column.count_label }} نوبت
+              </span>
+              <span class="inline-flex h-8 w-8 items-center justify-center rounded-xl text-loomera-textMuted transition group-open:rotate-180">
+                <i class="fa-solid fa-chevron-down text-[10px]" aria-hidden="true"></i>
+              </span>
+            </div>
+          </summary>
+
+          <div class="border-t border-loomera-borderSoft bg-loomera-bgSubtle/30 p-2.5">
+            {% if column.appointments %}
+              <div class="space-y-2" role="list" aria-label="نوبت‌های {{ column.name }}">
+                {% for appointment in column.appointments %}
+                  <article class="overflow-hidden rounded-[22px] border border-loomera-borderSoft bg-white shadow-sm"
+                           role="listitem">
+                    <a href="{{ appointment.detail_url }}"
+                       class="block p-3.5 transition active:bg-loomera-primarySoft/30"
+                       aria-label="مشاهده نوبت {{ appointment.customer_name }}">
+                      <div class="flex items-start justify-between gap-3">
+                        <div class="flex min-w-0 items-start gap-3">
+                          <div class="min-w-[3.8rem] shrink-0 text-right">
+                            <strong class="block text-base font-black text-loomera-textPrimary">{{ appointment.time_label }}</strong>
+                            {% if appointment.end_time_label %}
+                              <span class="mt-0.5 block text-[10px] font-bold text-loomera-textMuted">تا {{ appointment.end_time_label }}</span>
+                            {% endif %}
+                          </div>
+
+                          <div class="min-w-0 border-r border-loomera-borderSoft pr-3">
+                            <h3 class="truncate text-sm font-black text-loomera-textPrimary">{{ appointment.customer_name }}</h3>
+                            <p class="mt-1 truncate text-xs text-loomera-textMuted">{{ appointment.service_name }}</p>
+                          </div>
+                        </div>
+
+                        <span class="inline-flex shrink-0 items-center rounded-full px-2.5 py-1 text-[9px] font-black {{ appointment.status.badge_class }}">
+                          {{ appointment.status.label }}
+                        </span>
+                      </div>
+
+                      <div class="mt-3 flex items-center justify-between gap-3">
+                        <span class="truncate text-[10px] font-semibold text-loomera-textMuted">
+                          {{ appointment.order_code }}
+                        </span>
+                        <span class="inline-flex shrink-0 items-center gap-1.5 text-[11px] font-black text-loomera-primary">
+                          مشاهده
+                          <i class="fa-solid fa-chevron-left text-[9px]" aria-hidden="true"></i>
+                        </span>
+                      </div>
+                    </a>
+                  </article>
+                {% endfor %}
+              </div>
+            {% else %}
+              <div class="rounded-[20px] border border-dashed border-loomera-borderSoft bg-white px-4 py-5 text-center text-xs font-bold leading-6 text-loomera-textMuted"
+                   role="status">
+                برای این متخصص در این روز نوبتی ثبت نشده است.
+              </div>
+            {% endif %}
+          </div>
+        </details>
+      {% endfor %}
+    </div>
+
+    {# ------------------------------------------------------------------ #}
+    {# Desktop: compact columns                                            #}
+    {# ------------------------------------------------------------------ #}
+    <div class="hidden gap-4 lg:grid xl:grid-cols-3"
+         role="list"
+         aria-label="ستون‌های تقویم متخصص‌ها">
+      {% for column in appointment_management.schedule_board.columns %}
+        <section class="min-w-0 overflow-hidden rounded-[26px] border border-loomera-borderSoft bg-white shadow-lm-card"
+                 role="listitem"
+                 style="--staff-color: {{ column.color }};">
+          <header class="border-b border-loomera-borderSoft bg-[radial-gradient(circle_at_top_right,rgba(115,92,190,0.08),transparent_44%),linear-gradient(180deg,#fff_0%,#FBF9FE_100%)] p-4">
+            <div class="flex items-center justify-between gap-3">
+              <div class="flex min-w-0 items-center gap-3">
+                {% if column.avatar_url %}
+                  <img src="{{ column.avatar_url }}"
+                       alt="{{ column.name }}"
+                       class="h-11 w-11 shrink-0 rounded-[18px] object-cover"
+                       loading="lazy"
+                       decoding="async">
+                {% else %}
+                  <span class="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-[18px] bg-loomera-primarySoft text-xs font-black text-loomera-primaryText">
+                    {{ column.initials }}
+                  </span>
+                {% endif %}
+                <div class="min-w-0">
+                  <a href="{{ column.profile_url }}"
+                     class="block truncate text-sm font-black text-loomera-textPrimary">
+                    {{ column.name }}
+                  </a>
+                  <p class="mt-0.5 truncate text-xs text-loomera-textMuted">{{ column.expertise }}</p>
+                </div>
+              </div>
+              <span class="inline-flex shrink-0 rounded-full bg-loomera-bgSubtle px-3 py-1.5 text-[10px] font-black text-loomera-textSecondary">
+                {{ column.count_label }} نوبت
+              </span>
+            </div>
+          </header>
+
+          <div class="max-h-[34rem] space-y-2.5 overflow-y-auto p-3"
+               role="list"
+               aria-label="نوبت‌های {{ column.name }}">
+            {% if column.appointments %}
+              {% for appointment in column.appointments %}
+                <a href="{{ appointment.detail_url }}"
+                   class="block rounded-[22px] border border-loomera-borderSoft bg-white p-3.5 shadow-sm transition hover:-translate-y-0.5 hover:border-loomera-primary/25 hover:shadow-lm-card"
+                   role="listitem">
+                  <div class="flex items-start justify-between gap-3">
+                    <div class="min-w-0">
+                      <div class="flex items-center gap-2">
+                        <strong class="text-sm font-black text-loomera-textPrimary">{{ appointment.time_label }}</strong>
+                        {% if appointment.end_time_label %}
+                          <span class="text-[10px] font-bold text-loomera-textMuted">تا {{ appointment.end_time_label }}</span>
+                        {% endif %}
+                      </div>
+                      <h3 class="mt-2 truncate text-sm font-black text-loomera-textPrimary">{{ appointment.customer_name }}</h3>
+                      <p class="mt-1 truncate text-xs text-loomera-textMuted">{{ appointment.service_name }}</p>
+                    </div>
+
+                    <span class="inline-flex shrink-0 items-center rounded-full px-2.5 py-1 text-[9px] font-black {{ appointment.status.badge_class }}">
+                      {{ appointment.status.label }}
+                    </span>
+                  </div>
+
+                  <div class="mt-3 flex items-center justify-between gap-3 border-t border-loomera-borderSoft pt-2.5">
+                    <span class="truncate text-[10px] font-semibold text-loomera-textMuted">{{ appointment.order_code }}</span>
+                    <span class="text-[11px] font-black text-loomera-primary">مشاهده جزئیات</span>
+                  </div>
+                </a>
+              {% endfor %}
+            {% else %}
+              <div class="rounded-[20px] border border-dashed border-loomera-borderSoft bg-loomera-bgSubtle px-4 py-6 text-center text-xs font-bold leading-6 text-loomera-textMuted"
+                   role="status">
+                امروز رزروی برای این عضو تیم ثبت نشده است.
+              </div>
+            {% endif %}
+          </div>
+        </section>
+      {% endfor %}
+    </div>
+  </div>
+{% endif %}
