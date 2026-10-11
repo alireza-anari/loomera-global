@@ -85,6 +85,40 @@ Provider selection is not country, currency, phone, timezone, calendar, or busin
 
 No application feature consumes the provider boundary in Task 1.3. Existing map helpers, payment gateway code, SMS code, messaging dispatch, Bale/Telegram apps, views, models, middleware, context processors, and jobs continue to read/use their current contracts. Actual provider-neutral adapter/routing globalization belongs to **Phase 9** for maps, **Phase 14** for SMS/messaging, and **Phase 15** for payments/payouts. Task 1.3 does not claim that any international provider is implemented.
 
+## Shared Brand Identity Configuration Boundary
+
+Task 2.1 adds a deployment-level brand identity read boundary without changing the existing settings layer or activating branding changes in runtime surfaces.
+
+The supported application import path is:
+
+`loomera.branding.config`
+
+It defines exactly two public symbols:
+
+- `DeploymentBrandConfig` — a frozen immutable snapshot of deployment brand identity settings;
+- `get_deployment_brand_config()` — constructs a fresh snapshot from `django.conf.settings` on each call.
+
+The snapshot exposes exactly these fields:
+
+| Field | Existing Django setting | Loomera compatibility value |
+| --- | --- | --- |
+| `name` | `BRAND_NAME` | `"Loomera"` |
+| `display_name` | `BRAND_DISPLAY_NAME` | `"Loomera"` |
+| `domain` | `BRAND_DOMAIN` | `"loomera.local"` |
+| `public_base_url` | `PUBLIC_BASE_URL` | `""` |
+| `site_url` | `SITE_URL` | `""` |
+| `email_sender_name` | `LOOMERA_EMAIL_SENDER_NAME` | `"Loomera"` |
+| `default_from_email` | `DEFAULT_FROM_EMAIL` | `"Loomera <no-reply@loomera.local>"` |
+| `support_email` | `LOOMERA_SUPPORT_EMAIL` | `"support@loomera.local"` |
+| `partner_email` | `LOOMERA_PARTNER_EMAIL` | `"partners@loomera.local"` |
+| `marketing_email` | `LOOMERA_MARKETING_EMAIL` | `"hello@loomera.local"` |
+
+Task 2.1 introduces no new environment variable, alias, fallback, or validation rule. `loomera/settings/base.py` remains authoritative for all ten values. The accessor reads only those already-resolved Django settings, performs no caching, database/request/user/business access, and does not duplicate settings logic.
+
+No application feature consumes this boundary yet. Existing templates, email delivery code, SEO metadata, context processors, static assets, CSS, logos, and favicons continue to use their current contracts and visuals. Shared-template wiring is deferred to a later Phase 2 task. Logo, favicon, and brand-color configuration are also deferred to a later Phase 2 task after the existing asset contract is reviewed.
+
+Brand identity is independent of locale, country, currency, timezone, calendar, and provider selection. Changing the deployment brand name must not alter authentication, authorization, booking semantics, geography, money meaning, or provider routing. Task 2.1 does not introduce per-salon or per-business white-label branding.
+
 ## Compatibility Behavior
 
 Tasks 1.1, 1.2, and 1.3 intentionally preserve the current runtime behavior:
@@ -108,3 +142,5 @@ Later phases must preserve the architecture separation between deployment defaul
 ## Non-Goals
 
 Tasks 1.1, 1.2, and 1.3 do not implement globalization runtime behavior. They do not switch the UI to English, enable Arabic runtime behavior, modify Django `LANGUAGES`, modify `LANGUAGE_CODE`, modify `TIME_ZONE`, activate Gregorian presentation, change Jalali behavior, introduce business timezone or country fields, migrate phone identity, alter weekday semantics, reinterpret money, add currency fields, add/replace/enable/disable map/payment/SMS/messaging providers, change existing provider selectors or feature flags, add an environment-backed `MAP_PROVIDER` setting, add dependencies, add migrations, or implement business/request/provider routing. Task 1.3 does not start Phase 2.
+
+Task 2.1 only establishes the shared brand identity read boundary. It does not modify templates, static assets, logos, favicons, colors, SEO copy, email delivery behavior, locale behavior, calendar identifiers, user-agent behavior, models, migrations, providers, authentication, booking behavior, or deployment files, and it does not introduce per-salon white-label branding.
