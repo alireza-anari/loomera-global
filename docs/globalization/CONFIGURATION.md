@@ -115,9 +115,27 @@ The snapshot exposes exactly these fields:
 
 Task 2.1 introduces no new environment variable, alias, fallback, or validation rule. `loomera/settings/base.py` remains authoritative for all ten values. The accessor reads only those already-resolved Django settings, performs no caching, database/request/user/business access, and does not duplicate settings logic.
 
-No application feature consumes this boundary yet. Existing templates, email delivery code, SEO metadata, context processors, static assets, CSS, logos, and favicons continue to use their current contracts and visuals. Shared-template wiring is deferred to a later Phase 2 task. Logo, favicon, and brand-color configuration are also deferred to a later Phase 2 task after the existing asset contract is reviewed.
+Task 2.2 makes this Task 2.1 snapshot available to Django templates through the shared template context described below. Configuration ownership remains in `loomera.branding.config`; Task 2.2 does not add brand settings, defaults, validation, or per-salon branding.
 
 Brand identity is independent of locale, country, currency, timezone, calendar, and provider selection. Changing the deployment brand name must not alter authentication, authorization, booking semantics, geography, money meaning, or provider routing. Task 2.1 does not introduce per-salon or per-business white-label branding.
+
+## Shared Brand Template Context
+
+Task 2.2 registers the context processor:
+
+`loomera.branding.context_processors.deployment_brand`
+
+The processor exposes one template variable:
+
+`deployment_brand`
+
+Its value is a fresh `DeploymentBrandConfig` snapshot produced by the Task 2.1 `get_deployment_brand_config()` accessor. The context processor does not read Django settings or environment variables directly, access the database, inspect request/user/business/salon state, cache values, or infer locale or providers. Task 2.1 remains the source of brand configuration and the existing settings layer remains authoritative underneath it.
+
+Task 2.2 wires only the safest shared textual identity in the shell/head: the default document title, Open Graph title, Twitter title, application name, Apple mobile web app title, and Open Graph site name consume `deployment_brand.display_name`. The Loomera compatibility default therefore renders exactly as before unless the existing deployment brand display name is configured differently.
+
+Logo, favicon, manifest, social-image, and brand-color configuration remain deferred to a later Phase 2 slice because the current assets are Loomera-specific. `templates/partials/brand/logo.html` is intentionally unchanged. Persian SEO descriptions, `og:locale`, `<html lang>`/direction, translations, and broader SEO-content localization also remain deferred to their owning tasks/phases.
+
+This is deployment-level branding only. Task 2.2 does not introduce per-salon or per-business white-label branding and does not make brand identity drive language, country, currency, timezone, calendar, map/SMS/payment/messaging providers, authentication, authorization, or booking behavior.
 
 ## Compatibility Behavior
 
@@ -143,4 +161,4 @@ Later phases must preserve the architecture separation between deployment defaul
 
 Tasks 1.1, 1.2, and 1.3 do not implement globalization runtime behavior. They do not switch the UI to English, enable Arabic runtime behavior, modify Django `LANGUAGES`, modify `LANGUAGE_CODE`, modify `TIME_ZONE`, activate Gregorian presentation, change Jalali behavior, introduce business timezone or country fields, migrate phone identity, alter weekday semantics, reinterpret money, add currency fields, add/replace/enable/disable map/payment/SMS/messaging providers, change existing provider selectors or feature flags, add an environment-backed `MAP_PROVIDER` setting, add dependencies, add migrations, or implement business/request/provider routing. Task 1.3 does not start Phase 2.
 
-Task 2.1 only establishes the shared brand identity read boundary. It does not modify templates, static assets, logos, favicons, colors, SEO copy, email delivery behavior, locale behavior, calendar identifiers, user-agent behavior, models, migrations, providers, authentication, booking behavior, or deployment files, and it does not introduce per-salon white-label branding.
+Task 2.1 establishes the shared brand identity read boundary. Task 2.2 only wires that existing boundary into shared textual shell/head identity. Neither task configures or replaces logos, favicons, manifests, social images, colors, SEO descriptions, locale metadata, translations, email delivery behavior, calendar identifiers, user-agent behavior, models, migrations, providers, authentication, booking behavior, or per-salon white-label branding.
