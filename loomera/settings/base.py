@@ -4,6 +4,7 @@ import os
 import sys
 import importlib
 from pathlib import Path
+from urllib.parse import urlsplit
 from zoneinfo import ZoneInfo, ZoneInfoNotFoundError
 import environ
 from django.core.exceptions import ImproperlyConfigured
@@ -103,6 +104,103 @@ SITE_URL = (
     )
     .strip()
     .rstrip("/")
+)
+
+
+def _read_brand_static_path(setting_name: str, default: str) -> str:
+    value = env(setting_name, default=default).strip()
+    parsed = urlsplit(value)
+    path_segments = value.split("/")
+    if (
+        not value
+        or "\\" in value
+        or value.startswith("/")
+        or parsed.scheme
+        or parsed.netloc
+        or parsed.query
+        or parsed.fragment
+        or any(segment in {".", ".."} for segment in path_segments)
+    ):
+        raise ImproperlyConfigured(
+            f"{setting_name} must be a non-empty Django staticfiles-relative path "
+            "using forward slashes, without a URL scheme, query, fragment, or "
+            "'.'/'..' path segment."
+        )
+    return value
+
+
+def _read_positive_brand_dimension(setting_name: str, default: int) -> int:
+    raw_value = env(setting_name, default=str(default)).strip()
+    try:
+        value = int(raw_value)
+    except (TypeError, ValueError) as exc:
+        raise ImproperlyConfigured(
+            f"{setting_name} must be a positive integer."
+        ) from exc
+    if value <= 0:
+        raise ImproperlyConfigured(f"{setting_name} must be a positive integer.")
+    return value
+
+
+BRAND_LOGO_GLYPH_STATIC_PATH = _read_brand_static_path(
+    "BRAND_LOGO_GLYPH_STATIC_PATH",
+    "branding/logo/loomera-glyph-mark.png",
+)
+BRAND_APP_ICON_STATIC_PATH = _read_brand_static_path(
+    "BRAND_APP_ICON_STATIC_PATH",
+    "branding/logo/loomera-app-icon.png",
+)
+BRAND_LOGO_HEADER_STATIC_PATH = _read_brand_static_path(
+    "BRAND_LOGO_HEADER_STATIC_PATH",
+    "branding/logo/loomera-logo-header.png",
+)
+BRAND_LOGO_PRIMARY_STATIC_PATH = _read_brand_static_path(
+    "BRAND_LOGO_PRIMARY_STATIC_PATH",
+    "branding/logo/loomera-logo-primary.png",
+)
+BRAND_FAVICON_SVG_STATIC_PATH = _read_brand_static_path(
+    "BRAND_FAVICON_SVG_STATIC_PATH",
+    "branding/favicon/favicon.svg",
+)
+BRAND_FAVICON_ICO_STATIC_PATH = _read_brand_static_path(
+    "BRAND_FAVICON_ICO_STATIC_PATH",
+    "branding/favicon/favicon.ico",
+)
+BRAND_FAVICON_16_STATIC_PATH = _read_brand_static_path(
+    "BRAND_FAVICON_16_STATIC_PATH",
+    "branding/favicon/favicon-16x16.png",
+)
+BRAND_FAVICON_32_STATIC_PATH = _read_brand_static_path(
+    "BRAND_FAVICON_32_STATIC_PATH",
+    "branding/favicon/favicon-32x32.png",
+)
+BRAND_FAVICON_48_STATIC_PATH = _read_brand_static_path(
+    "BRAND_FAVICON_48_STATIC_PATH",
+    "branding/favicon/favicon-48x48.png",
+)
+BRAND_APPLE_TOUCH_ICON_STATIC_PATH = _read_brand_static_path(
+    "BRAND_APPLE_TOUCH_ICON_STATIC_PATH",
+    "branding/favicon/apple-touch-icon.png",
+)
+BRAND_MASK_ICON_STATIC_PATH = _read_brand_static_path(
+    "BRAND_MASK_ICON_STATIC_PATH",
+    "branding/favicon/safari-pinned-tab.svg",
+)
+BRAND_WEBMANIFEST_STATIC_PATH = _read_brand_static_path(
+    "BRAND_WEBMANIFEST_STATIC_PATH",
+    "branding/favicon/site.webmanifest",
+)
+BRAND_SOCIAL_IMAGE_STATIC_PATH = _read_brand_static_path(
+    "BRAND_SOCIAL_IMAGE_STATIC_PATH",
+    "branding/logo/loomera-logo-square.png",
+)
+BRAND_SOCIAL_IMAGE_WIDTH = _read_positive_brand_dimension(
+    "BRAND_SOCIAL_IMAGE_WIDTH",
+    1254,
+)
+BRAND_SOCIAL_IMAGE_HEIGHT = _read_positive_brand_dimension(
+    "BRAND_SOCIAL_IMAGE_HEIGHT",
+    1254,
 )
 LOOMERA_USER_AGENT = (
     env("LOOMERA_USER_AGENT", default=f"{BRAND_NAME}/1.0").strip()
