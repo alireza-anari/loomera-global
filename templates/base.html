@@ -25,6 +25,42 @@
     <link rel="stylesheet" href="{% static 'vendor/jalalidatepicker/jalalidatepicker.min.css' %}">
     <link rel="stylesheet" href="{% static 'css/components/unified_sliders.css' %}">
     <link rel="stylesheet" href="{% static 'css/components/workspace_switcher.css' %}">
+    <style id="deployment-brand-color-tokens">
+    html:not([data-theme="dark"]) {
+        --lm-primary: {{ deployment_brand_colors.primary_color }};
+        --lm-primary-hover: {{ deployment_brand_colors.primary_hover_color }};
+        --lm-primary-active: {{ deployment_brand_colors.primary_active_color }};
+        --lm-primary-soft: {{ deployment_brand_colors.primary_soft_color }};
+        --lm-secondary: {{ deployment_brand_colors.secondary_color }};
+        --lm-accent: {{ deployment_brand_colors.accent_color }};
+        --lm-bg: {{ deployment_brand_colors.background_color }};
+        --lm-app-surface: {{ deployment_brand_colors.background_color }};
+        --lm-dashboard-surface: {{ deployment_brand_colors.background_color }};
+        --lm-surface: {{ deployment_brand_colors.surface_color }};
+        --lm-card-surface: {{ deployment_brand_colors.surface_color }};
+        --lm-surface-raised: {{ deployment_brand_colors.surface_color }};
+        --lm-surface-elevated: {{ deployment_brand_colors.surface_color }};
+        --lm-sheet-surface: {{ deployment_brand_colors.surface_color }};
+        --lm-dashboard-panel: {{ deployment_brand_colors.surface_color }};
+        --lm-text-primary: {{ deployment_brand_colors.text_primary_color }};
+        --lm-text-on-primary: {{ deployment_brand_colors.text_on_primary_color }};
+        --lm-primary-rgb: {{ deployment_brand_colors.primary_rgb }};
+        --lm-primary-hover-rgb: {{ deployment_brand_colors.primary_hover_rgb }};
+        --lm-primary-active-rgb: {{ deployment_brand_colors.primary_active_rgb }};
+        --lm-primary-soft-rgb: {{ deployment_brand_colors.primary_soft_rgb }};
+        --lm-secondary-rgb: {{ deployment_brand_colors.secondary_rgb }};
+        --lm-accent-rgb: {{ deployment_brand_colors.accent_rgb }};
+        --lm-bg-rgb: {{ deployment_brand_colors.background_rgb }};
+        --lm-surface-rgb: {{ deployment_brand_colors.surface_rgb }};
+        --lm-text-primary-rgb: {{ deployment_brand_colors.text_primary_rgb }};
+        --lm-text-on-primary-rgb: {{ deployment_brand_colors.text_on_primary_rgb }};
+        --lm-border-selected: {{ deployment_brand_colors.primary_color }};
+        --lm-info: {{ deployment_brand_colors.primary_color }};
+        --lm-info-soft: {{ deployment_brand_colors.primary_soft_color }};
+        --lm-selection: {{ deployment_brand_colors.primary_soft_color }};
+        --lm-selected: {{ deployment_brand_colors.primary_soft_color }};
+    }
+    </style>
 
     {% block vendor_css %}{% endblock %}
 
