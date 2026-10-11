@@ -1,0 +1,53 @@
+# Loomera Global Configuration Contracts
+
+## Purpose
+
+Phase 1 establishes explicit globalization configuration contracts before later phases migrate application behavior. Task 1.1 adds validated deployment defaults for language, country, currency, timezone, and calendar context while preserving the current Persian/Iran runtime exactly.
+
+These settings are contracts for future phases. In Task 1.1 they are read and validated during settings import, but they do not drive Django locale, timezone, calendar presentation, money interpretation, provider selection, models, or persisted data.
+
+## Configuration Scope
+
+Loomera Global separates configuration into three scopes:
+
+- **Deployment defaults** are environment-backed installation defaults and capability constraints. Task 1.1 introduces only this scope.
+- **Future business/salon data** represents facts that can differ by business, such as business country, business timezone, or an explicitly modeled primary currency. Those values must be introduced by their owning later phases and are not inferred from Task 1.1 deployment defaults.
+- **Request/user presentation context** controls presentation for a request or user, such as active language, direction, calendar representation, and formatting. Task 1.1 does not create or change request/user locale behavior.
+
+Deployment defaults are therefore fallbacks/contracts, not substitutes for future business data and not active presentation preferences.
+
+## Deployment Globalization Defaults
+
+| Setting | Environment variable | Compatibility default | Validation | Currently consumed by runtime? | Owning future phase |
+| --- | --- | --- | --- | --- | --- |
+| `LOOMERA_DEFAULT_LANGUAGE` | `LOOMERA_DEFAULT_LANGUAGE` | `fa` | Trimmed and normalized to lowercase; must be non-empty and present in `LOOMERA_ENABLED_LANGUAGES`. | No. Contract validation only. | Phase 3 |
+| `LOOMERA_ENABLED_LANGUAGES` | `LOOMERA_ENABLED_LANGUAGES` | `fa` | Comma-separated non-empty list; values are trimmed and normalized to lowercase; empty entries and duplicates after normalization are rejected. | No. It does not replace Django `LANGUAGES`. | Phase 3 |
+| `LOOMERA_DEFAULT_COUNTRY` | `LOOMERA_DEFAULT_COUNTRY` | `IR` | Exactly two ASCII letters; normalized to uppercase. This is ISO 3166-1 alpha-2-shaped deployment context. | No. No country model/data behavior is changed. | Phase 9 |
+| `LOOMERA_DEFAULT_CURRENCY` | `LOOMERA_DEFAULT_CURRENCY` | empty | Empty is allowed. When configured, exactly three ASCII letters are required and normalized to uppercase. Shape validation does not prove official ISO 4217 allocation. | No. It does not label, convert, format, or reinterpret stored money. | Phase 8 |
+| `LOOMERA_DEFAULT_TIMEZONE` | `LOOMERA_DEFAULT_TIMEZONE` | `Asia/Tehran` | Must be non-empty and resolve through Python `zoneinfo` as an IANA timezone identifier. | No. It does not replace Django `TIME_ZONE` or appointment semantics. | Phase 5 |
+| `LOOMERA_DEFAULT_CALENDAR` | `LOOMERA_DEFAULT_CALENDAR` | `jalali` | Trimmed and normalized to lowercase; only `gregorian` and `jalali` are accepted. | No. It does not change date rendering or datepicker behavior. | Phase 5 |
+
+`LOOMERA_ENABLED_LANGUAGES` is represented in the environment as a comma-separated value, for example `fa,en`. The setting value exposed by Django settings is the validated normalized list.
+
+## Compatibility Behavior
+
+Task 1.1 intentionally preserves the current runtime behavior:
+
+- the current Persian runtime remains unchanged, including `LANGUAGE_CODE = "fa"`;
+- the current Tehran Django timezone remains unchanged, including `TIME_ZONE = "Asia/Tehran"`;
+- current Jalali rendering, parsing, datepicker, and scheduling behavior remains unchanged;
+- current monetary values retain their legacy toman semantics;
+- the empty `LOOMERA_DEFAULT_CURRENCY` compatibility default is intentional because assigning `IRR` before the Phase 8 money migration would give existing toman-semantic values incorrect financial meaning;
+- configuring any Task 1.1 value does not migrate or activate application behavior.
+
+In particular, a deployment may configure a future-facing default such as `LOOMERA_DEFAULT_LANGUAGE=en`, `LOOMERA_DEFAULT_TIMEZONE=UTC`, or `LOOMERA_DEFAULT_CALENDAR=gregorian` and Task 1.1 will validate that configuration, but the current Django/application runtime continues to use its existing Persian, Tehran, and Jalali behavior until the owning later phase deliberately wires the contract in.
+
+## Future Ownership
+
+Language and enabled-language runtime behavior belongs to **Phase 3**. Calendar and business/deployment timezone migration belongs to **Phase 5**. Explicit currency semantics and legacy toman reconciliation belong to **Phase 8**. Country/address data and country-aware geography behavior belongs to **Phase 9**.
+
+Later phases must preserve the architecture separation between deployment defaults, business facts, and request/user presentation context. They must also perform any required data profiling, migration, and regression work before changing persisted meaning.
+
+## Non-Goals
+
+Task 1.1 does not implement globalization behavior. It does not switch the UI to English, enable Arabic runtime behavior, modify Django `LANGUAGES`, modify `LANGUAGE_CODE`, modify `TIME_ZONE`, activate Gregorian presentation, change Jalali behavior, introduce business timezone or country fields, migrate phone identity, alter weekday semantics, reinterpret money, add currency fields, replace map/payment/SMS/messaging providers, change deployment configuration, add dependencies, add migrations, or implement any Task 1.2-or-later behavior.

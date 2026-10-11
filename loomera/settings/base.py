@@ -4,6 +4,7 @@ import os
 import sys
 import importlib
 from pathlib import Path
+from zoneinfo import ZoneInfo, ZoneInfoNotFoundError
 import environ
 from django.core.exceptions import ImproperlyConfigured
 
@@ -439,6 +440,91 @@ CSRF_FAILURE_VIEW = "apps.main.views.csrf_failure_view"
 # INTERNATIONALIZATION
 # ==============================================================================
 
+# Phase 1 deployment-level globalization contracts. These settings intentionally
+# do not drive Django/application runtime behavior yet; later phases own that
+# migration. Compatibility defaults preserve the current Persian/Iran baseline.
+def _normalize_ascii_alpha_code(
+    setting_name: str,
+    value: str,
+    *,
+    length: int,
+    allow_empty: bool = False,
+) -> str:
+    normalized = value.strip().upper()
+    if allow_empty and not normalized:
+        return ""
+    if (
+        len(normalized) != length
+        or not normalized.isascii()
+        or not normalized.isalpha()
+    ):
+        raise ImproperlyConfigured(
+            f"{setting_name} must contain exactly {length} ASCII letters."
+        )
+    return normalized
+
+
+def _read_enabled_languages() -> list[str]:
+    raw_value = env("LOOMERA_ENABLED_LANGUAGES", default="fa")
+    languages = [value.strip().lower() for value in raw_value.split(",")]
+
+    if not languages or any(not language for language in languages):
+        raise ImproperlyConfigured(
+            "LOOMERA_ENABLED_LANGUAGES must be a non-empty comma-separated "
+            "list without empty entries."
+        )
+    if len(set(languages)) != len(languages):
+        raise ImproperlyConfigured(
+            "LOOMERA_ENABLED_LANGUAGES must not contain duplicate values "
+            "after normalization."
+        )
+    return languages
+
+
+LOOMERA_ENABLED_LANGUAGES = _read_enabled_languages()
+LOOMERA_DEFAULT_LANGUAGE = env("LOOMERA_DEFAULT_LANGUAGE", default="fa").strip().lower()
+if not LOOMERA_DEFAULT_LANGUAGE:
+    raise ImproperlyConfigured("LOOMERA_DEFAULT_LANGUAGE must not be empty.")
+if LOOMERA_DEFAULT_LANGUAGE not in LOOMERA_ENABLED_LANGUAGES:
+    raise ImproperlyConfigured(
+        "LOOMERA_DEFAULT_LANGUAGE must be present in LOOMERA_ENABLED_LANGUAGES."
+    )
+
+LOOMERA_DEFAULT_COUNTRY = _normalize_ascii_alpha_code(
+    "LOOMERA_DEFAULT_COUNTRY",
+    env("LOOMERA_DEFAULT_COUNTRY", default="IR"),
+    length=2,
+)
+LOOMERA_DEFAULT_CURRENCY = _normalize_ascii_alpha_code(
+    "LOOMERA_DEFAULT_CURRENCY",
+    env("LOOMERA_DEFAULT_CURRENCY", default=""),
+    length=3,
+    allow_empty=True,
+)
+
+LOOMERA_DEFAULT_TIMEZONE = env(
+    "LOOMERA_DEFAULT_TIMEZONE",
+    default="Asia/Tehran",
+).strip()
+if not LOOMERA_DEFAULT_TIMEZONE:
+    raise ImproperlyConfigured("LOOMERA_DEFAULT_TIMEZONE must not be empty.")
+try:
+    ZoneInfo(LOOMERA_DEFAULT_TIMEZONE)
+except (ZoneInfoNotFoundError, ValueError) as exc:
+    raise ImproperlyConfigured(
+        "LOOMERA_DEFAULT_TIMEZONE must be a valid IANA timezone identifier."
+    ) from exc
+
+LOOMERA_DEFAULT_CALENDAR = env(
+    "LOOMERA_DEFAULT_CALENDAR",
+    default="jalali",
+).strip().lower()
+if LOOMERA_DEFAULT_CALENDAR not in {"gregorian", "jalali"}:
+    raise ImproperlyConfigured(
+        "LOOMERA_DEFAULT_CALENDAR must be either 'gregorian' or 'jalali'."
+    )
+
+# Current runtime settings remain unchanged until their owning future phases.
 LANGUAGE_CODE = "fa"
 TIME_ZONE = "Asia/Tehran"
 USE_I18N = True
