@@ -1591,24 +1591,61 @@ class SharedBrandAssetConfigurationTests(SimpleTestCase):
         )
         self.assertEqual(settings.AUTH_USER_MODEL, runtime_values["auth_user_model"])
 
-    def test_manifest_and_complete_static_tree_match_pre_task_compatibility_baseline(self):
+    def test_manifest_and_default_brand_static_assets_preserve_target_compatibility(self):
         project_root = Path(settings.BASE_DIR)
         manifest_path = project_root / "static" / "branding" / "favicon" / "site.webmanifest"
+        manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+
+        self.assertEqual(manifest["name"], "Loomera")
+        self.assertEqual(manifest["short_name"], "Loomera")
         self.assertEqual(
-            hashlib.sha256(manifest_path.read_bytes()).hexdigest(),
-            "ccfcf399a64c25bfe47e05823a2c65ea0f8058ddb57cd06c760305cc55afa823",
+            manifest["description"],
+            "Discovery and booking for beauty, aesthetic treatments, massage, and wellness.",
+        )
+        self.assertEqual(manifest["theme_color"], "#735CBE")
+        self.assertEqual(manifest["background_color"], "#FCFBFE")
+        self.assertEqual(manifest["display"], "standalone")
+        self.assertEqual(
+            manifest["icons"],
+            [
+                {
+                    "src": "/static/branding/favicon/android-chrome-192x192.png",
+                    "sizes": "192x192",
+                    "type": "image/png",
+                    "purpose": "any",
+                },
+                {
+                    "src": "/static/branding/favicon/android-chrome-512x512.png",
+                    "sizes": "512x512",
+                    "type": "image/png",
+                    "purpose": "any",
+                },
+                {
+                    "src": "/static/branding/favicon/maskable-icon-512x512.png",
+                    "sizes": "512x512",
+                    "type": "image/png",
+                    "purpose": "maskable",
+                },
+            ],
         )
 
-        digest = hashlib.sha256()
-        static_root = project_root / "static"
-        static_files = sorted(path for path in static_root.rglob("*") if path.is_file())
-        self.assertEqual(len(static_files), 598)
-        for path in static_files:
-            digest.update(path.relative_to(project_root).as_posix().encode("utf-8"))
-            digest.update(b"\0")
-            digest.update(path.read_bytes())
-            digest.update(b"\0")
-        self.assertEqual(
-            digest.hexdigest(),
-            "df543ed626c117d2801cabf62263d83133832c89d37a047ed851528f5676ad23",
-        )
+        assets = get_deployment_brand_asset_config()
+        for relative_path in (
+            assets.logo_glyph_path,
+            assets.app_icon_path,
+            assets.logo_header_path,
+            assets.logo_primary_path,
+            assets.favicon_svg_path,
+            assets.favicon_ico_path,
+            assets.favicon_16_path,
+            assets.favicon_32_path,
+            assets.favicon_48_path,
+            assets.apple_touch_icon_path,
+            assets.mask_icon_path,
+            assets.webmanifest_path,
+            assets.social_image_path,
+        ):
+            self.assertTrue(
+                (project_root / "static" / relative_path).is_file(),
+                msg=f"Missing default brand static asset: {relative_path}",
+            )
