@@ -16,6 +16,11 @@ from loomera.globalization.config import (
     DeploymentGlobalizationConfig,
     get_deployment_globalization_config,
 )
+from loomera.globalization import providers as provider_config_module
+from loomera.globalization.providers import (
+    DeploymentProviderConfig,
+    get_deployment_provider_config,
+)
 
 TRANSACTIONAL_SMS_SETTING_NAMES = (
     "SMSIR_VERIFY_URL",
@@ -344,3 +349,134 @@ class SharedGlobalizationConfigurationBoundaryTests(SimpleTestCase):
         self.assertNotIn("import environ", source)
         self.assertNotIn("loomera.settings.base", source)
         self.assertNotIn("ImproperlyConfigured", source)
+
+
+class SharedProviderConfigurationBoundaryTests(SimpleTestCase):
+    expected_field_names = (
+        "map_provider",
+        "sms_provider",
+        "payment_provider",
+        "messaging_allowed_providers",
+    )
+
+    def test_default_snapshot_preserves_current_provider_compatibility_values(self):
+        config = get_deployment_provider_config()
+
+        self.assertIsInstance(config, DeploymentProviderConfig)
+        self.assertEqual(config.map_provider, "mapir")
+        self.assertEqual(config.sms_provider, "disabled")
+        self.assertEqual(config.payment_provider, "zibal")
+        self.assertEqual(config.messaging_allowed_providers, ())
+        self.assertIsInstance(config.messaging_allowed_providers, tuple)
+
+    def test_map_provider_uses_existing_mapir_fallback_when_setting_is_absent_or_empty(self):
+        self.assertFalse(hasattr(settings, "MAP_PROVIDER"))
+        self.assertEqual(get_deployment_provider_config().map_provider, "mapir")
+
+        with override_settings(MAP_PROVIDER=""):
+            self.assertEqual(get_deployment_provider_config().map_provider, "mapir")
+
+    def test_snapshot_is_frozen_and_exposes_exact_contract_surface(self):
+        config = get_deployment_provider_config()
+
+        with self.assertRaises(FrozenInstanceError):
+            config.map_provider = "neshan"
+
+        self.assertEqual(
+            tuple(field.name for field in fields(DeploymentProviderConfig)),
+            self.expected_field_names,
+        )
+        self.assertEqual(
+            provider_config_module.__all__,
+            (
+                "DeploymentProviderConfig",
+                "get_deployment_provider_config",
+            ),
+        )
+        self.assertEqual(
+            {name for name in vars(DeploymentProviderConfig) if not name.startswith("_")},
+            set(self.expected_field_names),
+        )
+
+    @override_settings(
+        MAP_PROVIDER=" NESHAN ",
+        SMS_PROVIDER="twilio",
+        PAYMENT_PROVIDER="stripe",
+        MESSAGING_ALLOWED_PROVIDERS=["telegram", "bale"],
+    )
+    def test_overridden_provider_settings_are_reflected_without_globalization_inference(self):
+        config = get_deployment_provider_config()
+
+        self.assertEqual(config.map_provider, "neshan")
+        self.assertEqual(config.sms_provider, "twilio")
+        self.assertEqual(config.payment_provider, "stripe")
+        self.assertEqual(config.messaging_allowed_providers, ("telegram", "bale"))
+
+        self.assertEqual(settings.LOOMERA_DEFAULT_COUNTRY, "IR")
+        self.assertEqual(settings.LOOMERA_DEFAULT_CURRENCY, "")
+        self.assertEqual(settings.LOOMERA_DEFAULT_TIMEZONE, "Asia/Tehran")
+        self.assertEqual(settings.LANGUAGE_CODE, "fa")
+        self.assertEqual(settings.TIME_ZONE, "Asia/Tehran")
+
+    def test_accessor_returns_fresh_snapshots_without_mutating_messaging_settings_list(self):
+        allowed_providers = ["telegram", "bale"]
+
+        with override_settings(
+            MAP_PROVIDER="mapir",
+            SMS_PROVIDER="disabled",
+            PAYMENT_PROVIDER="zibal",
+            MESSAGING_ALLOWED_PROVIDERS=allowed_providers,
+        ):
+            first = get_deployment_provider_config()
+            second = get_deployment_provider_config()
+
+            self.assertIsNot(first, second)
+            self.assertEqual(first, second)
+            self.assertEqual(allowed_providers, ["telegram", "bale"])
+            self.assertIs(settings.MESSAGING_ALLOWED_PROVIDERS, allowed_providers)
+            self.assertEqual(first.messaging_allowed_providers, ("telegram", "bale"))
+            self.assertIsNot(first.messaging_allowed_providers, allowed_providers)
+
+    def test_accessor_reads_only_provider_django_settings_and_no_environment_or_domain_context(self):
+        providers_path = Path(settings.BASE_DIR) / "loomera" / "globalization" / "providers.py"
+        source = providers_path.read_text(encoding="utf-8")
+        tree = ast.parse(source, filename=str(providers_path))
+
+        direct_setting_reads = {
+            node.attr
+            for node in ast.walk(tree)
+            if isinstance(node, ast.Attribute)
+            and isinstance(node.value, ast.Name)
+            and node.value.id == "_settings"
+        }
+        getattr_setting_reads = {
+            node.args[1].value
+            for node in ast.walk(tree)
+            if isinstance(node, ast.Call)
+            and isinstance(node.func, ast.Name)
+            and node.func.id == "getattr"
+            and len(node.args) >= 2
+            and isinstance(node.args[0], ast.Name)
+            and node.args[0].id == "_settings"
+            and isinstance(node.args[1], ast.Constant)
+            and isinstance(node.args[1].value, str)
+        }
+
+        self.assertEqual(
+            direct_setting_reads | getattr_setting_reads,
+            {
+                "MAP_PROVIDER",
+                "SMS_PROVIDER",
+                "PAYMENT_PROVIDER",
+                "MESSAGING_ALLOWED_PROVIDERS",
+            },
+        )
+        self.assertNotIn("os.environ", source)
+        self.assertNotIn("import environ", source)
+        self.assertNotIn("loomera.settings.base", source)
+        self.assertNotIn("LOOMERA_DEFAULT_COUNTRY", source)
+        self.assertNotIn("LOOMERA_DEFAULT_CURRENCY", source)
+        self.assertNotIn("LOOMERA_DEFAULT_TIMEZONE", source)
+        self.assertNotIn("LANGUAGE_CODE", source)
+        self.assertNotIn("TIME_ZONE", source)
+        self.assertNotIn("PHONE", source.upper())
