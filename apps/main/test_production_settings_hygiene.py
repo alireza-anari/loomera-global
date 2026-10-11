@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import ast
+from dataclasses import FrozenInstanceError, fields
 import json
 import os
 from pathlib import Path
@@ -8,7 +9,13 @@ import subprocess
 import sys
 
 from django.conf import settings
-from django.test import SimpleTestCase
+from django.test import SimpleTestCase, override_settings
+
+from loomera.globalization import config as globalization_config_module
+from loomera.globalization.config import (
+    DeploymentGlobalizationConfig,
+    get_deployment_globalization_config,
+)
 
 TRANSACTIONAL_SMS_SETTING_NAMES = (
     "SMSIR_VERIFY_URL",
@@ -231,3 +238,109 @@ class ProductionSettingsHygieneTests(SimpleTestCase):
         self.assertEqual(values["LOOMERA_DEFAULT_TIMEZONE"], "UTC")
         self.assertEqual(values["LANGUAGE_CODE"], "fa")
         self.assertEqual(values["TIME_ZONE"], "Asia/Tehran")
+
+
+
+class SharedGlobalizationConfigurationBoundaryTests(SimpleTestCase):
+    expected_field_names = (
+        "default_language",
+        "enabled_languages",
+        "default_country",
+        "default_currency",
+        "default_timezone",
+        "default_calendar",
+    )
+
+    def test_default_snapshot_contains_all_compatibility_values(self):
+        config = get_deployment_globalization_config()
+
+        self.assertIsInstance(config, DeploymentGlobalizationConfig)
+        self.assertEqual(config.default_language, "fa")
+        self.assertEqual(config.enabled_languages, ("fa",))
+        self.assertIsInstance(config.enabled_languages, tuple)
+        self.assertEqual(config.default_country, "IR")
+        self.assertEqual(config.default_currency, "")
+        self.assertEqual(config.default_timezone, "Asia/Tehran")
+        self.assertEqual(config.default_calendar, "jalali")
+
+    def test_snapshot_is_immutable_and_has_no_extra_domain_surface(self):
+        config = get_deployment_globalization_config()
+
+        with self.assertRaises(FrozenInstanceError):
+            config.default_language = "en"
+
+        self.assertEqual(
+            tuple(field.name for field in fields(DeploymentGlobalizationConfig)),
+            self.expected_field_names,
+        )
+        self.assertEqual(
+            globalization_config_module.__all__,
+            (
+                "DeploymentGlobalizationConfig",
+                "get_deployment_globalization_config",
+            ),
+        )
+        self.assertEqual(
+            {name for name in vars(DeploymentGlobalizationConfig) if not name.startswith("_")},
+            set(self.expected_field_names),
+        )
+
+    @override_settings(
+        LOOMERA_DEFAULT_LANGUAGE="en",
+        LOOMERA_ENABLED_LANGUAGES=["fa", "en"],
+        LOOMERA_DEFAULT_COUNTRY="US",
+        LOOMERA_DEFAULT_CURRENCY="USD",
+        LOOMERA_DEFAULT_TIMEZONE="UTC",
+        LOOMERA_DEFAULT_CALENDAR="gregorian",
+    )
+    def test_valid_overridden_settings_are_reflected_without_runtime_activation(self):
+        config = get_deployment_globalization_config()
+
+        self.assertEqual(config.default_language, "en")
+        self.assertEqual(config.enabled_languages, ("fa", "en"))
+        self.assertEqual(config.default_country, "US")
+        self.assertEqual(config.default_currency, "USD")
+        self.assertEqual(config.default_timezone, "UTC")
+        self.assertEqual(config.default_calendar, "gregorian")
+        self.assertEqual(settings.LANGUAGE_CODE, "fa")
+        self.assertEqual(settings.TIME_ZONE, "Asia/Tehran")
+
+    def test_accessor_returns_fresh_snapshots_without_mutating_settings_list(self):
+        enabled_languages = ["fa", "en"]
+
+        with override_settings(
+            LOOMERA_DEFAULT_LANGUAGE="fa",
+            LOOMERA_ENABLED_LANGUAGES=enabled_languages,
+            LOOMERA_DEFAULT_COUNTRY="IR",
+            LOOMERA_DEFAULT_CURRENCY="",
+            LOOMERA_DEFAULT_TIMEZONE="Asia/Tehran",
+            LOOMERA_DEFAULT_CALENDAR="jalali",
+        ):
+            first = get_deployment_globalization_config()
+            second = get_deployment_globalization_config()
+
+            self.assertIsNot(first, second)
+            self.assertEqual(first, second)
+            self.assertEqual(enabled_languages, ["fa", "en"])
+            self.assertIs(settings.LOOMERA_ENABLED_LANGUAGES, enabled_languages)
+            self.assertEqual(first.enabled_languages, ("fa", "en"))
+            self.assertIsNot(first.enabled_languages, enabled_languages)
+
+    def test_accessor_reads_only_the_six_validated_django_settings(self):
+        config_path = Path(settings.BASE_DIR) / "loomera" / "globalization" / "config.py"
+        source = config_path.read_text(encoding="utf-8")
+        tree = ast.parse(source, filename=str(config_path))
+
+        setting_reads = {
+            node.attr
+            for node in ast.walk(tree)
+            if isinstance(node, ast.Attribute)
+            and isinstance(node.value, ast.Name)
+            and node.value.id == "_settings"
+        }
+
+        self.assertEqual(setting_reads, set(GLOBAL_DEPLOYMENT_SETTING_NAMES))
+        self.assertNotIn("os.environ", source)
+        self.assertNotIn("import environ", source)
+        self.assertNotIn("loomera.settings.base", source)
+        self.assertNotIn("ImproperlyConfigured", source)
