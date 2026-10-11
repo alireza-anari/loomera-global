@@ -31,9 +31,7 @@ Deployment defaults are therefore fallbacks/contracts, not substitutes for futur
 
 ## Shared Deployment Configuration Boundary
 
-The supported application import path is:
-
-`loomera.globalization.config`
+The supported application import path is `loomera.globalization.config`.
 
 It defines exactly two public symbols:
 
@@ -59,9 +57,7 @@ The architecture still distinguishes deployment configuration, future business/s
 
 ## Shared Provider Configuration Boundary
 
-The supported application import path is:
-
-`loomera.globalization.providers`
+The supported application import path is `loomera.globalization.providers`.
 
 It defines exactly two public symbols:
 
@@ -89,9 +85,7 @@ No application feature consumes the provider boundary in Task 1.3. Existing map 
 
 Task 2.1 adds a deployment-level brand identity read boundary without changing the existing settings layer or activating branding changes in runtime surfaces.
 
-The supported application import path is:
-
-`loomera.branding.config`
+The supported application import path is `loomera.branding.config`.
 
 It defines exactly two public symbols:
 
@@ -121,21 +115,52 @@ Brand identity is independent of locale, country, currency, timezone, calendar, 
 
 ## Shared Brand Template Context
 
-Task 2.2 registers the context processor:
+Task 2.2 registers the context processor `loomera.branding.context_processors.deployment_brand` and exposes `deployment_brand`, a fresh `DeploymentBrandConfig` snapshot. Task 2.3 keeps the same registered processor and additionally exposes `deployment_brand_assets`, a fresh `DeploymentBrandAssetConfig` snapshot. Both values are created through their supported accessors; the processor does not read settings or environment variables directly, access the database, inspect request/user/business/salon state, cache values, or infer locale or providers.
 
-`loomera.branding.context_processors.deployment_brand`
+Task 2.2 wires the safest shared textual identity in the shell/head: the default document title, Open Graph title, Twitter title, application name, Apple mobile web app title, and Open Graph site name consume `deployment_brand.display_name`. Task 2.3 wires the shared logo/favicon/manifest/social-image paths and social-image dimensions through `deployment_brand_assets` while retaining the exact Loomera compatibility defaults.
 
-The processor exposes one template variable:
+Persian SEO descriptions, `og:locale`, `<html lang>`/direction, translations, broader SEO-content localization, and brand-color configuration remain deferred to their owning tasks/phases. Branding remains deployment-level only; neither context value drives language, country, currency, timezone, calendar, providers, authentication, authorization, or booking behavior.
 
-`deployment_brand`
+## Shared Brand Asset Configuration
 
-Its value is a fresh `DeploymentBrandConfig` snapshot produced by the Task 2.1 `get_deployment_brand_config()` accessor. The context processor does not read Django settings or environment variables directly, access the database, inspect request/user/business/salon state, cache values, or infer locale or providers. Task 2.1 remains the source of brand configuration and the existing settings layer remains authoritative underneath it.
+Task 2.3 adds a sibling asset boundary at `loomera.branding.assets`. It intentionally does not expand the ten-field `DeploymentBrandConfig` identity/email/domain contract.
 
-Task 2.2 wires only the safest shared textual identity in the shell/head: the default document title, Open Graph title, Twitter title, application name, Apple mobile web app title, and Open Graph site name consume `deployment_brand.display_name`. The Loomera compatibility default therefore renders exactly as before unless the existing deployment brand display name is configured differently.
+The module exposes exactly two public symbols:
 
-Logo, favicon, manifest, social-image, and brand-color configuration remain deferred to a later Phase 2 slice because the current assets are Loomera-specific. `templates/partials/brand/logo.html` is intentionally unchanged. Persian SEO descriptions, `og:locale`, `<html lang>`/direction, translations, and broader SEO-content localization also remain deferred to their owning tasks/phases.
+- `DeploymentBrandAssetConfig` — a frozen immutable deployment asset snapshot;
+- `get_deployment_brand_asset_config()` — returns a fresh snapshot from the fifteen validated Django settings on every call.
 
-This is deployment-level branding only. Task 2.2 does not introduce per-salon or per-business white-label branding and does not make brand identity drive language, country, currency, timezone, calendar, map/SMS/payment/messaging providers, authentication, authorization, or booking behavior.
+The asset settings, snapshot fields, and Loomera compatibility defaults are:
+
+| Setting / environment variable | Snapshot field | Compatibility default |
+| --- | --- | --- |
+| `BRAND_LOGO_GLYPH_STATIC_PATH` | `logo_glyph_path` | `branding/logo/loomera-glyph-mark.png` |
+| `BRAND_APP_ICON_STATIC_PATH` | `app_icon_path` | `branding/logo/loomera-app-icon.png` |
+| `BRAND_LOGO_HEADER_STATIC_PATH` | `logo_header_path` | `branding/logo/loomera-logo-header.png` |
+| `BRAND_LOGO_PRIMARY_STATIC_PATH` | `logo_primary_path` | `branding/logo/loomera-logo-primary.png` |
+| `BRAND_FAVICON_SVG_STATIC_PATH` | `favicon_svg_path` | `branding/favicon/favicon.svg` |
+| `BRAND_FAVICON_ICO_STATIC_PATH` | `favicon_ico_path` | `branding/favicon/favicon.ico` |
+| `BRAND_FAVICON_16_STATIC_PATH` | `favicon_16_path` | `branding/favicon/favicon-16x16.png` |
+| `BRAND_FAVICON_32_STATIC_PATH` | `favicon_32_path` | `branding/favicon/favicon-32x32.png` |
+| `BRAND_FAVICON_48_STATIC_PATH` | `favicon_48_path` | `branding/favicon/favicon-48x48.png` |
+| `BRAND_APPLE_TOUCH_ICON_STATIC_PATH` | `apple_touch_icon_path` | `branding/favicon/apple-touch-icon.png` |
+| `BRAND_MASK_ICON_STATIC_PATH` | `mask_icon_path` | `branding/favicon/safari-pinned-tab.svg` |
+| `BRAND_WEBMANIFEST_STATIC_PATH` | `webmanifest_path` | `branding/favicon/site.webmanifest` |
+| `BRAND_SOCIAL_IMAGE_STATIC_PATH` | `social_image_path` | `branding/logo/loomera-logo-square.png` |
+| `BRAND_SOCIAL_IMAGE_WIDTH` | `social_image_width` | `1254` |
+| `BRAND_SOCIAL_IMAGE_HEIGHT` | `social_image_height` | `1254` |
+
+Every `*_STATIC_PATH` is a Django-staticfiles-relative path. Values are trimmed and must remain non-empty, relative, forward-slash paths. Absolute paths, URL schemes, backslashes, query strings, fragments, and `.` or `..` path segments are rejected with `ImproperlyConfigured`; invalid absolute/URL input is never converted into a relative path. These settings are not filesystem paths, remote/CDN URLs, `MEDIA_URL` references, or database-uploaded assets.
+
+`BRAND_SOCIAL_IMAGE_WIDTH` and `BRAND_SOCIAL_IMAGE_HEIGHT` must be positive integers. Zero, negative, non-integer, or otherwise invalid explicit values raise `ImproperlyConfigured`. The default remains `1254 × 1254`, preserving the existing Open Graph output.
+
+Templates continue to resolve all configured paths through Django's `{% static %}` tag. A buyer selecting alternate paths is responsible for packaging those referenced files where Django staticfiles can discover them; Task 2.3 does not verify synthetic alternate files exist and does not add replacement assets.
+
+The default `static/branding/favicon/site.webmanifest` remains unchanged. A buyer can set `BRAND_WEBMANIFEST_STATIC_PATH` to a deployment-supplied static manifest. That buyer-owned manifest is responsible for its `name`, `short_name`, icon references, description, theme color, and background color. Task 2.3 does not dynamically generate a manifest.
+
+All existing Loomera static files remain unchanged. The current colors `#FCFBFE`, `#16131F`, and `#735CBE` remain compatibility literals; no color setting is introduced by Task 2.3. Color/design-token configuration is deferred to a later Phase 2 task. SEO localization remains deferred, including localized descriptions and locale-aware metadata. There is no per-salon or per-business white-label asset layer.
+
+Asset selection is presentation configuration only. It does not infer or change `LANGUAGE_CODE`, `LOOMERA_DEFAULT_LANGUAGE`, country, currency, timezone, calendar, map/SMS/payment/messaging providers, authentication, authorization, or booking semantics.
 
 ## Compatibility Behavior
 
@@ -149,16 +174,16 @@ Tasks 1.1, 1.2, and 1.3 intentionally preserve the current runtime behavior:
 - configuring or reading any of the six deployment values does not migrate or activate application behavior;
 - current map, SMS, messaging, and payment selector/feature-flag behavior remains unchanged, including the existing `mapir`, `disabled`, `zibal`, and empty messaging-provider compatibility baseline.
 
-In particular, a deployment may configure a future-facing default such as `LOOMERA_DEFAULT_LANGUAGE=en`, `LOOMERA_DEFAULT_TIMEZONE=UTC`, or `LOOMERA_DEFAULT_CALENDAR=gregorian`. Task 1.1 validates that configuration and Task 1.2 can expose it through a snapshot, but the current Django/application runtime continues to use its existing Persian, Tehran, and Jalali behavior until the owning later phase deliberately wires the contract in.
+Task 2.3 likewise preserves the current Loomera visual asset URLs under defaults, leaves all static files and colors unchanged, and does not alter locale/provider/authentication/booking behavior.
 
 ## Future Ownership
 
 Language and enabled-language runtime behavior belongs to **Phase 3**. Calendar and business/deployment timezone migration belongs to **Phase 5**. Explicit currency semantics and legacy toman reconciliation belongs to **Phase 8**. Country/address data and country-aware geography behavior belongs to **Phase 9**. Provider-neutral map routing belongs to **Phase 9**, SMS/messaging provider globalization to **Phase 14**, and payment/payout provider globalization to **Phase 15**.
 
-Later phases must preserve the architecture separation between deployment defaults, provider selection, business facts, and request/user presentation context. They must also perform any required data profiling, migration, and regression work before changing persisted meaning or provider behavior.
+Later phases must preserve the architecture separation between deployment defaults, provider selection, business facts, request/user presentation context, and deployment branding. They must also perform any required data profiling, migration, and regression work before changing persisted meaning or provider behavior.
 
 ## Non-Goals
 
-Tasks 1.1, 1.2, and 1.3 do not implement globalization runtime behavior. They do not switch the UI to English, enable Arabic runtime behavior, modify Django `LANGUAGES`, modify `LANGUAGE_CODE`, modify `TIME_ZONE`, activate Gregorian presentation, change Jalali behavior, introduce business timezone or country fields, migrate phone identity, alter weekday semantics, reinterpret money, add currency fields, add/replace/enable/disable map/payment/SMS/messaging providers, change existing provider selectors or feature flags, add an environment-backed `MAP_PROVIDER` setting, add dependencies, add migrations, or implement business/request/provider routing. Task 1.3 does not start Phase 2.
+Tasks 1.1, 1.2, and 1.3 do not implement globalization runtime behavior. They do not switch the UI to English, enable Arabic runtime behavior, modify Django `LANGUAGES`, modify `LANGUAGE_CODE`, modify `TIME_ZONE`, activate Gregorian presentation, change Jalali behavior, introduce business timezone or country fields, migrate phone identity, alter weekday semantics, reinterpret money, add currency fields, add/replace/enable/disable map/payment/SMS/messaging providers, change existing provider selectors or feature flags, add dependencies, add migrations, or implement business/request/provider routing.
 
-Task 2.1 establishes the shared brand identity read boundary. Task 2.2 only wires that existing boundary into shared textual shell/head identity. Neither task configures or replaces logos, favicons, manifests, social images, colors, SEO descriptions, locale metadata, translations, email delivery behavior, calendar identifiers, user-agent behavior, models, migrations, providers, authentication, booking behavior, or per-salon white-label branding.
+Tasks 2.1 and 2.2 establish the shared brand identity boundary and textual template context. Task 2.3 configures only the approved shared static asset paths and social-image dimensions. It does not replace any static asset, change brand colors/CSS, redesign logo markup, dynamically generate a manifest, support database-uploaded or remote/CDN assets, localize SEO metadata, change `og:locale` or Persian descriptions, modify locale/model/email/calendar/user-agent/provider/auth/booking behavior, add migrations/dependencies, introduce per-salon branding, or start Task 2.4 or Phase 3.
