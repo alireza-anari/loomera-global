@@ -385,6 +385,7 @@ TEMPLATES = [
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
                 "django.template.context_processors.csrf",
+                "loomera.branding.context_processors.deployment_brand",
                 "apps.main.context_processors.redirect_form_errors",
                 "apps.main.views.madia_admin",
             ],
