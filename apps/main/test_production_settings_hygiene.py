@@ -1656,3 +1656,153 @@ class SharedBrandAssetConfigurationTests(SimpleTestCase):
                 (project_root / "static" / relative_path).is_file(),
                 msg=f"Missing default brand static asset: {relative_path}",
             )
+
+
+class MachineReadableBrandIdentityWiringTests(SimpleTestCase):
+    @staticmethod
+    def _runtime_context() -> dict[str, object]:
+        return {
+            "language_code": settings.LANGUAGE_CODE,
+            "default_language": settings.LOOMERA_DEFAULT_LANGUAGE,
+            "default_country": settings.LOOMERA_DEFAULT_COUNTRY,
+            "default_currency": settings.LOOMERA_DEFAULT_CURRENCY,
+            "default_timezone": settings.LOOMERA_DEFAULT_TIMEZONE,
+            "default_calendar": settings.LOOMERA_DEFAULT_CALENDAR,
+            "sms_provider": settings.SMS_PROVIDER,
+            "payment_provider": settings.PAYMENT_PROVIDER,
+            "messaging_allowed_providers": tuple(settings.MESSAGING_ALLOWED_PROVIDERS),
+            "auth_user_model": settings.AUTH_USER_MODEL,
+        }
+
+    def _assert_runtime_context_unchanged(self, before: dict[str, object]) -> None:
+        self.assertEqual(settings.LANGUAGE_CODE, before["language_code"])
+        self.assertEqual(settings.LOOMERA_DEFAULT_LANGUAGE, before["default_language"])
+        self.assertEqual(settings.LOOMERA_DEFAULT_COUNTRY, before["default_country"])
+        self.assertEqual(settings.LOOMERA_DEFAULT_CURRENCY, before["default_currency"])
+        self.assertEqual(settings.LOOMERA_DEFAULT_TIMEZONE, before["default_timezone"])
+        self.assertEqual(settings.LOOMERA_DEFAULT_CALENDAR, before["default_calendar"])
+        self.assertEqual(settings.SMS_PROVIDER, before["sms_provider"])
+        self.assertEqual(settings.PAYMENT_PROVIDER, before["payment_provider"])
+        self.assertEqual(
+            tuple(settings.MESSAGING_ALLOWED_PROVIDERS),
+            before["messaging_allowed_providers"],
+        )
+        self.assertEqual(settings.AUTH_USER_MODEL, before["auth_user_model"])
+
+    def test_api_v1_meta_preserves_default_loomera_brand_identity(self):
+        from django.urls import reverse
+
+        response = self.client.get(reverse("api:v1:meta"), secure=True)
+
+        self.assertEqual(response.status_code, 200)
+        application = response.json()["data"]["application"]
+        self.assertEqual(application["name"], "Loomera")
+        self.assertEqual(application["brand"], "Loomera")
+
+    @override_settings(
+        LOOMERA_PUBLIC_APP_VERSION="2026.10",
+        LOOMERA_PUBLIC_BUILD_ID="build-25",
+        LOOMERA_API_VERSION="v1-test",
+        LANGUAGE_CODE="fa",
+    )
+    def test_api_v1_meta_uses_one_brand_snapshot_and_preserves_other_metadata(self):
+        from types import SimpleNamespace
+        from unittest.mock import patch
+
+        from django.urls import reverse
+
+        deployment_brand = SimpleNamespace(name="Acme", display_name="Acme Booking")
+        runtime_context = self._runtime_context()
+
+        with patch(
+            "apps.api.v1.views.get_deployment_brand_config",
+            return_value=deployment_brand,
+        ) as get_brand:
+            response = self.client.get(reverse("api:v1:meta"), secure=True)
+
+        self.assertEqual(response.status_code, 200)
+        payload = response.json()["data"]
+        self.assertEqual(payload["application"]["name"], "Acme Booking")
+        self.assertEqual(payload["application"]["brand"], "Acme")
+        self.assertEqual(payload["application"]["version"], "2026.10")
+        self.assertEqual(payload["application"]["build"], "build-25")
+        self.assertEqual(payload["api"]["version"], "v1-test")
+        self.assertEqual(payload["api"]["base_path"], "/api/v1/")
+        self.assertEqual(payload["localization"]["default_language"], "fa")
+        self.assertIs(payload["localization"]["rtl"], True)
+        self.assertIn("time_utc", payload["server"])
+        get_brand.assert_called_once_with()
+        self._assert_runtime_context_unchanged(runtime_context)
+
+    def test_service_schema_preserves_default_loomera_provider_identity(self):
+        from types import SimpleNamespace
+
+        from apps.main.seo import build_service_schema
+
+        request = SimpleNamespace(
+            build_absolute_uri=lambda path: f"https://example.test{path}"
+        )
+        service = SimpleNamespace(
+            service_name="Haircut",
+            effective_seo_description="Service description",
+            get_absolute_url=lambda: "/services/haircut/",
+            service_image=None,
+        )
+
+        schema = json.loads(build_service_schema(request, service))
+
+        self.assertEqual(
+            schema["provider"],
+            {"@type": "Organization", "name": "Loomera"},
+        )
+
+    def test_service_schema_uses_one_brand_snapshot_and_preserves_schema_and_image_behavior(self):
+        from types import SimpleNamespace
+        from unittest.mock import patch
+
+        from apps.main.seo import build_service_schema
+
+        deployment_brand = SimpleNamespace(name="Acme", display_name="Acme Booking")
+        runtime_context = self._runtime_context()
+        request = SimpleNamespace(
+            build_absolute_uri=lambda path: f"https://example.test{path}"
+        )
+        service = SimpleNamespace(
+            service_name="Haircut",
+            effective_seo_description="Service description",
+            get_absolute_url=lambda: "/services/haircut/",
+            service_image=SimpleNamespace(url="/media/haircut.jpg"),
+        )
+
+        with patch(
+            "apps.main.seo.get_deployment_brand_config",
+            return_value=deployment_brand,
+        ) as get_brand:
+            schema = json.loads(build_service_schema(request, service))
+
+        self.assertEqual(schema["@context"], "https://schema.org")
+        self.assertEqual(schema["@type"], "Service")
+        self.assertEqual(schema["name"], "Haircut")
+        self.assertEqual(schema["description"], "Service description")
+        self.assertEqual(schema["url"], "https://example.test/services/haircut/")
+        self.assertEqual(
+            schema["provider"],
+            {"@type": "Organization", "name": "Acme Booking"},
+        )
+        self.assertEqual(schema["image"], "https://example.test/media/haircut.jpg")
+        get_brand.assert_called_once_with()
+        self._assert_runtime_context_unchanged(runtime_context)
+
+    def test_machine_readable_consumers_do_not_read_brand_settings_directly(self):
+        project_root = Path(settings.BASE_DIR)
+        api_source = (project_root / "apps" / "api" / "v1" / "views.py").read_text(
+            encoding="utf-8"
+        )
+        seo_source = (project_root / "apps" / "main" / "seo.py").read_text(
+            encoding="utf-8"
+        )
+
+        for forbidden in ("BRAND_NAME", "BRAND_DISPLAY_NAME"):
+            self.assertNotIn(forbidden, api_source)
+            self.assertNotIn(forbidden, seo_source)
+        self.assertNotIn("from django.conf import settings", seo_source)
