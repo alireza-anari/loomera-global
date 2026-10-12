@@ -5,6 +5,8 @@ from django.utils import timezone
 from rest_framework.permissions import AllowAny
 from rest_framework.views import APIView
 
+from loomera.branding.config import get_deployment_brand_config
+
 from .responses import api_success
 
 
@@ -26,12 +28,13 @@ class ApiV1MetaView(APIView):
     permission_classes = [AllowAny]
 
     def get(self, request, *args, **kwargs):
+        deployment_brand = get_deployment_brand_config()
         build_id = str(getattr(settings, "LOOMERA_PUBLIC_BUILD_ID", "") or "").strip()
 
         data = {
             "application": {
-                "name": str(getattr(settings, "BRAND_DISPLAY_NAME", "Loomera")),
-                "brand": str(getattr(settings, "BRAND_NAME", "Loomera")),
+                "name": deployment_brand.display_name,
+                "brand": deployment_brand.name,
                 "version": str(getattr(settings, "LOOMERA_PUBLIC_APP_VERSION", "beta")),
             },
             "api": {
