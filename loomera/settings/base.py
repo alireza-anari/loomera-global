@@ -1172,7 +1172,6 @@ ARTICLE_CONTENT_REPORT_DESCRIPTION_MAX_CHARS = env.int(
     "ARTICLE_CONTENT_REPORT_DESCRIPTION_MAX_CHARS",
     default=1000,
 )
-
 ARTICLE_STORY_EXPLORE_TEXT_MAX_CHARS = env.int(
     "ARTICLE_STORY_EXPLORE_TEXT_MAX_CHARS",
     default=80,
@@ -1187,7 +1186,6 @@ CUSTOMER_PROFILE_IMAGE_MAX_DIMENSION = env.int(
     "CUSTOMER_PROFILE_IMAGE_MAX_DIMENSION",
     default=5000,
 )
-
 CUSTOMER_PROFILE_IMAGE_MAX_PIXELS = env.int(
     "CUSTOMER_PROFILE_IMAGE_MAX_PIXELS",
     default=10_000_000,
@@ -1196,12 +1194,10 @@ SALON_GALLERY_IMAGE_MAX_SIZE_BYTES = env.int(
     "SALON_GALLERY_IMAGE_MAX_SIZE_BYTES",
     default=4 * 1024 * 1024,
 )
-
 SALON_GALLERY_IMAGE_MAX_DIMENSION = env.int(
     "SALON_GALLERY_IMAGE_MAX_DIMENSION",
     default=7000,
 )
-
 SALON_GALLERY_IMAGE_MAX_PIXELS = env.int(
     "SALON_GALLERY_IMAGE_MAX_PIXELS",
     default=20_000_000,
@@ -1210,92 +1206,74 @@ WORK_SAMPLE_IMAGE_MAX_SIZE_BYTES = env.int(
     "WORK_SAMPLE_IMAGE_MAX_SIZE_BYTES",
     default=2 * 1024 * 1024,
 )
-
 WORK_SAMPLE_IMAGE_MAX_DIMENSION = env.int(
     "WORK_SAMPLE_IMAGE_MAX_DIMENSION",
     default=2500,
 )
-
 WORK_SAMPLE_IMAGE_MAX_PIXELS = env.int(
     "WORK_SAMPLE_IMAGE_MAX_PIXELS",
     default=4_000_000,
 )
-
 STYLIST_PROFILE_IMAGE_MAX_SIZE_BYTES = env.int(
     "STYLIST_PROFILE_IMAGE_MAX_SIZE_BYTES",
     default=2 * 1024 * 1024,
 )
-
 STYLIST_PROFILE_IMAGE_MAX_DIMENSION = env.int(
     "STYLIST_PROFILE_IMAGE_MAX_DIMENSION",
     default=5000,
 )
-
 STYLIST_PROFILE_IMAGE_MAX_PIXELS = env.int(
     "STYLIST_PROFILE_IMAGE_MAX_PIXELS",
     default=10_000_000,
 )
-
 ARTICLE_COVER_IMAGE_MAX_SIZE_BYTES = env.int(
     "ARTICLE_COVER_IMAGE_MAX_SIZE_BYTES",
     default=4 * 1024 * 1024,
 )
-
 ARTICLE_COVER_IMAGE_MAX_DIMENSION = env.int(
     "ARTICLE_COVER_IMAGE_MAX_DIMENSION",
     default=7000,
 )
-
 ARTICLE_COVER_IMAGE_MAX_PIXELS = env.int(
     "ARTICLE_COVER_IMAGE_MAX_PIXELS",
     default=20_000_000,
 )
-
 SUPPORT_ATTACHMENT_MAX_SIZE_BYTES = env.int(
     "SUPPORT_ATTACHMENT_MAX_SIZE_BYTES",
     default=5 * 1024 * 1024,
 )
-
 SUPPORT_ATTACHMENT_IMAGE_MAX_DIMENSION = env.int(
     "SUPPORT_ATTACHMENT_IMAGE_MAX_DIMENSION",
     default=7000,
 )
-
 SUPPORT_ATTACHMENT_IMAGE_MAX_PIXELS = env.int(
     "SUPPORT_ATTACHMENT_IMAGE_MAX_PIXELS",
     default=20_000_000,
 )
-
 LOOMERA_SUPPORT_TICKET_RATE_LIMIT_FAIL_CLOSED = env.bool(
     "LOOMERA_SUPPORT_TICKET_RATE_LIMIT_FAIL_CLOSED",
     default=False,
 )
-
 FINANCE_PAYMENT_RECEIPT_MAX_SIZE_BYTES = env.int(
     "FINANCE_PAYMENT_RECEIPT_MAX_SIZE_BYTES",
     default=5 * 1024 * 1024,
 )
-
 FINANCE_PAYMENT_RECEIPT_IMAGE_MAX_DIMENSION = env.int(
     "FINANCE_PAYMENT_RECEIPT_IMAGE_MAX_DIMENSION",
     default=7000,
 )
-
 FINANCE_PAYMENT_RECEIPT_IMAGE_MAX_PIXELS = env.int(
     "FINANCE_PAYMENT_RECEIPT_IMAGE_MAX_PIXELS",
     default=20_000_000,
 )
-
 STAFF_CONTENT_MEDIA_MAX_SIZE_BYTES = env.int(
     "STAFF_CONTENT_MEDIA_MAX_SIZE_BYTES",
     default=25 * 1024 * 1024,
 )
-
 STAFF_CONTENT_MEDIA_IMAGE_MAX_DIMENSION = env.int(
     "STAFF_CONTENT_MEDIA_IMAGE_MAX_DIMENSION",
     default=7000,
 )
-
 STAFF_CONTENT_MEDIA_IMAGE_MAX_PIXELS = env.int(
     "STAFF_CONTENT_MEDIA_IMAGE_MAX_PIXELS",
     default=20_000_000,
@@ -1312,12 +1290,10 @@ SEARCH_SUGGESTIONS_QUERY_MAX_CHARS = env.int(
     "SEARCH_SUGGESTIONS_QUERY_MAX_CHARS",
     default=80,
 )
-
 LOCATION_SUGGESTIONS_QUERY_MAX_CHARS = env.int(
     "LOCATION_SUGGESTIONS_QUERY_MAX_CHARS",
     default=80,
 )
-
 SALON_SEARCH_QUERY_MAX_CHARS = env.int(
     "SALON_SEARCH_QUERY_MAX_CHARS",
     default=80,
@@ -1334,7 +1310,6 @@ APPOINTMENT_CHECKOUT_POST_MAX_BYTES = env.int(
     "APPOINTMENT_CHECKOUT_POST_MAX_BYTES",
     default=8 * 1024,
 )
-
 APPOINTMENT_CHECKOUT_COUPON_CODE_MAX_CHARS = env.int(
     "APPOINTMENT_CHECKOUT_COUPON_CODE_MAX_CHARS",
     default=64,
@@ -1343,12 +1318,10 @@ FINANCE_COUPON_POST_MAX_BYTES = env.int(
     "FINANCE_COUPON_POST_MAX_BYTES",
     default=8 * 1024,
 )
-
 FINANCE_COUPON_CODE_MAX_CHARS = env.int(
     "FINANCE_COUPON_CODE_MAX_CHARS",
     default=64,
 )
-
 FINANCE_COUPON_DESCRIPTION_MAX_CHARS = env.int(
     "FINANCE_COUPON_DESCRIPTION_MAX_CHARS",
     default=1000,
@@ -1357,12 +1330,10 @@ DASHBOARD_SCHEDULE_POST_MAX_BYTES = env.int(
     "DASHBOARD_SCHEDULE_POST_MAX_BYTES",
     default=16 * 1024,
 )
-
 DASHBOARD_SCHEDULE_REVIEW_NOTE_MAX_CHARS = env.int(
     "DASHBOARD_SCHEDULE_REVIEW_NOTE_MAX_CHARS",
     default=500,
 )
-
 DASHBOARD_SCHEDULE_MAX_SHIFT_ROWS = env.int(
     "DASHBOARD_SCHEDULE_MAX_SHIFT_ROWS",
     default=24,
@@ -1371,17 +1342,14 @@ FINANCE_REPORT_QUERY_MAX_CHARS = env.int(
     "FINANCE_REPORT_QUERY_MAX_CHARS",
     default=2048,
 )
-
 FINANCE_REPORT_MAX_RANGE_DAYS = env.int(
     "FINANCE_REPORT_MAX_RANGE_DAYS",
     default=370,
 )
-
 FINANCE_REPORT_EXPORT_MAX_ROWS = env.int(
     "FINANCE_REPORT_EXPORT_MAX_ROWS",
     default=5000,
 )
-
 FINANCE_EXPORT_CELL_MAX_CHARS = env.int(
     "FINANCE_EXPORT_CELL_MAX_CHARS",
     default=500,
@@ -1390,27 +1358,22 @@ SUPPORT_TICKET_POST_MAX_BYTES = env.int(
     "SUPPORT_TICKET_POST_MAX_BYTES",
     default=2 * 1024 * 1024,
 )
-
 SUPPORT_TICKET_REPLY_POST_MAX_BYTES = env.int(
     "SUPPORT_TICKET_REPLY_POST_MAX_BYTES",
     default=2 * 1024 * 1024,
 )
-
 PLATFORM_SUPPORT_QUERY_MAX_CHARS = env.int(
     "PLATFORM_SUPPORT_QUERY_MAX_CHARS",
     default=2048,
 )
-
 PLATFORM_SUPPORT_ACTION_POST_MAX_BYTES = env.int(
     "PLATFORM_SUPPORT_ACTION_POST_MAX_BYTES",
     default=16 * 1024,
 )
-
 PLATFORM_SUPPORT_ADMIN_REPLY_MAX_CHARS = env.int(
     "PLATFORM_SUPPORT_ADMIN_REPLY_MAX_CHARS",
     default=3000,
 )
-
 PLATFORM_SUPPORT_INTERNAL_NOTE_MAX_CHARS = env.int(
     "PLATFORM_SUPPORT_INTERNAL_NOTE_MAX_CHARS",
     default=2000,
@@ -1419,7 +1382,6 @@ PUBLIC_SALON_DETAIL_QUERY_MAX_CHARS = env.int(
     "PUBLIC_SALON_DETAIL_QUERY_MAX_CHARS",
     default=1024,
 )
-
 PUBLIC_SALON_REVIEW_APPOINTMENT_ID_MAX_CHARS = env.int(
     "PUBLIC_SALON_REVIEW_APPOINTMENT_ID_MAX_CHARS",
     default=20,
@@ -1507,12 +1469,10 @@ SMS_PUBLIC_BASE_URL = (
     .rstrip("/")
 )
 
-
 HELP_AI_ENABLED = env.bool(
     "HELP_AI_ENABLED",
     default=True,
 )
-
 HELP_AI_PROVIDER = (
     env(
         "HELP_AI_PROVIDER",
@@ -1521,22 +1481,18 @@ HELP_AI_PROVIDER = (
     .strip()
     .lower()
 )
-
 GROQ_API_KEY = env(
     "GROQ_API_KEY",
     default="",
 ).strip()
-
 OPENROUTER_API_KEY = env(
     "OPENROUTER_API_KEY",
     default="",
 ).strip()
-
 HELP_AI_API_KEY = env(
     "HELP_AI_API_KEY",
     default="",
 ).strip()
-
 HELP_AI_BASE_URL = (
     env(
         "HELP_AI_BASE_URL",
@@ -1545,7 +1501,6 @@ HELP_AI_BASE_URL = (
     .strip()
     .rstrip("/")
 )
-
 HELP_AI_SITE_URL = (
     env(
         "HELP_AI_SITE_URL",
@@ -1554,48 +1509,86 @@ HELP_AI_SITE_URL = (
     .strip()
     .rstrip("/")
 )
-
 HELP_AI_MODEL = env(
     "HELP_AI_MODEL",
     default="",
 ).strip()
-
 HELP_AI_TIMEOUT_SECONDS = env.int(
     "HELP_AI_TIMEOUT_SECONDS",
     default=15,
 )
-
 HELP_AI_MAX_COMPLETION_TOKENS = env.int(
     "HELP_AI_MAX_COMPLETION_TOKENS",
     default=750,
 )
-
 HELP_CHAT_GUEST_LIMIT = env.int(
     "HELP_CHAT_GUEST_LIMIT",
     default=10,
 )
-
 HELP_CHAT_USER_LIMIT = env.int(
     "HELP_CHAT_USER_LIMIT",
     default=30,
 )
-
 HELP_CHAT_RATE_WINDOW_SECONDS = env.int(
     "HELP_CHAT_RATE_WINDOW_SECONDS",
     default=3600,
 )
-
 HELP_SUPPORT_HANDOFF_LIMIT = env.int(
     "HELP_SUPPORT_HANDOFF_LIMIT",
     default=3,
 )
-
 HELP_SUPPORT_HANDOFF_WINDOW_SECONDS = env.int(
     "HELP_SUPPORT_HANDOFF_WINDOW_SECONDS",
     default=3600,
 )
-
 HELP_CONVERSATION_RETENTION_DAYS = env.int(
     "HELP_CONVERSATION_RETENTION_DAYS",
     default=30,
+)
+
+# ==============================================================================
+# DEPLOYMENT BRAND COLORS
+# ==============================================================================
+
+
+def _read_brand_hex_color(setting_name: str, default: str) -> str:
+    raw_value = env(setting_name, default=default)
+    if "\n" in raw_value or "\r" in raw_value or ";" in raw_value:
+        raise ImproperlyConfigured(
+            f"{setting_name} must be a CSS hexadecimal RGB color in #RRGGBB format."
+        )
+    value = raw_value.strip()
+    if (
+        len(value) != 7
+        or not value.startswith("#")
+        or any(character not in "0123456789abcdefABCDEF" for character in value[1:])
+    ):
+        raise ImproperlyConfigured(
+            f"{setting_name} must be a CSS hexadecimal RGB color in #RRGGBB format."
+        )
+    return value.upper()
+
+
+BRAND_PRIMARY_COLOR = _read_brand_hex_color("BRAND_PRIMARY_COLOR", "#735CBE")
+BRAND_PRIMARY_HOVER_COLOR = _read_brand_hex_color(
+    "BRAND_PRIMARY_HOVER_COLOR", "#886FD6"
+)
+BRAND_PRIMARY_ACTIVE_COLOR = _read_brand_hex_color(
+    "BRAND_PRIMARY_ACTIVE_COLOR", "#57526E"
+)
+BRAND_PRIMARY_SOFT_COLOR = _read_brand_hex_color(
+    "BRAND_PRIMARY_SOFT_COLOR", "#EEE8FA"
+)
+BRAND_SECONDARY_COLOR = _read_brand_hex_color("BRAND_SECONDARY_COLOR", "#9B80E0")
+BRAND_ACCENT_COLOR = _read_brand_hex_color("BRAND_ACCENT_COLOR", "#A7C8A1")
+BRAND_BACKGROUND_COLOR = _read_brand_hex_color("BRAND_BACKGROUND_COLOR", "#FCFBFE")
+BRAND_SURFACE_COLOR = _read_brand_hex_color("BRAND_SURFACE_COLOR", "#FFFFFF")
+BRAND_TEXT_PRIMARY_COLOR = _read_brand_hex_color(
+    "BRAND_TEXT_PRIMARY_COLOR", "#2E2A3C"
+)
+BRAND_TEXT_ON_PRIMARY_COLOR = _read_brand_hex_color(
+    "BRAND_TEXT_ON_PRIMARY_COLOR", "#FFFFFF"
+)
+BRAND_BROWSER_THEME_DARK_COLOR = _read_brand_hex_color(
+    "BRAND_BROWSER_THEME_DARK_COLOR", "#16131F"
 )

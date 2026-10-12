@@ -1,9 +1,9 @@
 {% load static %}
 <meta name="application-name" content="{{ deployment_brand.display_name }}">
 <meta name="apple-mobile-web-app-title" content="{{ deployment_brand.display_name }}">
-<meta name="theme-color" media="(prefers-color-scheme: light)" content="#FCFBFE">
-<meta name="theme-color" media="(prefers-color-scheme: dark)" content="#16131F">
-<meta name="msapplication-TileColor" content="#735CBE">
+<meta name="theme-color" media="(prefers-color-scheme: light)" content="{{ deployment_brand_colors.background_color }}">
+<meta name="theme-color" media="(prefers-color-scheme: dark)" content="{{ deployment_brand_colors.browser_theme_dark_color }}">
+<meta name="msapplication-TileColor" content="{{ deployment_brand_colors.primary_color }}">
 <meta name="color-scheme" content="light dark">
 <link rel="icon" href="{% static deployment_brand_assets.favicon_svg_path %}" type="image/svg+xml">
 <link rel="icon" href="{% static deployment_brand_assets.favicon_ico_path %}" sizes="any">
@@ -11,7 +11,7 @@
 <link rel="icon" type="image/png" sizes="32x32" href="{% static deployment_brand_assets.favicon_32_path %}">
 <link rel="icon" type="image/png" sizes="48x48" href="{% static deployment_brand_assets.favicon_48_path %}">
 <link rel="apple-touch-icon" sizes="180x180" href="{% static deployment_brand_assets.apple_touch_icon_path %}">
-<link rel="mask-icon" href="{% static deployment_brand_assets.mask_icon_path %}" color="#735CBE">
+<link rel="mask-icon" href="{% static deployment_brand_assets.mask_icon_path %}" color="{{ deployment_brand_colors.primary_color }}">
 <link rel="manifest" href="{% static deployment_brand_assets.webmanifest_path %}">
 <meta property="og:site_name" content="{{ deployment_brand.display_name }}">
 <meta property="og:type" content="website">

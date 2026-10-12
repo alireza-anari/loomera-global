@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import ast
+import hashlib
 from dataclasses import FrozenInstanceError, fields
 import json
 import os
@@ -59,6 +60,21 @@ print(
             "LOOMERA_DEFAULT_CALENDAR": base.LOOMERA_DEFAULT_CALENDAR,
             "LANGUAGE_CODE": base.LANGUAGE_CODE,
             "TIME_ZONE": base.TIME_ZONE,
+            "BRAND_LOGO_GLYPH_STATIC_PATH": base.BRAND_LOGO_GLYPH_STATIC_PATH,
+            "BRAND_APP_ICON_STATIC_PATH": base.BRAND_APP_ICON_STATIC_PATH,
+            "BRAND_LOGO_HEADER_STATIC_PATH": base.BRAND_LOGO_HEADER_STATIC_PATH,
+            "BRAND_LOGO_PRIMARY_STATIC_PATH": base.BRAND_LOGO_PRIMARY_STATIC_PATH,
+            "BRAND_FAVICON_SVG_STATIC_PATH": base.BRAND_FAVICON_SVG_STATIC_PATH,
+            "BRAND_FAVICON_ICO_STATIC_PATH": base.BRAND_FAVICON_ICO_STATIC_PATH,
+            "BRAND_FAVICON_16_STATIC_PATH": base.BRAND_FAVICON_16_STATIC_PATH,
+            "BRAND_FAVICON_32_STATIC_PATH": base.BRAND_FAVICON_32_STATIC_PATH,
+            "BRAND_FAVICON_48_STATIC_PATH": base.BRAND_FAVICON_48_STATIC_PATH,
+            "BRAND_APPLE_TOUCH_ICON_STATIC_PATH": base.BRAND_APPLE_TOUCH_ICON_STATIC_PATH,
+            "BRAND_MASK_ICON_STATIC_PATH": base.BRAND_MASK_ICON_STATIC_PATH,
+            "BRAND_WEBMANIFEST_STATIC_PATH": base.BRAND_WEBMANIFEST_STATIC_PATH,
+            "BRAND_SOCIAL_IMAGE_STATIC_PATH": base.BRAND_SOCIAL_IMAGE_STATIC_PATH,
+            "BRAND_SOCIAL_IMAGE_WIDTH": base.BRAND_SOCIAL_IMAGE_WIDTH,
+            "BRAND_SOCIAL_IMAGE_HEIGHT": base.BRAND_SOCIAL_IMAGE_HEIGHT,
         },
         sort_keys=True,
     )
@@ -69,7 +85,7 @@ print(
 class ProductionSettingsHygieneTests(SimpleTestCase):
     def _import_base_settings(self, **overrides: str) -> subprocess.CompletedProcess[str]:
         env = os.environ.copy()
-        for setting_name in GLOBAL_DEPLOYMENT_SETTING_NAMES:
+        for setting_name in (*GLOBAL_DEPLOYMENT_SETTING_NAMES, *BRAND_ASSET_SETTING_NAMES):
             env.pop(setting_name, None)
 
         env.update(
@@ -244,6 +260,53 @@ class ProductionSettingsHygieneTests(SimpleTestCase):
         self.assertEqual(values["LOOMERA_DEFAULT_TIMEZONE"], "UTC")
         self.assertEqual(values["LANGUAGE_CODE"], "fa")
         self.assertEqual(values["TIME_ZONE"], "Asia/Tehran")
+
+    def test_brand_static_path_contract_trims_valid_relative_path_and_rejects_invalid_values(self):
+        values = self._loaded_values(
+            BRAND_LOGO_GLYPH_STATIC_PATH=" custom/branding/glyph.svg "
+        )
+        self.assertEqual(
+            values["BRAND_LOGO_GLYPH_STATIC_PATH"],
+            "custom/branding/glyph.svg",
+        )
+
+        invalid_values = (
+            "",
+            "/branding/logo.png",
+            "https://cdn.example.com/logo.png",
+            "branding\\logo.png",
+            "branding/logo.png?version=1",
+            "branding/logo.png#mark",
+            "branding/../logo.png",
+            "branding/./logo.png",
+            "C:/branding/logo.png",
+        )
+        for invalid_value in invalid_values:
+            with self.subTest(value=invalid_value):
+                self._assert_invalid_configuration(
+                    "BRAND_LOGO_GLYPH_STATIC_PATH",
+                    BRAND_LOGO_GLYPH_STATIC_PATH=invalid_value,
+                )
+
+    def test_brand_social_image_dimensions_must_be_positive_integers(self):
+        values = self._loaded_values(
+            BRAND_SOCIAL_IMAGE_WIDTH="1600",
+            BRAND_SOCIAL_IMAGE_HEIGHT="900",
+        )
+        self.assertEqual(values["BRAND_SOCIAL_IMAGE_WIDTH"], 1600)
+        self.assertEqual(values["BRAND_SOCIAL_IMAGE_HEIGHT"], 900)
+
+        for setting_name in (
+            "BRAND_SOCIAL_IMAGE_WIDTH",
+            "BRAND_SOCIAL_IMAGE_HEIGHT",
+        ):
+            for invalid_value in ("0", "-1", "not-an-integer"):
+                with self.subTest(setting=setting_name, value=invalid_value):
+                    self._assert_invalid_configuration(
+                        setting_name,
+                        **{setting_name: invalid_value},
+                    )
+
 
 
 class SharedGlobalizationConfigurationBoundaryTests(SimpleTestCase):
@@ -482,7 +545,8 @@ class SharedProviderConfigurationBoundaryTests(SimpleTestCase):
         self.assertNotIn("PHONE", source.upper())
 
 
-from loomera.branding import assets as brand_assets_module
+from loomera.branding import assets as brand_asset_config_module
+from loomera.branding import colors as brand_color_config_module
 from loomera.branding import config as brand_config_module
 from loomera.branding import context_processors as brand_context_processor_module
 from loomera.branding.assets import (
@@ -492,6 +556,10 @@ from loomera.branding.assets import (
 from loomera.branding.config import (
     DeploymentBrandConfig,
     get_deployment_brand_config,
+)
+from loomera.branding.colors import (
+    DeploymentBrandColorConfig,
+    get_deployment_brand_color_config,
 )
 from loomera.branding.context_processors import deployment_brand
 
@@ -526,47 +594,53 @@ BRAND_ASSET_SETTING_NAMES = (
     "BRAND_SOCIAL_IMAGE_HEIGHT",
 )
 
-BRAND_ASSET_DEFAULTS = {
-    "BRAND_LOGO_GLYPH_STATIC_PATH": "branding/logo/loomera-glyph-mark.png",
-    "BRAND_APP_ICON_STATIC_PATH": "branding/logo/loomera-app-icon.png",
-    "BRAND_LOGO_HEADER_STATIC_PATH": "branding/logo/loomera-logo-header.png",
-    "BRAND_LOGO_PRIMARY_STATIC_PATH": "branding/logo/loomera-logo-primary.png",
-    "BRAND_FAVICON_SVG_STATIC_PATH": "branding/favicon/favicon.svg",
-    "BRAND_FAVICON_ICO_STATIC_PATH": "branding/favicon/favicon.ico",
-    "BRAND_FAVICON_16_STATIC_PATH": "branding/favicon/favicon-16x16.png",
-    "BRAND_FAVICON_32_STATIC_PATH": "branding/favicon/favicon-32x32.png",
-    "BRAND_FAVICON_48_STATIC_PATH": "branding/favicon/favicon-48x48.png",
-    "BRAND_APPLE_TOUCH_ICON_STATIC_PATH": "branding/favicon/apple-touch-icon.png",
-    "BRAND_MASK_ICON_STATIC_PATH": "branding/favicon/safari-pinned-tab.svg",
-    "BRAND_WEBMANIFEST_STATIC_PATH": "branding/favicon/site.webmanifest",
-    "BRAND_SOCIAL_IMAGE_STATIC_PATH": "branding/logo/loomera-logo-square.png",
-    "BRAND_SOCIAL_IMAGE_WIDTH": 1254,
-    "BRAND_SOCIAL_IMAGE_HEIGHT": 1254,
+BRAND_COLOR_SETTING_NAMES = (
+    "BRAND_PRIMARY_COLOR",
+    "BRAND_PRIMARY_HOVER_COLOR",
+    "BRAND_PRIMARY_ACTIVE_COLOR",
+    "BRAND_PRIMARY_SOFT_COLOR",
+    "BRAND_SECONDARY_COLOR",
+    "BRAND_ACCENT_COLOR",
+    "BRAND_BACKGROUND_COLOR",
+    "BRAND_SURFACE_COLOR",
+    "BRAND_TEXT_PRIMARY_COLOR",
+    "BRAND_TEXT_ON_PRIMARY_COLOR",
+    "BRAND_BROWSER_THEME_DARK_COLOR",
+)
+
+BRAND_COLOR_DEFAULTS = {
+    "BRAND_PRIMARY_COLOR": "#735CBE",
+    "BRAND_PRIMARY_HOVER_COLOR": "#886FD6",
+    "BRAND_PRIMARY_ACTIVE_COLOR": "#57526E",
+    "BRAND_PRIMARY_SOFT_COLOR": "#EEE8FA",
+    "BRAND_SECONDARY_COLOR": "#9B80E0",
+    "BRAND_ACCENT_COLOR": "#A7C8A1",
+    "BRAND_BACKGROUND_COLOR": "#FCFBFE",
+    "BRAND_SURFACE_COLOR": "#FFFFFF",
+    "BRAND_TEXT_PRIMARY_COLOR": "#2E2A3C",
+    "BRAND_TEXT_ON_PRIMARY_COLOR": "#FFFFFF",
+    "BRAND_BROWSER_THEME_DARK_COLOR": "#16131F",
 }
 
-BRAND_ASSET_SETTINGS_IMPORT_SCRIPT = r"""
+BRAND_COLOR_SETTINGS_IMPORT_SCRIPT = r"""
 import json
 from loomera.settings import base
 
 names = (
-    "BRAND_LOGO_GLYPH_STATIC_PATH",
-    "BRAND_APP_ICON_STATIC_PATH",
-    "BRAND_LOGO_HEADER_STATIC_PATH",
-    "BRAND_LOGO_PRIMARY_STATIC_PATH",
-    "BRAND_FAVICON_SVG_STATIC_PATH",
-    "BRAND_FAVICON_ICO_STATIC_PATH",
-    "BRAND_FAVICON_16_STATIC_PATH",
-    "BRAND_FAVICON_32_STATIC_PATH",
-    "BRAND_FAVICON_48_STATIC_PATH",
-    "BRAND_APPLE_TOUCH_ICON_STATIC_PATH",
-    "BRAND_MASK_ICON_STATIC_PATH",
-    "BRAND_WEBMANIFEST_STATIC_PATH",
-    "BRAND_SOCIAL_IMAGE_STATIC_PATH",
-    "BRAND_SOCIAL_IMAGE_WIDTH",
-    "BRAND_SOCIAL_IMAGE_HEIGHT",
+    "BRAND_PRIMARY_COLOR",
+    "BRAND_PRIMARY_HOVER_COLOR",
+    "BRAND_PRIMARY_ACTIVE_COLOR",
+    "BRAND_PRIMARY_SOFT_COLOR",
+    "BRAND_SECONDARY_COLOR",
+    "BRAND_ACCENT_COLOR",
+    "BRAND_BACKGROUND_COLOR",
+    "BRAND_SURFACE_COLOR",
+    "BRAND_TEXT_PRIMARY_COLOR",
+    "BRAND_TEXT_ON_PRIMARY_COLOR",
+    "BRAND_BROWSER_THEME_DARK_COLOR",
 )
 print(
-    "LOOMERA_BRAND_ASSETS_JSON="
+    "LOOMERA_BRAND_COLORS_JSON="
     + json.dumps({name: getattr(base, name) for name in names}, sort_keys=True)
 )
 """
@@ -596,7 +670,10 @@ class SharedBrandConfigurationBoundaryTests(SimpleTestCase):
         self.assertEqual(config.public_base_url, "")
         self.assertEqual(config.site_url, "")
         self.assertEqual(config.email_sender_name, "Loomera")
-        self.assertEqual(config.default_from_email, "Loomera <no-reply@loomera.local>")
+        self.assertEqual(
+            config.default_from_email,
+            "Loomera <no-reply@loomera.local>",
+        )
         self.assertEqual(config.support_email, "support@loomera.local")
         self.assertEqual(config.partner_email, "partners@loomera.local")
         self.assertEqual(config.marketing_email, "hello@loomera.local")
@@ -613,7 +690,10 @@ class SharedBrandConfigurationBoundaryTests(SimpleTestCase):
         )
         self.assertEqual(
             brand_config_module.__all__,
-            ("DeploymentBrandConfig", "get_deployment_brand_config"),
+            (
+                "DeploymentBrandConfig",
+                "get_deployment_brand_config",
+            ),
         )
         self.assertEqual(
             {name for name in vars(DeploymentBrandConfig) if not name.startswith("_")},
@@ -633,17 +713,15 @@ class SharedBrandConfigurationBoundaryTests(SimpleTestCase):
         LOOMERA_MARKETING_EMAIL="hello@example.com",
     )
     def test_overridden_brand_settings_are_reflected_without_runtime_inference(self):
-        runtime_values = {
-            "language_code": settings.LANGUAGE_CODE,
-            "time_zone": settings.TIME_ZONE,
-            "default_language": settings.LOOMERA_DEFAULT_LANGUAGE,
-            "default_country": settings.LOOMERA_DEFAULT_COUNTRY,
-            "default_currency": settings.LOOMERA_DEFAULT_CURRENCY,
-            "default_timezone": settings.LOOMERA_DEFAULT_TIMEZONE,
-            "sms_provider": settings.SMS_PROVIDER,
-            "payment_provider": settings.PAYMENT_PROVIDER,
-            "messaging_allowed_providers": tuple(settings.MESSAGING_ALLOWED_PROVIDERS),
-        }
+        language_code = settings.LANGUAGE_CODE
+        time_zone = settings.TIME_ZONE
+        default_language = settings.LOOMERA_DEFAULT_LANGUAGE
+        default_country = settings.LOOMERA_DEFAULT_COUNTRY
+        default_currency = settings.LOOMERA_DEFAULT_CURRENCY
+        default_timezone = settings.LOOMERA_DEFAULT_TIMEZONE
+        sms_provider = settings.SMS_PROVIDER
+        payment_provider = settings.PAYMENT_PROVIDER
+        messaging_allowed_providers = tuple(settings.MESSAGING_ALLOWED_PROVIDERS)
 
         config = get_deployment_brand_config()
 
@@ -653,27 +731,31 @@ class SharedBrandConfigurationBoundaryTests(SimpleTestCase):
         self.assertEqual(config.public_base_url, "https://www.example.com")
         self.assertEqual(config.site_url, "https://app.example.com")
         self.assertEqual(config.email_sender_name, "Acme Mail")
-        self.assertEqual(config.default_from_email, "Acme Mail <no-reply@example.com>")
+        self.assertEqual(
+            config.default_from_email,
+            "Acme Mail <no-reply@example.com>",
+        )
         self.assertEqual(config.support_email, "support@example.com")
         self.assertEqual(config.partner_email, "partners@example.com")
         self.assertEqual(config.marketing_email, "hello@example.com")
 
-        self.assertEqual(settings.LANGUAGE_CODE, runtime_values["language_code"])
-        self.assertEqual(settings.TIME_ZONE, runtime_values["time_zone"])
-        self.assertEqual(settings.LOOMERA_DEFAULT_LANGUAGE, runtime_values["default_language"])
-        self.assertEqual(settings.LOOMERA_DEFAULT_COUNTRY, runtime_values["default_country"])
-        self.assertEqual(settings.LOOMERA_DEFAULT_CURRENCY, runtime_values["default_currency"])
-        self.assertEqual(settings.LOOMERA_DEFAULT_TIMEZONE, runtime_values["default_timezone"])
-        self.assertEqual(settings.SMS_PROVIDER, runtime_values["sms_provider"])
-        self.assertEqual(settings.PAYMENT_PROVIDER, runtime_values["payment_provider"])
+        self.assertEqual(settings.LANGUAGE_CODE, language_code)
+        self.assertEqual(settings.TIME_ZONE, time_zone)
+        self.assertEqual(settings.LOOMERA_DEFAULT_LANGUAGE, default_language)
+        self.assertEqual(settings.LOOMERA_DEFAULT_COUNTRY, default_country)
+        self.assertEqual(settings.LOOMERA_DEFAULT_CURRENCY, default_currency)
+        self.assertEqual(settings.LOOMERA_DEFAULT_TIMEZONE, default_timezone)
+        self.assertEqual(settings.SMS_PROVIDER, sms_provider)
+        self.assertEqual(settings.PAYMENT_PROVIDER, payment_provider)
         self.assertEqual(
             tuple(settings.MESSAGING_ALLOWED_PROVIDERS),
-            runtime_values["messaging_allowed_providers"],
+            messaging_allowed_providers,
         )
 
     def test_accessor_returns_a_fresh_snapshot_per_call(self):
         first = get_deployment_brand_config()
         second = get_deployment_brand_config()
+
         self.assertIsNot(first, second)
         self.assertEqual(first, second)
 
@@ -681,6 +763,7 @@ class SharedBrandConfigurationBoundaryTests(SimpleTestCase):
         config_path = Path(settings.BASE_DIR) / "loomera" / "branding" / "config.py"
         source = config_path.read_text(encoding="utf-8")
         tree = ast.parse(source, filename=str(config_path))
+
         setting_reads = {
             node.attr
             for node in ast.walk(tree)
@@ -688,65 +771,64 @@ class SharedBrandConfigurationBoundaryTests(SimpleTestCase):
             and isinstance(node.value, ast.Name)
             and node.value.id == "_settings"
         }
+
         self.assertEqual(setting_reads, set(BRAND_DEPLOYMENT_SETTING_NAMES))
         self.assertNotIn("os.environ", source)
         self.assertNotIn("import environ", source)
         self.assertNotIn("loomera.settings.base", source)
-        for forbidden in (
-            "LANGUAGE_CODE",
-            "LOOMERA_DEFAULT_LANGUAGE",
-            "LOOMERA_DEFAULT_COUNTRY",
-            "LOOMERA_DEFAULT_CURRENCY",
-            "LOOMERA_DEFAULT_TIMEZONE",
-            "MAP_PROVIDER",
-            "SMS_PROVIDER",
-            "PAYMENT_PROVIDER",
-            "MESSAGING_ALLOWED_PROVIDERS",
-        ):
-            self.assertNotIn(forbidden, source)
+        self.assertNotIn("LANGUAGE_CODE", source)
+        self.assertNotIn("LOOMERA_DEFAULT_LANGUAGE", source)
+        self.assertNotIn("LOOMERA_DEFAULT_COUNTRY", source)
+        self.assertNotIn("LOOMERA_DEFAULT_CURRENCY", source)
+        self.assertNotIn("LOOMERA_DEFAULT_TIMEZONE", source)
+        self.assertNotIn("MAP_PROVIDER", source)
+        self.assertNotIn("SMS_PROVIDER", source)
+        self.assertNotIn("PAYMENT_PROVIDER", source)
+        self.assertNotIn("MESSAGING_ALLOWED_PROVIDERS", source)
 
     def test_brand_boundary_runtime_consumer_is_only_shared_template_context(self):
         project_root = Path(settings.BASE_DIR)
         config_path = project_root / "loomera" / "branding" / "config.py"
         test_path = project_root / "apps" / "main" / "test_production_settings_hygiene.py"
         occurrences: list[str] = []
+
         for root_name in ("apps", "loomera"):
             for path in (project_root / root_name).rglob("*.py"):
                 if path in {config_path, test_path} or path.name.startswith("test_"):
                     continue
                 source = path.read_text(encoding="utf-8")
-                if "DeploymentBrandConfig" in source or "get_deployment_brand_config" in source:
+                if (
+                    "DeploymentBrandConfig" in source
+                    or "get_deployment_brand_config" in source
+                ):
                     occurrences.append(str(path.relative_to(project_root)))
+
         self.assertEqual(occurrences, ["loomera/branding/context_processors.py"])
 
 
-class SharedBrandAssetConfigurationBoundaryTests(SimpleTestCase):
+class SharedBrandColorConfigurationBoundaryTests(SimpleTestCase):
     expected_field_names = (
-        "logo_glyph_path",
-        "app_icon_path",
-        "logo_header_path",
-        "logo_primary_path",
-        "favicon_svg_path",
-        "favicon_ico_path",
-        "favicon_16_path",
-        "favicon_32_path",
-        "favicon_48_path",
-        "apple_touch_icon_path",
-        "mask_icon_path",
-        "webmanifest_path",
-        "social_image_path",
-        "social_image_width",
-        "social_image_height",
+        "primary_color",
+        "primary_hover_color",
+        "primary_active_color",
+        "primary_soft_color",
+        "secondary_color",
+        "accent_color",
+        "background_color",
+        "surface_color",
+        "text_primary_color",
+        "text_on_primary_color",
+        "browser_theme_dark_color",
     )
 
-    def _import_brand_asset_settings(self, **overrides: str) -> subprocess.CompletedProcess[str]:
-        env = os.environ.copy()
-        for setting_name in BRAND_ASSET_SETTING_NAMES:
-            env.pop(setting_name, None)
-        env.update(
+    def _import_brand_color_settings(self, **overrides: str) -> subprocess.CompletedProcess[str]:
+        environment = os.environ.copy()
+        for setting_name in BRAND_COLOR_SETTING_NAMES:
+            environment.pop(setting_name, None)
+        environment.update(
             {
-                "SECRET_KEY": "test-only-brand-asset-settings",
-                "DATABASE_URL": "sqlite:///brand-asset-settings.sqlite3",
+                "SECRET_KEY": "test-only-brand-color-settings",
+                "DATABASE_URL": "sqlite:///brand-color-settings.sqlite3",
                 "DEBUG": "False",
                 "ALLOWED_HOSTS": "localhost,127.0.0.1",
                 "CSRF_TRUSTED_ORIGINS": "http://localhost,http://127.0.0.1",
@@ -756,84 +838,101 @@ class SharedBrandAssetConfigurationBoundaryTests(SimpleTestCase):
             }
         )
         return subprocess.run(
-            [sys.executable, "-c", BRAND_ASSET_SETTINGS_IMPORT_SCRIPT],
+            [sys.executable, "-c", BRAND_COLOR_SETTINGS_IMPORT_SCRIPT],
             cwd=settings.BASE_DIR,
-            env=env,
+            env=environment,
             capture_output=True,
             text=True,
             check=False,
         )
 
-    def _loaded_asset_values(self, **overrides: str) -> dict[str, object]:
-        result = self._import_brand_asset_settings(**overrides)
+    def _loaded_color_values(self, **overrides: str) -> dict[str, str]:
+        result = self._import_brand_color_settings(**overrides)
         self.assertEqual(
             result.returncode,
             0,
             msg=f"stdout:\n{result.stdout}\nstderr:\n{result.stderr}",
         )
         for line in result.stdout.splitlines():
-            if line.startswith("LOOMERA_BRAND_ASSETS_JSON="):
-                return json.loads(line.removeprefix("LOOMERA_BRAND_ASSETS_JSON="))
-        self.fail(f"Brand asset payload missing from subprocess output: {result.stdout}")
+            if line.startswith("LOOMERA_BRAND_COLORS_JSON="):
+                return json.loads(line.removeprefix("LOOMERA_BRAND_COLORS_JSON="))
+        self.fail(f"Brand color payload missing from subprocess output: {result.stdout}")
 
-    def _assert_invalid_asset_setting(self, setting_name: str, value: str) -> None:
-        result = self._import_brand_asset_settings(**{setting_name: value})
+    def _assert_invalid_color(self, setting_name: str, value: str) -> None:
+        result = self._import_brand_color_settings(**{setting_name: value})
         self.assertNotEqual(result.returncode, 0)
         self.assertIn("ImproperlyConfigured", result.stderr)
         self.assertIn(setting_name, result.stderr)
 
-    def test_exact_fifteen_setting_defaults_and_snapshot_are_loomera_compatible(self):
-        self.assertEqual(self._loaded_asset_values(), BRAND_ASSET_DEFAULTS)
-        config = get_deployment_brand_asset_config()
-        self.assertIsInstance(config, DeploymentBrandAssetConfig)
+    @staticmethod
+    def _template_context() -> dict[str, object]:
+        return {
+            "deployment_brand": get_deployment_brand_config(),
+            "deployment_brand_assets": get_deployment_brand_asset_config(),
+            "deployment_brand_colors": get_deployment_brand_color_config(),
+        }
+
+    def test_exact_eleven_compatibility_defaults_and_snapshot(self):
+        self.assertEqual(self._loaded_color_values(), BRAND_COLOR_DEFAULTS)
+        config = get_deployment_brand_color_config()
+        self.assertIsInstance(config, DeploymentBrandColorConfig)
         self.assertEqual(
             tuple(getattr(config, field_name) for field_name in self.expected_field_names),
-            (
-                "branding/logo/loomera-glyph-mark.png",
-                "branding/logo/loomera-app-icon.png",
-                "branding/logo/loomera-logo-header.png",
-                "branding/logo/loomera-logo-primary.png",
-                "branding/favicon/favicon.svg",
-                "branding/favicon/favicon.ico",
-                "branding/favicon/favicon-16x16.png",
-                "branding/favicon/favicon-32x32.png",
-                "branding/favicon/favicon-48x48.png",
-                "branding/favicon/apple-touch-icon.png",
-                "branding/favicon/safari-pinned-tab.svg",
-                "branding/favicon/site.webmanifest",
-                "branding/logo/loomera-logo-square.png",
-                1254,
-                1254,
-            ),
+            tuple(BRAND_COLOR_DEFAULTS.values()),
         )
 
-    def test_snapshot_is_frozen_and_public_api_is_exact(self):
-        config = get_deployment_brand_asset_config()
-        with self.assertRaises(FrozenInstanceError):
-            config.logo_glyph_path = "branding/other.png"
+    def test_settings_trim_normalize_and_reject_non_hex_or_injection_values(self):
         self.assertEqual(
-            tuple(field.name for field in fields(DeploymentBrandAssetConfig)),
+            self._loaded_color_values(BRAND_PRIMARY_COLOR="  #a1b2c3  ")[
+                "BRAND_PRIMARY_COLOR"
+            ],
+            "#A1B2C3",
+        )
+        invalid_values = (
+            "",
+            "   ",
+            "#123",
+            "#12345678",
+            "rgb(1, 2, 3)",
+            "hsl(1 2% 3%)",
+            "red",
+            "var(--brand-primary)",
+            "url(https://example.com/x)",
+            "https://example.com/#123456",
+            "123456",
+            "#12345G",
+            "#123456;body{display:none}",
+            "#123456\n",
+            "\n#123456",
+        )
+        for value in invalid_values:
+            with self.subTest(value=value):
+                self._assert_invalid_color("BRAND_PRIMARY_COLOR", value)
+
+    def test_snapshot_is_frozen_slotted_and_public_module_api_is_exact(self):
+        config = get_deployment_brand_color_config()
+        with self.assertRaises(FrozenInstanceError):
+            config.primary_color = "#000000"
+        self.assertFalse(hasattr(config, "__dict__"))
+        self.assertEqual(
+            tuple(field.name for field in fields(DeploymentBrandColorConfig)),
             self.expected_field_names,
         )
         self.assertEqual(
-            brand_assets_module.__all__,
-            ("DeploymentBrandAssetConfig", "get_deployment_brand_asset_config"),
-        )
-        self.assertEqual(
-            {name for name in vars(DeploymentBrandAssetConfig) if not name.startswith("_")},
-            set(self.expected_field_names),
+            brand_color_config_module.__all__,
+            ("DeploymentBrandColorConfig", "get_deployment_brand_color_config"),
         )
 
     def test_accessor_returns_fresh_uncached_snapshots(self):
-        first = get_deployment_brand_asset_config()
-        second = get_deployment_brand_asset_config()
+        first = get_deployment_brand_color_config()
+        second = get_deployment_brand_color_config()
         self.assertIsNot(first, second)
         self.assertEqual(first, second)
 
-    def test_accessor_reads_exactly_the_fifteen_approved_django_settings(self):
-        assets_path = Path(settings.BASE_DIR) / "loomera" / "branding" / "assets.py"
-        source = assets_path.read_text(encoding="utf-8")
-        tree = ast.parse(source, filename=str(assets_path))
+    def test_accessor_reads_exactly_eleven_resolved_settings_without_other_context(self):
+        colors_path = Path(settings.BASE_DIR) / "loomera" / "branding" / "colors.py"
+        source = colors_path.read_text(encoding="utf-8")
+        tree = ast.parse(source, filename=str(colors_path))
         setting_reads = {
             node.attr
             for node in ast.walk(tree)
@@ -841,7 +940,7 @@ class SharedBrandAssetConfigurationBoundaryTests(SimpleTestCase):
             and isinstance(node.value, ast.Name)
             and node.value.id == "_settings"
         }
-        self.assertEqual(setting_reads, set(BRAND_ASSET_SETTING_NAMES))
+        self.assertEqual(setting_reads, set(BRAND_COLOR_SETTING_NAMES))
         for forbidden in (
             "os.environ",
             "import environ",
@@ -853,84 +952,263 @@ class SharedBrandAssetConfigurationBoundaryTests(SimpleTestCase):
             "business",
             "cache",
             "LANGUAGE_CODE",
+            "LOOMERA_DEFAULT_LANGUAGE",
             "LOOMERA_DEFAULT_COUNTRY",
+            "LOOMERA_DEFAULT_CURRENCY",
+            "LOOMERA_DEFAULT_TIMEZONE",
+            "LOOMERA_DEFAULT_CALENDAR",
             "MAP_PROVIDER",
             "SMS_PROVIDER",
             "PAYMENT_PROVIDER",
+            "MESSAGING_ALLOWED_PROVIDERS",
         ):
             self.assertNotIn(forbidden, source)
-        for default in BRAND_ASSET_DEFAULTS.values():
-            if isinstance(default, str):
-                self.assertNotIn(default, source)
+        for default in set(BRAND_COLOR_DEFAULTS.values()):
+            self.assertNotIn(default, source)
 
-    def test_static_path_contract_accepts_trimmed_relative_path(self):
-        values = self._loaded_asset_values(
-            BRAND_LOGO_GLYPH_STATIC_PATH="  buyer/brand/glyph.svg  "
+    def test_rgb_helpers_are_deterministic_css_ready_triplets(self):
+        config = get_deployment_brand_color_config()
+        self.assertEqual(
+            (
+                config.primary_rgb,
+                config.primary_hover_rgb,
+                config.primary_active_rgb,
+                config.primary_soft_rgb,
+                config.secondary_rgb,
+                config.accent_rgb,
+                config.background_rgb,
+                config.surface_rgb,
+                config.text_primary_rgb,
+                config.text_on_primary_rgb,
+            ),
+            (
+                "115 92 190",
+                "136 111 214",
+                "87 82 110",
+                "238 232 250",
+                "155 128 224",
+                "167 200 161",
+                "252 251 254",
+                "255 255 255",
+                "46 42 60",
+                "255 255 255",
+            ),
         )
-        self.assertEqual(values["BRAND_LOGO_GLYPH_STATIC_PATH"], "buyer/brand/glyph.svg")
 
-    def test_static_path_contract_rejects_invalid_explicit_values(self):
-        invalid_values = (
-            "",
-            "   ",
-            "/branding/logo.png",
-            "https://cdn.example.com/logo.png",
-            "file://branding/logo.png",
-            "C:/branding/logo.png",
-            r"branding\logo.png",
-            "branding/logo.png?version=1",
-            "branding/logo.png#fragment",
-            "./branding/logo.png",
-            "branding/../logo.png",
-            "branding/./logo.png",
+    def test_default_metadata_and_runtime_bridge_preserve_core_loomera_palette(self):
+        context = self._template_context()
+        head = render_to_string("partials/brand/head_assets.html", context)
+        page = render_to_string(
+            "base.html",
+            {**context, "hide_navbar": True, "hide_footer": True},
         )
-        for value in invalid_values:
-            with self.subTest(value=value):
-                self._assert_invalid_asset_setting("BRAND_LOGO_GLYPH_STATIC_PATH", value)
+        self.assertIn(
+            'name="theme-color" media="(prefers-color-scheme: light)" content="#FCFBFE"',
+            head,
+        )
+        self.assertIn(
+            'name="theme-color" media="(prefers-color-scheme: dark)" content="#16131F"',
+            head,
+        )
+        self.assertIn('name="msapplication-TileColor" content="#735CBE"', head)
+        self.assertIn('color="#735CBE"', head)
+        expected_declarations = (
+            "--lm-primary: #735CBE;",
+            "--lm-primary-hover: #886FD6;",
+            "--lm-primary-active: #57526E;",
+            "--lm-primary-soft: #EEE8FA;",
+            "--lm-secondary: #9B80E0;",
+            "--lm-accent: #A7C8A1;",
+            "--lm-bg: #FCFBFE;",
+            "--lm-app-surface: #FCFBFE;",
+            "--lm-dashboard-surface: #FCFBFE;",
+            "--lm-surface: #FFFFFF;",
+            "--lm-card-surface: #FFFFFF;",
+            "--lm-surface-raised: #FFFFFF;",
+            "--lm-surface-elevated: #FFFFFF;",
+            "--lm-sheet-surface: #FFFFFF;",
+            "--lm-dashboard-panel: #FFFFFF;",
+            "--lm-text-primary: #2E2A3C;",
+            "--lm-text-on-primary: #FFFFFF;",
+            "--lm-primary-rgb: 115 92 190;",
+            "--lm-primary-hover-rgb: 136 111 214;",
+            "--lm-primary-active-rgb: 87 82 110;",
+            "--lm-primary-soft-rgb: 238 232 250;",
+            "--lm-secondary-rgb: 155 128 224;",
+            "--lm-accent-rgb: 167 200 161;",
+            "--lm-bg-rgb: 252 251 254;",
+            "--lm-surface-rgb: 255 255 255;",
+            "--lm-text-primary-rgb: 46 42 60;",
+            "--lm-text-on-primary-rgb: 255 255 255;",
+            "--lm-border-selected: #735CBE;",
+            "--lm-info: #735CBE;",
+            "--lm-info-soft: #EEE8FA;",
+            "--lm-selection: #EEE8FA;",
+            "--lm-selected: #EEE8FA;",
+        )
+        self.assertIn('id="deployment-brand-color-tokens"', page)
+        for declaration in expected_declarations:
+            self.assertIn(declaration, page)
 
-    def test_social_image_dimensions_must_be_positive_integers(self):
-        values = self._loaded_asset_values(
-            BRAND_SOCIAL_IMAGE_WIDTH="1600",
-            BRAND_SOCIAL_IMAGE_HEIGHT="900",
+        base_source = (Path(settings.BASE_DIR) / "templates" / "base.html").read_text(
+            encoding="utf-8"
         )
-        self.assertEqual(values["BRAND_SOCIAL_IMAGE_WIDTH"], 1600)
-        self.assertEqual(values["BRAND_SOCIAL_IMAGE_HEIGHT"], 900)
-        for setting_name in ("BRAND_SOCIAL_IMAGE_WIDTH", "BRAND_SOCIAL_IMAGE_HEIGHT"):
-            for value in ("0", "-1", "1.5", "not-a-number"):
-                with self.subTest(setting=setting_name, value=value):
-                    self._assert_invalid_asset_setting(setting_name, value)
+        self.assertNotIn("|safe", base_source)
+        self.assertNotIn("browser_theme_dark_color", base_source)
+        self.assertIn('html:not([data-theme="dark"])', base_source)
+
+    @override_settings(
+        BRAND_PRIMARY_COLOR="#112233",
+        BRAND_PRIMARY_HOVER_COLOR="#223344",
+        BRAND_PRIMARY_ACTIVE_COLOR="#334455",
+        BRAND_PRIMARY_SOFT_COLOR="#445566",
+        BRAND_SECONDARY_COLOR="#556677",
+        BRAND_ACCENT_COLOR="#667788",
+        BRAND_BACKGROUND_COLOR="#778899",
+        BRAND_SURFACE_COLOR="#8899AA",
+        BRAND_TEXT_PRIMARY_COLOR="#99AABB",
+        BRAND_TEXT_ON_PRIMARY_COLOR="#AABBCC",
+        BRAND_BROWSER_THEME_DARK_COLOR="#0B0C0D",
+    )
+    def test_alternate_palette_wires_metadata_hex_rgb_and_preserves_other_boundaries(self):
+        runtime_values = {
+            "language_code": settings.LANGUAGE_CODE,
+            "default_language": settings.LOOMERA_DEFAULT_LANGUAGE,
+            "default_country": settings.LOOMERA_DEFAULT_COUNTRY,
+            "default_currency": settings.LOOMERA_DEFAULT_CURRENCY,
+            "default_timezone": settings.LOOMERA_DEFAULT_TIMEZONE,
+            "default_calendar": settings.LOOMERA_DEFAULT_CALENDAR,
+            "sms_provider": settings.SMS_PROVIDER,
+            "payment_provider": settings.PAYMENT_PROVIDER,
+            "messaging_allowed_providers": tuple(settings.MESSAGING_ALLOWED_PROVIDERS),
+            "auth_user_model": settings.AUTH_USER_MODEL,
+        }
+        identity = get_deployment_brand_config()
+        assets = get_deployment_brand_asset_config()
+        context = self._template_context()
+        head = render_to_string("partials/brand/head_assets.html", context)
+        page = render_to_string(
+            "base.html",
+            {**context, "hide_navbar": True, "hide_footer": True},
+        )
+
+        self.assertIn('content="#778899"', head)
+        self.assertIn('content="#0B0C0D"', head)
+        self.assertIn('name="msapplication-TileColor" content="#112233"', head)
+        self.assertIn('color="#112233"', head)
+        expected = (
+            "--lm-primary: #112233;",
+            "--lm-primary-hover: #223344;",
+            "--lm-primary-active: #334455;",
+            "--lm-primary-soft: #445566;",
+            "--lm-secondary: #556677;",
+            "--lm-accent: #667788;",
+            "--lm-bg: #778899;",
+            "--lm-surface: #8899AA;",
+            "--lm-text-primary: #99AABB;",
+            "--lm-text-on-primary: #AABBCC;",
+            "--lm-primary-rgb: 17 34 51;",
+            "--lm-primary-hover-rgb: 34 51 68;",
+            "--lm-primary-active-rgb: 51 68 85;",
+            "--lm-primary-soft-rgb: 68 85 102;",
+            "--lm-secondary-rgb: 85 102 119;",
+            "--lm-accent-rgb: 102 119 136;",
+            "--lm-bg-rgb: 119 136 153;",
+            "--lm-surface-rgb: 136 153 170;",
+            "--lm-text-primary-rgb: 153 170 187;",
+            "--lm-text-on-primary-rgb: 170 187 204;",
+            "--lm-border-selected: #112233;",
+            "--lm-info: #112233;",
+            "--lm-info-soft: #445566;",
+            "--lm-selection: #445566;",
+            "--lm-selected: #445566;",
+        )
+        for declaration in expected:
+            self.assertIn(declaration, page)
+
+        self.assertEqual(get_deployment_brand_config(), identity)
+        self.assertEqual(get_deployment_brand_asset_config(), assets)
+        self.assertEqual(settings.LANGUAGE_CODE, runtime_values["language_code"])
+        self.assertEqual(settings.LOOMERA_DEFAULT_LANGUAGE, runtime_values["default_language"])
+        self.assertEqual(settings.LOOMERA_DEFAULT_COUNTRY, runtime_values["default_country"])
+        self.assertEqual(settings.LOOMERA_DEFAULT_CURRENCY, runtime_values["default_currency"])
+        self.assertEqual(settings.LOOMERA_DEFAULT_TIMEZONE, runtime_values["default_timezone"])
+        self.assertEqual(settings.LOOMERA_DEFAULT_CALENDAR, runtime_values["default_calendar"])
+        self.assertEqual(settings.SMS_PROVIDER, runtime_values["sms_provider"])
+        self.assertEqual(settings.PAYMENT_PROVIDER, runtime_values["payment_provider"])
+        self.assertEqual(
+            tuple(settings.MESSAGING_ALLOWED_PROVIDERS),
+            runtime_values["messaging_allowed_providers"],
+        )
+        self.assertEqual(settings.AUTH_USER_MODEL, runtime_values["auth_user_model"])
+
+    def test_color_boundary_runtime_consumer_is_only_shared_template_context(self):
+        project_root = Path(settings.BASE_DIR)
+        colors_path = project_root / "loomera" / "branding" / "colors.py"
+        test_path = project_root / "apps" / "main" / "test_production_settings_hygiene.py"
+        occurrences: list[str] = []
+        for root_name in ("apps", "loomera"):
+            for path in (project_root / root_name).rglob("*.py"):
+                if path in {colors_path, test_path} or path.name.startswith("test_"):
+                    continue
+                source = path.read_text(encoding="utf-8")
+                if (
+                    "DeploymentBrandColorConfig" in source
+                    or "get_deployment_brand_color_config" in source
+                ):
+                    occurrences.append(str(path.relative_to(project_root)))
+        self.assertEqual(occurrences, ["loomera/branding/context_processors.py"])
 
 
 class SharedBrandTemplateContextTests(SimpleTestCase):
     context_processor_path = "loomera.branding.context_processors.deployment_brand"
 
-    @staticmethod
-    def _context() -> dict[str, object]:
-        return {
-            "deployment_brand": get_deployment_brand_config(),
-            "deployment_brand_assets": get_deployment_brand_asset_config(),
-        }
-
-    def test_context_processor_returns_fresh_identity_and_asset_snapshots(self):
+    def test_context_processor_returns_all_three_fresh_branding_snapshots(self):
         first = deployment_brand(object())
         second = deployment_brand(object())
-        self.assertEqual(set(first), {"deployment_brand", "deployment_brand_assets"})
+
+        self.assertEqual(
+            set(first),
+            {"deployment_brand", "deployment_brand_assets", "deployment_brand_colors"},
+        )
         self.assertIsInstance(first["deployment_brand"], DeploymentBrandConfig)
-        self.assertIsInstance(first["deployment_brand_assets"], DeploymentBrandAssetConfig)
+        self.assertIsInstance(
+            first["deployment_brand_assets"],
+            DeploymentBrandAssetConfig,
+        )
+        self.assertIsInstance(
+            first["deployment_brand_colors"],
+            DeploymentBrandColorConfig,
+        )
         self.assertEqual(first["deployment_brand"].display_name, "Loomera")
-        self.assertEqual(first["deployment_brand_assets"].social_image_width, 1254)
+        self.assertEqual(first["deployment_brand_colors"].primary_color, "#735CBE")
         self.assertIsNot(first["deployment_brand"], second["deployment_brand"])
-        self.assertIsNot(first["deployment_brand_assets"], second["deployment_brand_assets"])
+        self.assertIsNot(
+            first["deployment_brand_assets"],
+            second["deployment_brand_assets"],
+        )
+        self.assertIsNot(
+            first["deployment_brand_colors"],
+            second["deployment_brand_colors"],
+        )
 
     def test_context_processor_is_registered_once_and_has_no_direct_context_reads(self):
         processors = settings.TEMPLATES[0]["OPTIONS"]["context_processors"]
         self.assertEqual(processors.count(self.context_processor_path), 1)
-        processor_path = Path(settings.BASE_DIR) / "loomera" / "branding" / "context_processors.py"
+
+        processor_path = (
+            Path(settings.BASE_DIR) / "loomera" / "branding" / "context_processors.py"
+        )
         source = processor_path.read_text(encoding="utf-8")
         tree = ast.parse(source, filename=str(processor_path))
+
         self.assertEqual(brand_context_processor_module.__all__, ("deployment_brand",))
-        for forbidden in ("django.conf", "os.environ", "import environ", ".objects", "apps.accounts", "booking"):
-            self.assertNotIn(forbidden, source.lower() if forbidden == "booking" else source)
+        self.assertNotIn("django.conf", source)
+        self.assertNotIn("os.environ", source)
+        self.assertNotIn("import environ", source)
+        self.assertNotIn(".objects", source)
+        self.assertNotIn("apps.accounts", source)
+        self.assertNotIn("booking", source.lower())
         self.assertEqual(
             [
                 node
@@ -955,97 +1233,303 @@ class SharedBrandTemplateContextTests(SimpleTestCase):
             "messaging_allowed_providers": tuple(settings.MESSAGING_ALLOWED_PROVIDERS),
             "auth_user_model": settings.AUTH_USER_MODEL,
         }
-        context = self._context()
-        context.update({"hide_navbar": True, "hide_footer": True})
-        rendered = render_to_string("base.html", context)
-        for expected in (
-            "<title>Aurora</title>",
-            '<meta property="og:title" content="Aurora">',
-            '<meta name="twitter:title" content="Aurora">',
-            '<meta name="application-name" content="Aurora">',
-            '<meta name="apple-mobile-web-app-title" content="Aurora">',
-            '<meta property="og:site_name" content="Aurora">',
-        ):
-            self.assertIn(expected, rendered)
+        rendered = render_to_string(
+            "base.html",
+            {
+                "deployment_brand": get_deployment_brand_config(),
+                "deployment_brand_assets": get_deployment_brand_asset_config(),
+                "deployment_brand_colors": get_deployment_brand_color_config(),
+                "hide_navbar": True,
+                "hide_footer": True,
+            },
+        )
+
+        self.assertIn("<title>Aurora</title>", rendered)
+        self.assertIn('<meta property="og:title" content="Aurora">', rendered)
+        self.assertIn('<meta name="twitter:title" content="Aurora">', rendered)
+        self.assertIn('<meta name="application-name" content="Aurora">', rendered)
+        self.assertIn('<meta name="apple-mobile-web-app-title" content="Aurora">', rendered)
+        self.assertIn('<meta property="og:site_name" content="Aurora">', rendered)
+
         self.assertEqual(settings.LANGUAGE_CODE, runtime_values["language_code"])
-        self.assertEqual(settings.LOOMERA_DEFAULT_LANGUAGE, runtime_values["default_language"])
+        self.assertEqual(
+            settings.LOOMERA_DEFAULT_LANGUAGE, runtime_values["default_language"]
+        )
         self.assertEqual(settings.LOOMERA_DEFAULT_COUNTRY, runtime_values["default_country"])
-        self.assertEqual(settings.LOOMERA_DEFAULT_CURRENCY, runtime_values["default_currency"])
-        self.assertEqual(settings.LOOMERA_DEFAULT_TIMEZONE, runtime_values["default_timezone"])
+        self.assertEqual(
+            settings.LOOMERA_DEFAULT_CURRENCY, runtime_values["default_currency"]
+        )
+        self.assertEqual(
+            settings.LOOMERA_DEFAULT_TIMEZONE, runtime_values["default_timezone"]
+        )
         self.assertEqual(settings.SMS_PROVIDER, runtime_values["sms_provider"])
         self.assertEqual(settings.PAYMENT_PROVIDER, runtime_values["payment_provider"])
-        self.assertEqual(tuple(settings.MESSAGING_ALLOWED_PROVIDERS), runtime_values["messaging_allowed_providers"])
+        self.assertEqual(
+            tuple(settings.MESSAGING_ALLOWED_PROVIDERS),
+            runtime_values["messaging_allowed_providers"],
+        )
         self.assertEqual(settings.AUTH_USER_MODEL, runtime_values["auth_user_model"])
 
-    def test_default_head_asset_output_matches_existing_loomera_urls_dimensions_and_metadata(self):
-        rendered = render_to_string("partials/brand/head_assets.html", self._context())
-        for path in (
-            "branding/favicon/favicon.svg",
-            "branding/favicon/favicon.ico",
-            "branding/favicon/favicon-16x16.png",
-            "branding/favicon/favicon-32x32.png",
-            "branding/favicon/favicon-48x48.png",
-            "branding/favicon/apple-touch-icon.png",
-            "branding/favicon/safari-pinned-tab.svg",
-            "branding/favicon/site.webmanifest",
-            "branding/logo/loomera-logo-square.png",
+    def test_compatibility_brand_locale_descriptions_assets_and_colors_remain_unchanged(self):
+        rendered = render_to_string(
+            "base.html",
+            {
+                "deployment_brand": get_deployment_brand_config(),
+                "deployment_brand_assets": get_deployment_brand_asset_config(),
+                "deployment_brand_colors": get_deployment_brand_color_config(),
+                "hide_navbar": True,
+                "hide_footer": True,
+            },
+        )
+        self.assertIn("<title>Loomera</title>", rendered)
+        self.assertIn('<html lang="fa" dir="rtl">', rendered)
+        self.assertIn('<meta property="og:locale" content="fa_IR">', rendered)
+
+        project_root = Path(settings.BASE_DIR)
+        base_source = (project_root / "templates" / "base.html").read_text(
+            encoding="utf-8"
+        )
+        head_source = (
+            project_root / "templates" / "partials" / "brand" / "head_assets.html"
+        ).read_text(encoding="utf-8")
+        settings_source = (
+            project_root / "loomera" / "settings" / "base.py"
+        ).read_text(encoding="utf-8")
+
+        self.assertIn(
+            "Loomera، پلتفرم انتخاب و رزرو خدمات زیبایی، aesthetic treatments، ماساژ و wellness با تجربه‌ای آرام، دقیق و قابل‌اعتماد.",
+            base_source,
+        )
+        self.assertEqual(
+            base_source.count("انتخاب روشن‌تر و رزرو آرام‌تر خدمات زیبایی و تندرستی."),
+            2,
+        )
+        for value in ("#FCFBFE", "#16131F", "#735CBE"):
+            self.assertIn(value, rendered)
+        for asset_url in (
+            "/static/branding/favicon/favicon.svg",
+            "/static/branding/favicon/favicon.ico",
+            "/static/branding/favicon/favicon-16x16.png",
+            "/static/branding/favicon/favicon-32x32.png",
+            "/static/branding/favicon/favicon-48x48.png",
+            "/static/branding/favicon/apple-touch-icon.png",
+            "/static/branding/favicon/safari-pinned-tab.svg",
+            "/static/branding/favicon/site.webmanifest",
+            "/static/branding/logo/loomera-logo-square.png",
         ):
-            self.assertIn(f"/static/{path}", rendered)
+            self.assertIn(asset_url, rendered)
         self.assertIn('<meta property="og:image:width" content="1254">', rendered)
         self.assertIn('<meta property="og:image:height" content="1254">', rendered)
-        self.assertIn('<meta property="og:locale" content="fa_IR">', rendered)
-        self.assertIn('<meta property="og:type" content="website">', rendered)
-        self.assertIn('<meta name="twitter:card" content="summary_large_image">', rendered)
-        self.assertIn('<meta name="color-scheme" content="light dark">', rendered)
-        for color in ("#FCFBFE", "#16131F", "#735CBE"):
-            self.assertIn(color, rendered)
+        for forbidden_setting in (
+            "BRAND_COLOR",
+            "BRAND_THEME_COLOR",
+            "BRAND_MASK_COLOR",
+        ):
+            self.assertNotIn(forbidden_setting, settings_source)
 
-    def test_logo_variants_use_the_correct_asset_field_and_alt_contract(self):
-        variants = {
-            "glyph": "branding/logo/loomera-glyph-mark.png",
-            "app-icon": "branding/logo/loomera-app-icon.png",
-            "header": "branding/logo/loomera-logo-header.png",
-            "compact": "branding/logo/loomera-logo-header.png",
-            "full": "branding/logo/loomera-logo-primary.png",
+
+class SharedBrandAssetConfigurationTests(SimpleTestCase):
+    expected_field_names = (
+        "logo_glyph_path",
+        "app_icon_path",
+        "logo_header_path",
+        "logo_primary_path",
+        "favicon_svg_path",
+        "favicon_ico_path",
+        "favicon_16_path",
+        "favicon_32_path",
+        "favicon_48_path",
+        "apple_touch_icon_path",
+        "mask_icon_path",
+        "webmanifest_path",
+        "social_image_path",
+        "social_image_width",
+        "social_image_height",
+    )
+
+    def _template_context(self) -> dict[str, object]:
+        return {
+            "deployment_brand": get_deployment_brand_config(),
+            "deployment_brand_assets": get_deployment_brand_asset_config(),
+            "deployment_brand_colors": get_deployment_brand_color_config(),
         }
-        for variant, path in variants.items():
+
+    def test_default_snapshot_preserves_exact_loomera_asset_compatibility_values(self):
+        config = get_deployment_brand_asset_config()
+
+        self.assertIsInstance(config, DeploymentBrandAssetConfig)
+        self.assertEqual(config.logo_glyph_path, "branding/logo/loomera-glyph-mark.png")
+        self.assertEqual(config.app_icon_path, "branding/logo/loomera-app-icon.png")
+        self.assertEqual(config.logo_header_path, "branding/logo/loomera-logo-header.png")
+        self.assertEqual(config.logo_primary_path, "branding/logo/loomera-logo-primary.png")
+        self.assertEqual(config.favicon_svg_path, "branding/favicon/favicon.svg")
+        self.assertEqual(config.favicon_ico_path, "branding/favicon/favicon.ico")
+        self.assertEqual(config.favicon_16_path, "branding/favicon/favicon-16x16.png")
+        self.assertEqual(config.favicon_32_path, "branding/favicon/favicon-32x32.png")
+        self.assertEqual(config.favicon_48_path, "branding/favicon/favicon-48x48.png")
+        self.assertEqual(
+            config.apple_touch_icon_path,
+            "branding/favicon/apple-touch-icon.png",
+        )
+        self.assertEqual(config.mask_icon_path, "branding/favicon/safari-pinned-tab.svg")
+        self.assertEqual(config.webmanifest_path, "branding/favicon/site.webmanifest")
+        self.assertEqual(config.social_image_path, "branding/logo/loomera-logo-square.png")
+        self.assertEqual(config.social_image_width, 1254)
+        self.assertEqual(config.social_image_height, 1254)
+
+    def test_all_fifteen_settings_are_defined_once_with_the_expected_validators(self):
+        settings_path = Path(settings.BASE_DIR) / "loomera" / "settings" / "base.py"
+        tree = ast.parse(
+            settings_path.read_text(encoding="utf-8"),
+            filename=str(settings_path),
+        )
+        expected_path_settings = set(BRAND_ASSET_SETTING_NAMES[:-2])
+        expected_dimension_settings = set(BRAND_ASSET_SETTING_NAMES[-2:])
+        assignment_calls: dict[str, str] = {}
+
+        for node in tree.body:
+            if not isinstance(node, ast.Assign) or len(node.targets) != 1:
+                continue
+            target = node.targets[0]
+            if not isinstance(target, ast.Name) or target.id not in BRAND_ASSET_SETTING_NAMES:
+                continue
+            self.assertIsInstance(node.value, ast.Call)
+            self.assertIsInstance(node.value.func, ast.Name)
+            self.assertNotIn(target.id, assignment_calls)
+            assignment_calls[target.id] = node.value.func.id
+
+        self.assertEqual(set(assignment_calls), set(BRAND_ASSET_SETTING_NAMES))
+        for setting_name in expected_path_settings:
+            self.assertEqual(assignment_calls[setting_name], "_read_brand_static_path")
+        for setting_name in expected_dimension_settings:
+            self.assertEqual(
+                assignment_calls[setting_name],
+                "_read_positive_brand_dimension",
+            )
+
+    def test_snapshot_is_frozen_and_exposes_exact_public_contract(self):
+        config = get_deployment_brand_asset_config()
+
+        with self.assertRaises(FrozenInstanceError):
+            config.logo_glyph_path = "other/logo.svg"
+
+        self.assertEqual(
+            tuple(field.name for field in fields(DeploymentBrandAssetConfig)),
+            self.expected_field_names,
+        )
+        self.assertEqual(
+            brand_asset_config_module.__all__,
+            (
+                "DeploymentBrandAssetConfig",
+                "get_deployment_brand_asset_config",
+            ),
+        )
+
+    def test_accessor_returns_a_fresh_snapshot_per_call(self):
+        first = get_deployment_brand_asset_config()
+        second = get_deployment_brand_asset_config()
+
+        self.assertIsNot(first, second)
+        self.assertEqual(first, second)
+
+    def test_accessor_reads_exactly_the_fifteen_resolved_asset_settings(self):
+        assets_path = Path(settings.BASE_DIR) / "loomera" / "branding" / "assets.py"
+        source = assets_path.read_text(encoding="utf-8")
+        tree = ast.parse(source, filename=str(assets_path))
+
+        setting_reads = {
+            node.attr
+            for node in ast.walk(tree)
+            if isinstance(node, ast.Attribute)
+            and isinstance(node.value, ast.Name)
+            and node.value.id == "_settings"
+        }
+
+        self.assertEqual(setting_reads, set(BRAND_ASSET_SETTING_NAMES))
+        self.assertNotIn("os.environ", source)
+        self.assertNotIn("import environ", source)
+        self.assertNotIn("loomera.settings.base", source)
+        self.assertNotIn("request", source.lower())
+        self.assertNotIn(".objects", source)
+        self.assertNotIn("apps.accounts", source)
+        self.assertNotIn("salon", source.lower())
+        self.assertNotIn("business", source.lower())
+
+    def test_asset_boundary_runtime_consumer_is_only_shared_template_context(self):
+        project_root = Path(settings.BASE_DIR)
+        assets_path = project_root / "loomera" / "branding" / "assets.py"
+        test_path = project_root / "apps" / "main" / "test_production_settings_hygiene.py"
+        occurrences: list[str] = []
+
+        for root_name in ("apps", "loomera"):
+            for path in (project_root / root_name).rglob("*.py"):
+                if path in {assets_path, test_path} or path.name.startswith("test_"):
+                    continue
+                source = path.read_text(encoding="utf-8")
+                if (
+                    "DeploymentBrandAssetConfig" in source
+                    or "get_deployment_brand_asset_config" in source
+                ):
+                    occurrences.append(str(path.relative_to(project_root)))
+
+        self.assertEqual(occurrences, ["loomera/branding/context_processors.py"])
+
+    def test_default_logo_variants_use_compatibility_assets_and_alt_rules(self):
+        context = self._template_context()
+        expected_by_variant = {
+            "glyph": "/static/branding/logo/loomera-glyph-mark.png",
+            "app-icon": "/static/branding/logo/loomera-app-icon.png",
+            "header": "/static/branding/logo/loomera-logo-header.png",
+            "compact": "/static/branding/logo/loomera-logo-header.png",
+            "full": "/static/branding/logo/loomera-logo-primary.png",
+        }
+
+        for variant, expected_url in expected_by_variant.items():
             with self.subTest(variant=variant):
-                context = self._context()
-                context["logo_variant"] = variant
-                rendered = render_to_string("partials/brand/logo.html", context)
-                self.assertIn(f'/static/{path}', rendered)
+                rendered = render_to_string(
+                    "partials/brand/logo.html",
+                    {**context, "logo_variant": variant},
+                )
+                self.assertIn(f'src="{expected_url}"', rendered)
                 self.assertIn('alt="Loomera"', rendered)
 
-        context = self._context()
-        context.update({"logo_variant": "full", "alt_text": "Explicit buyer alt"})
-        rendered = render_to_string("partials/brand/logo.html", context)
-        self.assertIn('alt="Explicit buyer alt"', rendered)
-        self.assertNotIn('alt="Loomera"', rendered)
+        explicit_alt = render_to_string(
+            "partials/brand/logo.html",
+            {**context, "logo_variant": "full", "alt_text": "Buyer mark"},
+        )
+        self.assertIn('alt="Buyer mark"', explicit_alt)
+        self.assertNotIn('alt="Loomera"', explicit_alt)
 
         with override_settings(BRAND_DISPLAY_NAME="Aurora"):
-            context = self._context()
-            context["logo_variant"] = "full"
-            rendered = render_to_string("partials/brand/logo.html", context)
-            self.assertIn('alt="Aurora"', rendered)
+            fallback_alt = render_to_string(
+                "partials/brand/logo.html",
+                {
+                    "deployment_brand": get_deployment_brand_config(),
+                    "deployment_brand_assets": get_deployment_brand_asset_config(),
+                    "deployment_brand_colors": get_deployment_brand_color_config(),
+                    "logo_variant": "glyph",
+                },
+            )
+        self.assertIn('alt="Aurora"', fallback_alt)
 
     @override_settings(
-        BRAND_LOGO_GLYPH_STATIC_PATH="buyer/logo/glyph.svg",
-        BRAND_APP_ICON_STATIC_PATH="buyer/logo/app.png",
-        BRAND_LOGO_HEADER_STATIC_PATH="buyer/logo/header.svg",
-        BRAND_LOGO_PRIMARY_STATIC_PATH="buyer/logo/primary.svg",
-        BRAND_FAVICON_SVG_STATIC_PATH="buyer/favicon/favicon.svg",
-        BRAND_FAVICON_ICO_STATIC_PATH="buyer/favicon/favicon.ico",
-        BRAND_FAVICON_16_STATIC_PATH="buyer/favicon/16.png",
-        BRAND_FAVICON_32_STATIC_PATH="buyer/favicon/32.png",
-        BRAND_FAVICON_48_STATIC_PATH="buyer/favicon/48.png",
-        BRAND_APPLE_TOUCH_ICON_STATIC_PATH="buyer/favicon/apple.png",
+        BRAND_LOGO_GLYPH_STATIC_PATH="buyer/brand/glyph.svg",
+        BRAND_APP_ICON_STATIC_PATH="buyer/brand/app-icon.png",
+        BRAND_LOGO_HEADER_STATIC_PATH="buyer/brand/header.png",
+        BRAND_LOGO_PRIMARY_STATIC_PATH="buyer/brand/primary.png",
+        BRAND_FAVICON_SVG_STATIC_PATH="buyer/favicon/icon.svg",
+        BRAND_FAVICON_ICO_STATIC_PATH="buyer/favicon/icon.ico",
+        BRAND_FAVICON_16_STATIC_PATH="buyer/favicon/icon-16.png",
+        BRAND_FAVICON_32_STATIC_PATH="buyer/favicon/icon-32.png",
+        BRAND_FAVICON_48_STATIC_PATH="buyer/favicon/icon-48.png",
+        BRAND_APPLE_TOUCH_ICON_STATIC_PATH="buyer/favicon/apple-touch.png",
         BRAND_MASK_ICON_STATIC_PATH="buyer/favicon/mask.svg",
         BRAND_WEBMANIFEST_STATIC_PATH="buyer/favicon/site.webmanifest",
-        BRAND_SOCIAL_IMAGE_STATIC_PATH="buyer/social/card.png",
+        BRAND_SOCIAL_IMAGE_STATIC_PATH="buyer/brand/social.png",
         BRAND_SOCIAL_IMAGE_WIDTH=1600,
         BRAND_SOCIAL_IMAGE_HEIGHT=900,
     )
-    def test_alternate_static_asset_settings_render_without_runtime_inference(self):
+    def test_alternate_asset_settings_render_without_locale_provider_auth_or_booking_inference(self):
         runtime_values = {
             "language_code": settings.LANGUAGE_CODE,
             "default_language": settings.LOOMERA_DEFAULT_LANGUAGE,
@@ -1058,22 +1542,41 @@ class SharedBrandTemplateContextTests(SimpleTestCase):
             "messaging_allowed_providers": tuple(settings.MESSAGING_ALLOWED_PROVIDERS),
             "auth_user_model": settings.AUTH_USER_MODEL,
         }
-        context = self._context()
+        context = self._template_context()
         head = render_to_string("partials/brand/head_assets.html", context)
-        self.assertIn('/static/buyer/favicon/favicon.svg', head)
-        self.assertIn('/static/buyer/favicon/site.webmanifest', head)
-        self.assertIn('/static/buyer/social/card.png', head)
+
+        for expected_url in (
+            "/static/buyer/favicon/icon.svg",
+            "/static/buyer/favicon/icon.ico",
+            "/static/buyer/favicon/icon-16.png",
+            "/static/buyer/favicon/icon-32.png",
+            "/static/buyer/favicon/icon-48.png",
+            "/static/buyer/favicon/apple-touch.png",
+            "/static/buyer/favicon/mask.svg",
+            "/static/buyer/favicon/site.webmanifest",
+            "/static/buyer/brand/social.png",
+        ):
+            self.assertIn(expected_url, head)
         self.assertIn('<meta property="og:image:width" content="1600">', head)
         self.assertIn('<meta property="og:image:height" content="900">', head)
-        for variant, path in (
-            ("glyph", "buyer/logo/glyph.svg"),
-            ("app-icon", "buyer/logo/app.png"),
-            ("header", "buyer/logo/header.svg"),
-            ("full", "buyer/logo/primary.svg"),
-        ):
-            variant_context = dict(context)
-            variant_context["logo_variant"] = variant
-            self.assertIn(f"/static/{path}", render_to_string("partials/brand/logo.html", variant_context))
+        self.assertIn('<meta property="og:locale" content="fa_IR">', head)
+        for value in ("#FCFBFE", "#16131F", "#735CBE"):
+            self.assertIn(value, head)
+
+        expected_logo_urls = {
+            "glyph": "/static/buyer/brand/glyph.svg",
+            "app-icon": "/static/buyer/brand/app-icon.png",
+            "header": "/static/buyer/brand/header.png",
+            "full": "/static/buyer/brand/primary.png",
+        }
+        for variant, expected_url in expected_logo_urls.items():
+            with self.subTest(variant=variant):
+                rendered = render_to_string(
+                    "partials/brand/logo.html",
+                    {**context, "logo_variant": variant},
+                )
+                self.assertIn(f'src="{expected_url}"', rendered)
+
         self.assertEqual(settings.LANGUAGE_CODE, runtime_values["language_code"])
         self.assertEqual(settings.LOOMERA_DEFAULT_LANGUAGE, runtime_values["default_language"])
         self.assertEqual(settings.LOOMERA_DEFAULT_COUNTRY, runtime_values["default_country"])
@@ -1082,56 +1585,67 @@ class SharedBrandTemplateContextTests(SimpleTestCase):
         self.assertEqual(settings.LOOMERA_DEFAULT_CALENDAR, runtime_values["default_calendar"])
         self.assertEqual(settings.SMS_PROVIDER, runtime_values["sms_provider"])
         self.assertEqual(settings.PAYMENT_PROVIDER, runtime_values["payment_provider"])
-        self.assertEqual(tuple(settings.MESSAGING_ALLOWED_PROVIDERS), runtime_values["messaging_allowed_providers"])
+        self.assertEqual(
+            tuple(settings.MESSAGING_ALLOWED_PROVIDERS),
+            runtime_values["messaging_allowed_providers"],
+        )
         self.assertEqual(settings.AUTH_USER_MODEL, runtime_values["auth_user_model"])
 
-    def test_compatibility_brand_locale_descriptions_assets_colors_and_manifest_remain_unchanged(self):
-        context = self._context()
-        context.update({"hide_navbar": True, "hide_footer": True})
-        rendered = render_to_string("base.html", context)
-        self.assertIn("<title>Loomera</title>", rendered)
-        self.assertIn('<html lang="fa" dir="rtl">', rendered)
-        self.assertIn('<meta property="og:locale" content="fa_IR">', rendered)
+    def test_manifest_and_default_brand_static_assets_preserve_target_compatibility(self):
         project_root = Path(settings.BASE_DIR)
-        base_source = (project_root / "templates" / "base.html").read_text(encoding="utf-8")
-        head_source = (project_root / "templates" / "partials" / "brand" / "head_assets.html").read_text(encoding="utf-8")
-        logo_source = (project_root / "templates" / "partials" / "brand" / "logo.html").read_text(encoding="utf-8")
-        settings_source = (project_root / "loomera" / "settings" / "base.py").read_text(encoding="utf-8")
-        manifest = json.loads((project_root / "static" / "branding" / "favicon" / "site.webmanifest").read_text(encoding="utf-8"))
-        self.assertIn(
-            "Loomera، پلتفرم انتخاب و رزرو خدمات زیبایی، aesthetic treatments، ماساژ و wellness با تجربه‌ای آرام، دقیق و قابل‌اعتماد.",
-            base_source,
-        )
-        self.assertEqual(base_source.count("انتخاب روشن‌تر و رزرو آرام‌تر خدمات زیبایی و تندرستی."), 2)
-        for value in ("#FCFBFE", "#16131F", "#735CBE"):
-            self.assertIn(value, head_source)
-        for field_name in (
-            "favicon_svg_path",
-            "favicon_ico_path",
-            "favicon_16_path",
-            "favicon_32_path",
-            "favicon_48_path",
-            "apple_touch_icon_path",
-            "mask_icon_path",
-            "webmanifest_path",
-            "social_image_path",
-            "social_image_width",
-            "social_image_height",
-        ):
-            self.assertIn(f"deployment_brand_assets.{field_name}", head_source)
-        for field_name in ("logo_glyph_path", "app_icon_path", "logo_header_path", "logo_primary_path"):
-            self.assertIn(f"deployment_brand_assets.{field_name}", logo_source)
-        self.assertIn("deployment_brand.display_name", logo_source)
-        for forbidden_setting in (
-            "BRAND_COLOR",
-            "BRAND_THEME_COLOR",
-            "BRAND_BACKGROUND_COLOR",
-            "BRAND_MASK_COLOR",
-        ):
-            self.assertNotIn(forbidden_setting, settings_source)
+        manifest_path = project_root / "static" / "branding" / "favicon" / "site.webmanifest"
+        manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+
         self.assertEqual(manifest["name"], "Loomera")
         self.assertEqual(manifest["short_name"], "Loomera")
+        self.assertEqual(
+            manifest["description"],
+            "Discovery and booking for beauty, aesthetic treatments, massage, and wellness.",
+        )
         self.assertEqual(manifest["theme_color"], "#735CBE")
         self.assertEqual(manifest["background_color"], "#FCFBFE")
         self.assertEqual(manifest["display"], "standalone")
-        self.assertEqual(len(manifest["icons"]), 3)
+        self.assertEqual(
+            manifest["icons"],
+            [
+                {
+                    "src": "/static/branding/favicon/android-chrome-192x192.png",
+                    "sizes": "192x192",
+                    "type": "image/png",
+                    "purpose": "any",
+                },
+                {
+                    "src": "/static/branding/favicon/android-chrome-512x512.png",
+                    "sizes": "512x512",
+                    "type": "image/png",
+                    "purpose": "any",
+                },
+                {
+                    "src": "/static/branding/favicon/maskable-icon-512x512.png",
+                    "sizes": "512x512",
+                    "type": "image/png",
+                    "purpose": "maskable",
+                },
+            ],
+        )
+
+        assets = get_deployment_brand_asset_config()
+        for relative_path in (
+            assets.logo_glyph_path,
+            assets.app_icon_path,
+            assets.logo_header_path,
+            assets.logo_primary_path,
+            assets.favicon_svg_path,
+            assets.favicon_ico_path,
+            assets.favicon_16_path,
+            assets.favicon_32_path,
+            assets.favicon_48_path,
+            assets.apple_touch_icon_path,
+            assets.mask_icon_path,
+            assets.webmanifest_path,
+            assets.social_image_path,
+        ):
+            self.assertTrue(
+                (project_root / "static" / relative_path).is_file(),
+                msg=f"Missing default brand static asset: {relative_path}",
+            )
