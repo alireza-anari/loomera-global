@@ -854,7 +854,7 @@ class SharedBrandColorConfigurationBoundaryTests(SimpleTestCase):
         )
 
     def _loaded_color_values(self, **overrides: str) -> dict[str, str]:
-        result = self._import_base_settings(**overrides)
+        result = self._import_brand_color_settings(**overrides)
         self.assertEqual(
             result.returncode,
             0,
