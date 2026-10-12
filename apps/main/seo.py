@@ -3,7 +3,7 @@ from __future__ import annotations
 import json
 from typing import Any
 
-from django.conf import settings
+from loomera.branding.config import get_deployment_brand_config
 
 
 def absolute_uri(request, path_or_url: str) -> str:
@@ -105,13 +105,14 @@ def build_salon_schema(request, salon, average_score=0, total_reviews=0, service
 
 
 def build_service_schema(request, service) -> str:
+    deployment_brand = get_deployment_brand_config()
     data = {
         "@context": "https://schema.org",
         "@type": "Service",
         "name": service.service_name,
         "description": service.effective_seo_description,
         "url": absolute_uri(request, service.get_absolute_url()),
-        "provider": {"@type": "Organization", "name": getattr(settings, "BRAND_DISPLAY_NAME", "Loomera")},
+        "provider": {"@type": "Organization", "name": deployment_brand.display_name},
     }
     image_url = image_absolute_uri(request, service.service_image)
     if image_url:
