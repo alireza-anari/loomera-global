@@ -1806,3 +1806,38 @@ class MachineReadableBrandIdentityWiringTests(SimpleTestCase):
             self.assertNotIn(forbidden, api_source)
             self.assertNotIn(forbidden, seo_source)
         self.assertNotIn("from django.conf import settings", seo_source)
+
+
+class SharedShellBrandLiteralCleanupTests(SimpleTestCase):
+    @staticmethod
+    def _template_context() -> dict[str, object]:
+        return {
+            "deployment_brand": get_deployment_brand_config(),
+            "deployment_brand_assets": get_deployment_brand_asset_config(),
+            "dashboard_header": {
+                "salon_name": "Test Salon",
+                "manager_name": "Test Manager",
+            },
+            "dashboard_sidebar_sections": [],
+        }
+
+    def test_shared_shell_preserves_default_loomera_compatibility_branding(self):
+        context = self._template_context()
+        splash = render_to_string("partials/brand/loader_splash.html", context)
+        sidebar = render_to_string("partials/dashboard/sidebar.html", context)
+
+        self.assertIn('<p class="lm-splash__title">Loomera</p>', splash)
+        self.assertIn('alt="Loomera"', splash)
+        self.assertIn('aria-label="ناوبری پنل مدیریت Loomera"', sidebar)
+        self.assertEqual(sidebar.count('alt="Loomera"'), 2)
+
+    @override_settings(BRAND_DISPLAY_NAME="Aurora")
+    def test_shared_shell_uses_alternate_deployment_brand_display_name(self):
+        context = self._template_context()
+        splash = render_to_string("partials/brand/loader_splash.html", context)
+        sidebar = render_to_string("partials/dashboard/sidebar.html", context)
+
+        self.assertIn('<p class="lm-splash__title">Aurora</p>', splash)
+        self.assertIn('alt="Aurora"', splash)
+        self.assertIn('aria-label="ناوبری پنل مدیریت Aurora"', sidebar)
+        self.assertEqual(sidebar.count('alt="Aurora"'), 2)
