@@ -241,3 +241,9 @@ Task 2.5 adds exactly two non-template runtime consumers of the existing `loomer
 `build_service_schema()` takes one fresh snapshot per service schema build and maps only `provider.name` to `display_name`. The service schema type, name, description, URL, optional image behavior, salon schema, breadcrumb schema, Persian address-region text, `addressCountry="IR"`, and public URL handling remain unchanged.
 
 The approved Python runtime consumers of `get_deployment_brand_config()` are therefore exactly `apps/api/v1/views.py`, `apps/main/seo.py`, and `loomera/branding/context_processors.py`. Task 2.5 adds no brand settings, fields, aliases, validation, caching, business/salon resolution, or environment reads. Brand identity remains deployment-level and does not infer or alter locale, country, currency, timezone, calendar, providers, authentication, authorization, or booking behavior.
+
+## Shared Shell Brand Literal Cleanup
+
+Task 2.6 reuses the existing centralized `deployment_brand` template context in the shared loader splash and dashboard sidebar. The loader splash title and logo alt text, plus the sidebar navigation brand label and both shared logo alt values, resolve from `deployment_brand.display_name`; the current compatibility configuration therefore continues to render Loomera by default.
+
+Task 2.6 introduces no new brand setting or branding boundary. CSS class names such as `loomera-*` remain implementation identifiers and are deliberately unchanged. Locale, direction, and translation behavior remain deferred to Phase 3. Branding remains deployment-level only; this task does not introduce per-salon or per-tenant white-labeling.

@@ -3,7 +3,7 @@
        class="fixed inset-y-0 right-0 z-[80] flex w-[min(21.5rem,calc(100vw-1rem))] translate-x-full flex-col overflow-visible border-l border-loomera-primary/15 bg-[linear-gradient(180deg,#EEE7FA_0%,#F6F0FF_42%,#EFEAF5_100%)] text-loomera-textPrimary shadow-[0_24px_80px_rgba(46,42,60,0.16)] backdrop-blur-xl transition-[width,transform] duration-300 ease-out lg:w-[22rem] lg:translate-x-0 lg:shadow-[0_16px_45px_rgba(46,42,60,0.07)]"
        data-dashboard-sidebar
        data-sidebar-state="expanded"
-       aria-label="ناوبری پنل مدیریت Loomera">
+       aria-label="ناوبری پنل مدیریت {{ deployment_brand.display_name }}">
       <div class="relative flex h-24 shrink-0 items-center justify-center overflow-visible border-b border-loomera-primary/10 bg-[radial-gradient(circle_at_top_right,rgba(115,92,190,0.16),transparent_46%),linear-gradient(180deg,#F8F3FF_0%,#EFE7FA_100%)] px-4">
         <a href="{{ profile_url }}"
           class="flex min-w-0 flex-1 flex-col items-center justify-center rounded-[22px] px-1 py-2 transition hover:opacity-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-loomera-primary/30"
@@ -12,12 +12,12 @@
           <div class="flex h-11 w-full min-w-0 items-center justify-center overflow-hidden">
             <span class="hidden h-10 w-10 shrink-0 items-center justify-center rounded-[18px] bg-white/80 shadow-sm ring-1 ring-loomera-primary/10"
                   data-sidebar-collapsed-only>
-              {% include "partials/brand/logo.html" with variant="glyph" class_name="lm-brand-glyph" alt_text="Loomera" %}
+              {% include "partials/brand/logo.html" with variant="glyph" class_name="lm-brand-glyph" alt_text=deployment_brand.display_name %}
             </span>
 
             <span class="mx-auto block max-w-[10.5rem] origin-center scale-[0.68] text-center"
                   data-sidebar-expanded-only>
-              {% include "partials/brand/logo.html" with variant="header" class_name="lm-brand-logo lm-brand-logo--shell" alt_text="Loomera" %}
+              {% include "partials/brand/logo.html" with variant="header" class_name="lm-brand-logo lm-brand-logo--shell" alt_text=deployment_brand.display_name %}
             </span>
           </div>
 
