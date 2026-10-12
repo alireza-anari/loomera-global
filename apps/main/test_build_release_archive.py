@@ -105,7 +105,7 @@ class MachineReadableBrandIdentityWiringTests(SimpleTestCase):
             "apps.api.v1.views.get_deployment_brand_config",
             return_value=deployment_brand,
         ) as get_brand:
-            response = self.client.get(reverse("api:v1:meta"))
+            response = self.client.get(reverse("api:v1:meta"), secure=True)
 
         self.assertEqual(response.status_code, 200)
         payload = response.json()
