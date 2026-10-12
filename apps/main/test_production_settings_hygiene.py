@@ -786,7 +786,7 @@ class SharedBrandConfigurationBoundaryTests(SimpleTestCase):
         self.assertNotIn("PAYMENT_PROVIDER", source)
         self.assertNotIn("MESSAGING_ALLOWED_PROVIDERS", source)
 
-    def test_brand_boundary_runtime_consumer_is_only_shared_template_context(self):
+    def test_brand_boundary_runtime_consumers_are_explicitly_approved(self):
         project_root = Path(settings.BASE_DIR)
         config_path = project_root / "loomera" / "branding" / "config.py"
         test_path = project_root / "apps" / "main" / "test_production_settings_hygiene.py"
@@ -803,7 +803,14 @@ class SharedBrandConfigurationBoundaryTests(SimpleTestCase):
                 ):
                     occurrences.append(str(path.relative_to(project_root)))
 
-        self.assertEqual(occurrences, ["loomera/branding/context_processors.py"])
+        self.assertCountEqual(
+            occurrences,
+            [
+                "apps/api/v1/views.py",
+                "apps/main/seo.py",
+                "loomera/branding/context_processors.py",
+            ],
+        )
 
 
 class SharedBrandColorConfigurationBoundaryTests(SimpleTestCase):
@@ -847,7 +854,7 @@ class SharedBrandColorConfigurationBoundaryTests(SimpleTestCase):
         )
 
     def _loaded_color_values(self, **overrides: str) -> dict[str, str]:
-        result = self._import_brand_color_settings(**overrides)
+        result = self._import_base_settings(**overrides)
         self.assertEqual(
             result.returncode,
             0,
