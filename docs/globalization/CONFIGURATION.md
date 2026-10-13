@@ -244,6 +244,10 @@ The approved Python runtime consumers of `get_deployment_brand_config()` are `ap
 
 Task 2.7 resolves each email sender from one fresh deployment brand snapshot's `default_from_email` at the existing sender-resolution point. `DEFAULT_FROM_EMAIL` remains owned by the settings layer; sender trimming, missing-email and empty-sender handling, opt-outs, attempts/retries, metadata, and masked logging retain their existing behavior. SMS and messaging paths do not use this branding accessor. No new setting or per-salon branding is introduced.
 
+## Article Publisher Brand Identity
+
+Task 2.8 makes `apps/articles/views.py` an explicitly approved brand-boundary runtime consumer. The Article JSON-LD publisher organization name uses `DeploymentBrandConfig.display_name` from one fresh snapshot; the default remains Loomera, with `BRAND_DISPLAY_NAME` still owned by the existing deployment setting and brand boundary. No new setting or environment variable is added. Branding remains deployment-level only, with no per-article, per-author, per-salon, or per-locale publisher branding. Persian magazine strings, Article author metadata, URLs, breadcrumbs, content, and locale behavior remain unchanged. Broader locale-aware SEO remains Phase 16.
+
 ## Shared Shell Brand Literal Cleanup
 
 Task 2.6 reuses the existing centralized `deployment_brand` template context in the shared loader splash and dashboard sidebar. The loader splash title and logo alt text, plus the sidebar navigation brand label and both shared logo alt values, resolve from `deployment_brand.display_name`; the current compatibility configuration therefore continues to render Loomera by default.
