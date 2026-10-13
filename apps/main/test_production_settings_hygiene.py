@@ -810,6 +810,7 @@ class SharedBrandConfigurationBoundaryTests(SimpleTestCase):
             occurrences,
             [
                 "apps/api/v1/views.py",
+                "apps/articles/views.py",
                 "apps/main/seo.py",
                 "apps/notifications/delivery.py",
                 "apps/orders/notification_delivery.py",
@@ -1846,6 +1847,65 @@ class SharedShellBrandLiteralCleanupTests(SimpleTestCase):
         self.assertIn('alt="Aurora"', splash)
         self.assertIn('aria-label="ناوبری پنل مدیریت Aurora"', sidebar)
         self.assertEqual(sidebar.count('alt="Aurora"'), 2)
+
+
+class ArticlePublisherBrandIdentityTests(SimpleTestCase):
+    def _schema_nodes(self):
+        path = Path(settings.BASE_DIR) / "apps/articles/views.py"
+        tree = ast.parse(path.read_text(encoding="utf-8"))
+        view = next(node for node in tree.body
+                    if isinstance(node, ast.ClassDef) and node.name == "ArticleDetailView")
+        method = next(node for node in view.body
+                      if isinstance(node, ast.FunctionDef) and node.name == "get_context_data")
+        schema = next(node for node in method.body if isinstance(node, ast.Assign)
+                      and any(isinstance(target, ast.Name) and target.id == "article_schema"
+                              for target in node.targets))
+        return tree, method, schema
+
+    def test_publisher_uses_display_name_from_one_fresh_local_snapshot(self):
+        tree, method, schema = self._schema_nodes()
+        calls = [node for node in ast.walk(tree) if isinstance(node, ast.Call)
+                 and isinstance(node.func, ast.Name)
+                 and node.func.id == "get_deployment_brand_config"]
+        self.assertEqual(len(calls), 1)
+        snapshot = next(node for node in method.body if isinstance(node, ast.Assign)
+                        and node.value is calls[0])
+        self.assertEqual(ast.dump(snapshot.targets[0]),
+                         ast.dump(ast.Name(id="deployment_brand", ctx=ast.Store())))
+        self.assertLess(method.body.index(snapshot), method.body.index(schema))
+        self.assertEqual(calls[0].args, [])
+        self.assertEqual(calls[0].keywords, [])
+        self.assertEqual(method.decorator_list, [])
+        imports = [node for node in tree.body if isinstance(node, ast.ImportFrom)
+                   and node.module == "loomera.branding.config"]
+        self.assertTrue(any(alias.name == "get_deployment_brand_config"
+                            and alias.asname is None
+                            for node in imports for alias in node.names))
+        publisher = next(value for key, value in zip(schema.value.keys, schema.value.values)
+                         if isinstance(key, ast.Constant) and key.value == "publisher")
+        accessor = Mock(side_effect=[SimpleNamespace(display_name="Loomera", name="Other"),
+                                    SimpleNamespace(display_name="Aurora", name="Other")])
+        program = ast.fix_missing_locations(ast.Module(body=[snapshot], type_ignores=[]))
+        namespace = {"get_deployment_brand_config": accessor}
+        for expected in ("Loomera", "Aurora"):
+            exec(compile(program, "article-snapshot", "exec"), namespace)
+            actual = eval(compile(ast.Expression(body=publisher), "article-publisher", "eval"),
+                          namespace)
+            self.assertEqual(actual, {"@type": "Organization", "name": expected})
+        self.assertEqual(accessor.call_count, 2)
+
+    def test_publisher_does_not_read_brand_display_setting_directly(self):
+        tree, _, _ = self._schema_nodes()
+        for node in ast.walk(tree):
+            if isinstance(node, ast.Attribute) and isinstance(node.value, ast.Name):
+                self.assertFalse(node.value.id == "settings"
+                                 and node.attr == "BRAND_DISPLAY_NAME")
+            if isinstance(node, ast.Call) and isinstance(node.func, ast.Name):
+                if node.func.id == "getattr" and len(node.args) >= 2:
+                    target, name = node.args[:2]
+                    self.assertFalse(isinstance(target, ast.Name) and target.id == "settings"
+                                     and isinstance(name, ast.Constant)
+                                     and name.value == "BRAND_DISPLAY_NAME")
 
 
 class SharedEmailSenderIdentityTests(SimpleTestCase):
