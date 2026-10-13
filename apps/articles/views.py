@@ -14,6 +14,8 @@ from django.views.decorators.http import require_POST
 from django.utils.decorators import method_decorator
 from django.views.generic import DetailView, ListView, TemplateView, View
 
+from loomera.branding.config import get_deployment_brand_config
+
 from .models import (
     Article,
     ArticleCategory,
@@ -282,6 +284,7 @@ class ArticleDetailView(DetailView):
             .distinct()[:6]
         )
 
+        deployment_brand = get_deployment_brand_config()
         article_schema = {
             "@context": "https://schema.org",
             "@type": "Article",
@@ -299,7 +302,7 @@ class ArticleDetailView(DetailView):
             },
             "publisher": {
                 "@type": "Organization",
-                "name": "Loomera",
+                "name": deployment_brand.display_name,
             },
             "mainEntityOfPage": self.request.build_absolute_uri(
                 article.get_absolute_url()
