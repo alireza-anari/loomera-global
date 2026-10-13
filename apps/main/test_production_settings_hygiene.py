@@ -1,13 +1,16 @@
 from __future__ import annotations
 
 import ast
+from contextlib import ExitStack
 import hashlib
-from dataclasses import FrozenInstanceError, fields
+from dataclasses import FrozenInstanceError, fields, replace
 import json
 import os
 from pathlib import Path
 import subprocess
 import sys
+from types import SimpleNamespace
+from unittest.mock import Mock, patch
 
 from django.conf import settings
 from django.template.loader import render_to_string
@@ -801,13 +804,15 @@ class SharedBrandConfigurationBoundaryTests(SimpleTestCase):
                     "DeploymentBrandConfig" in source
                     or "get_deployment_brand_config" in source
                 ):
-                    occurrences.append(str(path.relative_to(project_root)))
+                    occurrences.append(path.relative_to(project_root).as_posix())
 
         self.assertCountEqual(
             occurrences,
             [
                 "apps/api/v1/views.py",
                 "apps/main/seo.py",
+                "apps/notifications/delivery.py",
+                "apps/orders/notification_delivery.py",
                 "loomera/branding/context_processors.py",
             ],
         )
@@ -1163,7 +1168,7 @@ class SharedBrandColorConfigurationBoundaryTests(SimpleTestCase):
                     "DeploymentBrandColorConfig" in source
                     or "get_deployment_brand_color_config" in source
                 ):
-                    occurrences.append(str(path.relative_to(project_root)))
+                    occurrences.append(path.relative_to(project_root).as_posix())
         self.assertEqual(occurrences, ["loomera/branding/context_processors.py"])
 
 
@@ -1477,7 +1482,7 @@ class SharedBrandAssetConfigurationTests(SimpleTestCase):
                     "DeploymentBrandAssetConfig" in source
                     or "get_deployment_brand_asset_config" in source
                 ):
-                    occurrences.append(str(path.relative_to(project_root)))
+                    occurrences.append(path.relative_to(project_root).as_posix())
 
         self.assertEqual(occurrences, ["loomera/branding/context_processors.py"])
 
@@ -1841,3 +1846,150 @@ class SharedShellBrandLiteralCleanupTests(SimpleTestCase):
         self.assertIn('alt="Aurora"', splash)
         self.assertIn('aria-label="ناوبری پنل مدیریت Aurora"', sidebar)
         self.assertEqual(sidebar.count('alt="Aurora"'), 2)
+
+
+class SharedEmailSenderIdentityTests(SimpleTestCase):
+    def _exercise(self, consumer, *, sender, email="person@example.com",
+                  channel="email", opted_out=False, send_error=None,
+                  snapshot_sender=None):
+        from apps.notifications import delivery as notifications
+        from apps.orders import notification_delivery as orders
+        from loomera.branding.config import get_deployment_brand_config
+
+        module = notifications if consumer == "notifications" else orders
+        user = SimpleNamespace(email=email, mobile_number="09123456789")
+        customer = SimpleNamespace(notify_appointment_email=not opted_out,
+                                   notify_appointment_sms=True)
+        item = SimpleNamespace(
+            pk=7, order_id=8, title="Subject", body="Body", meta={"existing": True},
+            target_user_id=1, target_user=user, customer_id=1, customer=customer,
+            stylist_id=None, stylist=None, audience_role="customer",
+            recipient=SimpleNamespace(user=user, notification=SimpleNamespace(
+                title="Subject", body="Body")),
+            attempt_count=0, status="queued", provider="", sent_at=None,
+            failed_at=None, last_error="", save=Mock(),
+        )
+        with ExitStack() as stack:
+            stack.enter_context(override_settings(DEFAULT_FROM_EMAIL=sender,
+                                                   SMS_PROVIDER="disabled"))
+            get_brand = stack.enter_context(patch.object(
+                module, "get_deployment_brand_config",
+                wraps=get_deployment_brand_config, create=True))
+            if snapshot_sender is not None:
+                get_brand.return_value = replace(
+                    get_deployment_brand_config(), default_from_email=snapshot_sender)
+            send = stack.enter_context(patch.object(module, "send_mail",
+                                                    side_effect=send_error))
+            if send_error is not None:
+                stack.enter_context(self.assertLogs(module.logger, level="ERROR"))
+            if consumer == "notifications":
+                attempt = stack.enter_context(patch.object(
+                    notifications.NotificationDeliveryAttempt.objects, "create"))
+                result = (module.deliver_email if channel == "email"
+                          else module.deliver_sms)(item)
+                reason = attempt.call_args.kwargs["error_message"]
+                status = result.status
+                count = result.attempt_count
+            else:
+                query = stack.enter_context(patch.object(
+                    orders.AppointmentNotification.objects, "select_related"))
+                query.return_value.get.return_value = item
+                result = (module.deliver_email_notification if channel == "email"
+                          else module.deliver_sms_notification)(item)
+                reason = result.meta.get("reason", "")
+                status = result.delivery_status
+                count = result.meta.get("attempt_count", 0)
+                self.assertTrue(result.meta["existing"])
+            return status, reason, count, send, get_brand
+
+    def test_both_consumers_use_fresh_default_and_alternate_senders(self):
+        for consumer in ("notifications", "orders"):
+            for sender in ("Loomera <no-reply@loomera.local>",
+                           "  Aurora <mail@example.com>  "):
+                with self.subTest(consumer=consumer, sender=sender):
+                    status, _, count, send, get_brand = self._exercise(
+                        consumer, sender=sender)
+                    self.assertEqual(status, "sent")
+                    self.assertEqual(count, 1)
+                    self.assertEqual(send.call_args.kwargs, {
+                        "subject": "Subject", "message": "Body",
+                        "from_email": sender.strip(),
+                        "recipient_list": ["person@example.com"],
+                        "fail_silently": False,
+                    })
+                    get_brand.assert_called_once_with()
+
+    def test_sender_comes_from_returned_snapshot(self):
+        for consumer in ("notifications", "orders"):
+            with self.subTest(consumer=consumer):
+                status, _, _, send, get_brand = self._exercise(
+                    consumer, sender="settings@example.com",
+                    snapshot_sender="snapshot@example.com")
+                self.assertEqual(status, "sent")
+                self.assertEqual(send.call_args.kwargs["from_email"],
+                                 "snapshot@example.com")
+                get_brand.assert_called_once_with()
+
+    def test_empty_sender_preserves_pending_setup(self):
+        for consumer in ("notifications", "orders"):
+            with self.subTest(consumer=consumer):
+                status, reason, count, send, get_brand = self._exercise(
+                    consumer, sender="  ")
+                self.assertEqual((status, reason),
+                                 ("pending_setup", "missing_default_from_email"))
+                self.assertEqual(count, 1 if consumer == "notifications" else 0)
+                send.assert_not_called()
+                get_brand.assert_called_once_with()
+
+    def test_missing_email_does_not_resolve_sender(self):
+        for consumer in ("notifications", "orders"):
+            with self.subTest(consumer=consumer):
+                status, reason, _, send, get_brand = self._exercise(
+                    consumer, sender="mail@example.com", email="")
+                self.assertEqual((status, reason), ("pending_setup", "missing_email"))
+                send.assert_not_called()
+                get_brand.assert_not_called()
+
+    def test_order_email_opt_out_does_not_resolve_sender(self):
+        status, reason, count, send, get_brand = self._exercise(
+            "orders", sender="mail@example.com", opted_out=True)
+        self.assertEqual((status, reason, count),
+                         ("skipped", "customer_email_opt_out", 0))
+        send.assert_not_called()
+        get_brand.assert_not_called()
+
+    def test_failed_send_uses_one_snapshot_and_records_attempt(self):
+        for consumer in ("notifications", "orders"):
+            with self.subTest(consumer=consumer):
+                status, _, count, send, get_brand = self._exercise(
+                    consumer, sender="mail@example.com",
+                    send_error=RuntimeError("transport failure"))
+                self.assertEqual((status, count), ("failed", 1))
+                send.assert_called_once()
+                get_brand.assert_called_once_with()
+
+    def test_sms_paths_do_not_resolve_brand_identity(self):
+        for consumer in ("notifications", "orders"):
+            with self.subTest(consumer=consumer):
+                status, reason, _, send, get_brand = self._exercise(
+                    consumer, sender="mail@example.com", channel="sms")
+                self.assertEqual((status, reason),
+                                 ("pending_setup", "provider_disabled"))
+                send.assert_not_called()
+                get_brand.assert_not_called()
+
+    def test_email_consumers_do_not_read_sender_setting_directly(self):
+        for path in ("apps/notifications/delivery.py",
+                     "apps/orders/notification_delivery.py"):
+            tree = ast.parse((Path(settings.BASE_DIR) / path).read_text(encoding="utf-8"))
+            for node in ast.walk(tree):
+                if isinstance(node, ast.Attribute) and isinstance(node.value, ast.Name):
+                    self.assertFalse(node.value.id == "settings" and
+                                     node.attr == "DEFAULT_FROM_EMAIL", path)
+                if isinstance(node, ast.Call) and isinstance(node.func, ast.Name):
+                    if node.func.id == "getattr" and len(node.args) >= 2:
+                        target, name = node.args[:2]
+                        self.assertFalse(
+                            isinstance(target, ast.Name) and target.id == "settings"
+                            and isinstance(name, ast.Constant)
+                            and name.value == "DEFAULT_FROM_EMAIL", path)
