@@ -240,13 +240,19 @@ Task 2.5 adds exactly two non-template runtime consumers of the existing `loomer
 
 `build_service_schema()` takes one fresh snapshot per service schema build and maps only `provider.name` to `display_name`. The service schema type, name, description, URL, optional image behavior, salon schema, breadcrumb schema, Persian address-region text, `addressCountry="IR"`, and public URL handling remain unchanged.
 
-The approved Python runtime consumers of `get_deployment_brand_config()` are exactly `apps/api/v1/views.py`, `apps/articles/views.py`, `apps/main/seo.py`, `apps/notifications/delivery.py`, `apps/orders/notification_delivery.py`, and `loomera/branding/context_processors.py`. Task 2.5 adds no brand settings, fields, aliases, validation, caching, business/salon resolution, or environment reads. Brand identity remains deployment-level and does not infer or alter locale, country, currency, timezone, calendar, providers, authentication, authorization, or booking behavior.
+The approved Python runtime consumers of `get_deployment_brand_config()` are exactly `apps/api/v1/views.py`, `apps/articles/views.py`, `apps/help_center/ai.py`, `apps/main/seo.py`, `apps/notifications/delivery.py`, `apps/orders/notification_delivery.py`, and `loomera/branding/context_processors.py`. Task 2.5 adds no brand settings, fields, aliases, validation, caching, business/salon resolution, or environment reads. Brand identity remains deployment-level and does not infer or alter locale, country, currency, timezone, calendar, providers, authentication, authorization, or booking behavior.
 
 Task 2.7 resolves each email sender from one fresh deployment brand snapshot's `default_from_email` at the existing sender-resolution point. `DEFAULT_FROM_EMAIL` remains owned by the settings layer; sender trimming, missing-email and empty-sender handling, opt-outs, attempts/retries, metadata, and masked logging retain their existing behavior. SMS and messaging paths do not use this branding accessor. No new setting or per-salon branding is introduced.
 
 ## Article Publisher Brand Identity
 
 Task 2.8 makes `apps/articles/views.py` an explicitly approved brand-boundary runtime consumer. The Article JSON-LD publisher organization name uses `DeploymentBrandConfig.display_name` from one fresh snapshot; the default remains Loomera, with `BRAND_DISPLAY_NAME` still owned by the existing deployment setting and brand boundary. No new setting or environment variable is added. Branding remains deployment-level only, with no per-article, per-author, per-salon, or per-locale publisher branding. Persian magazine strings, Article author metadata, URLs, breadcrumbs, content, and locale behavior remain unchanged. Broader locale-aware SEO remains Phase 16.
+
+## Help AI OpenRouter Brand Identity
+
+Task 2.9 makes `apps/help_center/ai.py` an explicitly approved Python runtime consumer of `get_deployment_brand_config()`. OpenRouter uses one fresh local snapshot: `X-Title` uses `DeploymentBrandConfig.display_name`, and the `HTTP-Referer` fallback uses `DeploymentBrandConfig.public_base_url`. `HELP_AI_SITE_URL` remains the higher-priority Help AI-specific override; an empty effective URL omits `HTTP-Referer`. `BRAND_DISPLAY_NAME` and `PUBLIC_BASE_URL` remain owned by the existing deployment brand/settings boundary. No new setting or environment variable is introduced, and default Loomera behavior is preserved.
+
+Branding remains deployment-level only, with no per-user, per-help-article, per-salon, or per-locale AI brand identity. Groq and custom providers remain unchanged and do not resolve this snapshot. Provider credentials, models, endpoints, provider selection, ZDR/data collection policy, request behavior, and error handling remain unchanged.
 
 ## Shared Shell Brand Literal Cleanup
 

@@ -811,6 +811,7 @@ class SharedBrandConfigurationBoundaryTests(SimpleTestCase):
             [
                 "apps/api/v1/views.py",
                 "apps/articles/views.py",
+                "apps/help_center/ai.py",
                 "apps/main/seo.py",
                 "apps/notifications/delivery.py",
                 "apps/orders/notification_delivery.py",
@@ -1847,6 +1848,88 @@ class SharedShellBrandLiteralCleanupTests(SimpleTestCase):
         self.assertIn('alt="Aurora"', splash)
         self.assertIn('aria-label="ناوبری پنل مدیریت Aurora"', sidebar)
         self.assertEqual(sidebar.count('alt="Aurora"'), 2)
+
+
+class HelpAIOpenRouterBrandIdentityTests(SimpleTestCase):
+    def test_openrouter_headers_use_one_fresh_snapshot_per_construction(self):
+        from apps.help_center import ai
+        from loomera.branding.config import get_deployment_brand_config
+
+        cases = (
+            ("Loomera", "https://brand.example", "https://help.example",
+             {"X-Title": "Loomera Help Assistant", "HTTP-Referer": "https://help.example"}),
+            ("Aurora", "https://brand.example", "",
+             {"X-Title": "Aurora Help Assistant", "HTTP-Referer": "https://brand.example"}),
+            ("Aurora", "", "", {"X-Title": "Aurora Help Assistant"}),
+            ("", "", "", {}),
+        )
+        with patch.object(ai, "get_deployment_brand_config",
+                          wraps=get_deployment_brand_config, create=True) as get_brand:
+            for index, (name, brand_url, help_url, expected) in enumerate(cases, start=1):
+                with self.subTest(name=name, help_url=help_url), override_settings(
+                    BRAND_DISPLAY_NAME=name, PUBLIC_BASE_URL=brand_url,
+                    HELP_AI_SITE_URL=help_url, OPENROUTER_API_KEY="test-key",
+                    HELP_AI_MODEL="test-model", HELP_AI_TIMEOUT_SECONDS=9,
+                ):
+                    provider = ai.OpenRouterProvider()
+                    self.assertEqual(provider.extra_headers, expected)
+                    self.assertEqual(get_brand.call_count, index)
+                    self.assertEqual(provider.provider_name, "openrouter")
+                    self.assertEqual(provider.endpoint,
+                                     "https://openrouter.ai/api/v1/chat/completions")
+                    self.assertEqual((provider.api_key, provider.model, provider.timeout),
+                                     ("test-key", "test-model", 9))
+                    self.assertEqual(provider.extra_payload, {"provider": {
+                        "zdr": True, "data_collection": "deny", "allow_fallbacks": True,
+                    }})
+            get_brand.assert_called_with()
+
+    def test_openrouter_uses_returned_snapshot_and_other_providers_are_isolated(self):
+        from apps.help_center import ai
+
+        with override_settings(HELP_AI_SITE_URL="", BRAND_DISPLAY_NAME="Setting Name",
+                               PUBLIC_BASE_URL="https://setting.example"), patch.object(
+            ai, "get_deployment_brand_config", create=True,
+            return_value=SimpleNamespace(display_name="Aurora",
+                                         public_base_url="https://snapshot.example"),
+        ) as get_brand:
+            provider = ai.OpenRouterProvider()
+            self.assertEqual(provider.extra_headers, {
+                "X-Title": "Aurora Help Assistant", "HTTP-Referer": "https://snapshot.example",
+            })
+            get_brand.assert_called_once_with()
+            get_brand.reset_mock()
+            ai.GroqProvider()
+            ai.CustomProvider()
+            ai.DisabledProvider()
+            get_brand.assert_not_called()
+
+    def test_brand_accessor_is_local_to_openrouter_and_settings_reads_are_removed(self):
+        tree = ast.parse((Path(settings.BASE_DIR) / "apps/help_center/ai.py")
+                         .read_text(encoding="utf-8"))
+        provider = next(node for node in tree.body
+                        if isinstance(node, ast.ClassDef) and node.name == "OpenRouterProvider")
+        constructor = next(node for node in provider.body
+                           if isinstance(node, ast.FunctionDef) and node.name == "__init__")
+        calls = [node for node in ast.walk(tree) if isinstance(node, ast.Call)
+                 and isinstance(node.func, ast.Name)
+                 and node.func.id == "get_deployment_brand_config"]
+        self.assertEqual(len(calls), 1)
+        snapshot = next(node for node in constructor.body
+                        if isinstance(node, ast.Assign) and node.value is calls[0])
+        self.assertEqual(ast.dump(snapshot.targets[0]),
+                         ast.dump(ast.Name(id="deployment_brand", ctx=ast.Store())))
+        self.assertEqual(constructor.decorator_list, [])
+        for node in ast.walk(tree):
+            if isinstance(node, ast.Attribute) and isinstance(node.value, ast.Name):
+                self.assertFalse(node.value.id == "settings" and
+                                 node.attr in {"BRAND_DISPLAY_NAME", "PUBLIC_BASE_URL"})
+            if isinstance(node, ast.Call) and isinstance(node.func, ast.Name):
+                if node.func.id == "getattr" and len(node.args) >= 2:
+                    target, name = node.args[:2]
+                    self.assertFalse(isinstance(target, ast.Name) and target.id == "settings"
+                                     and isinstance(name, ast.Constant)
+                                     and name.value in {"BRAND_DISPLAY_NAME", "PUBLIC_BASE_URL"})
 
 
 class ArticlePublisherBrandIdentityTests(SimpleTestCase):

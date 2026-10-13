@@ -9,6 +9,8 @@ from dataclasses import dataclass
 
 from django.conf import settings
 
+from loomera.branding.config import get_deployment_brand_config
+
 
 logger = logging.getLogger(__name__)
 
@@ -138,13 +140,14 @@ class GroqProvider(OpenAICompatibleProvider):
 
 class OpenRouterProvider(OpenAICompatibleProvider):
     def __init__(self):
+        deployment_brand = get_deployment_brand_config()
         extra_headers = {}
         site_url = str(
             getattr(settings, "HELP_AI_SITE_URL", "")
-            or getattr(settings, "PUBLIC_BASE_URL", "")
+            or deployment_brand.public_base_url
             or ""
         ).strip()
-        app_name = str(getattr(settings, "BRAND_DISPLAY_NAME", "Loomera") or "Loomera").strip()
+        app_name = str(deployment_brand.display_name or "").strip()
         if site_url:
             extra_headers["HTTP-Referer"] = site_url
         if app_name:
