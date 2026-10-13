@@ -11,6 +11,7 @@ from django.core.mail import send_mail
 from django.db import transaction
 from django.utils import timezone
 
+from loomera.branding.config import get_deployment_brand_config
 from loomera.logging_utils import mask_email, mask_mobile
 
 from apps.notifications.smsir_transactional import (
@@ -155,7 +156,8 @@ def deliver_email_notification(
             DeliveryResult("pending_setup", {"reason": "missing_email"}),
         )
 
-    from_email = str(getattr(settings, "DEFAULT_FROM_EMAIL", "") or "").strip()
+    deployment_brand = get_deployment_brand_config()
+    from_email = str(deployment_brand.default_from_email or "").strip()
 
     if not from_email:
         return _save_delivery_result(
