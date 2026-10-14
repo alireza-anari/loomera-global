@@ -577,6 +577,8 @@ BRAND_DEPLOYMENT_SETTING_NAMES = (
     "LOOMERA_SUPPORT_EMAIL",
     "LOOMERA_PARTNER_EMAIL",
     "LOOMERA_MARKETING_EMAIL",
+    "LOOMERA_CALENDAR_PRODID",
+    "LOOMERA_CALENDAR_NAME",
 )
 
 BRAND_ASSET_SETTING_NAMES = (
@@ -661,6 +663,8 @@ class SharedBrandConfigurationBoundaryTests(SimpleTestCase):
         "support_email",
         "partner_email",
         "marketing_email",
+        "calendar_prodid",
+        "calendar_name",
     )
 
     def test_default_snapshot_preserves_current_brand_compatibility_values(self):
@@ -680,6 +684,8 @@ class SharedBrandConfigurationBoundaryTests(SimpleTestCase):
         self.assertEqual(config.support_email, "support@loomera.local")
         self.assertEqual(config.partner_email, "partners@loomera.local")
         self.assertEqual(config.marketing_email, "hello@loomera.local")
+        self.assertEqual(config.calendar_prodid, "-//Loomera//Appointment//FA")
+        self.assertEqual(config.calendar_name, "Loomera Appointment")
 
     def test_snapshot_is_frozen_and_exposes_exact_contract_surface(self):
         config = get_deployment_brand_config()
@@ -714,6 +720,8 @@ class SharedBrandConfigurationBoundaryTests(SimpleTestCase):
         LOOMERA_SUPPORT_EMAIL="support@example.com",
         LOOMERA_PARTNER_EMAIL="partners@example.com",
         LOOMERA_MARKETING_EMAIL="hello@example.com",
+        LOOMERA_CALENDAR_PRODID="-//Aurora Corp//Booking//EN",
+        LOOMERA_CALENDAR_NAME="Aurora Appointments",
     )
     def test_overridden_brand_settings_are_reflected_without_runtime_inference(self):
         language_code = settings.LANGUAGE_CODE
@@ -741,6 +749,8 @@ class SharedBrandConfigurationBoundaryTests(SimpleTestCase):
         self.assertEqual(config.support_email, "support@example.com")
         self.assertEqual(config.partner_email, "partners@example.com")
         self.assertEqual(config.marketing_email, "hello@example.com")
+        self.assertEqual(config.calendar_prodid, "-//Aurora Corp//Booking//EN")
+        self.assertEqual(config.calendar_name, "Aurora Appointments")
 
         self.assertEqual(settings.LANGUAGE_CODE, language_code)
         self.assertEqual(settings.TIME_ZONE, time_zone)
@@ -762,7 +772,7 @@ class SharedBrandConfigurationBoundaryTests(SimpleTestCase):
         self.assertIsNot(first, second)
         self.assertEqual(first, second)
 
-    def test_accessor_reads_only_the_ten_resolved_django_settings(self):
+    def test_accessor_reads_only_the_twelve_resolved_django_settings(self):
         config_path = Path(settings.BASE_DIR) / "loomera" / "branding" / "config.py"
         source = config_path.read_text(encoding="utf-8")
         tree = ast.parse(source, filename=str(config_path))
