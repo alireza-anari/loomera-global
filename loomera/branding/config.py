@@ -24,6 +24,8 @@ class DeploymentBrandConfig:
     support_email: str
     partner_email: str
     marketing_email: str
+    calendar_prodid: str
+    calendar_name: str
 
 
 def get_deployment_brand_config() -> DeploymentBrandConfig:
@@ -38,4 +40,6 @@ def get_deployment_brand_config() -> DeploymentBrandConfig:
         support_email=_settings.LOOMERA_SUPPORT_EMAIL,
         partner_email=_settings.LOOMERA_PARTNER_EMAIL,
         marketing_email=_settings.LOOMERA_MARKETING_EMAIL,
+        calendar_prodid=_settings.LOOMERA_CALENDAR_PRODID,
+        calendar_name=_settings.LOOMERA_CALENDAR_NAME,
     )

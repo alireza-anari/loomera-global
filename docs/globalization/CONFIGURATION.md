@@ -87,7 +87,7 @@ No application feature consumes the provider boundary in Task 1.3. Existing map 
 
 ## Shared Brand Identity Configuration Boundary
 
-Task 2.1 adds a deployment-level brand identity read boundary without changing the existing settings layer or activating branding changes in runtime surfaces.
+Task 2.1 adds a deployment-level brand identity read boundary without changing the existing settings layer or activating branding changes in runtime surfaces. Task 2.11 extends that same snapshot with the two already-existing deployment calendar brand-metadata settings without wiring a calendar runtime consumer.
 
 The supported application import path is:
 
@@ -112,12 +112,14 @@ The snapshot exposes exactly these fields:
 | `support_email` | `LOOMERA_SUPPORT_EMAIL` | `"support@loomera.local"` |
 | `partner_email` | `LOOMERA_PARTNER_EMAIL` | `"partners@loomera.local"` |
 | `marketing_email` | `LOOMERA_MARKETING_EMAIL` | `"hello@loomera.local"` |
+| `calendar_prodid` | `LOOMERA_CALENDAR_PRODID` | `"-//Loomera//Appointment//FA"` |
+| `calendar_name` | `LOOMERA_CALENDAR_NAME` | `"Loomera Appointment"` |
 
-Task 2.1 introduces no new environment variable, alias, fallback, or validation rule. `loomera/settings/base.py` remains authoritative for all ten values. The accessor reads only those already-resolved Django settings, performs no caching, database/request/user/business access, and does not duplicate settings logic.
+Task 2.1 introduced no new environment variable, alias, fallback, or validation rule for the original ten identity values. Task 2.11 likewise introduces no new environment variable or Django setting: `loomera/settings/base.py` remains authoritative for all twelve resolved values, including independently configurable `LOOMERA_CALENDAR_PRODID` and `LOOMERA_CALENDAR_NAME`. The accessor reads only those already-resolved Django settings, performs no caching, database/request/user/business access, and does not duplicate settings logic.
 
-Task 2.2 makes this Task 2.1 snapshot available to Django templates through the shared template context described below. Configuration ownership remains in `loomera.branding.config`; Task 2.2 does not add brand settings, defaults, validation, or per-salon branding.
+Task 2.2 makes this snapshot available to Django templates through the shared template context described below. Configuration ownership remains in `loomera.branding.config`; Task 2.11 does not add a context processor, defaults, validation, or per-salon branding.
 
-Brand identity is independent of locale, country, currency, timezone, calendar, and provider selection. Changing the deployment brand name must not alter authentication, authorization, booking semantics, geography, money meaning, or provider routing. Task 2.1 does not introduce per-salon or per-business white-label branding.
+Brand identity and brand metadata remain independent of locale, country, currency, timezone, calendar presentation semantics, and provider selection. Changing deployment calendar metadata does not alter authentication, authorization, booking semantics, timezone behavior, Gregorian/Jalali presentation, geography, money meaning, or provider routing. Task 2.11 does not introduce per-salon or per-business white-label branding.
 
 ## Shared Brand Template Context
 
@@ -127,15 +129,15 @@ Task 2.2 registers the context processor:
 
 The processor exposes exactly three template variables:
 
-- `deployment_brand` — a fresh `DeploymentBrandConfig` snapshot from Task 2.1;
+- `deployment_brand` — a fresh `DeploymentBrandConfig` snapshot from Task 2.1, extended by Task 2.11;
 - `deployment_brand_assets` — a fresh `DeploymentBrandAssetConfig` snapshot from Task 2.3;
 - `deployment_brand_colors` — a fresh `DeploymentBrandColorConfig` snapshot from Task 2.4.
 
-All three values are produced through their supported accessors. The context processor does not read Django settings or environment variables directly, access the database, inspect request/user/business/salon state, cache values, or infer locale or providers. Identity, assets, and colors remain sibling deployment-level branding contracts, with `loomera/settings/base.py` authoritative for settings validation/defaults.
+All three values are produced through their supported accessors. The context processor does not read Django settings or environment variables directly, access the database, inspect request/user/business/salon state, cache values, or infer locale or providers. Identity, metadata, assets, and colors remain deployment-level branding contracts, with `loomera/settings/base.py` authoritative for settings validation/defaults.
 
 Task 2.2 wires the safest shared textual identity in the shell/head, Task 2.3 wires shared logo/favicon/manifest/social-image references, and Task 2.4 wires the approved core color tokens and browser metadata through `deployment_brand_colors`. Persian SEO descriptions, `og:locale`, `<html lang>`/direction, translations, and broader SEO-content localization remain unchanged.
 
-This is deployment-level branding only. Tasks 2.2–2.4 do not introduce per-salon or per-business white-label branding and do not make brand identity, assets, or colors drive language, country, currency, timezone, calendar, map/SMS/payment/messaging providers, authentication, authorization, or booking behavior.
+This is deployment-level branding only. Tasks 2.2–2.4 and Task 2.11 do not introduce per-salon or per-business white-label branding and do not make brand identity, calendar metadata, assets, or colors drive language, country, currency, timezone, calendar presentation, map/SMS/payment/messaging providers, authentication, authorization, or booking behavior.
 
 ## Shared Brand Asset Configuration
 
@@ -265,3 +267,13 @@ Task 2.10 extends the same existing shared template brand context to the desktop
 Task 2.10 introduces no new setting, environment variable, accessor, context processor, or Python runtime consumer. The approved Python runtime consumers remain exactly `apps/api/v1/views.py`, `apps/articles/views.py`, `apps/help_center/ai.py`, `apps/main/seo.py`, `apps/notifications/delivery.py`, `apps/orders/notification_delivery.py`, and `loomera/branding/context_processors.py`. Logo asset routing remains owned by the existing `DeploymentBrandAssetConfig` and shared `partials/brand/logo.html` partial; Task 2.10 neither duplicates nor replaces that behavior.
 
 Branding remains deployment-level only. Task 2.10 does not introduce per-user, per-salon, per-business, or per-locale white-label behavior. Auth/password-recovery brand identity, Calendar/ICS identity, quick-link print branding, and other remaining Phase 2 residuals remain deferred to separately authorized tasks; Phase 2 is not claimed complete.
+
+## Calendar Brand Metadata Boundary
+
+Task 2.11 extends `DeploymentBrandConfig` with `calendar_prodid` and `calendar_name`. These fields snapshot the already-existing `LOOMERA_CALENDAR_PRODID` and `LOOMERA_CALENDAR_NAME` Django settings through the same fresh deployment brand accessor; no new environment variable, Django setting, accessor, or context processor is introduced.
+
+`LOOMERA_CALENDAR_PRODID` and `LOOMERA_CALENDAR_NAME` remain independently configurable in the settings layer. Their current compatibility defaults remain `-//Loomera//Appointment//FA` and `Loomera Appointment` under the default brand settings, while explicit deployment overrides are returned unchanged by the centralized brand snapshot. `loomera.branding.config` does not recompute either field from `DeploymentBrandConfig.name` or `display_name` and does not override explicitly configured calendar metadata.
+
+Task 2.11 is boundary-only. `apps/orders/views.py` is not migrated and continues its existing direct settings reads and existing calendar behavior. Google Calendar details, ICS UID/domain behavior, PRODID consumption, calendar-name consumption, ICS filenames, and other runtime calendar identity behavior remain unchanged. No new runtime consumer of `get_deployment_brand_config()` is introduced; the approved Python runtime consumer list remains exactly `apps/api/v1/views.py`, `apps/articles/views.py`, `apps/help_center/ai.py`, `apps/main/seo.py`, `apps/notifications/delivery.py`, `apps/orders/notification_delivery.py`, and `loomera/branding/context_processors.py`.
+
+Calendar brand metadata remains deployment-level only and introduces no per-salon, per-user, per-booking, or per-locale calendar branding. Calendar/timezone semantics, Gregorian/Jalali presentation, locale, and direction are unchanged; broader calendar/timezone globalization remains owned by later roadmap phases. A later separately authorized Phase 2 task will wire calendar runtime consumers through this boundary. Phase 2 is not claimed complete.
