@@ -7,7 +7,7 @@
           <i class="fa-solid fa-chevron-right"></i>
         </a>
       {% else %}
-        <a href="{% url 'salons:home' %}" class="lm-shell-brand-link" aria-label="Loomera home">
+        <a href="{% url 'salons:home' %}" class="lm-shell-brand-link" aria-label="{{ deployment_brand.display_name }} home">
           {% include "partials/brand/logo.html" with logo_variant="compact" logo_size="sm" %}
         </a>
       {% endif %}

@@ -1,7 +1,7 @@
 {% load static %}
 <header class="lm-shell-desktop-site-header hidden lg:block">
   <div class="lm-shell-desktop-site-header__inner lm-app-container">
-    <a href="{% url 'salons:home' %}" class="lm-shell-desktop-brand" aria-label="Loomera home">
+    <a href="{% url 'salons:home' %}" class="lm-shell-desktop-brand" aria-label="{{ deployment_brand.display_name }} home">
       {% include "partials/brand/logo.html" with logo_variant="header" logo_size="md" %}
     </a>
 

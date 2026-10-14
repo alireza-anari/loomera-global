@@ -2136,3 +2136,52 @@ class SharedEmailSenderIdentityTests(SimpleTestCase):
                             isinstance(target, ast.Name) and target.id == "settings"
                             and isinstance(name, ast.Constant)
                             and name.value == "DEFAULT_FROM_EMAIL", path)
+
+
+class SharedHeaderFooterBrandIdentityTests(SimpleTestCase):
+    def _template_source(self, relative_path: str) -> str:
+        return (
+            Path(settings.BASE_DIR) / "templates" / relative_path
+        ).read_text(encoding="utf-8")
+
+    def test_shared_home_labels_use_template_brand_context_without_literal_or_new_accessor(self):
+        for relative_path in (
+            "partials/shell/desktop_site_header.html",
+            "partials/shell/mobile_app_header.html",
+        ):
+            with self.subTest(template=relative_path):
+                source = self._template_source(relative_path)
+                self.assertNotIn('aria-label="Loomera home"', source)
+                self.assertIn(
+                    'aria-label="{{ deployment_brand.display_name }} home"',
+                    source,
+                )
+                self.assertEqual(
+                    source.count('{% include "partials/brand/logo.html"'),
+                    1,
+                )
+                self.assertNotIn("get_deployment_brand_config", source)
+
+    def test_footer_uses_shared_display_name_and_preserves_persian_tagline(self):
+        source = self._template_source("partials/footer.html")
+
+        self.assertNotIn("© {{ now|default:'' }} Loomera", source)
+        self.assertIn(
+            "© {{ now|default:'' }} {{ deployment_brand.display_name }}",
+            source,
+        )
+        self.assertIn("برای انتخابی روشن‌تر و رزروی آرام‌تر", source)
+        self.assertNotIn("get_deployment_brand_config", source)
+
+    def test_footer_renders_alternate_deployment_brand_without_template_edit(self):
+        rendered = render_to_string(
+            "partials/footer.html",
+            {
+                "now": "2026",
+                "deployment_brand": SimpleNamespace(display_name="Aurora"),
+            },
+        )
+
+        self.assertIn("© 2026 Aurora", rendered)
+        self.assertNotIn("Loomera", rendered)
+        self.assertIn("برای انتخابی روشن‌تر و رزروی آرام‌تر", rendered)
