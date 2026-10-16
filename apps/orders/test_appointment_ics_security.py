@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from datetime import time
+from urllib.parse import parse_qs, urlparse
 
 from django.test import TestCase, override_settings
 from django.urls import reverse
@@ -133,7 +134,66 @@ class AppointmentICSSecurityTests(TestCase):
         self.assertIn("BEGIN:VCALENDAR", body)
         self.assertIn("BEGIN:VEVENT", body)
         self.assertIn("END:VCALENDAR", body)
+        self.assertIn("PRODID:-//Loomera//Appointment//FA", body)
+        self.assertIn("X-WR-CALNAME:Loomera Appointment", body)
+        self.assertIn(
+            f"UID:loomera-appointment-{appointment.pk}-{appointment.order_id}@loomera.local",
+            body,
+        )
+        self.assertEqual(
+            response["Content-Disposition"],
+            f'inline; filename="loomera-appointment-{appointment.pk}.ics"',
+        )
         self.assertIn("text/calendar", response["Content-Type"])
+
+    @override_settings(
+        BRAND_NAME="Aurora",
+        BRAND_DISPLAY_NAME="Aurora",
+        BRAND_DOMAIN="aurora.example",
+        LOOMERA_CALENDAR_PRODID="-//Aurora Corp//Booking//EN",
+        LOOMERA_CALENDAR_NAME="Aurora Appointments",
+    )
+    def test_ics_uses_alternate_deployment_brand_identity(self):
+        customer = self._customer(mobile="09125000106")
+        appointment = self._appointment(customer=customer)
+
+        self.client.force_login(customer.user)
+
+        response = self.client.get(
+            reverse("orders:appointment_ics", kwargs={"pk": appointment.pk})
+        )
+
+        self.assertEqual(response.status_code, 200)
+        body = response.content.decode("utf-8")
+
+        self.assertIn("PRODID:-//Aurora Corp//Booking//EN", body)
+        self.assertIn("X-WR-CALNAME:Aurora Appointments", body)
+        self.assertIn(
+            f"UID:aurora-appointment-{appointment.pk}-{appointment.order_id}@aurora.example",
+            body,
+        )
+        self.assertEqual(
+            response["Content-Disposition"],
+            f'inline; filename="aurora-appointment-{appointment.pk}.ics"',
+        )
+        self.assertNotIn("loomera-appointment", body.lower())
+        self.assertNotIn("loomera-appointment", response["Content-Disposition"].lower())
+
+    @override_settings(BRAND_DISPLAY_NAME="Aurora")
+    def test_google_calendar_details_use_deployment_display_name(self):
+        customer = self._customer(mobile="09125000107")
+        appointment = self._appointment(customer=customer)
+
+        self.client.force_login(customer.user)
+
+        response = self.client.get(
+            reverse("orders:appointment_detail", kwargs={"pk": appointment.pk})
+        )
+
+        self.assertEqual(response.status_code, 200)
+        google_calendar_link = response.context["google_calendar_link"]
+        query = parse_qs(urlparse(google_calendar_link).query)
+        self.assertEqual(query["details"], ["رزرو شما در Aurora"])
 
     @override_settings(
         BRAND_DOMAIN="loomera.local\r\nX-INJECTED:1",

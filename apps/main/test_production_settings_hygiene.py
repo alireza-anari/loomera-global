@@ -825,9 +825,134 @@ class SharedBrandConfigurationBoundaryTests(SimpleTestCase):
                 "apps/main/seo.py",
                 "apps/notifications/delivery.py",
                 "apps/orders/notification_delivery.py",
+                "apps/orders/views.py",
                 "loomera/branding/context_processors.py",
             ],
         )
+
+
+class CalendarRuntimeBrandIdentityTests(SimpleTestCase):
+    @staticmethod
+    def _views_source_and_tree():
+        path = Path(settings.BASE_DIR) / "apps" / "orders" / "views.py"
+        source = path.read_text(encoding="utf-8")
+        return source, ast.parse(source, filename=str(path))
+
+    def test_calendar_runtime_uses_brand_boundary_without_direct_setting_reads(self):
+        source, tree = self._views_source_and_tree()
+        forbidden_settings = {
+            "BRAND_DISPLAY_NAME",
+            "BRAND_DOMAIN",
+            "LOOMERA_CALENDAR_PRODID",
+            "LOOMERA_CALENDAR_NAME",
+        }
+        direct_reads = {
+            node.attr
+            for node in ast.walk(tree)
+            if isinstance(node, ast.Attribute)
+            and isinstance(node.value, ast.Name)
+            and node.value.id == "settings"
+            and node.attr in forbidden_settings
+        }
+        getattr_reads = {
+            node.args[1].value
+            for node in ast.walk(tree)
+            if isinstance(node, ast.Call)
+            and isinstance(node.func, ast.Name)
+            and node.func.id == "getattr"
+            and len(node.args) >= 2
+            and isinstance(node.args[0], ast.Name)
+            and node.args[0].id == "settings"
+            and isinstance(node.args[1], ast.Constant)
+            and node.args[1].value in forbidden_settings
+        }
+        self.assertEqual(direct_reads | getattr_reads, set())
+
+        imports = [
+            alias
+            for node in tree.body
+            if isinstance(node, ast.ImportFrom)
+            and node.module == "loomera.branding.config"
+            for alias in node.names
+            if alias.name == "get_deployment_brand_config"
+        ]
+        self.assertEqual(len(imports), 1)
+        self.assertIsNone(imports[0].asname)
+
+        for field_name in (
+            "display_name",
+            "name",
+            "domain",
+            "calendar_prodid",
+            "calendar_name",
+        ):
+            self.assertIn(f"deployment_brand.{field_name}", source)
+
+        self.assertNotIn("loomera-appointment", source)
+
+    def test_calendar_runtime_resolves_one_fresh_snapshot_per_surface(self):
+        _, tree = self._views_source_and_tree()
+        detail_view = next(
+            node
+            for node in tree.body
+            if isinstance(node, ast.ClassDef) and node.name == "AppointmentDetailView"
+        )
+        detail_method = next(
+            node
+            for node in detail_view.body
+            if isinstance(node, ast.FunctionDef) and node.name == "get_context_data"
+        )
+        ics_view = next(
+            node
+            for node in tree.body
+            if isinstance(node, ast.ClassDef) and node.name == "AppointmentICSView"
+        )
+        ics_method = next(
+            node
+            for node in ics_view.body
+            if isinstance(node, ast.FunctionDef) and node.name == "get"
+        )
+
+        def accessor_calls(node):
+            return [
+                call
+                for call in ast.walk(node)
+                if isinstance(call, ast.Call)
+                and isinstance(call.func, ast.Name)
+                and call.func.id == "get_deployment_brand_config"
+            ]
+
+        self.assertEqual(len(accessor_calls(detail_method)), 1)
+        self.assertEqual(len(accessor_calls(ics_method)), 1)
+        self.assertEqual(
+            len(
+                [
+                    call
+                    for call in ast.walk(tree)
+                    if isinstance(call, ast.Call)
+                    and isinstance(call.func, ast.Name)
+                    and call.func.id == "get_deployment_brand_config"
+                ]
+            ),
+            2,
+        )
+        module_level_calls = [
+            node
+            for node in tree.body
+            if isinstance(node, ast.Expr)
+            and isinstance(node.value, ast.Call)
+            and isinstance(node.value.func, ast.Name)
+            and node.value.func.id == "get_deployment_brand_config"
+        ]
+        self.assertEqual(module_level_calls, [])
+
+    def test_calendar_brand_token_is_machine_safe_and_deployment_neutral(self):
+        from apps.orders.views import _calendar_brand_token
+
+        self.assertEqual(_calendar_brand_token("Loomera"), "loomera")
+        self.assertEqual(_calendar_brand_token("Aurora"), "aurora")
+        self.assertEqual(_calendar_brand_token(""), "brand")
+        self.assertEqual(_calendar_brand_token("###"), "brand")
 
 
 class SharedBrandColorConfigurationBoundaryTests(SimpleTestCase):

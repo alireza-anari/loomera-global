@@ -20,6 +20,7 @@ from apps.accounts.services.access import ensure_customer
 from apps.salons.models import Salon
 from apps.services.models import ServicePrice, Services
 from apps.stylists.models import StaffLeaveRequest, StylistSchedule
+from loomera.branding.config import get_deployment_brand_config
 from .booking_utils import (
     BLOCKING_STATUSES,
     build_cancellation_policy,
@@ -2940,10 +2941,9 @@ class AppointmentDetailView(LoginRequiredMixin, DetailView):
                 .strftime("%Y%m%dT%H%M%SZ")
             )
 
+        deployment_brand = get_deployment_brand_config()
         title = quote(f"{appointment.salon.salon_name} - نوبت")
-        details = quote(
-            f"رزرو شما در {getattr(settings, 'BRAND_DISPLAY_NAME', 'Loomera')}"
-        )
+        details = quote(f"رزرو شما در {deployment_brand.display_name}")
         location_txt = quote((appointment.salon.address or "").strip())
         dates = f"{gcal_fmt(start_dt)}/{gcal_fmt(end_dt)}"
         context["google_calendar_link"] = (
@@ -3270,6 +3270,10 @@ from django.utils.text import slugify
 from urllib.parse import quote
 
 
+def _calendar_brand_token(value):
+    return slugify(str(value or "").strip()) or "brand"
+
+
 class AppointmentICSView(LoginRequiredMixin, View):
     """
     دانلود فایل ICS برای اضافه شدن به تقویم (Mobile Calendar / Outlook / Apple)
@@ -3283,6 +3287,8 @@ class AppointmentICSView(LoginRequiredMixin, View):
             pk=pk,
             order__customer__user=request.user,
         )
+        deployment_brand = get_deployment_brand_config()
+        brand_token = _calendar_brand_token(deployment_brand.name)
 
         # ----- datetime start/end (timezone-aware) -----
         order_items = sorted(
@@ -3372,22 +3378,18 @@ class AppointmentICSView(LoginRequiredMixin, View):
         dtstamp = timezone.now().strftime("%Y%m%dT%H%M%SZ")
 
         uid_domain = _clean_ics_token(
-            getattr(settings, "BRAND_DOMAIN", "loomera.local"),
-            default="loomera.local",
+            deployment_brand.domain,
+            default="brand.local",
         )
         uid = _clean_ics_token(
-            f"loomera-appointment-{appointment.pk}-{appointment.order_id}@{uid_domain}",
-            default=f"loomera-appointment-{appointment.pk}@loomera.local",
+            f"{brand_token}-appointment-{appointment.pk}-{appointment.order_id}@{uid_domain}",
+            default=(
+                f"{brand_token}-appointment-{appointment.pk}-{appointment.order_id}@brand.local"
+            ),
         )
 
-        prodid = _escape_ics_text(
-            getattr(settings, "LOOMERA_CALENDAR_PRODID", "-//Loomera//Appointment//FA"),
-            default="-//Loomera//Appointment//FA",
-        )
-        calendar_name = _escape_ics_text(
-            getattr(settings, "LOOMERA_CALENDAR_NAME", "Loomera Appointment"),
-            default="Loomera Appointment",
-        )
+        prodid = _escape_ics_text(deployment_brand.calendar_prodid)
+        calendar_name = _escape_ics_text(deployment_brand.calendar_name)
 
         ics = (
             "BEGIN:VCALENDAR\r\n"
@@ -3408,7 +3410,7 @@ class AppointmentICSView(LoginRequiredMixin, View):
             "END:VCALENDAR\r\n"
         )
 
-        filename = f"loomera-appointment-{appointment.pk}.ics"
+        filename = f"{brand_token}-appointment-{appointment.pk}.ics"
         resp = HttpResponse(ics, content_type="text/calendar; charset=utf-8")
         # ✅ inline به جای attachment → Android app chooser نشان می‌دهد
         resp["Content-Disposition"] = f'inline; filename="{filename}"'
