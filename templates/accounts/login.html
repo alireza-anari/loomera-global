@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% load static %}
 
-{% block title %}ورود به لومرا{% endblock %}
+{% block title %}ورود به {{ deployment_brand.display_name }}{% endblock %}
 {% block body_attrs %}data-page="auth" data-auth-flow="login"{% endblock %}
 {% block main_class %}lm-login-main{% endblock %}
 
@@ -24,7 +24,7 @@
     <div class="lm-login-visual-background-softener"></div>
   </div>
 
-  {# Mobile keeps the existing lightweight Loomera surface instead of aggressively cropping the desktop artwork. #}
+  {# Mobile keeps the existing lightweight deployment surface instead of aggressively cropping the desktop artwork. #}
   <div class="lm-login-mobile-surface pointer-events-none -z-10" aria-hidden="true">
     <div class="absolute inset-x-0 top-0 h-80 bg-[radial-gradient(circle_at_80%_10%,rgba(115,92,190,0.14),transparent_35%),radial-gradient(circle_at_15%_30%,rgba(167,200,161,0.18),transparent_32%)]"></div>
   </div>
@@ -32,15 +32,15 @@
   <div class="lm-login-visual-frame">
     <div class="lm-login-visual-panel">
       <div class="lm-login-visual-toolbar">
-        <a href="{% url 'salons:home' %}" class="lm-login-visual-pill" aria-label="صفحه اصلی Loomera">
-          <img src="{% static 'branding/logo/loomera-glyph-mark.png' %}" alt="" class="lm-login-visual-logo" loading="eager" decoding="async">
-          <span>Loomera</span>
+        <a href="{% url 'salons:home' %}" class="lm-login-visual-pill" aria-label="صفحه اصلی {{ deployment_brand.display_name }}">
+          {% include "partials/brand/logo.html" with logo_variant="glyph" logo_size="sm" %}
+          <span>{{ deployment_brand.display_name }}</span>
         </a>
       </div>
 
       <section class="lm-login-visual-card" aria-label="فرم ورود">
         <header>
-          <h1 id="login-title" class="lm-login-title"><span>ورود به </span><span class="lm-login-title-brand">لومرا</span></h1>
+          <h1 id="login-title" class="lm-login-title"><span>ورود به </span><span class="lm-login-title-brand">{{ deployment_brand.display_name }}</span></h1>
           {% if next_url %}
             <p class="lm-login-return-copy mt-2">برای ادامه رزرو وارد حساب مشتری شو؛ بعد از ورود به همین مرحله برمی‌گردی.</p>
           {% endif %}

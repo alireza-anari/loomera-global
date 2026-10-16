@@ -2354,3 +2354,47 @@ class PasswordRecoveryBrandIdentityTests(SimpleTestCase):
         source = self._source("apps/accounts/views.py")
 
         self.assertNotIn("get_deployment_brand_config", source)
+
+
+class LoginBrandIdentityTests(SimpleTestCase):
+    @staticmethod
+    def _source(relative_path: str) -> str:
+        return (Path(settings.BASE_DIR) / relative_path).read_text(encoding="utf-8")
+
+    def test_active_login_template_uses_shared_deployment_brand_identity(self):
+        source = self._source("templates/accounts/login.html")
+        include = (
+            '{% include "partials/brand/logo.html" with '
+            'logo_variant="glyph" logo_size="sm" %}'
+        )
+
+        self.assertEqual(source.count('{% include "partials/brand/logo.html"'), 1)
+        self.assertIn(include, source)
+        self.assertIn(
+            "{% block title %}ورود به {{ deployment_brand.display_name }}{% endblock %}",
+            source,
+        )
+        self.assertIn(
+            'aria-label="صفحه اصلی {{ deployment_brand.display_name }}"',
+            source,
+        )
+        self.assertIn("<span>{{ deployment_brand.display_name }}</span>", source)
+        self.assertIn(
+            '<span class="lm-login-title-brand">{{ deployment_brand.display_name }}</span>',
+            source,
+        )
+        self.assertEqual(source.count("deployment_brand.display_name"), 4)
+        self.assertNotIn("branding/logo/loomera-glyph-mark.png", source)
+        self.assertNotIn("صفحه اصلی Loomera", source)
+        self.assertNotIn("ورود به لومرا", source)
+        self.assertNotIn("Loomera", source)
+        self.assertNotIn("لومرا", source)
+        self.assertEqual(source.count("branding/auth/login-desktop-hero.png"), 1)
+        self.assertIn("{% load static %}", source)
+        self.assertIn("bg-loomera-bg", source)
+        self.assertIn("text-loomera-textPrimary", source)
+
+    def test_accounts_view_remains_outside_brand_accessor_boundary(self):
+        source = self._source("apps/accounts/views.py")
+
+        self.assertNotIn("get_deployment_brand_config", source)
