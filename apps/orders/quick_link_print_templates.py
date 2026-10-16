@@ -7,12 +7,15 @@ from functools import lru_cache
 from io import BytesIO
 from zipfile import ZIP_DEFLATED, ZipFile
 from pathlib import Path
+from urllib.parse import urlsplit
 
-from django.conf import settings
 from django.contrib.staticfiles import finders
 from django.core.exceptions import DisallowedHost
 from django.core.exceptions import ImproperlyConfigured
 from PIL import Image, ImageDraw, ImageFont, ImageOps, features
+
+from loomera.branding.assets import get_deployment_brand_asset_config
+from loomera.branding.config import get_deployment_brand_config
 
 from .models import BookingQuickLink
 from .quick_link_qr import generate_booking_quick_link_qr
@@ -22,12 +25,6 @@ PRINT_TEMPLATE_DPI = 300
 PRINT_TEMPLATE_PREVIEW_MAX_PIXELS = 900
 PRINT_TEMPLATE_CONTENT_TYPE = "image/png"
 
-PRINT_TEMPLATE_LOGO = (
-    "branding/logo/loomera-logo-horizontal-rtl-transparent-360.png"
-)
-PRINT_TEMPLATE_SYMBOL = (
-    "branding/logo/loomera-symbol-transparent-160.png"
-)
 PRINT_TEMPLATE_FONT_REGULAR = (
     "fonts/yekan-bakh/YekanBakh-Regular.woff2"
 )
@@ -134,6 +131,13 @@ GREEN = (167, 200, 161, 255)
 WHITE = (255, 255, 255, 255)
 TRANSPARENT = (255, 255, 255, 0)
 
+_LOCAL_HOST_MARKERS = (
+    "127.0.0.1",
+    "localhost",
+    "0.0.0.0",
+    "testserver",
+)
+
 
 @dataclass(frozen=True)
 class BookingQuickLinkPrintTemplateSpec:
@@ -230,6 +234,10 @@ def get_booking_quick_link_print_template_spec(template_key: str):
         ) from exc
 
 
+def _deployment_print_logo_path():
+    return get_deployment_brand_asset_config().logo_header_path
+
+
 def _resolve_static_path(static_path: str) -> Path:
     resolved = finders.find(static_path)
 
@@ -255,8 +263,7 @@ def validate_booking_quick_link_print_template_dependencies():
     # Windows Pillow wheels may be built without RAQM. In that
     # environment the local Persian shaping fallback below is used.
     for static_path in (
-        PRINT_TEMPLATE_LOGO,
-        PRINT_TEMPLATE_SYMBOL,
+        _deployment_print_logo_path(),
         PRINT_TEMPLATE_FONT_REGULAR,
         PRINT_TEMPLATE_FONT_BOLD,
         PRINT_TEMPLATE_FONT_BLACK,
@@ -853,6 +860,78 @@ def _single_line_value(value):
     return " ".join(str(value or "").split()).strip()
 
 
+def _is_public_identity_value(value):
+    cleaned = _single_line_value(value)
+    return bool(
+        cleaned
+        and not any(
+            marker in cleaned.lower()
+            for marker in _LOCAL_HOST_MARKERS
+        )
+    )
+
+
+def _deployment_print_public_base_url(request=None):
+    deployment_brand = get_deployment_brand_config()
+
+    for candidate in (
+        deployment_brand.public_base_url,
+        deployment_brand.site_url,
+    ):
+        cleaned = _single_line_value(candidate)
+        if _is_public_identity_value(cleaned):
+            return cleaned.rstrip("/")
+
+    if request is not None:
+        try:
+            host = str(request.get_host()).strip()
+        except DisallowedHost:
+            host = ""
+
+        if _is_public_identity_value(host):
+            return "https://" + host.rstrip("/")
+
+    domain = _single_line_value(deployment_brand.domain).strip("/")
+    if _is_public_identity_value(domain):
+        return "https://" + domain
+
+    return ""
+
+
+def _public_identity_hostname(value):
+    cleaned = _single_line_value(value).rstrip("/")
+    if not cleaned:
+        return ""
+
+    parsed = urlsplit(
+        cleaned
+        if "://" in cleaned
+        else "//" + cleaned
+    )
+    return str(parsed.hostname or "").strip()
+
+
+def _deployment_print_display_host():
+    deployment_brand = get_deployment_brand_config()
+
+    for candidate in (
+        deployment_brand.public_base_url,
+        deployment_brand.site_url,
+    ):
+        cleaned = _single_line_value(candidate)
+        if not _is_public_identity_value(cleaned):
+            continue
+        hostname = _public_identity_hostname(cleaned)
+        if hostname:
+            return hostname
+
+    domain = _single_line_value(deployment_brand.domain)
+    if not _is_public_identity_value(domain):
+        return ""
+
+    return _public_identity_hostname(domain) or domain.strip("/")
+
+
 def _business_card_public_salon_url(
     request,
     salon,
@@ -865,49 +944,13 @@ def _business_card_public_salon_url(
         )
     )
 
-    local_markers = (
-        "127.0.0.1",
-        "localhost",
-        "0.0.0.0",
-        "testserver",
-    )
-
     if (
         canonical
-        and not any(
-            marker in canonical.lower()
-            for marker in local_markers
-        )
+        and _is_public_identity_value(canonical)
     ):
         return canonical
 
-    public_base = ""
-
-    for setting_name in (
-        "PUBLIC_BASE_URL",
-        "SITE_URL",
-    ):
-        candidate = _single_line_value(
-            getattr(
-                settings,
-                setting_name,
-                "",
-            )
-        )
-
-        if (
-            candidate
-            and not any(
-                marker
-                in candidate.lower()
-                for marker in local_markers
-            )
-        ):
-            public_base = candidate
-            break
-
-    if not public_base:
-        public_base = "https://loomera.ir"
+    public_base = _deployment_print_public_base_url()
 
     return (
         public_base.rstrip("/")
@@ -1594,55 +1637,7 @@ def _load_table_stand_art(spec):
 
 
 def _table_stand_public_base_url(request):
-    local_markers = (
-        "127.0.0.1",
-        "localhost",
-        "0.0.0.0",
-        "testserver",
-    )
-
-    for setting_name in (
-        "PUBLIC_BASE_URL",
-        "SITE_URL",
-    ):
-        candidate = str(
-            getattr(
-                settings,
-                setting_name,
-                "",
-            )
-            or ""
-        ).strip()
-
-        if (
-            candidate
-            and not any(
-                marker in candidate.lower()
-                for marker in local_markers
-            )
-        ):
-            return candidate.rstrip("/")
-
-    try:
-        host = str(
-            request.get_host()
-        ).strip()
-    except DisallowedHost:
-        host = ""
-
-    if (
-        host
-        and not any(
-            marker in host.lower()
-            for marker in local_markers
-        )
-    ):
-        return (
-            "https://"
-            + host.rstrip("/")
-        )
-
-    return "https://loomera.ir"
+    return _deployment_print_public_base_url(request)
 
 
 class _TableStandPublicRequest:
@@ -1822,14 +1817,14 @@ def _render_counter_card(*, request, quick_link, spec):
     )
     draw.text(
         (348, 850),
-        "loomera.ir",
+        _deployment_print_display_host(),
         font=_load_font("bold", 31),
         fill=WHITE,
         anchor="mm",
     )
 
     logo = _load_asset(
-        PRINT_TEMPLATE_LOGO,
+        _deployment_print_logo_path(),
         max_size=(390, 110),
     )
     canvas.alpha_composite(logo, (1260, 95))

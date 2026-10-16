@@ -825,6 +825,7 @@ class SharedBrandConfigurationBoundaryTests(SimpleTestCase):
                 "apps/main/seo.py",
                 "apps/notifications/delivery.py",
                 "apps/orders/notification_delivery.py",
+                "apps/orders/quick_link_print_templates.py",
                 "apps/orders/views.py",
                 "loomera/branding/context_processors.py",
             ],
@@ -1604,7 +1605,7 @@ class SharedBrandAssetConfigurationTests(SimpleTestCase):
         self.assertNotIn("salon", source.lower())
         self.assertNotIn("business", source.lower())
 
-    def test_asset_boundary_runtime_consumer_is_only_shared_template_context(self):
+    def test_asset_boundary_runtime_consumers_are_explicitly_approved(self):
         project_root = Path(settings.BASE_DIR)
         assets_path = project_root / "loomera" / "branding" / "assets.py"
         test_path = project_root / "apps" / "main" / "test_production_settings_hygiene.py"
@@ -1621,7 +1622,13 @@ class SharedBrandAssetConfigurationTests(SimpleTestCase):
                 ):
                     occurrences.append(path.relative_to(project_root).as_posix())
 
-        self.assertEqual(occurrences, ["loomera/branding/context_processors.py"])
+        self.assertCountEqual(
+            occurrences,
+            [
+                "apps/orders/quick_link_print_templates.py",
+                "loomera/branding/context_processors.py",
+            ],
+        )
 
     def test_default_logo_variants_use_compatibility_assets_and_alt_rules(self):
         context = self._template_context()
@@ -2398,3 +2405,137 @@ class LoginBrandIdentityTests(SimpleTestCase):
         source = self._source("apps/accounts/views.py")
 
         self.assertNotIn("get_deployment_brand_config", source)
+
+
+class QuickLinkPrintBrandIdentityTests(SimpleTestCase):
+    @staticmethod
+    def _source_and_tree():
+        path = Path(settings.BASE_DIR) / "apps" / "orders" / "quick_link_print_templates.py"
+        source = path.read_text(encoding="utf-8")
+        return source, ast.parse(source, filename=str(path))
+
+    def test_source_uses_existing_brand_boundaries_without_fixed_print_identity(self):
+        source, tree = self._source_and_tree()
+        imported = {
+            alias.name
+            for node in tree.body
+            if isinstance(node, ast.ImportFrom)
+            and node.module in {"loomera.branding.config", "loomera.branding.assets"}
+            for alias in node.names
+        }
+        self.assertIn("get_deployment_brand_config", imported)
+        self.assertIn("get_deployment_brand_asset_config", imported)
+        self.assertIn("logo_header_path", source)
+        self.assertNotIn(
+            "branding/logo/loomera-logo-horizontal-rtl-transparent-360.png",
+            source,
+        )
+        self.assertNotIn("branding/logo/loomera-symbol-transparent-160.png", source)
+        self.assertNotIn("PRINT_TEMPLATE_SYMBOL", source)
+        self.assertNotIn("https://loomera.ir", source)
+        self.assertNotIn('"loomera.ir"', source)
+        self.assertNotIn("'loomera.ir'", source)
+        self.assertNotIn("from django.conf import settings", source)
+        self.assertNotIn("settings.PUBLIC_BASE_URL", source)
+        self.assertNotIn("settings.SITE_URL", source)
+
+        accessor_names = {
+            "get_deployment_brand_config",
+            "get_deployment_brand_asset_config",
+        }
+        module_snapshots = []
+        for node in tree.body:
+            value = None
+            if isinstance(node, ast.Assign):
+                value = node.value
+            elif isinstance(node, ast.AnnAssign):
+                value = node.value
+            if (
+                isinstance(value, ast.Call)
+                and isinstance(value.func, ast.Name)
+                and value.func.id in accessor_names
+            ):
+                module_snapshots.append(value.func.id)
+        self.assertEqual(module_snapshots, [])
+
+    def test_helpers_resolve_fresh_overrides_after_module_import(self):
+        from apps.orders import quick_link_print_templates as print_templates
+
+        with override_settings(
+            BRAND_DOMAIN="example.test",
+            PUBLIC_BASE_URL="https://booking.example.test",
+            SITE_URL="https://site.example.test",
+            BRAND_LOGO_HEADER_STATIC_PATH="branding/custom/example-header.png",
+        ):
+            self.assertEqual(
+                print_templates._deployment_print_logo_path(),
+                "branding/custom/example-header.png",
+            )
+            self.assertEqual(
+                print_templates._deployment_print_public_base_url(),
+                "https://booking.example.test",
+            )
+            self.assertEqual(
+                print_templates._deployment_print_display_host(),
+                "booking.example.test",
+            )
+
+    def test_public_base_fallback_order_and_hostname_only(self):
+        from apps.orders import quick_link_print_templates as print_templates
+
+        with override_settings(
+            BRAND_DOMAIN="example.test",
+            PUBLIC_BASE_URL="",
+            SITE_URL="https://site.example.test/base",
+        ):
+            self.assertEqual(
+                print_templates._deployment_print_public_base_url(),
+                "https://site.example.test/base",
+            )
+            self.assertEqual(
+                print_templates._deployment_print_display_host(),
+                "site.example.test",
+            )
+
+        with override_settings(
+            BRAND_DOMAIN="example.test",
+            PUBLIC_BASE_URL="",
+            SITE_URL="",
+        ):
+            self.assertEqual(
+                print_templates._deployment_print_public_base_url(),
+                "https://example.test",
+            )
+            self.assertEqual(
+                print_templates._deployment_print_display_host(),
+                "example.test",
+            )
+
+    def test_request_host_and_disallowed_host_fallback_semantics_are_preserved(self):
+        from django.core.exceptions import DisallowedHost
+        from apps.orders import quick_link_print_templates as print_templates
+
+        with override_settings(
+            BRAND_DOMAIN="example.test",
+            PUBLIC_BASE_URL="",
+            SITE_URL="",
+        ):
+            request = SimpleNamespace(get_host=lambda: "request.example.test")
+            self.assertEqual(
+                print_templates._deployment_print_public_base_url(request),
+                "https://request.example.test",
+            )
+            local_request = SimpleNamespace(get_host=lambda: "localhost:8000")
+            self.assertEqual(
+                print_templates._deployment_print_public_base_url(local_request),
+                "https://example.test",
+            )
+
+            def disallowed_host():
+                raise DisallowedHost
+
+            rejected_request = SimpleNamespace(get_host=disallowed_host)
+            self.assertEqual(
+                print_templates._deployment_print_public_base_url(rejected_request),
+                "https://example.test",
+            )
