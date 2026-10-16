@@ -2320,3 +2320,37 @@ class SharedHeaderFooterBrandIdentityTests(SimpleTestCase):
         self.assertIn("© 2026 Aurora", rendered)
         self.assertNotIn("Loomera", rendered)
         self.assertIn("برای انتخابی روشن‌تر و رزروی آرام‌تر", rendered)
+
+
+class PasswordRecoveryBrandIdentityTests(SimpleTestCase):
+    @staticmethod
+    def _source(relative_path: str) -> str:
+        return (Path(settings.BASE_DIR) / relative_path).read_text(encoding="utf-8")
+
+    def test_active_recovery_template_uses_shared_brand_boundary(self):
+        source = self._source("templates/accounts/remember_password.html")
+
+        self.assertEqual(
+            source.count('{% include "partials/brand/logo.html"'),
+            1,
+        )
+        self.assertIn(
+            '{% include "partials/brand/logo.html" with variant="full" size="lg" %}',
+            source,
+        )
+        self.assertIn(
+            "امنیت حساب {{ deployment_brand.display_name }}",
+            source,
+        )
+        self.assertIn('<a href="/" class="inline-flex items-center">', source)
+        self.assertNotIn("branding/logo/loomera-logo-horizontal-transparent.png", source)
+        self.assertNotIn('alt="Loomera"', source)
+        self.assertNotIn("امنیت حساب Loomera", source)
+        self.assertNotIn("Loomera", source)
+        self.assertNotIn("لومرا", source)
+        self.assertNotIn("{% load static %}", source)
+
+    def test_accounts_view_remains_outside_brand_accessor_boundary(self):
+        source = self._source("apps/accounts/views.py")
+
+        self.assertNotIn("get_deployment_brand_config", source)
