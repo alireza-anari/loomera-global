@@ -150,7 +150,7 @@ It defines exactly two public symbols:
 - `DeploymentBrandAssetConfig` — a frozen immutable snapshot of the resolved deployment brand asset settings;
 - `get_deployment_brand_asset_config()` — constructs a fresh snapshot from `django.conf.settings` on every call.
 
-The deployment asset snapshot has exactly **20 frozen fields** (15 original fields, four Task 2.16 quick-link print artwork paths, and the Task 2.17 QR glyph path). The settings map exactly as follows:
+As of Task 2.18, the deployment asset snapshot has exactly **24 frozen fields** (15 original fields, four Task 2.16 quick-link print artwork paths, the Task 2.17 QR glyph path, and four Task 2.18 authentication hero paths). The settings map exactly as follows:
 
 | Django/environment setting | Snapshot field | Loomera compatibility default |
 | --- | --- | --- |
@@ -172,6 +172,10 @@ The deployment asset snapshot has exactly **20 frozen fields** (15 original fiel
 | `BRAND_QUICK_LINK_BUSINESS_CARD_BACK_ART_STATIC_PATH` | `quick_link_business_card_back_art_path` | `branding/quick-links/business-card-back.png` |
 | `BRAND_QUICK_LINK_TABLE_STAND_ART_STATIC_PATH` | `quick_link_table_stand_art_path` | `branding/quick-links/table-stand.png` |
 | `BRAND_QUICK_LINK_QR_GLYPH_STATIC_PATH` | `quick_link_qr_glyph_path` | `branding/logo/loomera-glyph-mark-square-transparent-512.png` |
+| `BRAND_AUTH_LOGIN_DESKTOP_HERO_STATIC_PATH` | `auth_login_desktop_hero_path` | `branding/auth/login-desktop-hero.png` |
+| `BRAND_AUTH_CUSTOMER_SIGNUP_HERO_STATIC_PATH` | `auth_customer_signup_hero_path` | `branding/auth/customer-signup-hero.png` |
+| `BRAND_AUTH_STYLIST_SIGNUP_HERO_STATIC_PATH` | `auth_stylist_signup_hero_path` | `branding/auth/stylist-signup-hero.png` |
+| `BRAND_AUTH_MANAGER_SIGNUP_HERO_STATIC_PATH` | `auth_manager_signup_hero_path` | `branding/auth/manager-signup-hero.png` |
 | `BRAND_SOCIAL_IMAGE_WIDTH` | `social_image_width` | `1254` |
 | `BRAND_SOCIAL_IMAGE_HEIGHT` | `social_image_height` | `1254` |
 
@@ -323,7 +327,7 @@ The login desktop hero-artwork deployment-brand decision also remains deferred, 
 
 ## Quick-Link Print Artwork Asset Configuration
 
-Task 2.16 adds deployment-level asset substitution for the four **existing static print artwork images**. Each setting above is an environment/Django setting resolved and validated at settings import by the existing `_read_brand_static_path` helper. `get_deployment_brand_asset_config()` returns a **fresh, frozen 20-field snapshot** at runtime. The four artwork consumers in `apps/orders/quick_link_print_templates.py` and the print dependency checker use the snapshot with Django staticfiles resolution; the previous fixed paths are no longer authoritative. The Task 2.15 generated print logo remains independently controlled by `BRAND_LOGO_HEADER_STATIC_PATH`.
+Task 2.16 adds deployment-level asset substitution for the four **existing static print artwork images**. Each setting above is an environment/Django setting resolved and validated at settings import by the existing `_read_brand_static_path` helper. `get_deployment_brand_asset_config()` now returns a **fresh, frozen 24-field snapshot** at runtime (it contained 19 fields when Task 2.16 originally landed). The four artwork consumers in `apps/orders/quick_link_print_templates.py` and the print dependency checker use the snapshot with Django staticfiles resolution; the previous fixed paths are no longer authoritative. The Task 2.15 generated print logo remains independently controlled by `BRAND_LOGO_HEADER_STATIC_PATH`.
 
 To supply buyer-branded print artwork:
 
@@ -345,7 +349,7 @@ The remaining deployment-brand decision for `branding/auth/login-desktop-hero.pn
 
 ## Quick-Link QR Center Glyph Deployment Asset
 
-Task 2.17 adds exactly one setting, `BRAND_QUICK_LINK_QR_GLYPH_STATIC_PATH`, with the unchanged compatibility default `branding/logo/loomera-glyph-mark-square-transparent-512.png`. It maps to `DeploymentBrandAssetConfig.quick_link_qr_glyph_path`; the fresh, frozen snapshot now has exactly **20 fields**. Settings import validates this path with the existing `_read_brand_static_path` helper.
+Task 2.17 adds exactly one setting, `BRAND_QUICK_LINK_QR_GLYPH_STATIC_PATH`, with the unchanged compatibility default `branding/logo/loomera-glyph-mark-square-transparent-512.png`. It maps to `DeploymentBrandAssetConfig.quick_link_qr_glyph_path`; the fresh, frozen snapshot reached **20 fields in Task 2.17** and has **24 fields after Task 2.18**. Settings import validates this path with the existing `_read_brand_static_path` helper.
 
 The website logo and QR center glyph are **independently configured**. Changing `BRAND_LOGO_GLYPH_STATIC_PATH`, another website logo, or the four print artwork settings does not automatically replace the glyph composited into QR pixels. Both standalone QR output and print output use the shared QR service; print layouts are unchanged.
 
@@ -360,6 +364,26 @@ QR payload/target URL, tokens, error correction, border/quiet zone, output dimen
 
 The existing natural CI executes production hygiene/build-release tests, including new database-free QR glyph regressions in the hygiene module. The complete focused QR service and readiness suites are separate: authored tests are not evidence of execution, and green hygiene CI alone does not establish full print rendering, QR decoding or browser validation.
 
-Remaining Phase 2 gaps include login/signup artwork, direct identity/logo consumers, homepage artwork, public/legal/SEO copy, reports, download filenames, notification/help/bot copy and theme/deployment-content review. This task resolves only the shared QR glyph selection boundary.
+At the time of Task 2.17, residual Phase 2 gaps included login/signup artwork, direct identity/logo consumers, homepage artwork, public/legal/SEO copy, reports, download filenames, notification/help/bot copy and theme/deployment-content review. Task 2.18 addresses the four active authentication hero images and signup identity only; the remaining gaps still require a fresh exit audit.
+
+**Phase 2 NOT COMPLETE. Phase 3 BLOCKED.**
+
+
+## Authentication Hero Artwork and Signup Brand Identity
+
+Task 2.18 makes the four active authentication-entry hero images independently configurable at deployment level. The setting-to-field/default mapping is included in the 24-field asset table above. The active routes/templates remain `accounts:login` (`accounts/login.html`), `accounts:customer_signup` (`accounts/customer_signup.html`), `accounts:stylist_signup` (`accounts/stylist_signup.html`), and `accounts:register` (`accounts/register.html`). Each template resolves its hero using the existing globally provided fresh `deployment_brand_assets` snapshot with Django's `{% static %}` tag. No view, context processor, or new Python runtime asset accessor consumer is introduced.
+
+The three signup templates now reuse the shared `partials/brand/logo.html` glyph component and `deployment_brand.display_name` for their page titles, home-pill accessible/visible names, and identity text. The login page already used that shared name/glyph identity after Task 2.14; its only Task 2.18 template change is hero selection. Signup role labels, explanations, fields, CSRF, OTP flow, URLs, redirects, form actions, mobile behavior, and existing Persian functional copy remain unchanged. Internal `loomera-` class and data attributes are stable implementation identifiers, not buyer-facing identity.
+
+For a buyer deployment:
+
+1. Provide up to four separately branded static images: login desktop hero, customer signup hero, stylist signup hero, and manager signup hero. The four original Loomera PNGs are 1672 × 941 pixels, RGB, and the current full-viewport desktop CSS uses `object-fit: cover` with centered positioning. Maintain a composition with a relatively quiet right side behind the form; verify desktop crops at target viewports. Mobile retains the existing lightweight graphical surface instead of displaying/cropping desktop artwork.
+2. Package every replacement as an actual file in a Django staticfiles input, for example `static/buyer/auth/`. Configure the corresponding `BRAND_AUTH_*_HERO_STATIC_PATH` variables using relative paths such as `buyer/auth/login-desktop.png`. Paths use the existing `_read_brand_static_path` validator: empty, absolute, Windows-drive, backslash, URL, query/fragment, and `.`/`..` segment inputs fail settings import. A buyer can override any subset of the four paths independently.
+3. Run staticfiles collection and verify all configured URLs return the expected image with the deployed static storage. The template `static` tag generates a URL; unlike the quick-link PNG loader, it does not open or existence-check the target file at request time. A missing packaged hero can therefore yield a broken image instead of a Django validation exception. There is no automatic fallback to Loomera artwork.
+4. Preview the four real pages on desktop and mobile under the buyer's configured `BRAND_DISPLAY_NAME` and `BRAND_LOGO_GLYPH_STATIC_PATH`. Confirm the buyer hero and glyph, title, visible identity, accessibility label, responsive card legibility, and existing signup/login behavior.
+
+Unconfigured deployments retain the exact original four Loomera PNG paths and existing CSS/layout, with no binary artwork modification. The hero settings remain separate from website logo paths and the Quick-Link QR glyph. They are deployment-wide only: no per-user, salon, business, request, location, or locale routing; no module-global snapshot/cache. The previously approved **nine identity** and **four asset** Python runtime consumers remain unchanged.
+
+The natural GitHub CI invokes production settings hygiene and build-release tests. Task 2.18 adds settings-contract, 24-field snapshot, default/alternate-brand, sequential-override, and template-rendering regressions to hygiene. A green CI result is not, by itself, browser visual testing or a deployed staticfiles availability guarantee. Homepage imagery/video and wider public/legal/SEO copy are separate residual scopes.
 
 **Phase 2 NOT COMPLETE. Phase 3 BLOCKED.**

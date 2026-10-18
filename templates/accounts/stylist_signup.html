@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% load static %}
 
-{% block title %}ثبت‌نام متخصص | لومرا{% endblock %}
+{% block title %}ثبت‌نام متخصص | {{ deployment_brand.display_name }}{% endblock %}
 {% block body_attrs %}data-page="auth" data-auth-flow="stylist-signup"{% endblock %}
 {% block main_class %}lm-signup-main{% endblock %}
 
@@ -12,7 +12,7 @@
 {% block content %}
 <section class="lm-signup-shell" aria-labelledby="signup-title">
   <div class="lm-signup-background" aria-hidden="true">
-    <img src="{% static 'branding/auth/stylist-signup-hero.png' %}" alt="" class="lm-signup-background-image" loading="eager" decoding="async" fetchpriority="high">
+    <img src="{% static deployment_brand_assets.auth_stylist_signup_hero_path %}" alt="" class="lm-signup-background-image" loading="eager" decoding="async" fetchpriority="high">
     <div class="lm-signup-background-softener"></div>
   </div>
   <div class="lm-signup-mobile-surface" aria-hidden="true"></div>
@@ -20,9 +20,9 @@
   <div class="lm-signup-frame">
     <div class="lm-signup-panel">
       <div class="lm-signup-toolbar">
-        <a href="{% url 'salons:home' %}" class="lm-signup-brand-pill" aria-label="صفحه اصلی Loomera">
-          <img src="{% static 'branding/logo/loomera-glyph-mark.png' %}" alt="" class="lm-signup-brand-logo" loading="eager" decoding="async">
-          <span>Loomera</span>
+        <a href="{% url 'salons:home' %}" class="lm-signup-brand-pill" aria-label="صفحه اصلی {{ deployment_brand.display_name }}">
+          {% include "partials/brand/logo.html" with logo_variant="glyph" logo_size="sm" %}
+          <span>{{ deployment_brand.display_name }}</span>
         </a>
       </div>
 
