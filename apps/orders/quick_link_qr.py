@@ -14,14 +14,11 @@ from django.utils.text import slugify
 from PIL import Image, ImageDraw
 from qrcode.constants import ERROR_CORRECT_H
 
+from loomera.branding.assets import get_deployment_brand_asset_config
+
 from .models import BookingQuickLink
 from .quick_links import build_quick_link_url
 
-
-BOOKING_QUICK_LINK_QR_GLYPH = (
-    "branding/logo/"
-    "loomera-glyph-mark-square-transparent-512.png"
-)
 
 BOOKING_QUICK_LINK_QR_CONTENT_TYPE = "image/png"
 
@@ -68,22 +65,22 @@ class GeneratedBookingQuickLinkQR:
     warnings: tuple[str, ...]
 
 
-def _resolve_official_glyph_path() -> Path:
+def _resolve_official_glyph_path(static_path: str) -> Path:
     resolved = finders.find(
-        BOOKING_QUICK_LINK_QR_GLYPH
+        static_path
     )
 
     if not resolved:
         raise ImproperlyConfigured(
-            "Glyph رسمی Loomera برای تولید QR پیدا نشد: "
-            f"{BOOKING_QUICK_LINK_QR_GLYPH}"
+            "Configured QR glyph could not be resolved: "
+            f"{static_path}"
         )
 
     glyph_path = Path(resolved)
 
     if not glyph_path.is_file():
         raise ImproperlyConfigured(
-            "مسیر Glyph رسمی Loomera فایل معتبر نیست: "
+            "Configured QR glyph is not a file: "
             f"{glyph_path}"
         )
 
@@ -204,16 +201,21 @@ def _load_and_prepare_glyph(
 ) -> tuple[Image.Image, int]:
     try:
         with Image.open(glyph_path) as source:
+            if source.format != "PNG":
+                raise ValueError("QR glyph must be a PNG")
             glyph = source.convert("RGBA")
     except (OSError, ValueError) as exc:
         raise ImproperlyConfigured(
-            "Glyph رسمی Loomera یک تصویر PNG معتبر نیست."
+            f"Configured QR glyph is not a readable PNG: {glyph_path}"
         ) from exc
 
     visible_box = glyph.getbbox()
 
-    if visible_box:
-        glyph = glyph.crop(visible_box)
+    if visible_box is None:
+        raise ImproperlyConfigured(
+            f"Configured QR glyph has no visible pixels: {glyph_path}"
+        )
+    glyph = glyph.crop(visible_box)
 
     max_logo_width = max(
         box_size * 4,
@@ -349,7 +351,8 @@ def generate_booking_quick_link_qr(
             "URL عمومی لینک رزرو برای QR ساخته نشد."
         )
 
-    glyph_path = _resolve_official_glyph_path()
+    glyph_static_path = get_deployment_brand_asset_config().quick_link_qr_glyph_path
+    glyph_path = _resolve_official_glyph_path(glyph_static_path)
 
     qr = qrcode.QRCode(
         version=None,
@@ -446,9 +449,7 @@ def generate_booking_quick_link_qr(
         error_correction=(
             BOOKING_QUICK_LINK_QR_ERROR_CORRECTION
         ),
-        glyph_static_path=(
-            BOOKING_QUICK_LINK_QR_GLYPH
-        ),
+        glyph_static_path=glyph_static_path,
         logo_width_ratio=logo_width_ratio,
         warnings=get_booking_quick_link_qr_warnings(
             quick_link

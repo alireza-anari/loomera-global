@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import ast
 from contextlib import ExitStack
+from io import BytesIO
 import hashlib
 from dataclasses import FrozenInstanceError, fields, replace
 import json
@@ -83,6 +84,7 @@ print(
             "BRAND_QUICK_LINK_BUSINESS_CARD_FRONT_ART_STATIC_PATH": base.BRAND_QUICK_LINK_BUSINESS_CARD_FRONT_ART_STATIC_PATH,
             "BRAND_QUICK_LINK_BUSINESS_CARD_BACK_ART_STATIC_PATH": base.BRAND_QUICK_LINK_BUSINESS_CARD_BACK_ART_STATIC_PATH,
             "BRAND_QUICK_LINK_TABLE_STAND_ART_STATIC_PATH": base.BRAND_QUICK_LINK_TABLE_STAND_ART_STATIC_PATH,
+            "BRAND_QUICK_LINK_QR_GLYPH_STATIC_PATH": base.BRAND_QUICK_LINK_QR_GLYPH_STATIC_PATH,
             "BRAND_SOCIAL_IMAGE_WIDTH": base.BRAND_SOCIAL_IMAGE_WIDTH,
             "BRAND_SOCIAL_IMAGE_HEIGHT": base.BRAND_SOCIAL_IMAGE_HEIGHT,
         },
@@ -345,6 +347,27 @@ class ProductionSettingsHygieneTests(SimpleTestCase):
             for invalid in invalid_values:
                 with self.subTest(setting=name, value=invalid):
                     self._assert_invalid_configuration(name, **{name: invalid})
+
+    def test_qr_glyph_setting_default_and_trimmed_override(self):
+        name = "BRAND_QUICK_LINK_QR_GLYPH_STATIC_PATH"
+        self.assertEqual(
+            self._loaded_values()[name],
+            "branding/logo/loomera-glyph-mark-square-transparent-512.png",
+        )
+        self.assertEqual(
+            self._loaded_values(**{name: "  buyer/qr/glyph.png  "})[name],
+            "buyer/qr/glyph.png",
+        )
+
+    def test_qr_glyph_setting_rejects_invalid_static_paths(self):
+        name = "BRAND_QUICK_LINK_QR_GLYPH_STATIC_PATH"
+        for value in (
+            "", "   ", "/glyph.png", "C:/glyph.png", r"buyer\glyph.png",
+            "https://buyer.test/glyph.png", "buyer/glyph.png?v=1",
+            "buyer/glyph.png#mark", "buyer/../glyph.png", "buyer/./glyph.png",
+        ):
+            with self.subTest(value=value):
+                self._assert_invalid_configuration(name, **{name: value})
 
     def test_brand_social_image_dimensions_must_be_positive_integers(self):
         values = self._loaded_values(
@@ -654,6 +677,7 @@ BRAND_ASSET_SETTING_NAMES = (
     "BRAND_QUICK_LINK_BUSINESS_CARD_FRONT_ART_STATIC_PATH",
     "BRAND_QUICK_LINK_BUSINESS_CARD_BACK_ART_STATIC_PATH",
     "BRAND_QUICK_LINK_TABLE_STAND_ART_STATIC_PATH",
+    "BRAND_QUICK_LINK_QR_GLYPH_STATIC_PATH",
     "BRAND_SOCIAL_IMAGE_WIDTH",
     "BRAND_SOCIAL_IMAGE_HEIGHT",
 )
@@ -1570,6 +1594,7 @@ class SharedBrandAssetConfigurationTests(SimpleTestCase):
         "quick_link_business_card_front_art_path",
         "quick_link_business_card_back_art_path",
         "quick_link_table_stand_art_path",
+        "quick_link_qr_glyph_path",
         "social_image_width",
         "social_image_height",
     )
@@ -1605,10 +1630,11 @@ class SharedBrandAssetConfigurationTests(SimpleTestCase):
         self.assertEqual(config.quick_link_business_card_front_art_path, "branding/quick-links/business-card-front.png")
         self.assertEqual(config.quick_link_business_card_back_art_path, "branding/quick-links/business-card-back.png")
         self.assertEqual(config.quick_link_table_stand_art_path, "branding/quick-links/table-stand.png")
+        self.assertEqual(config.quick_link_qr_glyph_path, "branding/logo/loomera-glyph-mark-square-transparent-512.png")
         self.assertEqual(config.social_image_width, 1254)
         self.assertEqual(config.social_image_height, 1254)
 
-    def test_all_nineteen_settings_are_defined_once_with_the_expected_validators(self):
+    def test_all_twenty_settings_are_defined_once_with_the_expected_validators(self):
         settings_path = Path(settings.BASE_DIR) / "loomera" / "settings" / "base.py"
         tree = ast.parse(
             settings_path.read_text(encoding="utf-8"),
@@ -1648,7 +1674,7 @@ class SharedBrandAssetConfigurationTests(SimpleTestCase):
             tuple(field.name for field in fields(DeploymentBrandAssetConfig)),
             self.expected_field_names,
         )
-        self.assertEqual(len(fields(DeploymentBrandAssetConfig)), 19)
+        self.assertEqual(len(fields(DeploymentBrandAssetConfig)), 20)
         self.assertEqual(
             brand_asset_config_module.__all__,
             (
@@ -1664,7 +1690,7 @@ class SharedBrandAssetConfigurationTests(SimpleTestCase):
         self.assertIsNot(first, second)
         self.assertEqual(first, second)
 
-    def test_accessor_reads_exactly_the_nineteen_resolved_asset_settings(self):
+    def test_accessor_reads_exactly_the_twenty_resolved_asset_settings(self):
         assets_path = Path(settings.BASE_DIR) / "loomera" / "branding" / "assets.py"
         source = assets_path.read_text(encoding="utf-8")
         tree = ast.parse(source, filename=str(assets_path))
@@ -1678,7 +1704,7 @@ class SharedBrandAssetConfigurationTests(SimpleTestCase):
         }
 
         self.assertEqual(setting_reads, set(BRAND_ASSET_SETTING_NAMES))
-        self.assertEqual(len(setting_reads), 19)
+        self.assertEqual(len(setting_reads), 20)
         self.assertNotIn("os.environ", source)
         self.assertNotIn("import environ", source)
         self.assertNotIn("loomera.settings.base", source)
@@ -1762,6 +1788,8 @@ class SharedBrandAssetConfigurationTests(SimpleTestCase):
             occurrences,
             [
                 "apps/orders/quick_link_print_templates.py",
+                "apps/orders/quick_link_qr.py",
+                "apps/orders/management/commands/quick_link_readiness_check.py",
                 "loomera/branding/context_processors.py",
             ],
         )
@@ -2891,3 +2919,151 @@ class QuickLinkPrintArtworkAssetTests(SimpleTestCase):
         ):
             self.assertFalse(hasattr(print_templates, legacy_name))
         self.assertNotIn("from django.conf import settings", source)
+
+
+class QuickLinkQRGlyphBoundaryTests(SimpleTestCase):
+    default_path = "branding/logo/loomera-glyph-mark-square-transparent-512.png"
+    public_url = "https://buyer.example/booking/quick/test-token/"
+
+    @staticmethod
+    def _qr_module():
+        from apps.orders import quick_link_qr
+        return quick_link_qr
+
+    def _generate(self):
+        qr = self._qr_module()
+        link = SimpleNamespace(
+            pk=17, salon=SimpleNamespace(salon_name="Buyer Salon"), salon_id=8,
+            placement=qr.BookingQuickLink.Placement.TABLE_STAND,
+            archived_at=None, is_active=True, expires_at=None, payload={},
+            mode=qr.BookingQuickLink.Mode.SERVICE,
+        )
+        with patch.object(qr, "build_quick_link_url", return_value=self.public_url):
+            return qr.generate_booking_quick_link_qr(request=object(), quick_link=link)
+
+    def test_default_glyph_and_snapshot_compatibility(self):
+        first = get_deployment_brand_asset_config()
+        second = get_deployment_brand_asset_config()
+        self.assertEqual(first.quick_link_qr_glyph_path, self.default_path)
+        self.assertIsNot(first, second)
+        self.assertEqual(len(fields(first)), 20)
+        with self.assertRaises(FrozenInstanceError):
+            first.quick_link_qr_glyph_path = "buyer/other.png"
+        generated = self._generate()
+        self.assertEqual(generated.glyph_static_path, self.default_path)
+        self.assertEqual(generated.filename, "loomera-buyer-salon-stand-link-17.png")
+        self.assertEqual(generated.content_type, "image/png")
+
+    def test_sequential_buyer_pngs_change_center_without_changing_qr_geometry(self):
+        qr = self._qr_module()  # Import before overrides: no import-time snapshot.
+        baseline = self._generate()
+        with TemporaryDirectory() as directory:
+            for index, color in enumerate(((231, 19, 47), (13, 187, 73))):
+                with self.subTest(color=color):
+                    path = Path(directory) / f"glyph-{index}.png"
+                    Image.new("RGBA", (64, 64), (*color, 255)).save(path)
+                    selected = f"buyer/qr/glyph-{index}.png"
+                    with override_settings(BRAND_QUICK_LINK_QR_GLYPH_STATIC_PATH=selected):
+                        snapshot = get_deployment_brand_asset_config()
+                        self.assertEqual(snapshot.quick_link_qr_glyph_path, selected)
+                        with patch.object(qr.finders, "find", return_value=str(path)) as find:
+                            generated = self._generate()
+                        find.assert_called_once_with(selected)
+                    self.assertEqual(generated.glyph_static_path, selected)
+                    self.assertEqual(generated.url, self.public_url)
+                    for field in (
+                        "width", "height", "box_size", "border_modules",
+                        "error_correction", "content_type", "filename", "warnings",
+                    ):
+                        self.assertEqual(getattr(generated, field), getattr(baseline, field))
+                    self.assertLessEqual(generated.logo_width_ratio, qr.BOOKING_QUICK_LINK_QR_LOGO_RATIO)
+                    with Image.open(BytesIO(generated.content)) as output:
+                        self.assertEqual(output.format, "PNG")
+                        self.assertEqual(output.getpixel((output.width // 2, output.height // 2)), color)
+                        self.assertEqual(output.getpixel((0, 0)), (255, 255, 255))
+                        with Image.open(BytesIO(baseline.content)) as original:
+                            # The outer quarter is outside the unchanged center backing.
+                            self.assertEqual(
+                                output.crop((0, 0, output.width, output.height // 4)).tobytes(),
+                                original.crop((0, 0, original.width, original.height // 4)).tobytes(),
+                            )
+        self.assertEqual(get_deployment_brand_asset_config().quick_link_qr_glyph_path, self.default_path)
+
+    def test_missing_or_invalid_buyer_glyph_never_falls_back(self):
+        qr = self._qr_module()
+        with TemporaryDirectory() as directory:
+            root = Path(directory)
+            corrupt = root / "corrupt.png"
+            corrupt.write_bytes(b"not a raster image")
+            jpeg = root / "wrong-format.png"
+            Image.new("RGB", (64, 64), "red").save(jpeg, format="JPEG")
+            empty = root / "empty.png"
+            Image.new("RGBA", (64, 64), (0, 0, 0, 0)).save(empty)
+            for resolved in (None, str(root / "missing.png"), str(corrupt), str(jpeg), str(empty)):
+                with self.subTest(resolved=resolved):
+                    with override_settings(BRAND_QUICK_LINK_QR_GLYPH_STATIC_PATH="buyer/qr/invalid.png"):
+                        with patch.object(qr.finders, "find", return_value=resolved) as find:
+                            with self.assertRaises(ImproperlyConfigured):
+                                self._generate()
+                        find.assert_called_once_with("buyer/qr/invalid.png")
+
+    def test_readiness_checks_configured_png_and_reports_unreadable_images(self):
+        from apps.orders.management.commands.quick_link_readiness_check import Command
+        qr = self._qr_module()
+        with TemporaryDirectory() as directory:
+            path = Path(directory) / "glyph.png"
+            for valid in (True, False):
+                with self.subTest(valid=valid):
+                    if valid:
+                        Image.new("RGBA", (64, 64), (17, 199, 61, 255)).save(path)
+                    else:
+                        path.write_bytes(b"corrupt")
+                    with override_settings(BRAND_QUICK_LINK_QR_GLYPH_STATIC_PATH="buyer/qr/check.png"):
+                        with patch.object(qr.finders, "find", return_value=str(path)) as find:
+                            findings = Command()._dependency_findings()
+                        find.assert_called_once_with("buyer/qr/check.png")
+                    glyph = next(item for item in findings if item.code == "qr-glyph")
+                    self.assertEqual(glyph.level, "PASS" if valid else "FAIL")
+                    self.assertIn("buyer/qr/check.png", glyph.message)
+            with override_settings(BRAND_QUICK_LINK_QR_GLYPH_STATIC_PATH="buyer/qr/missing.png"):
+                with patch.object(qr.finders, "find", return_value=None):
+                    findings = Command()._dependency_findings()
+            self.assertEqual(next(item.level for item in findings if item.code == "qr-glyph"), "FAIL")
+
+    def test_qr_and_readiness_do_not_snapshot_brand_configuration(self):
+        for relative in (
+            "apps/orders/quick_link_qr.py",
+            "apps/orders/management/commands/quick_link_readiness_check.py",
+        ):
+            source = (Path(settings.BASE_DIR) / relative).read_text(encoding="utf-8")
+            tree = ast.parse(source)
+            self.assertNotIn(self.default_path, source)
+            self.assertNotIn("BOOKING_QUICK_LINK_QR_GLYPH", source)
+            self.assertNotIn("os.environ", source)
+            for node in tree.body:
+                if isinstance(node, (ast.Assign, ast.AnnAssign)):
+                    value = node.value
+                    self.assertFalse(any(
+                        isinstance(call, ast.Call)
+                        and isinstance(call.func, ast.Name)
+                        and call.func.id == "get_deployment_brand_asset_config"
+                        for call in ast.walk(value)
+                    ))
+
+    def test_print_integration_still_consumes_shared_qr_generator(self):
+        path = Path(settings.BASE_DIR) / "apps/orders/quick_link_print_templates.py"
+        tree = ast.parse(path.read_text(encoding="utf-8"))
+        self.assertTrue(any(
+            isinstance(node, ast.ImportFrom) and node.module == "quick_link_qr"
+            and any(alias.name == "generate_booking_quick_link_qr" for alias in node.names)
+            for node in tree.body
+        ))
+        consumer = next(
+            node for node in tree.body
+            if isinstance(node, ast.FunctionDef) and node.name == "_qr_image"
+        )
+        self.assertTrue(any(
+            isinstance(node, ast.Call) and isinstance(node.func, ast.Name)
+            and node.func.id == "generate_booking_quick_link_qr"
+            for node in ast.walk(consumer)
+        ))

@@ -150,7 +150,7 @@ It defines exactly two public symbols:
 - `DeploymentBrandAssetConfig` — a frozen immutable snapshot of the resolved deployment brand asset settings;
 - `get_deployment_brand_asset_config()` — constructs a fresh snapshot from `django.conf.settings` on every call.
 
-The deployment asset snapshot has exactly **19 frozen fields** (15 existing fields plus four Task 2.16 quick-link print artwork paths). The settings map exactly as follows:
+The deployment asset snapshot has exactly **20 frozen fields** (15 original fields, four Task 2.16 quick-link print artwork paths, and the Task 2.17 QR glyph path). The settings map exactly as follows:
 
 | Django/environment setting | Snapshot field | Loomera compatibility default |
 | --- | --- | --- |
@@ -171,6 +171,7 @@ The deployment asset snapshot has exactly **19 frozen fields** (15 existing fiel
 | `BRAND_QUICK_LINK_BUSINESS_CARD_FRONT_ART_STATIC_PATH` | `quick_link_business_card_front_art_path` | `branding/quick-links/business-card-front.png` |
 | `BRAND_QUICK_LINK_BUSINESS_CARD_BACK_ART_STATIC_PATH` | `quick_link_business_card_back_art_path` | `branding/quick-links/business-card-back.png` |
 | `BRAND_QUICK_LINK_TABLE_STAND_ART_STATIC_PATH` | `quick_link_table_stand_art_path` | `branding/quick-links/table-stand.png` |
+| `BRAND_QUICK_LINK_QR_GLYPH_STATIC_PATH` | `quick_link_qr_glyph_path` | `branding/logo/loomera-glyph-mark-square-transparent-512.png` |
 | `BRAND_SOCIAL_IMAGE_WIDTH` | `social_image_width` | `1254` |
 | `BRAND_SOCIAL_IMAGE_HEIGHT` | `social_image_height` | `1254` |
 
@@ -322,7 +323,7 @@ The login desktop hero-artwork deployment-brand decision also remains deferred, 
 
 ## Quick-Link Print Artwork Asset Configuration
 
-Task 2.16 adds deployment-level asset substitution for the four **existing static print artwork images**. Each setting above is an environment/Django setting resolved and validated at settings import by the existing `_read_brand_static_path` helper. `get_deployment_brand_asset_config()` returns a **fresh, frozen 19-field snapshot** at runtime. The four artwork consumers in `apps/orders/quick_link_print_templates.py` and the print dependency checker use the snapshot with Django staticfiles resolution; the previous fixed paths are no longer authoritative. The Task 2.15 generated print logo remains independently controlled by `BRAND_LOGO_HEADER_STATIC_PATH`.
+Task 2.16 adds deployment-level asset substitution for the four **existing static print artwork images**. Each setting above is an environment/Django setting resolved and validated at settings import by the existing `_read_brand_static_path` helper. `get_deployment_brand_asset_config()` returns a **fresh, frozen 20-field snapshot** at runtime. The four artwork consumers in `apps/orders/quick_link_print_templates.py` and the print dependency checker use the snapshot with Django staticfiles resolution; the previous fixed paths are no longer authoritative. The Task 2.15 generated print logo remains independently controlled by `BRAND_LOGO_HEADER_STATIC_PATH`.
 
 To supply buyer-branded print artwork:
 
@@ -335,8 +336,30 @@ To supply buyer-branded print artwork:
 
 With no overrides, the four default paths still reference the original, **unchanged Loomera PNGs**. This task does not modify any `static/branding/quick-links/*.png` bytes or introduce per-salon, per-user, per-business, per-location, or per-locale white-labeling. Image loading/conversion, geometry, text/QR positions, URL precedence, DPI checks, filename/content-type contracts, preview and download behavior remain unchanged.
 
-The approved Python runtime consumer list for `get_deployment_brand_config()` remains the **nine Task 2.15 paths**: `apps/api/v1/views.py`, `apps/articles/views.py`, `apps/help_center/ai.py`, `apps/main/seo.py`, `apps/notifications/delivery.py`, `apps/orders/notification_delivery.py`, `apps/orders/quick_link_print_templates.py`, `apps/orders/views.py`, and `loomera/branding/context_processors.py`. The approved runtime consumers for `get_deployment_brand_asset_config()` are **exactly two**: `apps/orders/quick_link_print_templates.py` and `loomera/branding/context_processors.py`. Neither boundary reads request, user, salon, business, database, or locale state to choose quick-link artwork.
+The approved Python runtime consumer list for `get_deployment_brand_config()` remains the **nine Task 2.15 paths**: `apps/api/v1/views.py`, `apps/articles/views.py`, `apps/help_center/ai.py`, `apps/main/seo.py`, `apps/notifications/delivery.py`, `apps/orders/notification_delivery.py`, `apps/orders/quick_link_print_templates.py`, `apps/orders/views.py`, and `loomera/branding/context_processors.py`. The approved runtime consumers for `get_deployment_brand_asset_config()` are **exactly four**: `apps/orders/quick_link_print_templates.py`, `loomera/branding/context_processors.py`, `apps/orders/quick_link_qr.py`, and `apps/orders/management/commands/quick_link_readiness_check.py`. Neither boundary reads request, user, salon, business, database, or locale state to choose quick-link artwork.
 
 The remaining deployment-brand decision for `branding/auth/login-desktop-hero.png` is deferred, as are other residuals identified by a fresh Phase 2 exit audit. Task 2.16 does not represent a Phase 2 exit audit or authorize additional cleanup.
+
+**Phase 2 NOT COMPLETE. Phase 3 BLOCKED.**
+
+
+## Quick-Link QR Center Glyph Deployment Asset
+
+Task 2.17 adds exactly one setting, `BRAND_QUICK_LINK_QR_GLYPH_STATIC_PATH`, with the unchanged compatibility default `branding/logo/loomera-glyph-mark-square-transparent-512.png`. It maps to `DeploymentBrandAssetConfig.quick_link_qr_glyph_path`; the fresh, frozen snapshot now has exactly **20 fields**. Settings import validates this path with the existing `_read_brand_static_path` helper.
+
+The website logo and QR center glyph are **independently configured**. Changing `BRAND_LOGO_GLYPH_STATIC_PATH`, another website logo, or the four print artwork settings does not automatically replace the glyph composited into QR pixels. Both standalone QR output and print output use the shared QR service; print layouts are unchanged.
+
+To replace the QR emblem:
+
+1. Supply a readable raster **PNG**, preferably square, with visible pixels, a clear centered mark and transparent surrounding space. Keep fine detail modest for print readability. The existing loader converts to RGBA, crops transparent outer bounds, and resizes/composites within the existing center/backing limits; transparency is recommended, not mandatory. Completely transparent images and non-PNG files are rejected.
+2. Package it in a deployment staticfiles input, for example `static/buyer/qr/glyph.png`, and set `BRAND_QUICK_LINK_QR_GLYPH_STATIC_PATH=buyer/qr/glyph.png`. Use a staticfiles-relative path, not a URL, absolute path or media upload. Apply the usual staticfiles collection/deployment process.
+3. A missing, non-file, unreadable, corrupt, non-PNG or invisible configured glyph fails explicitly with `ImproperlyConfigured`; there is no fallback to Loomera artwork. The read-only `quick_link_readiness_check` command uses the same selected path and shared image loader and reports a `qr-glyph` failure for invalid files. No network image fetching occurs.
+4. Preview standalone and printed QR outputs and test scanning at intended physical sizes in the deployment. Confirm the buyer glyph and destination URL. The generated result's `glyph_static_path` records the selected path, and sequential Django settings overrides take effect after module import.
+
+QR payload/target URL, tokens, error correction, border/quiet zone, output dimensions, colors, backing region, overlay ratios, resizing/compositing geometry, content type and filenames remain unchanged. Original static PNG bytes remain unchanged; the default preserves the existing Loomera artwork. Selection uses only deployment settings, with no module-global snapshot/cache or request/user/salon/business/locale routing. The nine identity consumers remain unchanged; the four asset consumers are listed above.
+
+The existing natural CI executes production hygiene/build-release tests, including new database-free QR glyph regressions in the hygiene module. The complete focused QR service and readiness suites are separate: authored tests are not evidence of execution, and green hygiene CI alone does not establish full print rendering, QR decoding or browser validation.
+
+Remaining Phase 2 gaps include login/signup artwork, direct identity/logo consumers, homepage artwork, public/legal/SEO copy, reports, download filenames, notification/help/bot copy and theme/deployment-content review. This task resolves only the shared QR glyph selection boundary.
 
 **Phase 2 NOT COMPLETE. Phase 3 BLOCKED.**

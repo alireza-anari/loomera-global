@@ -4,7 +4,7 @@ from dataclasses import dataclass
 from importlib import metadata
 
 from django.contrib.contenttypes.models import ContentType
-from django.contrib.staticfiles import finders
+from django.core.exceptions import ImproperlyConfigured
 from django.core.management.base import (
     BaseCommand,
     CommandError,
@@ -12,10 +12,15 @@ from django.core.management.base import (
 from django.db.models import Count, F, Subquery
 from django.utils import timezone
 
+from loomera.branding.assets import get_deployment_brand_asset_config
+
 from apps.analytics.models import AnalyticsEvent
 from apps.orders.models import BookingQuickLink, Order
 from apps.orders.quick_link_qr import (
-    BOOKING_QUICK_LINK_QR_GLYPH,
+    BOOKING_QUICK_LINK_QR_MIN_PIXELS,
+    BOOKING_QUICK_LINK_QR_MIN_BOX_SIZE,
+    _load_and_prepare_glyph,
+    _resolve_official_glyph_path,
 )
 from apps.orders.quick_links import (
     BOOKING_QUICK_LINK_CONVERTED_EVENT,
@@ -140,30 +145,26 @@ class Command(BaseCommand):
     def _dependency_findings(self):
         findings = []
 
-        glyph_path = finders.find(
-            BOOKING_QUICK_LINK_QR_GLYPH
-        )
-
-        if glyph_path:
+        static_path = get_deployment_brand_asset_config().quick_link_qr_glyph_path
+        try:
+            glyph_path = _resolve_official_glyph_path(static_path)
+            _load_and_prepare_glyph(
+                glyph_path,
+                qr_width=BOOKING_QUICK_LINK_QR_MIN_PIXELS,
+                box_size=BOOKING_QUICK_LINK_QR_MIN_BOX_SIZE,
+            )
+        except ImproperlyConfigured as exc:
             findings.append(
                 ReadinessFinding(
-                    "PASS",
-                    "qr-glyph",
-                    (
-                        "Official Loomera QR glyph "
-                        "is available."
-                    ),
+                    "FAIL", "qr-glyph",
+                    f"Configured QR glyph {static_path} is unavailable or invalid: {exc}",
                 )
             )
         else:
             findings.append(
                 ReadinessFinding(
-                    "FAIL",
-                    "qr-glyph",
-                    (
-                        "Official Loomera QR glyph "
-                        "could not be resolved."
-                    ),
+                    "PASS", "qr-glyph",
+                    f"Configured QR glyph {static_path} is readable.",
                 )
             )
 

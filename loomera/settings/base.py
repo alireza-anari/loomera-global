@@ -210,6 +210,10 @@ BRAND_QUICK_LINK_TABLE_STAND_ART_STATIC_PATH = _read_brand_static_path(
     "BRAND_QUICK_LINK_TABLE_STAND_ART_STATIC_PATH",
     "branding/quick-links/table-stand.png",
 )
+BRAND_QUICK_LINK_QR_GLYPH_STATIC_PATH = _read_brand_static_path(
+    "BRAND_QUICK_LINK_QR_GLYPH_STATIC_PATH",
+    "branding/logo/loomera-glyph-mark-square-transparent-512.png",
+)
 BRAND_SOCIAL_IMAGE_WIDTH = _read_positive_brand_dimension(
     "BRAND_SOCIAL_IMAGE_WIDTH",
     1254,

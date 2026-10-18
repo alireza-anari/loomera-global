@@ -8,6 +8,7 @@ from unittest.mock import patch
 
 import qrcode
 from django.contrib.auth import get_user_model
+from django.core.exceptions import ImproperlyConfigured
 from django.test import (
     RequestFactory,
     TestCase,
@@ -22,12 +23,13 @@ from apps.accounts.models import SalonManager
 from apps.orders.models import BookingQuickLink
 from apps.orders.quick_link_qr import (
     BOOKING_QUICK_LINK_QR_BORDER_MODULES,
-    BOOKING_QUICK_LINK_QR_GLYPH,
     BOOKING_QUICK_LINK_QR_LOGO_RATIO,
     BOOKING_QUICK_LINK_QR_MIN_PIXELS,
     build_booking_quick_link_qr_filename,
     generate_booking_quick_link_qr,
 )
+from loomera.branding.assets import get_deployment_brand_asset_config
+from apps.orders import quick_link_qr
 from apps.salons.models import Salon
 from apps.services.models import Services
 
@@ -223,7 +225,7 @@ class BookingQuickLinkQRServiceTests(TestCase):
 
         self.assertEqual(
             generated.glyph_static_path,
-            BOOKING_QUICK_LINK_QR_GLYPH,
+            "branding/logo/loomera-glyph-mark-square-transparent-512.png",
         )
 
         self.assertLessEqual(
@@ -379,3 +381,49 @@ class BookingQuickLinkQRServiceTests(TestCase):
                 for warning in fixed_result.warnings
             )
         )
+
+    def test_buyer_glyph_replaces_center_and_preserves_payload_geometry_and_filename(self):
+        link = self.create_quick_link()
+        request = self.build_request()
+        baseline = generate_booking_quick_link_qr(request=request, quick_link=link)
+        with TemporaryDirectory() as directory:
+            for index, color in enumerate(((233, 17, 59), (19, 197, 83))):
+                path = Path(directory) / f"glyph-{index}.png"
+                Image.new("RGBA", (64, 64), (*color, 255)).save(path)
+                selected = f"buyer/qr/{index}.png"
+                with self.subTest(selected=selected):
+                    with override_settings(BRAND_QUICK_LINK_QR_GLYPH_STATIC_PATH=selected):
+                        with patch.object(quick_link_qr.finders, "find", return_value=str(path)) as find:
+                            generated = generate_booking_quick_link_qr(request=request, quick_link=link)
+                        find.assert_called_once_with(selected)
+                    self.assertEqual(generated.glyph_static_path, selected)
+                    for field in (
+                        "url", "filename", "width", "height", "box_size",
+                        "border_modules", "error_correction", "content_type", "warnings",
+                    ):
+                        self.assertEqual(getattr(generated, field), getattr(baseline, field))
+                    with Image.open(BytesIO(generated.content)) as image:
+                        self.assertEqual(image.getpixel((image.width // 2, image.height // 2)), color)
+                        self.assertEqual(image.getpixel((0, 0)), (255, 255, 255))
+        self.assertEqual(
+            get_deployment_brand_asset_config().quick_link_qr_glyph_path,
+            "branding/logo/loomera-glyph-mark-square-transparent-512.png",
+        )
+
+    def test_invalid_buyer_glyph_fails_without_default_fallback(self):
+        link = self.create_quick_link()
+        with TemporaryDirectory() as directory:
+            root = Path(directory)
+            bad = root / "bad.png"
+            bad.write_bytes(b"corrupt PNG")
+            jpeg = root / "jpeg.png"
+            Image.new("RGB", (64, 64), "red").save(jpeg, format="JPEG")
+            empty = root / "empty.png"
+            Image.new("RGBA", (64, 64), (0, 0, 0, 0)).save(empty)
+            for resolved in (None, str(root / "missing.png"), str(bad), str(jpeg), str(empty)):
+                with self.subTest(resolved=resolved):
+                    with override_settings(BRAND_QUICK_LINK_QR_GLYPH_STATIC_PATH="buyer/invalid.png"):
+                        with patch.object(quick_link_qr.finders, "find", return_value=resolved) as find:
+                            with self.assertRaises(ImproperlyConfigured):
+                                generate_booking_quick_link_qr(request=self.build_request(), quick_link=link)
+                        find.assert_called_once_with("buyer/invalid.png")

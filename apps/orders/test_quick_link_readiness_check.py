@@ -1,16 +1,22 @@
 from __future__ import annotations
 
 from io import StringIO
+from pathlib import Path
+from tempfile import TemporaryDirectory
+from unittest.mock import patch
+
+from PIL import Image
 
 from django.contrib.auth import get_user_model
 from django.contrib.contenttypes.models import ContentType
 from django.core.management import call_command
 from django.core.management.base import CommandError
-from django.test import TestCase
+from django.test import TestCase, override_settings
 from django.utils import timezone
 
 from apps.accounts.models import SalonManager
 from apps.analytics.models import AnalyticsEvent
+from apps.orders import quick_link_qr
 from apps.orders.models import BookingQuickLink
 from apps.orders.quick_links import (
     BOOKING_QUICK_LINK_CONVERTED_EVENT,
@@ -225,3 +231,34 @@ class QuickLinkReadinessCheckTests(TestCase):
 
         with self.assertRaises(CommandError):
             self.run_command()
+
+    def test_readiness_uses_buyer_png_after_import(self):
+        with TemporaryDirectory() as directory:
+            for index in range(2):
+                path = Path(directory) / f"buyer-{index}.png"
+                Image.new("RGBA", (64, 64), (17, 197, 61, 255)).save(path)
+                selected = f"buyer/qr/{index}.png"
+                with override_settings(BRAND_QUICK_LINK_QR_GLYPH_STATIC_PATH=selected):
+                    with patch.object(quick_link_qr.finders, "find", return_value=str(path)) as find:
+                        output = self.run_command()
+                    find.assert_called_once_with(selected)
+                self.assertIn("PASS qr-glyph", output)
+                self.assertIn(selected, output)
+
+    def test_readiness_rejects_missing_corrupt_and_invisible_buyer_glyphs(self):
+        with TemporaryDirectory() as directory:
+            root = Path(directory)
+            corrupt = root / "bad.png"
+            corrupt.write_bytes(b"not PNG")
+            empty = root / "empty.png"
+            Image.new("RGBA", (64, 64), (0, 0, 0, 0)).save(empty)
+            for resolved in (None, str(root / "missing.png"), str(corrupt), str(empty)):
+                with self.subTest(resolved=resolved):
+                    output = StringIO()
+                    with override_settings(BRAND_QUICK_LINK_QR_GLYPH_STATIC_PATH="buyer/invalid.png"):
+                        with patch.object(quick_link_qr.finders, "find", return_value=resolved) as find:
+                            with self.assertRaises(CommandError):
+                                call_command("quick_link_readiness_check", stdout=output)
+                        find.assert_called_once_with("buyer/invalid.png")
+                    self.assertIn("FAIL qr-glyph", output.getvalue())
+                    self.assertIn("buyer/invalid.png", output.getvalue())
