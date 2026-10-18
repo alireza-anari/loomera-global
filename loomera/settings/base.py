@@ -194,6 +194,22 @@ BRAND_SOCIAL_IMAGE_STATIC_PATH = _read_brand_static_path(
     "BRAND_SOCIAL_IMAGE_STATIC_PATH",
     "branding/logo/loomera-logo-square.png",
 )
+BRAND_QUICK_LINK_MIRROR_LABEL_ART_STATIC_PATH = _read_brand_static_path(
+    "BRAND_QUICK_LINK_MIRROR_LABEL_ART_STATIC_PATH",
+    "branding/quick-links/mirror-label-print-art.png",
+)
+BRAND_QUICK_LINK_BUSINESS_CARD_FRONT_ART_STATIC_PATH = _read_brand_static_path(
+    "BRAND_QUICK_LINK_BUSINESS_CARD_FRONT_ART_STATIC_PATH",
+    "branding/quick-links/business-card-front.png",
+)
+BRAND_QUICK_LINK_BUSINESS_CARD_BACK_ART_STATIC_PATH = _read_brand_static_path(
+    "BRAND_QUICK_LINK_BUSINESS_CARD_BACK_ART_STATIC_PATH",
+    "branding/quick-links/business-card-back.png",
+)
+BRAND_QUICK_LINK_TABLE_STAND_ART_STATIC_PATH = _read_brand_static_path(
+    "BRAND_QUICK_LINK_TABLE_STAND_ART_STATIC_PATH",
+    "branding/quick-links/table-stand.png",
+)
 BRAND_SOCIAL_IMAGE_WIDTH = _read_positive_brand_dimension(
     "BRAND_SOCIAL_IMAGE_WIDTH",
     1254,

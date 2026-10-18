@@ -29,6 +29,10 @@ class DeploymentBrandAssetConfig:
     webmanifest_path: str
 
     social_image_path: str
+    quick_link_mirror_label_art_path: str
+    quick_link_business_card_front_art_path: str
+    quick_link_business_card_back_art_path: str
+    quick_link_table_stand_art_path: str
     social_image_width: int
     social_image_height: int
 
@@ -48,6 +52,10 @@ def get_deployment_brand_asset_config() -> DeploymentBrandAssetConfig:
         mask_icon_path=_settings.BRAND_MASK_ICON_STATIC_PATH,
         webmanifest_path=_settings.BRAND_WEBMANIFEST_STATIC_PATH,
         social_image_path=_settings.BRAND_SOCIAL_IMAGE_STATIC_PATH,
+        quick_link_mirror_label_art_path=_settings.BRAND_QUICK_LINK_MIRROR_LABEL_ART_STATIC_PATH,
+        quick_link_business_card_front_art_path=_settings.BRAND_QUICK_LINK_BUSINESS_CARD_FRONT_ART_STATIC_PATH,
+        quick_link_business_card_back_art_path=_settings.BRAND_QUICK_LINK_BUSINESS_CARD_BACK_ART_STATIC_PATH,
+        quick_link_table_stand_art_path=_settings.BRAND_QUICK_LINK_TABLE_STAND_ART_STATIC_PATH,
         social_image_width=_settings.BRAND_SOCIAL_IMAGE_WIDTH,
         social_image_height=_settings.BRAND_SOCIAL_IMAGE_HEIGHT,
     )
