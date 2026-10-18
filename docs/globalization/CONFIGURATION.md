@@ -150,7 +150,7 @@ It defines exactly two public symbols:
 - `DeploymentBrandAssetConfig` — a frozen immutable snapshot of the resolved deployment brand asset settings;
 - `get_deployment_brand_asset_config()` — constructs a fresh snapshot from `django.conf.settings` on every call.
 
-The snapshot and settings map exactly as follows:
+The deployment asset snapshot has exactly **19 frozen fields** (15 existing fields plus four Task 2.16 quick-link print artwork paths). The settings map exactly as follows:
 
 | Django/environment setting | Snapshot field | Loomera compatibility default |
 | --- | --- | --- |
@@ -167,6 +167,10 @@ The snapshot and settings map exactly as follows:
 | `BRAND_MASK_ICON_STATIC_PATH` | `mask_icon_path` | `branding/favicon/safari-pinned-tab.svg` |
 | `BRAND_WEBMANIFEST_STATIC_PATH` | `webmanifest_path` | `branding/favicon/site.webmanifest` |
 | `BRAND_SOCIAL_IMAGE_STATIC_PATH` | `social_image_path` | `branding/logo/loomera-logo-square.png` |
+| `BRAND_QUICK_LINK_MIRROR_LABEL_ART_STATIC_PATH` | `quick_link_mirror_label_art_path` | `branding/quick-links/mirror-label-print-art.png` |
+| `BRAND_QUICK_LINK_BUSINESS_CARD_FRONT_ART_STATIC_PATH` | `quick_link_business_card_front_art_path` | `branding/quick-links/business-card-front.png` |
+| `BRAND_QUICK_LINK_BUSINESS_CARD_BACK_ART_STATIC_PATH` | `quick_link_business_card_back_art_path` | `branding/quick-links/business-card-back.png` |
+| `BRAND_QUICK_LINK_TABLE_STAND_ART_STATIC_PATH` | `quick_link_table_stand_art_path` | `branding/quick-links/table-stand.png` |
 | `BRAND_SOCIAL_IMAGE_WIDTH` | `social_image_width` | `1254` |
 | `BRAND_SOCIAL_IMAGE_HEIGHT` | `social_image_height` | `1254` |
 
@@ -315,3 +319,24 @@ Task 2.15 introduces no new setting, environment variable, branding dataclass fi
 Quick-link QR generation and payload, tokens, salon lookup and URL/path composition, booking attribution and request/session behavior, generated filenames, response content type, preview behavior, print coordinates, dimensions, DPI, bleed/trim/QR/name boxes, colors, fonts, transparency, resize/compositing limits, and layout remain unchanged. The static quick-link artwork files `branding/quick-links/mirror-label-print-art.png`, `branding/quick-links/business-card-front.png`, `branding/quick-links/business-card-back.png`, and `branding/quick-links/table-stand.png` remain unchanged and are not yet claimed to be brand-neutral; embedded artwork branding remains subject to a fresh Phase 2 exit audit.
 
 The login desktop hero-artwork deployment-brand decision also remains deferred, along with any remaining quick-link artwork branding or other residual found by the next fresh Phase 2 exit audit. Task 2.15 does not claim Phase 2 complete, and Phase 3 remains blocked until a fresh Phase 2 exit audit proves completion.
+
+## Quick-Link Print Artwork Asset Configuration
+
+Task 2.16 adds deployment-level asset substitution for the four **existing static print artwork images**. Each setting above is an environment/Django setting resolved and validated at settings import by the existing `_read_brand_static_path` helper. `get_deployment_brand_asset_config()` returns a **fresh, frozen 19-field snapshot** at runtime. The four artwork consumers in `apps/orders/quick_link_print_templates.py` and the print dependency checker use the snapshot with Django staticfiles resolution; the previous fixed paths are no longer authoritative. The Task 2.15 generated print logo remains independently controlled by `BRAND_LOGO_HEADER_STATIC_PATH`.
+
+To supply buyer-branded print artwork:
+
+1. Design four replacement PNG images without unintended Loomera logos, domain names, or promotional copy. Simply changing `BRAND_DISPLAY_NAME`, `BRAND_DOMAIN`, or the generated print logo setting cannot change pixels embedded in the default PNGs; the app does **not** scrub, recolor, mask, crop, or regenerate embedded print art.
+2. Keep the exact print contracts: mirror label **945 × 945 px**, a genuinely transparent top-left pixel (alpha zero), and RGBA-compatible content; business-card **front and back each 1075 × 575 px**; table stand **1311 × 1819 px** with **300-DPI metadata** (the existing runtime tolerance is 295–305 DPI). Keep composition compatible with the existing QR/name placement, table-stand trim and bleed boxes, and all print geometry.
+3. Package the four files in a Django **staticfiles input** available to the deployment (for example, `static/buyer/quick-links/`). Use distinct paths for front and back, and ensure each configured path resolves to a real file.
+4. Configure `BRAND_QUICK_LINK_MIRROR_LABEL_ART_STATIC_PATH`, `BRAND_QUICK_LINK_BUSINESS_CARD_FRONT_ART_STATIC_PATH`, `BRAND_QUICK_LINK_BUSINESS_CARD_BACK_ART_STATIC_PATH`, and `BRAND_QUICK_LINK_TABLE_STAND_ART_STATIC_PATH` with their staticfiles-relative paths (for example, `buyer/quick-links/mirror-label.png`). Values are trimmed; empty, absolute/Windows-drive, backslash, URL, query/fragment, and `.`/`..` segment values fail settings import.
+5. Run the deployment's usual staticfiles collection and deployment process. These are **deployment-packaged local static asset paths**, not remote URLs, CDN downloads, `MEDIA_URL` uploads, database media, or request-dependent assets. If a configured file is missing, the print loader raises `ImproperlyConfigured`; the dependency checker reports that configured missing path. There is no fallback to Loomera artwork.
+6. Preview and download all relevant print outputs in the deployed environment: mirror label, business-card front, business-card back, and table stand. Confirm the buyer artwork, transparency, QR placement, printed name/host, dimensions, and print metadata. The counter-card behavior is unchanged.
+
+With no overrides, the four default paths still reference the original, **unchanged Loomera PNGs**. This task does not modify any `static/branding/quick-links/*.png` bytes or introduce per-salon, per-user, per-business, per-location, or per-locale white-labeling. Image loading/conversion, geometry, text/QR positions, URL precedence, DPI checks, filename/content-type contracts, preview and download behavior remain unchanged.
+
+The approved Python runtime consumer list for `get_deployment_brand_config()` remains the **nine Task 2.15 paths**: `apps/api/v1/views.py`, `apps/articles/views.py`, `apps/help_center/ai.py`, `apps/main/seo.py`, `apps/notifications/delivery.py`, `apps/orders/notification_delivery.py`, `apps/orders/quick_link_print_templates.py`, `apps/orders/views.py`, and `loomera/branding/context_processors.py`. The approved runtime consumers for `get_deployment_brand_asset_config()` are **exactly two**: `apps/orders/quick_link_print_templates.py` and `loomera/branding/context_processors.py`. Neither boundary reads request, user, salon, business, database, or locale state to choose quick-link artwork.
+
+The remaining deployment-brand decision for `branding/auth/login-desktop-hero.png` is deferred, as are other residuals identified by a fresh Phase 2 exit audit. Task 2.16 does not represent a Phase 2 exit audit or authorize additional cleanup.
+
+**Phase 2 NOT COMPLETE. Phase 3 BLOCKED.**

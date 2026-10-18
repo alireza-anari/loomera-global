@@ -35,23 +35,6 @@ PRINT_TEMPLATE_FONT_BLACK = (
     "fonts/yekan-bakh/YekanBakh-Black.woff2"
 )
 
-PRINT_TEMPLATE_MIRROR_LABEL_ART = (
-    "branding/quick-links/mirror-label-print-art.png"
-)
-
-
-PRINT_TEMPLATE_BUSINESS_CARD_FRONT_ART = (
-    "branding/quick-links/business-card-front.png"
-)
-PRINT_TEMPLATE_BUSINESS_CARD_BACK_ART = (
-    "branding/quick-links/business-card-back.png"
-)
-
-
-PRINT_TEMPLATE_TABLE_STAND_ART = (
-    "branding/quick-links/table-stand.png"
-)
-
 TABLE_STAND_NAME_BOX = (
     240,
     530,
@@ -258,15 +241,20 @@ def _resolve_static_path(static_path: str) -> Path:
 
 def validate_booking_quick_link_print_template_dependencies():
     missing = []
+    assets = get_deployment_brand_asset_config()
 
     # RAQM improves complex-text rendering, but it is optional.
     # Windows Pillow wheels may be built without RAQM. In that
     # environment the local Persian shaping fallback below is used.
     for static_path in (
-        _deployment_print_logo_path(),
+        assets.logo_header_path,
         PRINT_TEMPLATE_FONT_REGULAR,
         PRINT_TEMPLATE_FONT_BOLD,
         PRINT_TEMPLATE_FONT_BLACK,
+        assets.quick_link_mirror_label_art_path,
+        assets.quick_link_business_card_front_art_path,
+        assets.quick_link_business_card_back_art_path,
+        assets.quick_link_table_stand_art_path,
     ):
         if not finders.find(static_path):
             missing.append(static_path)
@@ -748,7 +736,7 @@ def _vertical_gradient(size, start, end):
 
 def _load_mirror_label_art(spec):
     static_path = _resolve_static_path(
-        PRINT_TEMPLATE_MIRROR_LABEL_ART
+        get_deployment_brand_asset_config().quick_link_mirror_label_art_path
     )
 
     try:
@@ -832,13 +820,15 @@ def _load_business_card_art(
     side,
     spec,
 ):
-    static_path = {
-        "front": PRINT_TEMPLATE_BUSINESS_CARD_FRONT_ART,
-        "back": PRINT_TEMPLATE_BUSINESS_CARD_BACK_ART,
-    }.get(side)
-
-    if not static_path:
+    if side not in {"front", "back"}:
         raise ValueError("سمت کارت ویزیت معتبر نیست.")
+
+    assets = get_deployment_brand_asset_config()
+    static_path = (
+        assets.quick_link_business_card_front_art_path
+        if side == "front"
+        else assets.quick_link_business_card_back_art_path
+    )
 
     try:
         with Image.open(_resolve_static_path(static_path)) as source:
@@ -1600,7 +1590,7 @@ def _load_table_stand_art(spec):
     try:
         with Image.open(
             _resolve_static_path(
-                PRINT_TEMPLATE_TABLE_STAND_ART
+                get_deployment_brand_asset_config().quick_link_table_stand_art_path
             )
         ) as source:
             image = source.convert("RGBA")

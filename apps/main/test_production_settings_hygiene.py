@@ -7,14 +7,17 @@ from dataclasses import FrozenInstanceError, fields, replace
 import json
 import os
 from pathlib import Path
+from tempfile import TemporaryDirectory
 import subprocess
 import sys
 from types import SimpleNamespace
 from unittest.mock import Mock, patch
 
 from django.conf import settings
+from django.core.exceptions import ImproperlyConfigured
 from django.template.loader import render_to_string
 from django.test import SimpleTestCase, override_settings
+from PIL import Image
 
 from loomera.globalization import config as globalization_config_module
 from loomera.globalization.config import (
@@ -76,6 +79,10 @@ print(
             "BRAND_MASK_ICON_STATIC_PATH": base.BRAND_MASK_ICON_STATIC_PATH,
             "BRAND_WEBMANIFEST_STATIC_PATH": base.BRAND_WEBMANIFEST_STATIC_PATH,
             "BRAND_SOCIAL_IMAGE_STATIC_PATH": base.BRAND_SOCIAL_IMAGE_STATIC_PATH,
+            "BRAND_QUICK_LINK_MIRROR_LABEL_ART_STATIC_PATH": base.BRAND_QUICK_LINK_MIRROR_LABEL_ART_STATIC_PATH,
+            "BRAND_QUICK_LINK_BUSINESS_CARD_FRONT_ART_STATIC_PATH": base.BRAND_QUICK_LINK_BUSINESS_CARD_FRONT_ART_STATIC_PATH,
+            "BRAND_QUICK_LINK_BUSINESS_CARD_BACK_ART_STATIC_PATH": base.BRAND_QUICK_LINK_BUSINESS_CARD_BACK_ART_STATIC_PATH,
+            "BRAND_QUICK_LINK_TABLE_STAND_ART_STATIC_PATH": base.BRAND_QUICK_LINK_TABLE_STAND_ART_STATIC_PATH,
             "BRAND_SOCIAL_IMAGE_WIDTH": base.BRAND_SOCIAL_IMAGE_WIDTH,
             "BRAND_SOCIAL_IMAGE_HEIGHT": base.BRAND_SOCIAL_IMAGE_HEIGHT,
         },
@@ -290,6 +297,54 @@ class ProductionSettingsHygieneTests(SimpleTestCase):
                     "BRAND_LOGO_GLYPH_STATIC_PATH",
                     BRAND_LOGO_GLYPH_STATIC_PATH=invalid_value,
                 )
+
+    def test_quick_link_art_settings_use_exact_defaults_and_existing_validator(self):
+        values = self._loaded_values()
+        settings_path = Path(settings.BASE_DIR) / "loomera" / "settings" / "base.py"
+        tree = ast.parse(settings_path.read_text(encoding="utf-8"))
+        definitions = {
+            node.targets[0].id: node.value
+            for node in tree.body
+            if isinstance(node, ast.Assign)
+            and len(node.targets) == 1
+            and isinstance(node.targets[0], ast.Name)
+            and node.targets[0].id in QUICK_LINK_ART_SETTING_DEFAULTS
+        }
+        self.assertEqual(set(definitions), set(QUICK_LINK_ART_SETTING_DEFAULTS))
+
+        for name, default in QUICK_LINK_ART_SETTING_DEFAULTS.items():
+            with self.subTest(setting=name):
+                self.assertEqual(values[name], default)
+                call = definitions[name]
+                self.assertIsInstance(call, ast.Call)
+                self.assertIsInstance(call.func, ast.Name)
+                self.assertEqual(call.func.id, "_read_brand_static_path")
+                self.assertEqual(
+                    [ast.literal_eval(arg) for arg in call.args],
+                    [name, default],
+                )
+                self.assertEqual(
+                    self._loaded_values(**{name: "  buyer/quick-links/alternate.png  "})[name],
+                    "buyer/quick-links/alternate.png",
+                )
+
+    def test_each_quick_link_art_setting_rejects_all_invalid_static_paths(self):
+        invalid_values = (
+            "",
+            "   ",
+            "/absolute/artwork.png",
+            "C:/absolute/artwork.png",
+            r"branding\\quick-links\\artwork.png",
+            "https://cdn.example.test/artwork.png",
+            "branding/quick-links/artwork.png?rev=1",
+            "branding/quick-links/artwork.png#label",
+            "branding/../artwork.png",
+            "branding/./artwork.png",
+        )
+        for name in QUICK_LINK_ART_SETTING_DEFAULTS:
+            for invalid in invalid_values:
+                with self.subTest(setting=name, value=invalid):
+                    self._assert_invalid_configuration(name, **{name: invalid})
 
     def test_brand_social_image_dimensions_must_be_positive_integers(self):
         values = self._loaded_values(
@@ -595,9 +650,27 @@ BRAND_ASSET_SETTING_NAMES = (
     "BRAND_MASK_ICON_STATIC_PATH",
     "BRAND_WEBMANIFEST_STATIC_PATH",
     "BRAND_SOCIAL_IMAGE_STATIC_PATH",
+    "BRAND_QUICK_LINK_MIRROR_LABEL_ART_STATIC_PATH",
+    "BRAND_QUICK_LINK_BUSINESS_CARD_FRONT_ART_STATIC_PATH",
+    "BRAND_QUICK_LINK_BUSINESS_CARD_BACK_ART_STATIC_PATH",
+    "BRAND_QUICK_LINK_TABLE_STAND_ART_STATIC_PATH",
     "BRAND_SOCIAL_IMAGE_WIDTH",
     "BRAND_SOCIAL_IMAGE_HEIGHT",
 )
+
+QUICK_LINK_ART_SETTING_DEFAULTS = {
+    "BRAND_QUICK_LINK_MIRROR_LABEL_ART_STATIC_PATH": "branding/quick-links/mirror-label-print-art.png",
+    "BRAND_QUICK_LINK_BUSINESS_CARD_FRONT_ART_STATIC_PATH": "branding/quick-links/business-card-front.png",
+    "BRAND_QUICK_LINK_BUSINESS_CARD_BACK_ART_STATIC_PATH": "branding/quick-links/business-card-back.png",
+    "BRAND_QUICK_LINK_TABLE_STAND_ART_STATIC_PATH": "branding/quick-links/table-stand.png",
+}
+
+QUICK_LINK_ART_BUYER_PATHS = {
+    "BRAND_QUICK_LINK_MIRROR_LABEL_ART_STATIC_PATH": "buyer/quick-links/mirror-label-print-art.png",
+    "BRAND_QUICK_LINK_BUSINESS_CARD_FRONT_ART_STATIC_PATH": "buyer/quick-links/business-card-front.png",
+    "BRAND_QUICK_LINK_BUSINESS_CARD_BACK_ART_STATIC_PATH": "buyer/quick-links/business-card-back.png",
+    "BRAND_QUICK_LINK_TABLE_STAND_ART_STATIC_PATH": "buyer/quick-links/table-stand.png",
+}
 
 BRAND_COLOR_SETTING_NAMES = (
     "BRAND_PRIMARY_COLOR",
@@ -1493,6 +1566,10 @@ class SharedBrandAssetConfigurationTests(SimpleTestCase):
         "mask_icon_path",
         "webmanifest_path",
         "social_image_path",
+        "quick_link_mirror_label_art_path",
+        "quick_link_business_card_front_art_path",
+        "quick_link_business_card_back_art_path",
+        "quick_link_table_stand_art_path",
         "social_image_width",
         "social_image_height",
     )
@@ -1524,10 +1601,14 @@ class SharedBrandAssetConfigurationTests(SimpleTestCase):
         self.assertEqual(config.mask_icon_path, "branding/favicon/safari-pinned-tab.svg")
         self.assertEqual(config.webmanifest_path, "branding/favicon/site.webmanifest")
         self.assertEqual(config.social_image_path, "branding/logo/loomera-logo-square.png")
+        self.assertEqual(config.quick_link_mirror_label_art_path, "branding/quick-links/mirror-label-print-art.png")
+        self.assertEqual(config.quick_link_business_card_front_art_path, "branding/quick-links/business-card-front.png")
+        self.assertEqual(config.quick_link_business_card_back_art_path, "branding/quick-links/business-card-back.png")
+        self.assertEqual(config.quick_link_table_stand_art_path, "branding/quick-links/table-stand.png")
         self.assertEqual(config.social_image_width, 1254)
         self.assertEqual(config.social_image_height, 1254)
 
-    def test_all_fifteen_settings_are_defined_once_with_the_expected_validators(self):
+    def test_all_nineteen_settings_are_defined_once_with_the_expected_validators(self):
         settings_path = Path(settings.BASE_DIR) / "loomera" / "settings" / "base.py"
         tree = ast.parse(
             settings_path.read_text(encoding="utf-8"),
@@ -1567,6 +1648,7 @@ class SharedBrandAssetConfigurationTests(SimpleTestCase):
             tuple(field.name for field in fields(DeploymentBrandAssetConfig)),
             self.expected_field_names,
         )
+        self.assertEqual(len(fields(DeploymentBrandAssetConfig)), 19)
         self.assertEqual(
             brand_asset_config_module.__all__,
             (
@@ -1582,7 +1664,7 @@ class SharedBrandAssetConfigurationTests(SimpleTestCase):
         self.assertIsNot(first, second)
         self.assertEqual(first, second)
 
-    def test_accessor_reads_exactly_the_fifteen_resolved_asset_settings(self):
+    def test_accessor_reads_exactly_the_nineteen_resolved_asset_settings(self):
         assets_path = Path(settings.BASE_DIR) / "loomera" / "branding" / "assets.py"
         source = assets_path.read_text(encoding="utf-8")
         tree = ast.parse(source, filename=str(assets_path))
@@ -1596,6 +1678,7 @@ class SharedBrandAssetConfigurationTests(SimpleTestCase):
         }
 
         self.assertEqual(setting_reads, set(BRAND_ASSET_SETTING_NAMES))
+        self.assertEqual(len(setting_reads), 19)
         self.assertNotIn("os.environ", source)
         self.assertNotIn("import environ", source)
         self.assertNotIn("loomera.settings.base", source)
@@ -1800,6 +1883,10 @@ class SharedBrandAssetConfigurationTests(SimpleTestCase):
             assets.mask_icon_path,
             assets.webmanifest_path,
             assets.social_image_path,
+            assets.quick_link_mirror_label_art_path,
+            assets.quick_link_business_card_front_art_path,
+            assets.quick_link_business_card_back_art_path,
+            assets.quick_link_table_stand_art_path,
         ):
             self.assertTrue(
                 (project_root / "static" / relative_path).is_file(),
@@ -2539,3 +2626,215 @@ class QuickLinkPrintBrandIdentityTests(SimpleTestCase):
                 print_templates._deployment_print_public_base_url(rejected_request),
                 "https://example.test",
             )
+
+
+class QuickLinkPrintArtworkAssetTests(SimpleTestCase):
+    @staticmethod
+    def _print_module():
+        # Import first: overrides must be observed on subsequent runtime calls.
+        from apps.orders import quick_link_print_templates
+
+        return quick_link_print_templates
+
+    @staticmethod
+    def _write_png(path, size, color, *, dpi=None):
+        save_kwargs = {"format": "PNG"}
+        if dpi is not None:
+            save_kwargs["dpi"] = (dpi, dpi)
+        Image.new("RGBA", size, color).save(path, **save_kwargs)
+
+    def test_alternate_paths_reach_each_loader_and_dependency_validation(self):
+        print_templates = self._print_module()
+        mirror = print_templates.get_booking_quick_link_print_template_spec("mirror_label")
+        card = print_templates.get_booking_quick_link_print_template_spec("business_card")
+        stand = print_templates.get_booking_quick_link_print_template_spec("table_stand")
+        buyer_paths = list(QUICK_LINK_ART_BUYER_PATHS.values())
+        colors = (
+            (10, 20, 30, 0),
+            (40, 50, 60, 255),
+            (70, 80, 90, 255),
+            (100, 110, 120, 255),
+        )
+
+        with TemporaryDirectory() as directory:
+            files = {}
+            for i, (relative_path, size, color) in enumerate(
+                zip(
+                    buyer_paths,
+                    (
+                        (mirror.width, mirror.height),
+                        (card.width, card.height),
+                        (card.width, card.height),
+                        (stand.width, stand.height),
+                    ),
+                    colors,
+                )
+            ):
+                file_path = Path(directory) / f"art-{i}.png"
+                self._write_png(
+                    file_path, size, color, dpi=300 if i == 3 else None
+                )
+                files[relative_path] = file_path
+
+            observed = []
+            def resolve(relative_path):
+                observed.append(relative_path)
+                if relative_path in files:
+                    return str(files[relative_path])
+                if relative_path in (
+                    settings.BRAND_LOGO_HEADER_STATIC_PATH,
+                    print_templates.PRINT_TEMPLATE_FONT_REGULAR,
+                    print_templates.PRINT_TEMPLATE_FONT_BOLD,
+                    print_templates.PRINT_TEMPLATE_FONT_BLACK,
+                ):
+                    return "packaged/static-asset"
+                return None
+
+            with override_settings(**QUICK_LINK_ART_BUYER_PATHS), patch.object(
+                print_templates.finders, "find", side_effect=resolve
+            ):
+                assets = get_deployment_brand_asset_config()
+                self.assertEqual(
+                    (
+                        assets.quick_link_mirror_label_art_path,
+                        assets.quick_link_business_card_front_art_path,
+                        assets.quick_link_business_card_back_art_path,
+                        assets.quick_link_table_stand_art_path,
+                    ),
+                    tuple(buyer_paths),
+                )
+                self.assertEqual(
+                    print_templates._load_mirror_label_art(mirror).getpixel((0, 0)),
+                    colors[0],
+                )
+                self.assertEqual(
+                    print_templates._load_business_card_art(
+                        side="front", spec=card
+                    ).getpixel((0, 0)),
+                    colors[1],
+                )
+                self.assertEqual(
+                    print_templates._load_business_card_art(
+                        side="back", spec=card
+                    ).getpixel((0, 0)),
+                    colors[2],
+                )
+                self.assertEqual(
+                    print_templates._load_table_stand_art(stand).getpixel((0, 0)),
+                    colors[3],
+                )
+                self.assertEqual(
+                    print_templates.validate_booking_quick_link_print_template_dependencies(),
+                    (),
+                )
+
+            for buyer_path in buyer_paths:
+                self.assertIn(buyer_path, observed)
+            for default_path in QUICK_LINK_ART_SETTING_DEFAULTS.values():
+                self.assertNotIn(default_path, observed)
+
+    def test_missing_buyer_artwork_is_reported_and_never_uses_default(self):
+        print_templates = self._print_module()
+        mirror = print_templates.get_booking_quick_link_print_template_spec("mirror_label")
+        card = print_templates.get_booking_quick_link_print_template_spec("business_card")
+        stand = print_templates.get_booking_quick_link_print_template_spec("table_stand")
+        missing_paths = tuple(QUICK_LINK_ART_BUYER_PATHS.values())
+        observed = []
+
+        def resolve(relative_path):
+            observed.append(relative_path)
+            return None if relative_path in missing_paths else "packaged/static-asset"
+
+        with override_settings(**QUICK_LINK_ART_BUYER_PATHS), patch.object(
+            print_templates.finders, "find", side_effect=resolve
+        ):
+            self.assertEqual(
+                print_templates.validate_booking_quick_link_print_template_dependencies(),
+                missing_paths,
+            )
+            for missing_path, loader in (
+                (missing_paths[0], lambda: print_templates._load_mirror_label_art(mirror)),
+                (missing_paths[1], lambda: print_templates._load_business_card_art(side="front", spec=card)),
+                (missing_paths[2], lambda: print_templates._load_business_card_art(side="back", spec=card)),
+                (missing_paths[3], lambda: print_templates._load_table_stand_art(stand)),
+            ):
+                with self.subTest(path=missing_path):
+                    with self.assertRaisesRegex(
+                        ImproperlyConfigured, missing_path
+                    ):
+                        loader()
+
+        for default_path in QUICK_LINK_ART_SETTING_DEFAULTS.values():
+            self.assertNotIn(default_path, observed)
+
+    def test_wrong_dimensions_are_rejected_for_all_four_artworks(self):
+        print_templates = self._print_module()
+        mirror = print_templates.get_booking_quick_link_print_template_spec("mirror_label")
+        card = print_templates.get_booking_quick_link_print_template_spec("business_card")
+        stand = print_templates.get_booking_quick_link_print_template_spec("table_stand")
+        cases = (
+            ("mirror", mirror, lambda: print_templates._load_mirror_label_art(mirror)),
+            ("front", card, lambda: print_templates._load_business_card_art(side="front", spec=card)),
+            ("back", card, lambda: print_templates._load_business_card_art(side="back", spec=card)),
+            ("stand", stand, lambda: print_templates._load_table_stand_art(stand)),
+        )
+        with TemporaryDirectory() as directory:
+            for name, spec, loader in cases:
+                with self.subTest(artwork=name):
+                    path = Path(directory) / f"{name}.png"
+                    self._write_png(
+                        path,
+                        (spec.width + 1, spec.height),
+                        (1, 2, 3, 0),
+                        dpi=300,
+                    )
+                    with override_settings(**QUICK_LINK_ART_BUYER_PATHS), patch.object(
+                        print_templates.finders, "find", return_value=str(path)
+                    ):
+                        with self.assertRaises(ImproperlyConfigured):
+                            loader()
+
+    def test_mirror_transparency_and_table_stand_dpi_guards_remain_enforced(self):
+        print_templates = self._print_module()
+        mirror = print_templates.get_booking_quick_link_print_template_spec("mirror_label")
+        stand = print_templates.get_booking_quick_link_print_template_spec("table_stand")
+        with TemporaryDirectory() as directory:
+            path = Path(directory) / "art.png"
+            self._write_png(path, (mirror.width, mirror.height), (1, 2, 3, 255))
+            with override_settings(**QUICK_LINK_ART_BUYER_PATHS), patch.object(
+                print_templates.finders, "find", return_value=str(path)
+            ):
+                with self.assertRaises(ImproperlyConfigured):
+                    print_templates._load_mirror_label_art(mirror)
+
+            for dpi, accepted in ((None, False), (290, False), (297, True), (303, True), (310, False)):
+                with self.subTest(dpi=dpi):
+                    self._write_png(
+                        path, (stand.width, stand.height), (1, 2, 3, 255), dpi=dpi
+                    )
+                    with override_settings(**QUICK_LINK_ART_BUYER_PATHS), patch.object(
+                        print_templates.finders, "find", return_value=str(path)
+                    ):
+                        if accepted:
+                            self.assertEqual(
+                                print_templates._load_table_stand_art(stand).size,
+                                (1311, 1819),
+                            )
+                        else:
+                            with self.assertRaises(ImproperlyConfigured):
+                                print_templates._load_table_stand_art(stand)
+
+    def test_no_fixed_artwork_paths_or_snapshot_at_module_import(self):
+        print_templates = self._print_module()
+        source = (Path(settings.BASE_DIR) / "apps" / "orders" /
+                  "quick_link_print_templates.py").read_text(encoding="utf-8")
+        for path in QUICK_LINK_ART_SETTING_DEFAULTS.values():
+            self.assertNotIn(path, source)
+        for legacy_name in (
+            "PRINT_TEMPLATE_MIRROR_LABEL_ART",
+            "PRINT_TEMPLATE_BUSINESS_CARD_FRONT_ART",
+            "PRINT_TEMPLATE_BUSINESS_CARD_BACK_ART",
+            "PRINT_TEMPLATE_TABLE_STAND_ART",
+        ):
+            self.assertFalse(hasattr(print_templates, legacy_name))
+        self.assertNotIn("from django.conf import settings", source)
