@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% load static %}
 
-{% block title %}ثبت‌نام متخصص | لومرا{% endblock %}
+{% block title %}ثبت‌نام متخصص | {{ deployment_brand.display_name }}{% endblock %}
 {% block body_attrs %}data-page="auth" data-auth-flow="stylist-signup"{% endblock %}
 {% block main_class %}lm-signup-main{% endblock %}
 
@@ -20,9 +20,9 @@
   <div class="lm-signup-frame">
     <div class="lm-signup-panel">
       <div class="lm-signup-toolbar">
-        <a href="{% url 'salons:home' %}" class="lm-signup-brand-pill" aria-label="صفحه اصلی Loomera">
+        <a href="{% url 'salons:home' %}" class="lm-signup-brand-pill" aria-label="صفحه اصلی {{ deployment_brand.display_name }}">
           <img src="{% static deployment_brand_assets.logo_glyph_path %}" alt="" class="lm-signup-brand-logo" loading="eager" decoding="async">
-          <span>Loomera</span>
+          <span>{{ deployment_brand.display_name }}</span>
         </a>
       </div>
 
