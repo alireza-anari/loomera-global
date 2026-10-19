@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% load static %}
 
-{% block title %}لومرا | زیبایی، ساده‌تر{% endblock %}
+{% block title %}{{ deployment_brand.display_name_fa }} | زیبایی، ساده‌تر{% endblock %}
 {% block body_attrs %}data-page="loomera-home"{% endblock %}
 
 {% block head %}
@@ -31,7 +31,7 @@
         </h1>
 
         <p>
-          <span class="lm-brand-secondary">لومرا</span> مشتری‌ها، متخصص‌ها و سالن‌ها را در یک پلتفرم هوشمند
+          <span class="lm-brand-secondary">{{ deployment_brand.display_name_fa }}</span> مشتری‌ها، متخصص‌ها و سالن‌ها را در یک پلتفرم هوشمند
           به هم متصل می‌کند تا تجربه‌ای بهتر برای همه بسازد.
         </p>
 
@@ -52,11 +52,11 @@
         </div>
       </div>
 
-      <div class="lm-hero-media" aria-label="نمونه تجربه رزرو در لومرا">
+      <div class="lm-hero-media" aria-label="نمونه تجربه رزرو در {{ deployment_brand.display_name_fa }}">
         <div class="lm-phone-glow"></div>
         <img
           src="{% static 'images/home/home-hero-v8.webp' %}"
-          alt="نمونه رابط رزرو لومرا"
+          alt="نمونه رابط رزرو {{ deployment_brand.display_name_fa }}"
           class="lm-hero-phone"
         >
       </div>
@@ -83,7 +83,7 @@
             <h3>مشتری</h3>
             <p>راحت پیدا کن<br>مطمئن انتخاب کن<br>سریع رزرو کن</p>
           </div>
-          <img src="{% static 'images/home/audience-customer.webp' %}" alt="مشتری لومرا">
+          <img src="{% static 'images/home/audience-customer.webp' %}" alt="مشتری {{ deployment_brand.display_name_fa }}">
         </article>
 
         <article class="lm-audience-card lm-audience-stylist">
@@ -94,7 +94,7 @@
             <h3>متخصص</h3>
             <p>برنامه‌ات را ببین<br>مشتری‌هایت را مدیریت کن<br>روی کارت تمرکز کن</p>
           </div>
-          <img src="{% static 'images/home/audience-stylist.webp' %}" alt="متخصص لومرا">
+          <img src="{% static 'images/home/audience-stylist.webp' %}" alt="متخصص {{ deployment_brand.display_name_fa }}">
         </article>
 
         <article class="lm-audience-card lm-audience-manager">
@@ -105,7 +105,7 @@
             <h3>مدیر سالن</h3>
             <p>تیم، نوبت‌ها و عملکرد<br>سالن را از یکجا<br>مدیریت کن</p>
           </div>
-          <img src="{% static 'images/home/audience-manager.webp' %}" alt="مدیر سالن لومرا">
+          <img src="{% static 'images/home/audience-manager.webp' %}" alt="مدیر سالن {{ deployment_brand.display_name_fa }}">
         </article>
 
       </div>
@@ -149,7 +149,7 @@
           <div class="lm-product-screen lm-product-screen-mobile">
             <img
               src="{% static 'images/home/customer-experience-v8.webp' %}"
-              alt="نمای تجربه رزرو مشتری در لومرا"
+              alt="نمای تجربه رزرو مشتری در {{ deployment_brand.display_name_fa }}"
             >
           </div>
         </article>
@@ -176,7 +176,7 @@
           <div class="lm-product-screen lm-product-screen-dashboard">
             <img
               src="{% static 'images/home/stylist-experience-v8.webp' %}"
-              alt="نمای داشبورد متخصص لومرا"
+              alt="نمای داشبورد متخصص {{ deployment_brand.display_name_fa }}"
             >
           </div>
         </article>
@@ -203,7 +203,7 @@
           <div class="lm-product-screen lm-product-screen-dashboard">
             <img
               src="{% static 'images/home/manager-experience-v8.webp' %}"
-              alt="نمای داشبورد مدیر سالن لومرا"
+              alt="نمای داشبورد مدیر سالن {{ deployment_brand.display_name_fa }}"
             >
           </div>
         </article>
@@ -275,7 +275,7 @@
   <section class="lm-home-section lm-home-final lm-reveal">
     <div class="lm-home-container lm-final-panel">
       <header class="lm-section-heading">
-        <h2><span class="lm-brand-secondary">لومرا</span> برای تو از کجا شروع می‌شود؟</h2>
+        <h2><span class="lm-brand-secondary">{{ deployment_brand.display_name_fa }}</span> برای تو از کجا شروع می‌شود؟</h2>
         <p>نقش خودت را انتخاب کن تا با بهترین تجربه برای همان مسیر شروع کنی.</p>
       </header>
 
@@ -320,7 +320,7 @@
   <div class="lm-intro-video-shell">
 
     <h2 id="loomera-intro-video-title" class="sr-only">
-      معرفی لومرا و نحوه کار با پلتفرم
+      معرفی {{ deployment_brand.display_name_fa }} و نحوه کار با پلتفرم
     </h2>
 
     <button

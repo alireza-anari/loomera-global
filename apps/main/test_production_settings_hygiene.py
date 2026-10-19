@@ -704,6 +704,7 @@ BRAND_DEPLOYMENT_SETTING_NAMES = (
     "LOOMERA_MARKETING_EMAIL",
     "LOOMERA_CALENDAR_PRODID",
     "LOOMERA_CALENDAR_NAME",
+    "BRAND_DISPLAY_NAME_FA",
 )
 
 BRAND_ASSET_SETTING_NAMES = (
@@ -821,6 +822,7 @@ class SharedBrandConfigurationBoundaryTests(SimpleTestCase):
         "marketing_email",
         "calendar_prodid",
         "calendar_name",
+        "display_name_fa",
     )
 
     def test_default_snapshot_preserves_current_brand_compatibility_values(self):
@@ -842,6 +844,7 @@ class SharedBrandConfigurationBoundaryTests(SimpleTestCase):
         self.assertEqual(config.marketing_email, "hello@loomera.local")
         self.assertEqual(config.calendar_prodid, "-//Loomera//Appointment//FA")
         self.assertEqual(config.calendar_name, "Loomera Appointment")
+        self.assertEqual(config.display_name_fa, "لومرا")
 
     def test_snapshot_is_frozen_and_exposes_exact_contract_surface(self):
         config = get_deployment_brand_config()
@@ -868,6 +871,7 @@ class SharedBrandConfigurationBoundaryTests(SimpleTestCase):
     @override_settings(
         BRAND_NAME="Acme",
         BRAND_DISPLAY_NAME="Acme Global",
+        BRAND_DISPLAY_NAME_FA="آرورا",
         BRAND_DOMAIN="example.com",
         PUBLIC_BASE_URL="https://www.example.com",
         SITE_URL="https://app.example.com",
@@ -894,6 +898,7 @@ class SharedBrandConfigurationBoundaryTests(SimpleTestCase):
 
         self.assertEqual(config.name, "Acme")
         self.assertEqual(config.display_name, "Acme Global")
+        self.assertEqual(config.display_name_fa, "آرورا")
         self.assertEqual(config.domain, "example.com")
         self.assertEqual(config.public_base_url, "https://www.example.com")
         self.assertEqual(config.site_url, "https://app.example.com")
@@ -928,7 +933,7 @@ class SharedBrandConfigurationBoundaryTests(SimpleTestCase):
         self.assertIsNot(first, second)
         self.assertEqual(first, second)
 
-    def test_accessor_reads_only_the_twelve_resolved_django_settings(self):
+    def test_accessor_reads_only_the_thirteen_resolved_django_settings(self):
         config_path = Path(settings.BASE_DIR) / "loomera" / "branding" / "config.py"
         source = config_path.read_text(encoding="utf-8")
         tree = ast.parse(source, filename=str(config_path))
@@ -1577,6 +1582,7 @@ class SharedBrandTemplateContextTests(SimpleTestCase):
             DeploymentBrandColorConfig,
         )
         self.assertEqual(first["deployment_brand"].display_name, "Loomera")
+        self.assertEqual(first["deployment_brand"].display_name_fa, "لومرا")
         self.assertEqual(first["deployment_brand_colors"].primary_color, "#735CBE")
         self.assertIsNot(first["deployment_brand"], second["deployment_brand"])
         self.assertIsNot(

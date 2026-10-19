@@ -87,6 +87,7 @@ CSF_REVIEW_COMMENT_MAX_CHARS = env.int(
 # touchpoints do not reintroduce legacy Salonify names.
 BRAND_NAME = env("BRAND_NAME", default="Loomera").strip() or "Loomera"
 BRAND_DISPLAY_NAME = env("BRAND_DISPLAY_NAME", default=BRAND_NAME).strip() or BRAND_NAME
+BRAND_DISPLAY_NAME_FA = env("BRAND_DISPLAY_NAME_FA", default="لومرا").strip() or "لومرا"
 BRAND_DOMAIN = env("BRAND_DOMAIN", default="loomera.local").strip() or "loomera.local"
 PUBLIC_BASE_URL = (
     env(

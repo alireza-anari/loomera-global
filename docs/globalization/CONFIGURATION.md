@@ -114,8 +114,9 @@ The snapshot exposes exactly these fields:
 | `marketing_email` | `LOOMERA_MARKETING_EMAIL` | `"hello@loomera.local"` |
 | `calendar_prodid` | `LOOMERA_CALENDAR_PRODID` | `"-//Loomera//Appointment//FA"` |
 | `calendar_name` | `LOOMERA_CALENDAR_NAME` | `"Loomera Appointment"` |
+| `display_name_fa` | `BRAND_DISPLAY_NAME_FA` | `"لومرا"` |
 
-Task 2.1 introduced no new environment variable, alias, fallback, or validation rule for the original ten identity values. Task 2.11 likewise introduces no new environment variable or Django setting: `loomera/settings/base.py` remains authoritative for all twelve resolved values, including independently configurable `LOOMERA_CALENDAR_PRODID` and `LOOMERA_CALENDAR_NAME`. The accessor reads only those already-resolved Django settings, performs no caching, database/request/user/business access, and does not duplicate settings logic.
+Task 2.1 introduced no new environment variable, alias, fallback, or validation rule for the original ten identity values. Task 2.11 likewise introduced no new environment variable or Django setting for the original twelve fields, including independently configurable `LOOMERA_CALENDAR_PRODID` and `LOOMERA_CALENDAR_NAME`. The subsequent homepage Persian-display migration adds exactly one independent setting, `BRAND_DISPLAY_NAME_FA`, for a total of thirteen resolved snapshot fields. `loomera/settings/base.py` remains authoritative for defaults and normalization. The accessor reads only those resolved Django settings, performs no caching, database/request/user/business access, and does not duplicate settings logic.
 
 Task 2.2 makes this snapshot available to Django templates through the shared template context described below. Configuration ownership remains in `loomera.branding.config`; Task 2.11 does not add a context processor, defaults, validation, or per-salon branding.
 
@@ -330,6 +331,16 @@ The shared public-shell description in `templates/base.html`, dashboard-shell SE
 With no override, the default **Loomera** identity and all surrounding Persian SEO copy remain unchanged in rendered output. Repeated sequential buyer overrides use fresh context snapshots; no extra context processor is added. HTML language/direction, `og:locale=fa_IR`, visual assets, styling, SEO prose apart from the brand token, public URLs, auth/booking/provider behavior, and locale handling remain unchanged.
 
 This cleanup does not migrate Persian `لومرا` product/marketing text, homepage media, email fallback copy, PDFs, legal statements, static filenames, or other audit findings. **Phase 2 NOT COMPLETE. Phase 3 BLOCKED.**
+
+## Homepage Persian Display Brand Identity
+
+The public homepage (`templates/pages/home.html`) now takes its **twelve** visible Persian brand-name occurrences from `deployment_brand.display_name_fa`, backed by the independent deployment setting `BRAND_DISPLAY_NAME_FA`. Those twelve slots include the page title, hero copy and accessible labels, illustration alternative text, the final call to action, and the video-dialog accessible heading. The setting trims surrounding whitespace and falls back to `"لومرا"` when absent or blank, so the original Persian homepage renders identically by default.
+
+Buyer configuration: set **both** `BRAND_DISPLAY_NAME` (Latin/shared shell, signup, search metadata) and `BRAND_DISPLAY_NAME_FA` (homepage Persian copy) if the two identities should change together. They intentionally do **not** derive from each other. For example, `BRAND_DISPLAY_NAME=Aurora` and `BRAND_DISPLAY_NAME_FA=آرورا` produce independent resolved values in the same fresh `DeploymentBrandConfig` snapshot. Changing only the Latin setting leaves the homepage Persian name as `لومرا`. Buyer-provided Persian text is HTML-escaped by normal Django template interpolation.
+
+The homepage's surrounding Persian sentences, classes, layout, forms, routes, JavaScript, CSS, `loomera-*` implementation IDs, seven `images/home/` static file references, and two `videos/loomera-*` media references remain unchanged. The underlying image/video pixels may still contain embedded Loomera branding; this text-only change does not rebrand media assets, translate the page, infer locale, or add per-user/business/salon branding or provider behavior. No new Python runtime brand consumer, context processor, or cache is introduced.
+
+**Phase 2 NOT COMPLETE. Phase 3 BLOCKED** pending a fresh residual audit.
 
 ## Quick-Link Print Brand Identity
 
