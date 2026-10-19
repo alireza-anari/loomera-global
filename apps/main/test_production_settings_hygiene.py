@@ -3016,7 +3016,7 @@ class QuickLinkQRGlyphBoundaryTests(SimpleTestCase):
         second = get_deployment_brand_asset_config()
         self.assertEqual(first.quick_link_qr_glyph_path, self.default_path)
         self.assertIsNot(first, second)
-        self.assertEqual(len(fields(first)), 20)
+        self.assertEqual(len(fields(first)), 24)
         with self.assertRaises(FrozenInstanceError):
             first.quick_link_qr_glyph_path = "buyer/other.png"
         generated = self._generate()
