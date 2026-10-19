@@ -5,14 +5,14 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover">
   <title>{% block title %}{{ page_title|default:"داشبورد مجموعه" }}{% endblock %}</title>
-  <meta name="description" content="{% block meta_description %}داشبورد مدیریت Loomera برای پیگیری نوبت‌ها، خدمات، تیم و مجموعه.{% endblock %}">
-  <meta property="og:title" content="{% block og_title %}داشبورد Loomera{% endblock %}">
-  <meta property="og:description" content="{% block og_description %}مدیریت ساده‌تر و دقیق‌تر مجموعه در Loomera.{% endblock %}">
-  <meta name="twitter:title" content="{% block twitter_title %}داشبورد Loomera{% endblock %}">
+  <meta name="description" content="{% block meta_description %}داشبورد مدیریت {{ deployment_brand.display_name }} برای پیگیری نوبت‌ها، خدمات، تیم و مجموعه.{% endblock %}">
+  <meta property="og:title" content="{% block og_title %}داشبورد {{ deployment_brand.display_name }}{% endblock %}">
+  <meta property="og:description" content="{% block og_description %}مدیریت ساده‌تر و دقیق‌تر مجموعه در {{ deployment_brand.display_name }}.{% endblock %}">
+  <meta name="twitter:title" content="{% block twitter_title %}داشبورد {{ deployment_brand.display_name }}{% endblock %}">
   <script>
     document.documentElement.setAttribute("data-theme", "light");
   </script>
-  <meta name="twitter:description" content="{% block twitter_description %}مدیریت ساده‌تر و دقیق‌تر مجموعه در Loomera.{% endblock %}">
+  <meta name="twitter:description" content="{% block twitter_description %}مدیریت ساده‌تر و دقیق‌تر مجموعه در {{ deployment_brand.display_name }}.{% endblock %}">
   {% include "partials/brand/head_assets.html" %}
   <link rel="stylesheet" href="{% static 'css/output.css' %}">
   <link rel="stylesheet" href="{% static 'css/loomera-brand.css' %}">

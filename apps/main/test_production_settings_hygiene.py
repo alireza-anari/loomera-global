@@ -16,6 +16,7 @@ from unittest.mock import Mock, patch
 
 from django.conf import settings
 from django.core.exceptions import ImproperlyConfigured
+from django.template import engines
 from django.template.loader import render_to_string
 from django.test import SimpleTestCase, override_settings
 from PIL import Image
@@ -1603,6 +1604,10 @@ class SharedBrandTemplateContextTests(SimpleTestCase):
 
         self.assertIn(
             "Loomera، پلتفرم انتخاب و رزرو خدمات زیبایی، aesthetic treatments، ماساژ و wellness با تجربه‌ای آرام، دقیق و قابل‌اعتماد.",
+            rendered,
+        )
+        self.assertIn(
+            "{{ deployment_brand.display_name }}، پلتفرم انتخاب و رزرو خدمات زیبایی",
             base_source,
         )
         self.assertEqual(
@@ -1631,6 +1636,65 @@ class SharedBrandTemplateContextTests(SimpleTestCase):
             "BRAND_MASK_COLOR",
         ):
             self.assertNotIn(forbidden_setting, settings_source)
+
+
+    def test_shared_shell_and_search_metadata_render_default_and_sequential_buyer_names(self):
+        dashboard_source = (
+            Path(settings.BASE_DIR) / "templates" / "dashboard_template.html"
+        ).read_text(encoding="utf-8")
+        dashboard_head = dashboard_source.split("<head>", 1)[1].split("</head>", 1)[0]
+
+        for brand_name in ("Loomera", "Buyer Studio", "Second Buyer"):
+            with override_settings(BRAND_DISPLAY_NAME=brand_name):
+                brand_context = {
+                    "deployment_brand": get_deployment_brand_config(),
+                    "deployment_brand_assets": get_deployment_brand_asset_config(),
+                    "deployment_brand_colors": get_deployment_brand_color_config(),
+                }
+                public_html = render_to_string(
+                    "base.html",
+                    {**brand_context, "hide_navbar": True, "hide_footer": True},
+                )
+                dashboard_head_html = engines["django"].from_string(
+                    "{% load static %}\n" + dashboard_head
+                ).render(brand_context)
+                search_html = render_to_string("pages/search.html", brand_context)
+
+                with self.subTest(brand=brand_name):
+                    self.assertIn(
+                        f'<meta name="description" content="{brand_name}، پلتفرم انتخاب و رزرو خدمات زیبایی، aesthetic treatments، ماساژ و wellness با تجربه‌ای آرام، دقیق و قابل‌اعتماد.">',
+                        public_html,
+                    )
+                    self.assertIn(
+                        f'<meta name="description" content="داشبورد مدیریت {brand_name} برای پیگیری نوبت‌ها، خدمات، تیم و مجموعه.">',
+                        dashboard_head_html,
+                    )
+                    self.assertIn(
+                        f'<meta property="og:title" content="داشبورد {brand_name}">',
+                        dashboard_head_html,
+                    )
+                    self.assertIn(
+                        f'<meta name="twitter:title" content="داشبورد {brand_name}">',
+                        dashboard_head_html,
+                    )
+                    self.assertIn(
+                        f'<meta property="og:description" content="مدیریت ساده‌تر و دقیق‌تر مجموعه در {brand_name}.">',
+                        dashboard_head_html,
+                    )
+                    self.assertIn(
+                        f'<meta name="twitter:description" content="مدیریت ساده‌تر و دقیق‌تر مجموعه در {brand_name}.">',
+                        dashboard_head_html,
+                    )
+                    self.assertIn(
+                        f'<title>جستجوی مجموعه و خدمات زیبایی | {brand_name}</title>',
+                        search_html,
+                    )
+                    self.assertIn(
+                        f'<meta name="description" content="جستجوی مجموعه‌ها، خدمات و متخصصان زیبایی در {brand_name} با فیلتر قیمت، امتیاز، تخفیف و زمان آزاد.">',
+                        search_html,
+                    )
+                    self.assertIn('<html lang="fa" dir="rtl">', public_html)
+                    self.assertIn('<meta property="og:locale" content="fa_IR">', public_html)
 
 
 class SharedBrandAssetConfigurationTests(SimpleTestCase):
