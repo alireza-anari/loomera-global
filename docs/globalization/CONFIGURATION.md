@@ -150,7 +150,7 @@ It defines exactly two public symbols:
 - `DeploymentBrandAssetConfig` — a frozen immutable snapshot of the resolved deployment brand asset settings;
 - `get_deployment_brand_asset_config()` — constructs a fresh snapshot from `django.conf.settings` on every call.
 
-The deployment asset snapshot has exactly **20 frozen fields** (15 original fields, four Task 2.16 quick-link print artwork paths, and the Task 2.17 QR glyph path). The settings map exactly as follows:
+The deployment asset snapshot has exactly **24 frozen fields** (15 original fields, four Task 2.16 quick-link print artwork paths, the Task 2.17 QR glyph path, and four Task 2.18 authentication hero paths). The settings map exactly as follows:
 
 | Django/environment setting | Snapshot field | Loomera compatibility default |
 | --- | --- | --- |
@@ -172,12 +172,18 @@ The deployment asset snapshot has exactly **20 frozen fields** (15 original fiel
 | `BRAND_QUICK_LINK_BUSINESS_CARD_BACK_ART_STATIC_PATH` | `quick_link_business_card_back_art_path` | `branding/quick-links/business-card-back.png` |
 | `BRAND_QUICK_LINK_TABLE_STAND_ART_STATIC_PATH` | `quick_link_table_stand_art_path` | `branding/quick-links/table-stand.png` |
 | `BRAND_QUICK_LINK_QR_GLYPH_STATIC_PATH` | `quick_link_qr_glyph_path` | `branding/logo/loomera-glyph-mark-square-transparent-512.png` |
+| `BRAND_LOGIN_HERO_STATIC_PATH` | `login_hero_path` | `branding/auth/login-desktop-hero.png` |
+| `BRAND_CUSTOMER_SIGNUP_HERO_STATIC_PATH` | `customer_signup_hero_path` | `branding/auth/customer-signup-hero.png` |
+| `BRAND_STYLIST_SIGNUP_HERO_STATIC_PATH` | `stylist_signup_hero_path` | `branding/auth/stylist-signup-hero.png` |
+| `BRAND_MANAGER_SIGNUP_HERO_STATIC_PATH` | `manager_signup_hero_path` | `branding/auth/manager-signup-hero.png` |
 | `BRAND_SOCIAL_IMAGE_WIDTH` | `social_image_width` | `1254` |
 | `BRAND_SOCIAL_IMAGE_HEIGHT` | `social_image_height` | `1254` |
 
 Every `*_STATIC_PATH` value is a Django-staticfiles-relative path. Settings import trims the value and rejects an empty path, a leading `/`, backslashes, URL schemes such as `://`, query strings, fragments, Windows absolute-drive paths, and `.` or `..` path segments with `ImproperlyConfigured`. The accessor does not repeat this validation. Social-image width and height must parse as positive integers; zero, negative, or non-integer values fail settings import with `ImproperlyConfigured`.
 
-The supported templates continue resolving asset paths with Django's `{% static %}` tag. A deployment that overrides any path is responsible for packaging the referenced file in its staticfiles inputs. Remote/CDN URLs, `MEDIA_URL` assets, database uploads, and per-salon asset routing are not part of this contract.
+Task 2.18 routes the Login desktop hero and the customer, stylist, and manager Signup hero images through the same fresh deployment asset snapshot. The three Signup glyphs reuse the existing `logo_glyph_path`; they do not introduce another logo setting. Web/shared logos, authentication hero artwork, quick-link print artwork, and the QR glyph remain independently configured. The original Loomera images, layout, CSS, authentication behavior, and Persian copy remain unchanged by this asset-only task. The Homepage illustrations and media remain outside Task 2.18.
+
+The supported templates continue resolving asset paths with Django's `{% static %}` tag. A deployment that overrides any path is responsible for packaging the referenced file in its staticfiles inputs, including the four authentication hero files and any separately overridden Signup glyph. Remote/CDN URLs, `MEDIA_URL` assets, database uploads, and per-salon asset routing are not part of this contract.
 
 `BRAND_WEBMANIFEST_STATIC_PATH` may point to a deployment-supplied static manifest. The repository's default `static/branding/favicon/site.webmanifest` remains unchanged and is not generated dynamically. A buyer providing a custom manifest owns its `name`, `short_name`, icon references, description, and theme/background colors.
 

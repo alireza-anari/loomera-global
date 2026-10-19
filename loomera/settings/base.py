@@ -214,6 +214,22 @@ BRAND_QUICK_LINK_QR_GLYPH_STATIC_PATH = _read_brand_static_path(
     "BRAND_QUICK_LINK_QR_GLYPH_STATIC_PATH",
     "branding/logo/loomera-glyph-mark-square-transparent-512.png",
 )
+BRAND_LOGIN_HERO_STATIC_PATH = _read_brand_static_path(
+    "BRAND_LOGIN_HERO_STATIC_PATH",
+    "branding/auth/login-desktop-hero.png",
+)
+BRAND_CUSTOMER_SIGNUP_HERO_STATIC_PATH = _read_brand_static_path(
+    "BRAND_CUSTOMER_SIGNUP_HERO_STATIC_PATH",
+    "branding/auth/customer-signup-hero.png",
+)
+BRAND_STYLIST_SIGNUP_HERO_STATIC_PATH = _read_brand_static_path(
+    "BRAND_STYLIST_SIGNUP_HERO_STATIC_PATH",
+    "branding/auth/stylist-signup-hero.png",
+)
+BRAND_MANAGER_SIGNUP_HERO_STATIC_PATH = _read_brand_static_path(
+    "BRAND_MANAGER_SIGNUP_HERO_STATIC_PATH",
+    "branding/auth/manager-signup-hero.png",
+)
 BRAND_SOCIAL_IMAGE_WIDTH = _read_positive_brand_dimension(
     "BRAND_SOCIAL_IMAGE_WIDTH",
     1254,
