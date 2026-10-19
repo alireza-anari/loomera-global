@@ -2634,7 +2634,7 @@ class LoginBrandIdentityTests(SimpleTestCase):
         self.assertNotIn("ورود به لومرا", source)
         self.assertNotIn("Loomera", source)
         self.assertNotIn("لومرا", source)
-        self.assertEqual(source.count("branding/auth/login-desktop-hero.png"), 1)
+        self.assertEqual(source.count("{% static deployment_brand_assets.login_hero_path %}"), 1)
         self.assertIn("{% load static %}", source)
         self.assertIn("bg-loomera-bg", source)
         self.assertIn("text-loomera-textPrimary", source)
