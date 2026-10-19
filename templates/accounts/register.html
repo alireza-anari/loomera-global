@@ -12,7 +12,7 @@
 {% block content %}
 <section class="lm-signup-shell" aria-labelledby="signup-title">
   <div class="lm-signup-background" aria-hidden="true">
-    <img src="{% static 'branding/auth/manager-signup-hero.png' %}" alt="" class="lm-signup-background-image" loading="eager" decoding="async" fetchpriority="high">
+    <img src="{% static deployment_brand_assets.manager_signup_hero_path %}" alt="" class="lm-signup-background-image" loading="eager" decoding="async" fetchpriority="high">
     <div class="lm-signup-background-softener"></div>
   </div>
   <div class="lm-signup-mobile-surface" aria-hidden="true"></div>
@@ -21,7 +21,7 @@
     <div class="lm-signup-panel">
       <div class="lm-signup-toolbar">
         <a href="{% url 'salons:home' %}" class="lm-signup-brand-pill" aria-label="صفحه اصلی Loomera">
-          <img src="{% static 'branding/logo/loomera-glyph-mark.png' %}" alt="" class="lm-signup-brand-logo" loading="eager" decoding="async">
+          <img src="{% static deployment_brand_assets.logo_glyph_path %}" alt="" class="lm-signup-brand-logo" loading="eager" decoding="async">
           <span>Loomera</span>
         </a>
       </div>

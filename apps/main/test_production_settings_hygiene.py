@@ -85,6 +85,10 @@ print(
             "BRAND_QUICK_LINK_BUSINESS_CARD_BACK_ART_STATIC_PATH": base.BRAND_QUICK_LINK_BUSINESS_CARD_BACK_ART_STATIC_PATH,
             "BRAND_QUICK_LINK_TABLE_STAND_ART_STATIC_PATH": base.BRAND_QUICK_LINK_TABLE_STAND_ART_STATIC_PATH,
             "BRAND_QUICK_LINK_QR_GLYPH_STATIC_PATH": base.BRAND_QUICK_LINK_QR_GLYPH_STATIC_PATH,
+            "BRAND_LOGIN_HERO_STATIC_PATH": base.BRAND_LOGIN_HERO_STATIC_PATH,
+            "BRAND_CUSTOMER_SIGNUP_HERO_STATIC_PATH": base.BRAND_CUSTOMER_SIGNUP_HERO_STATIC_PATH,
+            "BRAND_STYLIST_SIGNUP_HERO_STATIC_PATH": base.BRAND_STYLIST_SIGNUP_HERO_STATIC_PATH,
+            "BRAND_MANAGER_SIGNUP_HERO_STATIC_PATH": base.BRAND_MANAGER_SIGNUP_HERO_STATIC_PATH,
             "BRAND_SOCIAL_IMAGE_WIDTH": base.BRAND_SOCIAL_IMAGE_WIDTH,
             "BRAND_SOCIAL_IMAGE_HEIGHT": base.BRAND_SOCIAL_IMAGE_HEIGHT,
         },
@@ -368,6 +372,48 @@ class ProductionSettingsHygieneTests(SimpleTestCase):
         ):
             with self.subTest(value=value):
                 self._assert_invalid_configuration(name, **{name: value})
+
+
+    def test_auth_hero_settings_use_exact_defaults_and_existing_validator(self):
+        values = self._loaded_values()
+        settings_path = Path(settings.BASE_DIR) / "loomera" / "settings" / "base.py"
+        tree = ast.parse(settings_path.read_text(encoding="utf-8"))
+        definitions = {
+            node.targets[0].id: node.value
+            for node in tree.body
+            if isinstance(node, ast.Assign)
+            and len(node.targets) == 1
+            and isinstance(node.targets[0], ast.Name)
+            and node.targets[0].id in AUTH_ARTWORK_SETTING_DEFAULTS
+        }
+        self.assertEqual(set(definitions), set(AUTH_ARTWORK_SETTING_DEFAULTS))
+        for name, default in AUTH_ARTWORK_SETTING_DEFAULTS.items():
+            with self.subTest(setting=name):
+                self.assertEqual(values[name], default)
+                call = definitions[name]
+                self.assertIsInstance(call, ast.Call)
+                self.assertIsInstance(call.func, ast.Name)
+                self.assertEqual(call.func.id, "_read_brand_static_path")
+                self.assertEqual(
+                    [ast.literal_eval(arg) for arg in call.args],
+                    [name, default],
+                )
+                self.assertEqual(
+                    self._loaded_values(**{name: "  buyer/auth/alternate-hero.png  "})[name],
+                    "buyer/auth/alternate-hero.png",
+                )
+
+    def test_auth_hero_settings_reject_invalid_static_paths(self):
+        invalid_values = (
+            "", "   ", "/absolute/hero.png", "C:/hero.png",
+            r"buyer\\auth\\hero.png", "https://buyer.test/hero.png",
+            "buyer/hero.png?rev=1", "buyer/hero.png#anchor",
+            "buyer/../hero.png", "buyer/./hero.png",
+        )
+        for name in AUTH_ARTWORK_SETTING_DEFAULTS:
+            for invalid in invalid_values:
+                with self.subTest(setting=name, value=invalid):
+                    self._assert_invalid_configuration(name, **{name: invalid})
 
     def test_brand_social_image_dimensions_must_be_positive_integers(self):
         values = self._loaded_values(
@@ -678,9 +724,21 @@ BRAND_ASSET_SETTING_NAMES = (
     "BRAND_QUICK_LINK_BUSINESS_CARD_BACK_ART_STATIC_PATH",
     "BRAND_QUICK_LINK_TABLE_STAND_ART_STATIC_PATH",
     "BRAND_QUICK_LINK_QR_GLYPH_STATIC_PATH",
+    "BRAND_LOGIN_HERO_STATIC_PATH",
+    "BRAND_CUSTOMER_SIGNUP_HERO_STATIC_PATH",
+    "BRAND_STYLIST_SIGNUP_HERO_STATIC_PATH",
+    "BRAND_MANAGER_SIGNUP_HERO_STATIC_PATH",
     "BRAND_SOCIAL_IMAGE_WIDTH",
     "BRAND_SOCIAL_IMAGE_HEIGHT",
 )
+
+AUTH_ARTWORK_SETTING_DEFAULTS = {
+    "BRAND_LOGIN_HERO_STATIC_PATH": "branding/auth/login-desktop-hero.png",
+    "BRAND_CUSTOMER_SIGNUP_HERO_STATIC_PATH": "branding/auth/customer-signup-hero.png",
+    "BRAND_STYLIST_SIGNUP_HERO_STATIC_PATH": "branding/auth/stylist-signup-hero.png",
+    "BRAND_MANAGER_SIGNUP_HERO_STATIC_PATH": "branding/auth/manager-signup-hero.png",
+}
+
 
 QUICK_LINK_ART_SETTING_DEFAULTS = {
     "BRAND_QUICK_LINK_MIRROR_LABEL_ART_STATIC_PATH": "branding/quick-links/mirror-label-print-art.png",
@@ -1595,6 +1653,10 @@ class SharedBrandAssetConfigurationTests(SimpleTestCase):
         "quick_link_business_card_back_art_path",
         "quick_link_table_stand_art_path",
         "quick_link_qr_glyph_path",
+        "login_hero_path",
+        "customer_signup_hero_path",
+        "stylist_signup_hero_path",
+        "manager_signup_hero_path",
         "social_image_width",
         "social_image_height",
     )
@@ -1631,10 +1693,14 @@ class SharedBrandAssetConfigurationTests(SimpleTestCase):
         self.assertEqual(config.quick_link_business_card_back_art_path, "branding/quick-links/business-card-back.png")
         self.assertEqual(config.quick_link_table_stand_art_path, "branding/quick-links/table-stand.png")
         self.assertEqual(config.quick_link_qr_glyph_path, "branding/logo/loomera-glyph-mark-square-transparent-512.png")
+        self.assertEqual(config.login_hero_path, "branding/auth/login-desktop-hero.png")
+        self.assertEqual(config.customer_signup_hero_path, "branding/auth/customer-signup-hero.png")
+        self.assertEqual(config.stylist_signup_hero_path, "branding/auth/stylist-signup-hero.png")
+        self.assertEqual(config.manager_signup_hero_path, "branding/auth/manager-signup-hero.png")
         self.assertEqual(config.social_image_width, 1254)
         self.assertEqual(config.social_image_height, 1254)
 
-    def test_all_twenty_settings_are_defined_once_with_the_expected_validators(self):
+    def test_all_twenty_four_settings_are_defined_once_with_the_expected_validators(self):
         settings_path = Path(settings.BASE_DIR) / "loomera" / "settings" / "base.py"
         tree = ast.parse(
             settings_path.read_text(encoding="utf-8"),
@@ -1674,7 +1740,7 @@ class SharedBrandAssetConfigurationTests(SimpleTestCase):
             tuple(field.name for field in fields(DeploymentBrandAssetConfig)),
             self.expected_field_names,
         )
-        self.assertEqual(len(fields(DeploymentBrandAssetConfig)), 20)
+        self.assertEqual(len(fields(DeploymentBrandAssetConfig)), 24)
         self.assertEqual(
             brand_asset_config_module.__all__,
             (
@@ -1690,7 +1756,7 @@ class SharedBrandAssetConfigurationTests(SimpleTestCase):
         self.assertIsNot(first, second)
         self.assertEqual(first, second)
 
-    def test_accessor_reads_exactly_the_twenty_resolved_asset_settings(self):
+    def test_accessor_reads_exactly_the_twenty_four_resolved_asset_settings(self):
         assets_path = Path(settings.BASE_DIR) / "loomera" / "branding" / "assets.py"
         source = assets_path.read_text(encoding="utf-8")
         tree = ast.parse(source, filename=str(assets_path))
@@ -1704,7 +1770,7 @@ class SharedBrandAssetConfigurationTests(SimpleTestCase):
         }
 
         self.assertEqual(setting_reads, set(BRAND_ASSET_SETTING_NAMES))
-        self.assertEqual(len(setting_reads), 20)
+        self.assertEqual(len(setting_reads), 24)
         self.assertNotIn("os.environ", source)
         self.assertNotIn("import environ", source)
         self.assertNotIn("loomera.settings.base", source)
@@ -1968,6 +2034,10 @@ class SharedBrandAssetConfigurationTests(SimpleTestCase):
             assets.quick_link_business_card_front_art_path,
             assets.quick_link_business_card_back_art_path,
             assets.quick_link_table_stand_art_path,
+            assets.login_hero_path,
+            assets.customer_signup_hero_path,
+            assets.stylist_signup_hero_path,
+            assets.manager_signup_hero_path,
         ):
             self.assertTrue(
                 (project_root / "static" / relative_path).is_file(),
@@ -3067,3 +3137,96 @@ class QuickLinkQRGlyphBoundaryTests(SimpleTestCase):
             and node.func.id == "generate_booking_quick_link_qr"
             for node in ast.walk(consumer)
         ))
+
+
+class AuthenticationArtworkDeploymentBoundaryTests(SimpleTestCase):
+    template_assets = (
+        ("accounts/login.html", "login_hero_path", "branding/auth/login-desktop-hero.png"),
+        ("accounts/customer_signup.html", "customer_signup_hero_path", "branding/auth/customer-signup-hero.png"),
+        ("accounts/stylist_signup.html", "stylist_signup_hero_path", "branding/auth/stylist-signup-hero.png"),
+        ("accounts/register.html", "manager_signup_hero_path", "branding/auth/manager-signup-hero.png"),
+    )
+    signup_templates = (
+        "accounts/customer_signup.html",
+        "accounts/stylist_signup.html",
+        "accounts/register.html",
+    )
+
+    @staticmethod
+    def _brand_context():
+        return {
+            "deployment_brand": get_deployment_brand_config(),
+            "deployment_brand_assets": get_deployment_brand_asset_config(),
+            "deployment_brand_colors": get_deployment_brand_color_config(),
+        }
+
+    def test_defaults_render_existing_artwork_and_signup_glyph(self):
+        snapshot = get_deployment_brand_asset_config()
+        self.assertEqual(len(fields(snapshot)), 24)
+        self.assertEqual(snapshot.logo_glyph_path, "branding/logo/loomera-glyph-mark.png")
+        for template_name, field, default in self.template_assets:
+            with self.subTest(template=template_name):
+                self.assertEqual(getattr(snapshot, field), default)
+                self.assertTrue((Path(settings.BASE_DIR) / "static" / default).is_file())
+                rendered = render_to_string(template_name, self._brand_context())
+                self.assertIn(f'src="/static/{default}"', rendered)
+                if template_name in self.signup_templates:
+                    self.assertIn(
+                        'src="/static/branding/logo/loomera-glyph-mark.png"',
+                        rendered,
+                    )
+
+    def test_sequential_buyer_overrides_render_from_fresh_snapshots(self):
+        first = get_deployment_brand_asset_config()
+        for brand in ("buyer-one", "buyer-two"):
+            overrides = {
+                "BRAND_LOGIN_HERO_STATIC_PATH": f"{brand}/auth/login.webp",
+                "BRAND_CUSTOMER_SIGNUP_HERO_STATIC_PATH": f"{brand}/auth/customer.png",
+                "BRAND_STYLIST_SIGNUP_HERO_STATIC_PATH": f"{brand}/auth/stylist.png",
+                "BRAND_MANAGER_SIGNUP_HERO_STATIC_PATH": f"{brand}/auth/manager.png",
+                "BRAND_LOGO_GLYPH_STATIC_PATH": f"{brand}/brand/glyph.svg",
+            }
+            with override_settings(**overrides):
+                snapshot = get_deployment_brand_asset_config()
+                self.assertIsNot(snapshot, first)
+                for template_name, field, default in self.template_assets:
+                    with self.subTest(brand=brand, template=template_name):
+                        setting_for_field = {
+                            "login_hero_path": "BRAND_LOGIN_HERO_STATIC_PATH",
+                            "customer_signup_hero_path": "BRAND_CUSTOMER_SIGNUP_HERO_STATIC_PATH",
+                            "stylist_signup_hero_path": "BRAND_STYLIST_SIGNUP_HERO_STATIC_PATH",
+                            "manager_signup_hero_path": "BRAND_MANAGER_SIGNUP_HERO_STATIC_PATH",
+                        }
+                        expected_path = overrides[setting_for_field[field]]
+                        self.assertEqual(getattr(snapshot, field), expected_path)
+                        rendered = render_to_string(template_name, self._brand_context())
+                        self.assertIn(f'src="/static/{expected_path}"', rendered)
+                        self.assertNotIn(f'src="/static/{default}"', rendered)
+                        if template_name in self.signup_templates:
+                            self.assertIn(
+                                f'src="/static/{brand}/brand/glyph.svg"',
+                                rendered,
+                            )
+        restored = get_deployment_brand_asset_config()
+        for _, field, default in self.template_assets:
+            self.assertEqual(getattr(restored, field), default)
+
+    def test_auth_templates_do_not_embed_fixed_loomera_artwork_paths(self):
+        root = Path(settings.BASE_DIR) / "templates"
+        for template_name, field, default in self.template_assets:
+            with self.subTest(template=template_name):
+                source = (root / template_name).read_text(encoding="utf-8")
+                self.assertIn(
+                    "{% static deployment_brand_assets." + field + " %}",
+                    source,
+                )
+                self.assertNotIn("{% static '" + default + "' %}", source)
+                if template_name in self.signup_templates:
+                    self.assertIn(
+                        "{% static deployment_brand_assets.logo_glyph_path %}",
+                        source,
+                    )
+                    self.assertNotIn(
+                        "{% static 'branding/logo/loomera-glyph-mark.png' %}",
+                        source,
+                    )

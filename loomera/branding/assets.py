@@ -34,6 +34,10 @@ class DeploymentBrandAssetConfig:
     quick_link_business_card_back_art_path: str
     quick_link_table_stand_art_path: str
     quick_link_qr_glyph_path: str
+    login_hero_path: str
+    customer_signup_hero_path: str
+    stylist_signup_hero_path: str
+    manager_signup_hero_path: str
     social_image_width: int
     social_image_height: int
 
@@ -58,6 +62,10 @@ def get_deployment_brand_asset_config() -> DeploymentBrandAssetConfig:
         quick_link_business_card_back_art_path=_settings.BRAND_QUICK_LINK_BUSINESS_CARD_BACK_ART_STATIC_PATH,
         quick_link_table_stand_art_path=_settings.BRAND_QUICK_LINK_TABLE_STAND_ART_STATIC_PATH,
         quick_link_qr_glyph_path=_settings.BRAND_QUICK_LINK_QR_GLYPH_STATIC_PATH,
+        login_hero_path=_settings.BRAND_LOGIN_HERO_STATIC_PATH,
+        customer_signup_hero_path=_settings.BRAND_CUSTOMER_SIGNUP_HERO_STATIC_PATH,
+        stylist_signup_hero_path=_settings.BRAND_STYLIST_SIGNUP_HERO_STATIC_PATH,
+        manager_signup_hero_path=_settings.BRAND_MANAGER_SIGNUP_HERO_STATIC_PATH,
         social_image_width=_settings.BRAND_SOCIAL_IMAGE_WIDTH,
         social_image_height=_settings.BRAND_SOCIAL_IMAGE_HEIGHT,
     )
