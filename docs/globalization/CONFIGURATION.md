@@ -315,6 +315,14 @@ Task 2.14 introduces no new Django setting, environment variable, Python runtime
 
 The existing `branding/auth/login-desktop-hero.png` artwork and login CSS remain intentionally unchanged; any deployment-brand decision or redesign for that hero stays deferred to a later fresh Phase 2 exit audit. Quick-link print branding also remains deferred, and Task 2.14 does not claim all auth branding is complete. Phase 2 is not claimed complete, and Phase 3 remains blocked until a fresh Phase 2 exit audit proves completion.
 
+## Signup Visible Brand Identity
+
+The three active Signup templates — `templates/accounts/customer_signup.html`, `templates/accounts/stylist_signup.html`, and `templates/accounts/register.html` — now resolve the page title, visible home-pill name, and home-pill accessible label from the existing `deployment_brand.display_name` template context, backed by the deployment-level `BRAND_DISPLAY_NAME` setting. Their role-specific Persian registration labels remain unchanged. The default is still Loomera; a buyer override updates all three identity slots without a template edit, new setting, runtime accessor, or context processor.
+
+This text identity is independent of authentication artwork: the three Signup hero paths still use their existing `deployment_brand_assets.*_signup_hero_path` fields, while each existing `lm-signup-brand-logo` image continues to use `deployment_brand_assets.logo_glyph_path`. No shared-logo partial substitution, image markup/layout/CSS change, form/CSRF/OTP/redirect change, or locale/provider inference is part of this follow-up.
+
+This is a narrowly scoped Phase 2 follow-up stacked on Task 2.18, not a declaration that Phase 2 is complete. Phase 3 remains blocked pending a fresh Phase 2 exit audit.
+
 ## Quick-Link Print Brand Identity
 
 Task 2.15 wires `apps/orders/quick_link_print_templates.py` to the existing deployment brand identity and asset boundaries. The generated print logo now resolves from `DeploymentBrandAssetConfig.logo_header_path`, backed by the existing `BRAND_LOGO_HEADER_STATIC_PATH`; no print-specific logo setting or environment variable is added. At this migration point the default `branding/logo/loomera-logo-header.png` and the previous fixed `branding/logo/loomera-logo-horizontal-rtl-transparent-360.png` are byte-identical Git blobs (`8512a25cac6fd0971427151dd27febb1eddf646a`), so default Loomera print-logo pixels remain compatible.

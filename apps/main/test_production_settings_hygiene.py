@@ -3230,3 +3230,66 @@ class AuthenticationArtworkDeploymentBoundaryTests(SimpleTestCase):
                         "{% static 'branding/logo/loomera-glyph-mark.png' %}",
                         source,
                     )
+
+    def test_signup_templates_use_dynamic_display_identity_without_fixed_labels(self):
+        roles = (
+            ("accounts/customer_signup.html", "مشتری"),
+            ("accounts/stylist_signup.html", "متخصص"),
+            ("accounts/register.html", "مدیر مجموعه"),
+        )
+        root = Path(settings.BASE_DIR) / "templates"
+        for template_name, role in roles:
+            with self.subTest(template=template_name):
+                source = (root / template_name).read_text(encoding="utf-8")
+                self.assertIn(
+                    "{% block title %}ثبت‌نام " + role
+                    + " | {{ deployment_brand.display_name }}{% endblock %}",
+                    source,
+                )
+                self.assertIn(
+                    'aria-label="صفحه اصلی {{ deployment_brand.display_name }}"',
+                    source,
+                )
+                self.assertIn("<span>{{ deployment_brand.display_name }}</span>", source)
+                self.assertEqual(source.count("deployment_brand.display_name"), 3)
+                self.assertNotIn("<span>Loomera</span>", source)
+                self.assertNotIn('aria-label="صفحه اصلی Loomera"', source)
+                self.assertNotIn(f"ثبت‌نام {role} | لومرا", source)
+                self.assertIn(
+                    '<img src="{% static deployment_brand_assets.logo_glyph_path %}" '
+                    'alt="" class="lm-signup-brand-logo" loading="eager" decoding="async">',
+                    source,
+                )
+                self.assertIn("{% csrf_token %}", source)
+
+    def test_signup_display_name_renders_default_and_sequential_buyer_overrides(self):
+        default_name = get_deployment_brand_config().display_name
+        self.assertEqual(default_name, "Loomera")
+        roles = (
+            ("accounts/customer_signup.html", "مشتری"),
+            ("accounts/stylist_signup.html", "متخصص"),
+            ("accounts/register.html", "مدیر مجموعه"),
+        )
+
+        for brand_name in ("Loomera", "Buyer Studio", "Second Buyer"):
+            with override_settings(BRAND_DISPLAY_NAME=brand_name):
+                self.assertEqual(get_deployment_brand_config().display_name, brand_name)
+                for template_name, role in roles:
+                    with self.subTest(brand=brand_name, template=template_name):
+                        rendered = render_to_string(template_name, self._brand_context())
+                        self.assertIn(f"ثبت‌نام {role} | {brand_name}", rendered)
+                        self.assertIn(f'aria-label="صفحه اصلی {brand_name}"', rendered)
+                        self.assertIn(f"<span>{brand_name}</span>", rendered)
+                        self.assertIn(
+                            'src="/static/branding/logo/loomera-glyph-mark.png"',
+                            rendered,
+                        )
+                        if brand_name != "Loomera":
+                            self.assertNotIn("<span>Loomera</span>", rendered)
+                            self.assertNotIn('aria-label="صفحه اصلی Loomera"', rendered)
+
+        self.assertEqual(get_deployment_brand_config().display_name, default_name)
+        for template_name, role in roles:
+            with self.subTest(restored_template=template_name):
+                rendered = render_to_string(template_name, self._brand_context())
+                self.assertIn(f"ثبت‌نام {role} | {default_name}", rendered)
