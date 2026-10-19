@@ -1604,6 +1604,10 @@ class SharedBrandTemplateContextTests(SimpleTestCase):
 
         self.assertIn(
             "Loomera، پلتفرم انتخاب و رزرو خدمات زیبایی، aesthetic treatments، ماساژ و wellness با تجربه‌ای آرام، دقیق و قابل‌اعتماد.",
+            rendered,
+        )
+        self.assertIn(
+            "{{ deployment_brand.display_name }}، پلتفرم انتخاب و رزرو خدمات زیبایی",
             base_source,
         )
         self.assertEqual(

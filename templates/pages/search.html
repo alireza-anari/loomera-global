@@ -1,8 +1,8 @@
 {% extends "base.html" %}
 {% load static %}
 
-{% block title %}جستجوی مجموعه و خدمات زیبایی | Loomera{% endblock %}
-{% block meta_description %}جستجوی مجموعه‌ها، خدمات و متخصصان زیبایی در Loomera با فیلتر قیمت، امتیاز، تخفیف و زمان آزاد.{% endblock %}
+{% block title %}جستجوی مجموعه و خدمات زیبایی | {{ deployment_brand.display_name }}{% endblock %}
+{% block meta_description %}جستجوی مجموعه‌ها، خدمات و متخصصان زیبایی در {{ deployment_brand.display_name }} با فیلتر قیمت، امتیاز، تخفیف و زمان آزاد.{% endblock %}
 
 {% block vendor_css %}
   <link rel="stylesheet" href="{% static 'vendor/mapp/dist/css/mapp.min.css' %}">

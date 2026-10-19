@@ -323,6 +323,14 @@ This text identity is independent of authentication artwork: the three Signup he
 
 This is a narrowly scoped Phase 2 follow-up stacked on Task 2.18, not a declaration that Phase 2 is complete. Phase 3 remains blocked pending a fresh Phase 2 exit audit.
 
+## Shared Shell and Search Metadata Brand Identity
+
+The shared public-shell description in `templates/base.html`, dashboard-shell SEO/Open Graph/Twitter fallback metadata in `templates/dashboard_template.html`, and public search title and description in `templates/pages/search.html` resolve the deployment display-name token from the existing `deployment_brand.display_name` context (`BRAND_DISPLAY_NAME`). A buyer can change the supported identity without editing templates, adding a new setting or Python runtime accessor, or introducing caching or request/salon/user inference.
+
+With no override, the default **Loomera** identity and all surrounding Persian SEO copy remain unchanged in rendered output. Repeated sequential buyer overrides use fresh context snapshots; no extra context processor is added. HTML language/direction, `og:locale=fa_IR`, visual assets, styling, SEO prose apart from the brand token, public URLs, auth/booking/provider behavior, and locale handling remain unchanged.
+
+This cleanup does not migrate Persian `لومرا` product/marketing text, homepage media, email fallback copy, PDFs, legal statements, static filenames, or other audit findings. **Phase 2 NOT COMPLETE. Phase 3 BLOCKED.**
+
 ## Quick-Link Print Brand Identity
 
 Task 2.15 wires `apps/orders/quick_link_print_templates.py` to the existing deployment brand identity and asset boundaries. The generated print logo now resolves from `DeploymentBrandAssetConfig.logo_header_path`, backed by the existing `BRAND_LOGO_HEADER_STATIC_PATH`; no print-specific logo setting or environment variable is added. At this migration point the default `branding/logo/loomera-logo-header.png` and the previous fixed `branding/logo/loomera-logo-horizontal-rtl-transparent-360.png` are byte-identical Git blobs (`8512a25cac6fd0971427151dd27febb1eddf646a`), so default Loomera print-logo pixels remain compatible.
