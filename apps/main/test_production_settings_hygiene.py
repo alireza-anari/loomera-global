@@ -1466,6 +1466,96 @@ class SharedBrandColorConfigurationBoundaryTests(SimpleTestCase):
         self.assertEqual(occurrences, ["loomera/branding/context_processors.py"])
 
 
+class HomepagePersianBrandIdentityTests(SimpleTestCase):
+    """The homepage's Persian name is deployment-scoped, not a literal or locale guess."""
+
+    @staticmethod
+    def _home_source():
+        return (
+            Path(settings.BASE_DIR) / "templates" / "pages" / "home.html"
+        ).read_text(encoding="utf-8")
+
+    @staticmethod
+    def _render_home():
+        return render_to_string(
+            "pages/home.html",
+            {
+                "deployment_brand": get_deployment_brand_config(),
+                "deployment_brand_assets": get_deployment_brand_asset_config(),
+                "deployment_brand_colors": get_deployment_brand_color_config(),
+            },
+        )
+
+    def test_homepage_has_exactly_twelve_persian_brand_bindings(self):
+        source = self._home_source()
+        self.assertEqual(source.count("{{ deployment_brand.display_name_fa }}"), 12)
+        self.assertNotIn("لومرا", source)
+        for stable_reference in (
+            'data-page="loomera-home"',
+            'id="loomera-intro-video-dialog"',
+            "images/home/home-hero-v8.webp",
+            "images/home/audience-customer.webp",
+            "images/home/audience-stylist.webp",
+            "images/home/audience-manager.webp",
+            "images/home/customer-experience-v8.webp",
+            "images/home/stylist-experience-v8.webp",
+            "images/home/manager-experience-v8.webp",
+            "videos/loomera-intro-poster.webp",
+            "videos/loomera-intro-web.mp4",
+        ):
+            self.assertIn(stable_reference, source)
+
+    def test_default_homepage_keeps_farsi_loomera_copy(self):
+        self.assertEqual(get_deployment_brand_config().display_name_fa, "لومرا")
+        rendered = self._render_home()
+        self.assertIn("<title>لومرا | زیبایی، ساده‌تر</title>", rendered)
+        self.assertIn('alt="مشتری لومرا"', rendered)
+        self.assertIn("معرفی لومرا و نحوه کار با پلتفرم", rendered)
+
+    def test_two_buyers_can_choose_independent_persian_names(self):
+        for latin, persian in (
+            ("Aurora", "آرورا"),
+            ("Second Buyer", "نیلوفر"),
+        ):
+            with self.subTest(latin=latin, persian=persian):
+                with override_settings(
+                    BRAND_DISPLAY_NAME=latin,
+                    BRAND_DISPLAY_NAME_FA=persian,
+                ):
+                    config = get_deployment_brand_config()
+                    self.assertEqual(config.display_name, latin)
+                    self.assertEqual(config.display_name_fa, persian)
+                    rendered = self._render_home()
+                    self.assertIn(
+                        f"<title>{persian} | زیبایی، ساده‌تر</title>",
+                        rendered,
+                    )
+                    self.assertIn(f'alt="مشتری {persian}"', rendered)
+                    self.assertIn(
+                        f"معرفی {persian} و نحوه کار با پلتفرم",
+                        rendered,
+                    )
+                    self.assertNotIn("مشتری لومرا", rendered)
+
+    @override_settings(BRAND_DISPLAY_NAME="Aurora")
+    def test_latin_display_name_does_not_implicitly_change_persian_name(self):
+        self.assertEqual(get_deployment_brand_config().display_name_fa, "لومرا")
+        self.assertIn(
+            "<title>لومرا | زیبایی، ساده‌تر</title>",
+            self._render_home(),
+        )
+
+    @override_settings(BRAND_DISPLAY_NAME_FA="آرورا & <جدید>")
+    def test_homepage_escapes_persian_brand_value_as_html(self):
+        rendered = self._render_home()
+        self.assertIn(
+            "<title>آرورا &amp; &lt;جدید&gt; | زیبایی، ساده‌تر</title>",
+            rendered,
+        )
+        self.assertIn('alt="مشتری آرورا &amp; &lt;جدید&gt;"', rendered)
+        self.assertNotIn("آرورا & <جدید>", rendered)
+
+
 class SharedBrandTemplateContextTests(SimpleTestCase):
     context_processor_path = "loomera.branding.context_processors.deployment_brand"
 
