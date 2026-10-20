@@ -4567,3 +4567,90 @@ class ArticleDetailBacklinkDeploymentBrandTests(SimpleTestCase):
         self.assertIn(f"مجله {escaped}\n          </a>", rendered)
         self.assertNotIn("آرورا & <جدید>", rendered)
         self.assertIn("<title>عنوان مستقل مقاله</title>", rendered)
+
+
+class SupportSuccessTitleDeploymentBrandTests(SimpleTestCase):
+    """Support confirmation browser title uses only the Latin deployment identity."""
+
+    @staticmethod
+    def _source():
+        return (
+            Path(settings.BASE_DIR) / "templates" / "main" / "support" / "success.html"
+        ).read_text(encoding="utf-8")
+
+    @staticmethod
+    def _render():
+        return render_to_string(
+            "main/support/success.html",
+            {
+                "deployment_brand": get_deployment_brand_config(),
+                "deployment_brand_assets": get_deployment_brand_asset_config(),
+                "deployment_brand_colors": get_deployment_brand_color_config(),
+                "hide_navbar": True,
+                "hide_footer": True,
+            },
+        )
+
+    def test_one_latin_title_slot_preserves_support_message_and_urls(self):
+        from django.urls import reverse
+
+        source = self._source()
+        self.assertEqual(source.count("{{ deployment_brand.display_name }}"), 1)
+        self.assertNotIn("Loomera", source)
+        self.assertEqual(source.count("لومرا"), 1)
+        self.assertIn("پاسخ تیم لومرا در همان بخش نمایش داده می‌شود.", source)
+        self.assertIn("{% url 'main:contact' %}", source)
+        self.assertIn("{% url 'accounts:login' %}", source)
+        self.assertIn("{% url 'accounts:customer_panel' %}", source)
+        self.assertIn('data-page="support_success"', source)
+        self.assertNotIn("BRAND_DISPLAY_NAME", source)
+        self.assertNotIn("get_deployment_brand_config", source)
+        self.assertEqual(reverse("main:success"), "/main/success/")
+        self.assertEqual(reverse("main:contact"), "/main/contact/")
+
+    def test_default_loomera_title_and_support_actions_remain(self):
+        self.assertEqual(get_deployment_brand_config().display_name, "Loomera")
+        rendered = self._render()
+        self.assertIn("<title>درخواست ثبت شد | Loomera</title>", rendered)
+        self.assertIn("درخواست شما ثبت شد", rendered)
+        self.assertIn("پاسخ تیم لومرا در همان بخش نمایش داده می‌شود.", rendered)
+        self.assertIn('href="/main/contact/"', rendered)
+        self.assertIn("ثبت یا پیگیری درخواست", rendered)
+        self.assertIn("بازگشت", rendered)
+
+    def test_two_sequential_buyers_render_independent_latin_title_names(self):
+        for latin, persian in (("Aurora", "آرورا"), ("Second Buyer", "نیلوفر")):
+            with self.subTest(latin=latin, persian=persian):
+                with override_settings(
+                    BRAND_DISPLAY_NAME=latin, BRAND_DISPLAY_NAME_FA=persian
+                ):
+                    rendered = self._render()
+                    self.assertEqual(
+                        get_deployment_brand_config().display_name, latin
+                    )
+                    self.assertIn(
+                        f"<title>درخواست ثبت شد | {latin}</title>", rendered
+                    )
+                    self.assertNotIn("<title>درخواست ثبت شد | Loomera</title>", rendered)
+                    self.assertIn(
+                        "پاسخ تیم لومرا در همان بخش نمایش داده می‌شود.", rendered
+                    )
+                    self.assertIn('href="/main/contact/"', rendered)
+        self.assertEqual(get_deployment_brand_config().display_name, "Loomera")
+
+    @override_settings(BRAND_DISPLAY_NAME_FA="آرورا")
+    def test_persian_only_override_does_not_infer_a_latin_name(self):
+        self.assertEqual(get_deployment_brand_config().display_name, "Loomera")
+        self.assertIn(
+            "<title>درخواست ثبت شد | Loomera</title>", self._render()
+        )
+
+    @override_settings(BRAND_DISPLAY_NAME="Aurora & <New>")
+    def test_latin_brand_title_uses_normal_html_escaping(self):
+        rendered = self._render()
+        self.assertIn(
+            "<title>درخواست ثبت شد | Aurora &amp; &lt;New&gt;</title>",
+            rendered,
+        )
+        self.assertNotIn("Aurora & <New>", rendered)
+        self.assertIn("پاسخ تیم لومرا در همان بخش نمایش داده می‌شود.", rendered)
