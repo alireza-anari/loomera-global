@@ -4140,3 +4140,112 @@ class HelpCenterHomeMetadataDeploymentBrandTests(SimpleTestCase):
         )
         self.assertNotIn("آرورا & <جدید>", rendered)
         self.assertIn("<h2>قوانین و مقررات لومرا</h2>", rendered)
+
+
+class MagazineHomeDeploymentBrandTests(SimpleTestCase):
+    """The magazine landing template uses deployment-scoped Persian identity."""
+
+    @staticmethod
+    def _source():
+        return (
+            Path(settings.BASE_DIR) / "templates" / "articles" / "magazine_home.html"
+        ).read_text(encoding="utf-8")
+
+    @staticmethod
+    def _render():
+        return render_to_string(
+            "articles/magazine_home.html",
+            {
+                "deployment_brand": get_deployment_brand_config(),
+                "deployment_brand_assets": get_deployment_brand_asset_config(),
+                "deployment_brand_colors": get_deployment_brand_color_config(),
+                "hide_navbar": True,
+                "hide_footer": True,
+                "magazine_stories": [
+                    {
+                        "id": 7,
+                        "title": "استوری نمونه",
+                        "salon": {"salon_name": "مجموعه نمونه", "logo": ""},
+                        "cover_image": None,
+                    },
+                ],
+                "magazine_stories_payload": [],
+                "latest_articles": [],
+                "categories": [],
+                "current_article_q": "",
+                "current_article_sort": "newest",
+                "current_article_category": "",
+            },
+        )
+
+    def test_four_magazine_identity_slots_use_shared_persian_brand_context(self):
+        from django.urls import reverse
+
+        source = self._source()
+        self.assertEqual(source.count("{{ deployment_brand.display_name_fa }}"), 4)
+        self.assertNotIn("لومرا", source)
+        self.assertNotIn("get_deployment_brand_config", source)
+        self.assertNotIn("BRAND_DISPLAY_NAME_FA", source)
+        self.assertIn("{% load articles_extras %}", source)
+        self.assertIn('{% include "articles/partials/story_viewer.html"', source)
+        self.assertIn('data-story-open', source)
+        self.assertIn('name="q"', source)
+        self.assertIn('name="category"', source)
+        self.assertIn('name="sort"', source)
+        self.assertIn("{% url 'articles:story_explore' %}", source)
+        self.assertIn("{% url 'articles:magazine_home' %}", source)
+        self.assertEqual(reverse("articles:magazine_home"), "/magazine/")
+        self.assertEqual(reverse("articles:story_explore"), "/magazine/stories/")
+
+    def test_default_loomera_copy_and_story_filter_behavior_are_preserved(self):
+        self.assertEqual(get_deployment_brand_config().display_name_fa, "لومرا")
+        rendered = self._render()
+        self.assertIn("<title>مجله لومرا | آموزش زیبایی،", rendered)
+        self.assertIn("مجله لومرا؛ آموزش‌های تخصصی زیبایی", rendered)
+        self.assertIn(">مجله لومرا</p>", rendered)
+        self.assertIn(">استوری‌های لومرا</p>", rendered)
+        self.assertIn('href="/magazine/stories/"', rendered)
+        self.assertIn('name="sort"', rendered)
+        self.assertIn('data-story-id="7"', rendered)
+        self.assertIn('href="/magazine/"', rendered)
+        self.assertIn("گزارش استوری به تیم لومرا", rendered)
+
+    def test_two_sequential_buyers_have_isolated_persian_magazine_copy(self):
+        for latin, persian in (("Aurora", "آرورا"), ("Second Buyer", "نیلوفر")):
+            with self.subTest(latin=latin, persian=persian):
+                with override_settings(
+                    BRAND_DISPLAY_NAME=latin, BRAND_DISPLAY_NAME_FA=persian
+                ):
+                    rendered = self._render()
+                    self.assertEqual(
+                        get_deployment_brand_config().display_name_fa, persian
+                    )
+                    self.assertIn(f"<title>مجله {persian} | آموزش زیبایی،", rendered)
+                    self.assertIn(
+                        f"مجله {persian}؛ آموزش‌های تخصصی زیبایی", rendered
+                    )
+                    self.assertIn(f">مجله {persian}</p>", rendered)
+                    self.assertIn(f">استوری‌های {persian}</p>", rendered)
+                    self.assertNotIn("<title>مجله لومرا |", rendered)
+                    self.assertNotIn(">مجله لومرا</p>", rendered)
+                    self.assertNotIn(">استوری‌های لومرا</p>", rendered)
+                    self.assertIn("گزارش استوری به تیم لومرا", rendered)
+        self.assertEqual(get_deployment_brand_config().display_name_fa, "لومرا")
+
+    @override_settings(BRAND_DISPLAY_NAME="Aurora")
+    def test_latin_brand_setting_does_not_infer_persian_magazine_copy(self):
+        self.assertEqual(get_deployment_brand_config().display_name_fa, "لومرا")
+        rendered = self._render()
+        self.assertIn("<title>مجله لومرا | آموزش زیبایی،", rendered)
+        self.assertIn(">مجله لومرا</p>", rendered)
+        self.assertIn(">استوری‌های لومرا</p>", rendered)
+
+    @override_settings(BRAND_DISPLAY_NAME_FA="آرورا & <جدید>")
+    def test_magazine_brand_autoescapes_html_in_all_four_slots(self):
+        rendered = self._render()
+        escaped = "آرورا &amp; &lt;جدید&gt;"
+        self.assertIn(f"<title>مجله {escaped} | آموزش زیبایی،", rendered)
+        self.assertIn(f"مجله {escaped}؛ آموزش‌های تخصصی زیبایی", rendered)
+        self.assertIn(f">مجله {escaped}</p>", rendered)
+        self.assertIn(f">استوری‌های {escaped}</p>", rendered)
+        self.assertNotIn("آرورا & <جدید>", rendered)
