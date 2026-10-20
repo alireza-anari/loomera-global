@@ -1,12 +1,14 @@
 from apps.main.ui_feedback import stash_form_errors, user_error_message
 import mimetypes
 from pathlib import PurePosixPath
+from types import SimpleNamespace
 import logging
 
 from django.conf import settings
 from django.core.files.storage import default_storage
 from django.contrib import messages
 from django.shortcuts import get_object_or_404, redirect, render
+from django.template.loader import get_template
 from django.urls import reverse
 from django.views import View
 from django.db import connection, transaction
@@ -15,11 +17,13 @@ from django.http import (
     Http404,
     HttpResponse,
     HttpResponseForbidden,
+    HttpResponseServerError,
     JsonResponse,
 )
 from django.core.exceptions import ValidationError
 from .forms import SupportForm, SupportTicketReplyForm
 from .models import SupportTicket, SupportTicketMessage
+from loomera.branding.config import get_deployment_brand_config
 
 from apps.dashboards.jalali_utils import format_jalali_with_weekday, format_time_fa
 from apps.accounts.notifications import (
@@ -52,6 +56,18 @@ def csrf_failure_view(request, reason=""):
     """Render CSRF failures in Persian while intentionally hiding the raw reason."""
 
     return render(request, "403.html", {"is_csrf_failure": True}, status=403)
+
+
+def server_error_view(request):
+    """Render HTTP 500 with minimal deployment branding and no RequestContext."""
+
+    config = get_deployment_brand_config()
+    deployment_brand = SimpleNamespace(
+        display_name=config.display_name,
+        display_name_fa=config.display_name_fa,
+    )
+    html = get_template("500.html").render({"deployment_brand": deployment_brand})
+    return HttpResponseServerError(html)
 
 
 class RobotsTxtView(View):
