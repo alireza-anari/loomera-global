@@ -479,3 +479,13 @@ This task does not change dynamic `list_title` or `list_description`, the Persia
 Five database-free regressions in `apps/main/test_production_settings_hygiene.py` cover exact template slots and preserved pagination markup, default title and backlink, sequential independent buyer overrides, Latin/Persian separation, escaping, and stable category/tag route names. The tests-only RED commit `458d637962e448d4f8af4d1e8714a5577157f8fc` failed as expected in GitHub Actions `39464289164` while the original template still hard-coded the brand. Only a separately verified GREEN CI on the final head establishes the targeted checks; these checks do not claim full-suite, database-backed, or browser coverage.
 
 **Phase 2 NOT COMPLETE. Phase 3 BLOCKED.** No deployment is authorized as part of this change.
+
+## Magazine Story Explorer Persian Brand Identity
+
+The public `/magazine/stories/` page (`templates/articles/story_explore.html`) now uses existing `deployment_brand.display_name_fa` template context in **exactly three** Persian identity slots: browser title (`استوری‌های مجموعه‌ها | مجله <brand>`), meta description (`استوری‌های مجموعه‌های زیبایی در <brand>`), and the backlink label to the magazine home (`مجله <brand>`). The default remains **لومرا**. A separate Persian `BRAND_DISPLAY_NAME_FA` setting controls the brand; Latin-only `BRAND_DISPLAY_NAME` does not infer a Persian name. Django template autoescaping is unchanged.
+
+This is a presentation-only boundary. Story model and payload data, read/visibility permissions, request-driven search, favorite scope, sorting, topic and service filters, paging and query parameters, all route names and destinations, the story viewer include, reporting/moderation strings and reason codes, JS event handlers, styles/static assets, views, existing context processors, provider selection, database schema and legal copy are unchanged. The included story viewer continues to use its original literal `تیم لومرا` reporting/help copy; that text is deliberately outside this task.
+
+Five database-free regressions in `apps/main/test_production_settings_hygiene.py` verify exact three bindings, default page and filters, two independent sequential buyer names, Latin/Persian separation and HTML escaping. Tests-only RED SHA `99785d4631e4a16b884ce156ffcc95a42f40f412` was observed failing in GitHub Actions run `39465813470` (0 template bindings vs 3). Final-head CI must independently pass; no claim of full-suite, browser, or deployed behavior is made.
+
+**Phase 2 NOT COMPLETE. Phase 3 BLOCKED.** No deployment is authorized.
