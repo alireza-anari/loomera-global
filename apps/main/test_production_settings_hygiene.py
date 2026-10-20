@@ -5128,7 +5128,7 @@ class ServerError500HandlerTests(SimpleTestCase):
                     BRAND_DISPLAY_NAME=latin, BRAND_DISPLAY_NAME_FA=persian
                 ):
                     response = Client(raise_request_exception=False).get(
-                        "/_test/500/"
+                        "/_test/500/", secure=True
                     )
                     self.assertEqual(response.status_code, 500)
                     html = response.content.decode("utf-8")
@@ -5153,7 +5153,7 @@ class ServerError500HandlerTests(SimpleTestCase):
     def test_client_real_500_escapes_independent_brand_names(self):
         from django.test import Client
 
-        response = Client(raise_request_exception=False).get("/_test/500/")
+        response = Client(raise_request_exception=False).get("/_test/500/", secure=True)
         self.assertEqual(response.status_code, 500)
         html = response.content.decode("utf-8")
         self.assertIn(
