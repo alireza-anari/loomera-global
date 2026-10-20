@@ -1,5 +1,5 @@
 {% extends "base.html" %}{% load static %}
-{% block title %}{{ category.title }} | مرکز راهنمای لومرا{% endblock %}
+{% block title %}{{ category.title }} | مرکز راهنمای {{ deployment_brand.display_name_fa }}{% endblock %}
 {% block head %}{{ block.super }}<link rel="stylesheet" href="{% static 'css/components/help_center.css' %}?v=20260904-1">{% endblock %}
 {% block content %}
 <main class="lm-help-center min-h-dvh pb-20"><header class="lm-help-center__page-head"><div class="mx-auto max-w-5xl px-4 py-8 sm:px-6 xl:px-0"><nav class="lm-help-center__breadcrumbs"><a href="{% url 'help_center:home' %}">مرکز راهنما</a><i class="fa-solid fa-chevron-left"></i><span>{{ category.title }}</span></nav><h1 class="mt-5 text-2xl font-black">{{ category.title }}</h1><p class="mt-2 text-sm leading-8 text-loomera-textMuted">{{ category.description }}</p><small>{{ category.article_count }} راهنما</small></div></header>
