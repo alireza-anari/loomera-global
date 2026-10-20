@@ -3556,3 +3556,120 @@ class AuthenticationArtworkDeploymentBoundaryTests(SimpleTestCase):
             with self.subTest(restored_template=template_name):
                 rendered = render_to_string(template_name, self._brand_context())
                 self.assertIn(f"ثبت‌نام {role} | {default_name}", rendered)
+
+
+class WorkspaceChooserDeploymentBrandTests(SimpleTestCase):
+    """Deployment branding for the active multi-role workspace chooser."""
+
+    default_logo_path = "branding/logo/loomera-logo-horizontal-rtl-transparent-240.png"
+
+    @staticmethod
+    def _source():
+        return (
+            Path(settings.BASE_DIR) / "templates" / "accounts" / "workspace_choose.html"
+        ).read_text(encoding="utf-8")
+
+    @staticmethod
+    def _render():
+        return render_to_string(
+            "accounts/workspace_choose.html",
+            {
+                "deployment_brand": get_deployment_brand_config(),
+                "deployment_brand_assets": get_deployment_brand_asset_config(),
+                "deployment_brand_colors": get_deployment_brand_color_config(),
+                "request": SimpleNamespace(
+                    user=SimpleNamespace(stylist=None, salon_manager_profile=None)
+                ),
+                "workspaces": [],
+                "hide_navbar": True,
+                "hide_footer": True,
+            },
+        )
+
+    def test_workspace_brand_slots_use_shared_context_not_fixed_literals(self):
+        source = self._source()
+        self.assertEqual(source.count("{{ deployment_brand.display_name_fa }}"), 4)
+        self.assertIn(
+            "{% static deployment_brand_assets.workspace_logo_path %}", source
+        )
+        self.assertNotIn("لومرا", source)
+        self.assertNotIn(
+            "{% static 'branding/logo/loomera-logo-horizontal-rtl-transparent-240.png' %}",
+            source,
+        )
+        for preserved in (
+            "data-multirole-workspace-chooser",
+            'action="{% url \'accounts:workspace_choose\' %}"',
+            'name="kind" value="{{ workspace.kind }}"',
+            "data-workspace-kind",
+            "accounts:add_role",
+        ):
+            self.assertIn(preserved, source)
+
+    def test_default_brand_and_exact_legacy_logo_path_remain_compatible(self):
+        snapshot = get_deployment_brand_asset_config()
+        self.assertEqual(snapshot.workspace_logo_path, self.default_logo_path)
+        self.assertEqual(len(fields(snapshot)), 25)
+        self.assertTrue((Path(settings.BASE_DIR) / "static" / self.default_logo_path).is_file())
+        rendered = self._render()
+        self.assertIn("<title>انتخاب محیط فعالیت | لومرا</title>", rendered)
+        self.assertIn('aria-label="لومرا — حساب من"', rendered)
+        self.assertIn('alt="لومرا"', rendered)
+        self.assertIn(f'src="/static/{self.default_logo_path}"', rendered)
+        self.assertIn("فعالیت حرفه‌ای خودت را در لومرا شروع کنی", rendered)
+
+    def test_two_buyer_brand_and_logo_overrides_refresh_without_leaking_defaults(self):
+        original = get_deployment_brand_asset_config()
+        for name, persian, logo in (
+            ("Aurora", "آرورا", "buyer-one/brand/workspace.png"),
+            ("Second Buyer", "نیلوفر", "buyer-two/brand/workspace.svg"),
+        ):
+            with self.subTest(name=name):
+                with override_settings(
+                    BRAND_DISPLAY_NAME=name,
+                    BRAND_DISPLAY_NAME_FA=persian,
+                    BRAND_WORKSPACE_LOGO_STATIC_PATH=logo,
+                ):
+                    snapshot = get_deployment_brand_asset_config()
+                    self.assertIsNot(snapshot, original)
+                    self.assertEqual(snapshot.workspace_logo_path, logo)
+                    rendered = self._render()
+                    self.assertIn(f"<title>انتخاب محیط فعالیت | {persian}</title>", rendered)
+                    self.assertIn(f'aria-label="{persian} — حساب من"', rendered)
+                    self.assertIn(f'alt="{persian}"', rendered)
+                    self.assertIn(f'src="/static/{logo}"', rendered)
+                    self.assertIn(f"فعالیت حرفه‌ای خودت را در {persian} شروع کنی", rendered)
+                    self.assertNotIn(f'src="/static/{self.default_logo_path}"', rendered)
+        self.assertEqual(
+            get_deployment_brand_asset_config().workspace_logo_path,
+            self.default_logo_path,
+        )
+
+    @override_settings(
+        BRAND_DISPLAY_NAME_FA="آرورا & <جدید>",
+        BRAND_WORKSPACE_LOGO_STATIC_PATH="buyer/brand/workspace.png",
+    )
+    def test_buyer_display_name_is_escaped_in_html_and_accessibility(self):
+        rendered = self._render()
+        self.assertIn("آرورا &amp; &lt;جدید&gt;", rendered)
+        self.assertIn('aria-label="آرورا &amp; &lt;جدید&gt; — حساب من"', rendered)
+        self.assertNotIn("آرورا & <جدید>", rendered)
+
+    def test_workspace_logo_setting_uses_existing_validated_path_contract(self):
+        path = Path(settings.BASE_DIR) / "loomera" / "settings" / "base.py"
+        tree = ast.parse(path.read_text(encoding="utf-8"))
+        assignments = [
+            node.value
+            for node in tree.body
+            if isinstance(node, ast.Assign)
+            and len(node.targets) == 1
+            and isinstance(node.targets[0], ast.Name)
+            and node.targets[0].id == "BRAND_WORKSPACE_LOGO_STATIC_PATH"
+        ]
+        self.assertEqual(len(assignments), 1)
+        self.assertIsInstance(assignments[0], ast.Call)
+        self.assertEqual(assignments[0].func.id, "_read_brand_static_path")
+        self.assertEqual(
+            [ast.literal_eval(arg) for arg in assignments[0].args],
+            ["BRAND_WORKSPACE_LOGO_STATIC_PATH", self.default_logo_path],
+        )
