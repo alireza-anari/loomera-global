@@ -419,3 +419,13 @@ The existing natural CI executes production hygiene/build-release tests, includi
 Remaining Phase 2 gaps include login/signup artwork, direct identity/logo consumers, homepage artwork, public/legal/SEO copy, reports, download filenames, notification/help/bot copy and theme/deployment-content review. This task resolves only the shared QR glyph selection boundary.
 
 **Phase 2 NOT COMPLETE. Phase 3 BLOCKED.**
+
+## Partners Landing Page Persian Brand Identity
+
+The active `/partners/` page (also served at the legacy `/join-loomera/` route) now renders seven Persian brand references from the existing request/template `deployment_brand.display_name_fa` snapshot, configured by `BRAND_DISPLAY_NAME_FA`. The references are the HTML page title, meta description, Open Graph title, hero badge, introductory paragraph, benefits heading, and closing call-to-action heading. The compatibility default remains **لومرا**. Separate buyer deployments may set an independent Persian brand name; overriding only the Latin `BRAND_DISPLAY_NAME` does not implicitly translate or change it. Django template autoescaping remains enabled, including within metadata.
+
+**Explicit preservation boundary:** The two support links intentionally retain their existing literal `?topic=درخواست همکاری مجموعه با لومرا` values because they are support-form prefill/routing inputs rather than visible display text. This incremental change does not redefine that support-topic contract. The `/partners/` and `/join-loomera/` routes, authenticated/anonymous registration links, layout, classes, static assets, shared header/footer, all other Persian copy, and support processing are unchanged. No settings, views, URLs, context processors, client scripts, providers, migrations or legal documents were modified.
+
+The five added database-free hygiene regressions cover exactly seven template bindings, unchanged support links and route names, existing default copy, sequential independent buyers, Latin/Persian separation, and escaped buyer-supplied HTML. The tests-only RED commit intentionally demonstrated that the original static template did not satisfy those requirements (PR #38, GitHub Actions run #39448618778). Any later GREEN result must be verified separately; passing the targeted CI does not establish full-suite or browser QA.
+
+Other Phase 2 gaps (including support-topic localization, legal review, help/messaging copy and embedded visual branding) remain separate. **Phase 2 NOT COMPLETE. Phase 3 BLOCKED.** No deployment is authorized by this change.
