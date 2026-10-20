@@ -94,8 +94,11 @@ class BetaUxReportsFilterBatch39StaticGuards(TestCase):
     def test_pdf_is_branded_and_keeps_legacy_route_contract(self):
         source = self.read("apps/dashboards/reports_components.py")
         page = self.read("templates/dashboards/reports.html")
-        self.assertIn("loomera-logo-horizontal-rtl-transparent-360.png", source)
-        self.assertIn("loomera.ir", source)
+        self.assertIn("get_deployment_brand_config()", source)
+        self.assertIn("get_deployment_brand_asset_config()", source)
+        self.assertIn("logo_header_path", source)
+        self.assertNotIn("loomera-logo-horizontal-rtl-transparent-360.png", source)
+        self.assertNotIn("loomera.ir", source)
         self.assertIn("گزارش عملکرد", source)
         self.assertIn("def build_reports_csv_response", source)
         self.assertIn(".pdf", source)

@@ -982,6 +982,7 @@ class SharedBrandConfigurationBoundaryTests(SimpleTestCase):
             [
                 "apps/api/v1/views.py",
                 "apps/articles/views.py",
+                "apps/dashboards/reports_components.py",
                 "apps/help_center/ai.py",
                 "apps/main/seo.py",
                 "apps/notifications/delivery.py",
@@ -2115,6 +2116,7 @@ class SharedBrandAssetConfigurationTests(SimpleTestCase):
             occurrences,
             [
                 "apps/orders/quick_link_print_templates.py",
+                "apps/dashboards/reports_components.py",
                 "apps/orders/quick_link_qr.py",
                 "apps/orders/management/commands/quick_link_readiness_check.py",
                 "loomera/branding/context_processors.py",
