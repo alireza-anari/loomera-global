@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
-{% block title %}صفحه پیدا نشد | Loomera{% endblock %}
-{% block meta_description %}صفحه‌ای که دنبال آن هستید در لومرا پیدا نشد.{% endblock %}
+{% block title %}صفحه پیدا نشد | {{ deployment_brand.display_name }}{% endblock %}
+{% block meta_description %}صفحه‌ای که دنبال آن هستید در {{ deployment_brand.display_name_fa }} پیدا نشد.{% endblock %}
 {% block main_class %}bg-loomera-bg text-loomera-textPrimary{% endblock %}
 {% block body_attrs %}data-page="error_404"{% endblock %}
 
@@ -24,7 +24,7 @@
           </span>
 
           <h1 class="mt-5 max-w-2xl text-3xl font-black leading-[1.5] sm:text-4xl lg:text-5xl">
-            این صفحه در لومرا پیدا نشد
+            این صفحه در {{ deployment_brand.display_name_fa }} پیدا نشد
           </h1>
 
           <p class="mt-4 max-w-2xl text-sm font-medium leading-8 text-white/75 sm:text-base">
