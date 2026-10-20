@@ -3807,3 +3807,99 @@ class PartnerPageDeploymentBrandTests(SimpleTestCase):
         self.assertIn(f"با {escaped} مجموعه، کلینیک زیبایی", rendered)
         self.assertIn(f"{escaped} چه چیزی را ساده‌تر می‌کند؟", rendered)
         self.assertNotIn("آرورا & <جدید>", rendered)
+
+
+class HelpArticleDeploymentBrandTests(SimpleTestCase):
+    """The active help-article wrapper uses deployment-scoped Persian identity."""
+
+    @staticmethod
+    def _source():
+        return (
+            Path(settings.BASE_DIR) / "templates" / "help_center" / "article.html"
+        ).read_text(encoding="utf-8")
+
+    @staticmethod
+    def _render():
+        from datetime import date
+
+        return render_to_string(
+            "help_center/article.html",
+            {
+                "deployment_brand": get_deployment_brand_config(),
+                "deployment_brand_assets": get_deployment_brand_asset_config(),
+                "deployment_brand_colors": get_deployment_brand_color_config(),
+                "hide_navbar": True,
+                "hide_footer": True,
+                "article": {
+                    "title": "راهنمای رزرو",
+                    "summary": "خلاصه آزمایشی راهنما",
+                    "category": "bookings",
+                    "category_title": "رزرو",
+                    "article_type_label": "مرحله‌به‌مرحله",
+                    "body": "",
+                    "updated_at": date(2026, 10, 20),
+                    "action_links": [
+                        {"url": "/accounts/register/", "label": "ثبت‌نام"}
+                    ],
+                },
+                "related_articles": [],
+            },
+        )
+
+    def test_three_help_article_identity_slots_use_shared_context(self):
+        from django.urls import reverse
+
+        source = self._source()
+        self.assertEqual(source.count("{{ deployment_brand.display_name_fa }}"), 3)
+        self.assertNotIn("لومرا", source)
+        self.assertNotIn("get_deployment_brand_config", source)
+        self.assertNotIn("BRAND_DISPLAY_NAME_FA", source)
+        self.assertIn("{% load static help_docs %}", source)
+        self.assertIn("{{ article.body|render_help_markdown }}", source)
+        self.assertIn("data-help-open-assistant", source)
+        self.assertIn("{% url 'help_center:home' %}", source)
+        self.assertIn("{% url 'support' %}", source)
+        self.assertEqual(reverse("help_center:article", args=["bookings"]), "/help/article/bookings/")
+
+    def test_default_loomera_name_preserves_article_wrapper_copy(self):
+        self.assertEqual(get_deployment_brand_config().display_name_fa, "لومرا")
+        rendered = self._render()
+        self.assertIn("<title>راهنمای رزرو | مرکز راهنمای لومرا</title>", rendered)
+        self.assertIn("<span>راهنمای لومرا</span>", rendered)
+        self.assertIn("در لومرا شو.", rendered)
+        self.assertIn("خلاصه آزمایشی راهنما", rendered)
+        self.assertIn('href="/accounts/register/"', rendered)
+
+    def test_two_buyers_render_sequential_farsi_names_without_default_leakage(self):
+        for latin, persian in (
+            ("Aurora", "آرورا"),
+            ("Second Buyer", "نیلوفر"),
+        ):
+            with self.subTest(latin=latin, persian=persian):
+                with override_settings(
+                    BRAND_DISPLAY_NAME=latin, BRAND_DISPLAY_NAME_FA=persian
+                ):
+                    rendered = self._render()
+                    self.assertEqual(
+                        get_deployment_brand_config().display_name_fa, persian
+                    )
+                    self.assertIn(f"<title>راهنمای رزرو | مرکز راهنمای {persian}</title>", rendered)
+                    self.assertIn(f"<span>راهنمای {persian}</span>", rendered)
+                    self.assertIn(f"در {persian} شو.", rendered)
+                    self.assertNotIn("<span>راهنمای لومرا</span>", rendered)
+                    self.assertNotIn("در لومرا شو.", rendered)
+        self.assertEqual(get_deployment_brand_config().display_name_fa, "لومرا")
+
+    @override_settings(BRAND_DISPLAY_NAME="Aurora")
+    def test_latin_name_does_not_infer_a_persian_name(self):
+        self.assertEqual(get_deployment_brand_config().display_name_fa, "لومرا")
+        self.assertIn("<span>راهنمای لومرا</span>", self._render())
+
+    @override_settings(BRAND_DISPLAY_NAME_FA="آرورا & <جدید>")
+    def test_buyer_name_is_escaped_in_title_document_meta_and_action_copy(self):
+        rendered = self._render()
+        escaped = "آرورا &amp; &lt;جدید&gt;"
+        self.assertIn(f"<title>راهنمای رزرو | مرکز راهنمای {escaped}</title>", rendered)
+        self.assertIn(f"<span>راهنمای {escaped}</span>", rendered)
+        self.assertIn(f"در {escaped} شو.", rendered)
+        self.assertNotIn("آرورا & <جدید>", rendered)
