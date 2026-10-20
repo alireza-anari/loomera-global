@@ -4865,3 +4865,126 @@ class NotFound404DeploymentBrandTests(SimpleTestCase):
         )
         self.assertNotIn("Aurora & <New>", rendered)
         self.assertNotIn("آرورا & <جدید>", rendered)
+
+
+class Forbidden403DeploymentBrandTests(SimpleTestCase):
+    """Public 403 page uses independent brand names without changing security copy."""
+
+    @staticmethod
+    def _source():
+        return (Path(settings.BASE_DIR) / "templates" / "403.html").read_text(
+            encoding="utf-8"
+        )
+
+    @staticmethod
+    def _render(*, is_csrf_failure=False):
+        return render_to_string(
+            "403.html",
+            {
+                "deployment_brand": get_deployment_brand_config(),
+                "deployment_brand_assets": get_deployment_brand_asset_config(),
+                "deployment_brand_colors": get_deployment_brand_color_config(),
+                "hide_navbar": True,
+                "hide_footer": True,
+                "is_csrf_failure": is_csrf_failure,
+            },
+        )
+
+    def test_exact_brand_slots_preserve_both_security_branches_and_navigation(self):
+        source = self._source()
+        self.assertEqual(source.count("{{ deployment_brand.display_name }}"), 1)
+        self.assertEqual(source.count("{{ deployment_brand.display_name_fa }}"), 2)
+        self.assertNotIn("Loomera", source)
+        self.assertNotIn("لومرا", source)
+        self.assertNotIn("get_deployment_brand_config", source)
+        self.assertNotIn("BRAND_DISPLAY_NAME", source)
+        self.assertIn('data-page="error_403"', source)
+        self.assertIn("خطای ۴۰۳", source)
+        self.assertIn("{% if is_csrf_failure %}", source)
+        self.assertIn("اعتبار این درخواست پایان یافته است", source)
+        self.assertIn("برای حفظ امنیت حساب، صفحه را تازه‌سازی کنید", source)
+        self.assertIn("دسترسی به این بخش برای شما مجاز نیست", source)
+        self.assertIn("جزئیات فنی این خطا نمایش داده نمی‌شود.", source)
+        self.assertIn('href="/"', source)
+        self.assertIn("{% url 'accounts:login' %}", source)
+
+    def test_default_brand_in_both_403_variants_keeps_security_guidance(self):
+        from django.urls import reverse
+
+        self.assertEqual(get_deployment_brand_config().display_name, "Loomera")
+        self.assertEqual(get_deployment_brand_config().display_name_fa, "لومرا")
+        denied = self._render()
+        csrf = self._render(is_csrf_failure=True)
+        for rendered in (denied, csrf):
+            self.assertIn("<title>دسترسی مجاز نیست | Loomera</title>", rendered)
+            self.assertIn(
+                "دسترسی به این بخش از لومرا برای این درخواست مجاز نیست.",
+                rendered,
+            )
+            self.assertIn("خطای ۴۰۳", rendered)
+            self.assertIn('href="/"', rendered)
+            self.assertIn(f'href="{reverse("accounts:login")}"', rendered)
+        self.assertIn("به بخش دیگری از لومرا برگردید.", denied)
+        self.assertIn("جزئیات فنی این خطا نمایش داده نمی‌شود.", denied)
+        self.assertIn("اعتبار این درخواست پایان یافته است", csrf)
+        self.assertIn("برای حفظ امنیت حساب، صفحه را تازه‌سازی کنید", csrf)
+        self.assertNotIn("به بخش دیگری از لومرا برگردید.", csrf)
+
+    def test_two_sequential_deployments_do_not_leak_403_brand(self):
+        for latin, persian in (("Aurora", "آرورا"), ("Second Buyer", "نیلوفر")):
+            with self.subTest(latin=latin, persian=persian):
+                with override_settings(
+                    BRAND_DISPLAY_NAME=latin, BRAND_DISPLAY_NAME_FA=persian
+                ):
+                    denied = self._render()
+                    csrf = self._render(is_csrf_failure=True)
+                    for rendered in (denied, csrf):
+                        self.assertIn(
+                            f"<title>دسترسی مجاز نیست | {latin}</title>", rendered
+                        )
+                        self.assertIn(
+                            f"دسترسی به این بخش از {persian} برای این درخواست مجاز نیست.",
+                            rendered,
+                        )
+                        self.assertNotIn(
+                            "<title>دسترسی مجاز نیست | Loomera</title>", rendered
+                        )
+                    self.assertIn(f"به بخش دیگری از {persian} برگردید.", denied)
+                    self.assertNotIn("به بخش دیگری از لومرا برگردید.", denied)
+                    self.assertNotIn("به بخش دیگری از", csrf)
+                    self.assertIn("اعتبار این درخواست پایان یافته است", csrf)
+        self.assertEqual(get_deployment_brand_config().display_name, "Loomera")
+        self.assertEqual(get_deployment_brand_config().display_name_fa, "لومرا")
+
+    def test_latin_and_persian_names_override_independently(self):
+        with override_settings(BRAND_DISPLAY_NAME="Aurora"):
+            denied = self._render()
+            self.assertIn("<title>دسترسی مجاز نیست | Aurora</title>", denied)
+            self.assertIn("دسترسی به این بخش از لومرا", denied)
+            self.assertIn("به بخش دیگری از لومرا برگردید.", denied)
+        with override_settings(BRAND_DISPLAY_NAME_FA="آرورا"):
+            denied = self._render()
+            self.assertIn("<title>دسترسی مجاز نیست | Loomera</title>", denied)
+            self.assertIn("دسترسی به این بخش از آرورا", denied)
+            self.assertIn("به بخش دیگری از آرورا برگردید.", denied)
+
+    @override_settings(
+        BRAND_DISPLAY_NAME="Aurora & <New>",
+        BRAND_DISPLAY_NAME_FA="آرورا & <جدید>",
+    )
+    def test_brand_is_html_escaped_in_title_meta_and_denied_guidance(self):
+        denied = self._render()
+        csrf = self._render(is_csrf_failure=True)
+        for rendered in (denied, csrf):
+            self.assertIn(
+                "<title>دسترسی مجاز نیست | Aurora &amp; &lt;New&gt;</title>",
+                rendered,
+            )
+            self.assertIn(
+                "دسترسی به این بخش از آرورا &amp; &lt;جدید&gt; برای این درخواست مجاز نیست.",
+                rendered,
+            )
+            self.assertNotIn("Aurora & <New>", rendered)
+            self.assertNotIn("آرورا & <جدید>", rendered)
+        self.assertIn("به بخش دیگری از آرورا &amp; &lt;جدید&gt; برگردید.", denied)
+        self.assertNotIn("به بخش دیگری از", csrf)
