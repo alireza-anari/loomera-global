@@ -4249,3 +4249,100 @@ class MagazineHomeDeploymentBrandTests(SimpleTestCase):
         self.assertIn(f">مجله {escaped}</p>", rendered)
         self.assertIn(f">استوری‌های {escaped}</p>", rendered)
         self.assertNotIn("آرورا & <جدید>", rendered)
+
+
+class MagazineListDeploymentBrandTests(SimpleTestCase):
+    """Magazine category and tag list chrome follows the Persian deployment name."""
+
+    @staticmethod
+    def _source():
+        return (
+            Path(settings.BASE_DIR) / "templates" / "articles" / "article_list.html"
+        ).read_text(encoding="utf-8")
+
+    @staticmethod
+    def _render():
+        return render_to_string(
+            "articles/article_list.html",
+            {
+                "deployment_brand": get_deployment_brand_config(),
+                "deployment_brand_assets": get_deployment_brand_asset_config(),
+                "deployment_brand_colors": get_deployment_brand_color_config(),
+                "hide_navbar": True,
+                "hide_footer": True,
+                "list_title": "رزرو و نوبت‌ها",
+                "list_description": "مقالات این موضوع",
+                "articles": [],
+                "is_paginated": False,
+            },
+        )
+
+    def test_exactly_two_magazine_list_brand_slots_reuse_shared_context(self):
+        from django.urls import reverse
+
+        source = self._source()
+        self.assertEqual(source.count("{{ deployment_brand.display_name_fa }}"), 2)
+        self.assertNotIn("لومرا", source)
+        self.assertNotIn("BRAND_DISPLAY_NAME_FA", source)
+        self.assertNotIn("get_deployment_brand_config", source)
+        self.assertIn("{{ list_title }}", source)
+        self.assertIn("{{ list_description }}", source)
+        self.assertIn('{% include "articles/partials/article_card.html"', source)
+        self.assertIn("{{ page_obj.number|fa_digits }}", source)
+        self.assertIn("{% url 'articles:magazine_home' %}", source)
+        self.assertEqual(reverse("articles:magazine_home"), "/magazine/")
+        self.assertEqual(
+            reverse("articles:category_detail", args=["bookings"]),
+            "/magazine/category/bookings/",
+        )
+        self.assertEqual(
+            reverse("articles:tag_detail", args=["beauty"]),
+            "/magazine/tag/beauty/",
+        )
+
+    def test_existing_loomera_default_title_and_magazine_link_remain(self):
+        self.assertEqual(get_deployment_brand_config().display_name_fa, "لومرا")
+        rendered = self._render()
+        self.assertIn("<title>رزرو و نوبت‌ها | مجله لومرا</title>", rendered)
+        self.assertIn("مجله لومرا\n      </a>", rendered)
+        self.assertIn('href="/magazine/"', rendered)
+        self.assertIn("مقالات این موضوع", rendered)
+        self.assertIn("هنوز مقاله‌ای در این بخش نیست", rendered)
+        self.assertIn("بازگشت به مجله", rendered)
+
+    def test_two_sequential_buyers_render_independent_persian_names(self):
+        for latin, persian in (("Aurora", "آرورا"), ("Second Buyer", "نیلوفر")):
+            with self.subTest(latin=latin, persian=persian):
+                with override_settings(
+                    BRAND_DISPLAY_NAME=latin, BRAND_DISPLAY_NAME_FA=persian
+                ):
+                    rendered = self._render()
+                    self.assertEqual(
+                        get_deployment_brand_config().display_name_fa, persian
+                    )
+                    self.assertIn(
+                        f"<title>رزرو و نوبت‌ها | مجله {persian}</title>",
+                        rendered,
+                    )
+                    self.assertIn(f"مجله {persian}\n      </a>", rendered)
+                    self.assertNotIn("<title>رزرو و نوبت‌ها | مجله لومرا</title>", rendered)
+                    self.assertNotIn("مجله لومرا\n      </a>", rendered)
+                    self.assertIn('href="/magazine/"', rendered)
+        self.assertEqual(get_deployment_brand_config().display_name_fa, "لومرا")
+
+    @override_settings(BRAND_DISPLAY_NAME="Aurora")
+    def test_latin_only_override_does_not_infer_persian_name(self):
+        self.assertEqual(get_deployment_brand_config().display_name_fa, "لومرا")
+        rendered = self._render()
+        self.assertIn("<title>رزرو و نوبت‌ها | مجله لومرا</title>", rendered)
+        self.assertIn("مجله لومرا\n      </a>", rendered)
+
+    @override_settings(BRAND_DISPLAY_NAME_FA="آرورا & <جدید>")
+    def test_buyer_name_autoescapes_in_title_and_magazine_link(self):
+        rendered = self._render()
+        escaped = "آرورا &amp; &lt;جدید&gt;"
+        self.assertIn(
+            f"<title>رزرو و نوبت‌ها | مجله {escaped}</title>", rendered
+        )
+        self.assertIn(f"مجله {escaped}\n      </a>", rendered)
+        self.assertNotIn("آرورا & <جدید>", rendered)

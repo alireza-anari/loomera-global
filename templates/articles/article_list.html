@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% load articles_extras %}
 
-{% block title %}{{ list_title }} | مجله لومرا{% endblock %}
+{% block title %}{{ list_title }} | مجله {{ deployment_brand.display_name_fa }}{% endblock %}
 {% block meta_description %}{{ list_description }}{% endblock %}
 {% block main_class %}bg-loomera-bg text-loomera-textPrimary{% endblock %}
 {% block body_attrs %}data-page="magazine-list"{% endblock %}
@@ -12,7 +12,7 @@
     <div class="mx-auto w-full max-w-7xl px-4 py-6 sm:px-6 sm:py-8 xl:px-0">
       <a href="{% url 'articles:magazine_home' %}" class="inline-flex items-center gap-2 text-xs font-black text-loomera-primary">
         <i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
-        مجله لومرا
+        مجله {{ deployment_brand.display_name_fa }}
       </a>
 
       <h1 class="mt-3 text-2xl font-black leading-10 text-loomera-textPrimary sm:text-3xl">
