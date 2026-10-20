@@ -509,3 +509,13 @@ The successful support-submission confirmation page at `/main/success/` (`templa
 Five database-free regressions in `apps/main/test_production_settings_hygiene.py` check one Latin slot, default compatibility and preserved support actions, two sequential independent buyer names, Latin/Persian name separation and HTML escaping. RED tests-only SHA `cb3fc69f2a026e72c4b9a9930f0497a518fd1c00` failed as expected in GitHub Actions `39469505730` while the title was still static. A separately observed successful CI on the final implementation head is required for GREEN; the targeted checks do not certify full-suite, browser or live production behavior.
 
 **Phase 2 NOT COMPLETE. Phase 3 BLOCKED.** No deployment is authorized.
+
+## HTTP 400 Page Deployment Brand Metadata
+
+The public HTTP 400 error template (`templates/400.html`) now uses the existing request-scoped `deployment_brand` context in **exactly two metadata identity slots**: the browser title `درخواست نامعتبر | <deployment_brand.display_name>` (Latin label from `BRAND_DISPLAY_NAME`) and the meta description `درخواست ارسال‌شده برای <deployment_brand.display_name_fa> معتبر نبود.` (Persian label from `BRAND_DISPLAY_NAME_FA`). Defaults remain **Loomera** and **لومرا**. The settings are independent: changing one name does not infer or override the other. Django autoescaping protects both placements.
+
+**Strict failure-handling boundary:** `apps.main.views.bad_request_view` still renders `400.html` with HTTP status **400**. The visible `خطای ۴۰۰` indicator, guidance about technical detail confidentiality, page content, root and browser-back actions, base layout, HTML structure, route handlers, security disclosures and statuses are unchanged. Other error pages (403, 404, 500), providers, settings, context processors, database schema and deployment behavior are outside this change.
+
+Five database-free regressions in `apps/main/test_production_settings_hygiene.py` cover the exact two shared brand context slots, unchanged HTTP 400 handler source and navigation, default appearance, two sequential independent deployment brands, separate Latin/Persian overrides, and escaped markup. RED tests-only commit `e7425949fe468d2600742f342081881d7af5f42a` was observed failing on unchanged title in GitHub Actions `39471691744`. The final head requires a separate successful native GitHub CI result; these targeted checks do not certify a full test suite, browser QA or production error handling.
+
+**Phase 2 NOT COMPLETE. Phase 3 BLOCKED.** No deployment is authorized.

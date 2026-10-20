@@ -4654,3 +4654,107 @@ class SupportSuccessTitleDeploymentBrandTests(SimpleTestCase):
         )
         self.assertNotIn("Aurora & <New>", rendered)
         self.assertIn("پاسخ تیم لومرا در همان بخش نمایش داده می‌شود.", rendered)
+
+
+class BadRequest400MetadataDeploymentBrandTests(SimpleTestCase):
+    """The 400 response metadata uses existing independent deployment names."""
+
+    @staticmethod
+    def _source():
+        return (Path(settings.BASE_DIR) / "templates" / "400.html").read_text(
+            encoding="utf-8"
+        )
+
+    @staticmethod
+    def _render():
+        return render_to_string(
+            "400.html",
+            {
+                "deployment_brand": get_deployment_brand_config(),
+                "deployment_brand_assets": get_deployment_brand_asset_config(),
+                "deployment_brand_colors": get_deployment_brand_color_config(),
+                "hide_navbar": True,
+                "hide_footer": True,
+            },
+        )
+
+    def test_only_two_error_metadata_slots_and_safe_navigation(self):
+        source = self._source()
+        self.assertEqual(source.count("{{ deployment_brand.display_name }}"), 1)
+        self.assertEqual(source.count("{{ deployment_brand.display_name_fa }}"), 1)
+        self.assertNotIn("Loomera", source)
+        self.assertNotIn("لومرا", source)
+        self.assertNotIn("get_deployment_brand_config", source)
+        self.assertNotIn("BRAND_DISPLAY_NAME", source)
+        self.assertIn('data-page="error_400"', source)
+        self.assertIn("خطای ۴۰۰", source)
+        self.assertIn("جزئیات فنی خطا برای حفظ امنیت نمایش داده نمی‌شود.", source)
+        self.assertIn('href="/"', source)
+        self.assertIn('onclick="history.back()"', source)
+        views_source = (
+            Path(settings.BASE_DIR) / "apps" / "main" / "views.py"
+        ).read_text(encoding="utf-8")
+        self.assertIn('return render(request, "400.html", status=400)', views_source)
+
+    def test_default_brand_preserves_browser_title_description_and_actions(self):
+        self.assertEqual(get_deployment_brand_config().display_name, "Loomera")
+        self.assertEqual(get_deployment_brand_config().display_name_fa, "لومرا")
+        rendered = self._render()
+        self.assertIn("<title>درخواست نامعتبر | Loomera</title>", rendered)
+        self.assertIn(
+            "درخواست ارسال‌شده برای لومرا معتبر نبود.", rendered
+        )
+        self.assertIn("اطلاعات این درخواست معتبر نیست", rendered)
+        self.assertIn("جزئیات فنی خطا برای حفظ امنیت نمایش داده نمی‌شود.", rendered)
+        self.assertIn('href="/"', rendered)
+        self.assertIn('onclick="history.back()"', rendered)
+
+    def test_two_sequential_deployments_do_not_leak_identity(self):
+        for latin, persian in (("Aurora", "آرورا"), ("Second Buyer", "نیلوفر")):
+            with self.subTest(latin=latin, persian=persian):
+                with override_settings(
+                    BRAND_DISPLAY_NAME=latin, BRAND_DISPLAY_NAME_FA=persian
+                ):
+                    rendered = self._render()
+                    self.assertIn(
+                        f"<title>درخواست نامعتبر | {latin}</title>", rendered
+                    )
+                    self.assertIn(
+                        f"درخواست ارسال‌شده برای {persian} معتبر نبود.", rendered
+                    )
+                    self.assertNotIn(
+                        "<title>درخواست نامعتبر | Loomera</title>", rendered
+                    )
+                    self.assertNotIn(
+                        "درخواست ارسال‌شده برای لومرا معتبر نبود.", rendered
+                    )
+                    self.assertIn("جزئیات فنی خطا برای حفظ امنیت", rendered)
+        self.assertEqual(get_deployment_brand_config().display_name, "Loomera")
+        self.assertEqual(get_deployment_brand_config().display_name_fa, "لومرا")
+
+    def test_latin_and_persian_overrides_are_independent(self):
+        with override_settings(BRAND_DISPLAY_NAME="Aurora"):
+            rendered = self._render()
+            self.assertIn("<title>درخواست نامعتبر | Aurora</title>", rendered)
+            self.assertIn("درخواست ارسال‌شده برای لومرا معتبر نبود.", rendered)
+        with override_settings(BRAND_DISPLAY_NAME_FA="آرورا"):
+            rendered = self._render()
+            self.assertIn("<title>درخواست نامعتبر | Loomera</title>", rendered)
+            self.assertIn("درخواست ارسال‌شده برای آرورا معتبر نبود.", rendered)
+
+    @override_settings(
+        BRAND_DISPLAY_NAME="Aurora & <New>",
+        BRAND_DISPLAY_NAME_FA="آرورا & <جدید>",
+    )
+    def test_title_and_meta_autoescape_untrusted_brand_labels(self):
+        rendered = self._render()
+        self.assertIn(
+            "<title>درخواست نامعتبر | Aurora &amp; &lt;New&gt;</title>",
+            rendered,
+        )
+        self.assertIn(
+            "درخواست ارسال‌شده برای آرورا &amp; &lt;جدید&gt; معتبر نبود.",
+            rendered,
+        )
+        self.assertNotIn("Aurora & <New>", rendered)
+        self.assertNotIn("آرورا & <جدید>", rendered)

@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
-{% block title %}درخواست نامعتبر | Loomera{% endblock %}
-{% block meta_description %}درخواست ارسال‌شده برای لومرا معتبر نبود.{% endblock %}
+{% block title %}درخواست نامعتبر | {{ deployment_brand.display_name }}{% endblock %}
+{% block meta_description %}درخواست ارسال‌شده برای {{ deployment_brand.display_name_fa }} معتبر نبود.{% endblock %}
 {% block main_class %}bg-loomera-bg text-loomera-textPrimary{% endblock %}
 {% block body_attrs %}data-page="error_400"{% endblock %}
 
