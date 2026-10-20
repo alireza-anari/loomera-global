@@ -1,8 +1,8 @@
 {% extends "base.html" %}
 {% load static articles_extras %}
 
-{% block title %}استوری‌های مجموعه‌ها | مجله لومرا{% endblock %}
-{% block meta_description %}استوری‌های مجموعه‌های زیبایی در لومرا{% endblock %}
+{% block title %}استوری‌های مجموعه‌ها | مجله {{ deployment_brand.display_name_fa }}{% endblock %}
+{% block meta_description %}استوری‌های مجموعه‌های زیبایی در {{ deployment_brand.display_name_fa }}{% endblock %}
 {% block body_attrs %}data-page="magazine-stories"{% endblock %}
 
 {% block content %}
@@ -11,7 +11,7 @@
     <div class="mx-auto w-full max-w-7xl px-4 py-6 sm:px-6 sm:py-8 xl:px-0">
       <a href="{% url 'articles:magazine_home' %}" class="inline-flex items-center gap-2 text-xs font-black text-loomera-primary">
         <i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
-        مجله لومرا
+        مجله {{ deployment_brand.display_name_fa }}
       </a>
 
       <div class="mt-3 flex items-center justify-between gap-4">
