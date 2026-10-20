@@ -499,3 +499,13 @@ The active public article detail template (`templates/articles/article_detail.ht
 Five database-free regressions in `apps/main/test_production_settings_hygiene.py` exercise the default article wrapper, one shared brand slot, sequential independent buyer brands, Latin/Persian separation, HTML escaping, unchanged SEO metadata and report message, and article/magazine routes. The tests-only RED commit `cc45bfd614f0a4b0ae2ce7b883bc9204920d0ca4` failed as expected in GitHub Actions `39467728035` (0 brand slots instead of 1). A separately checked successful final-head CI run is required to establish GREEN; complete test suite, database and browser QA are not implied.
 
 **Phase 2 NOT COMPLETE. Phase 3 BLOCKED.** No deployment is authorized.
+
+## Support Success Page Latin Browser Title Identity
+
+The successful support-submission confirmation page at `/main/success/` (`templates/main/support/success.html`) uses the existing `deployment_brand.display_name` template context in **exactly one Latin identity slot**: the browser title (`درخواست ثبت شد | <brand>`). `BRAND_DISPLAY_NAME` controls that independent title segment; the default remains **Loomera**. Changing only Persian `BRAND_DISPLAY_NAME_FA` does not infer a new Latin name. Django autoescaping is retained.
+
+**Deliberate operational boundary:** The visible Persian response promise (`در صورت نیاز، پاسخ تیم لومرا در همان بخش نمایش داده می‌شود.`) is unchanged in this phase and is not renamed implicitly to the deployment display name. The success heading, support-submission and tracking links (`main:contact`, `accounts:login`, `accounts:customer_panel`), their destinations and permission branches, view functions, navigation and layout, other support pages, existing brand settings/context processors, persisted tickets, notification delivery and legal text remain unchanged. No new settings, database migration, provider/locale behavior or deployment operations are introduced.
+
+Five database-free regressions in `apps/main/test_production_settings_hygiene.py` check one Latin slot, default compatibility and preserved support actions, two sequential independent buyer names, Latin/Persian name separation and HTML escaping. RED tests-only SHA `cb3fc69f2a026e72c4b9a9930f0497a518fd1c00` failed as expected in GitHub Actions `39469505730` while the title was still static. A separately observed successful CI on the final implementation head is required for GREEN; the targeted checks do not certify full-suite, browser or live production behavior.
+
+**Phase 2 NOT COMPLETE. Phase 3 BLOCKED.** No deployment is authorized.
