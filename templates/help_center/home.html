@@ -1,6 +1,6 @@
 {% extends "base.html" %}{% load static %}
-{% block title %}مرکز راهنمای لومرا{% endblock %}
-{% block meta_description %}راهنمای ساده و مرحله‌به‌مرحله استفاده از لومرا{% endblock %}
+{% block title %}مرکز راهنمای {{ deployment_brand.display_name_fa }}{% endblock %}
+{% block meta_description %}راهنمای ساده و مرحله‌به‌مرحله استفاده از {{ deployment_brand.display_name_fa }}{% endblock %}
 {% block body_attrs %}data-page="help-center"{% endblock %}
 {% block head %}{{ block.super }}<link rel="stylesheet" href="{% static 'css/components/help_center.css' %}?v=20260904-1">{% endblock %}
 {% block content %}
