@@ -4096,7 +4096,7 @@ class HelpCenterHomeMetadataDeploymentBrandTests(SimpleTestCase):
         self.assertIn("<title>مرکز راهنمای لومرا</title>", rendered)
         self.assertIn("راهنمای ساده و مرحله‌به‌مرحله استفاده از لومرا", rendered)
         self.assertIn("<h2>قوانین و مقررات لومرا</h2>", rendered)
-        self.assertIn('href="/help/search/"', rendered)
+        self.assertIn('action="/help/search/"', rendered)
         self.assertIn('href="/help/legal/"', rendered)
         self.assertIn("راهنمای مشتری", rendered)
 
