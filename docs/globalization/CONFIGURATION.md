@@ -519,3 +519,13 @@ The public HTTP 400 error template (`templates/400.html`) now uses the existing 
 Five database-free regressions in `apps/main/test_production_settings_hygiene.py` cover the exact two shared brand context slots, unchanged HTTP 400 handler source and navigation, default appearance, two sequential independent deployment brands, separate Latin/Persian overrides, and escaped markup. RED tests-only commit `e7425949fe468d2600742f342081881d7af5f42a` was observed failing on unchanged title in GitHub Actions `39471691744`. The final head requires a separate successful native GitHub CI result; these targeted checks do not certify a full test suite, browser QA or production error handling.
 
 **Phase 2 NOT COMPLETE. Phase 3 BLOCKED.** No deployment is authorized.
+
+## HTTP 404 Page Deployment Brand Identity
+
+The public HTTP 404 error template (`templates/404.html`) now uses the existing `deployment_brand` context for **exactly three** brand identity references: the Latin browser-title suffix (`صفحه پیدا نشد | <brand>`) from `deployment_brand.display_name`, the Persian meta description from `deployment_brand.display_name_fa`, and the visible Persian main heading (`این صفحه در <brand> پیدا نشد`) from the same Persian value. Existing defaults remain **Loomera** and **لومرا**. `BRAND_DISPLAY_NAME` and `BRAND_DISPLAY_NAME_FA` are independent, and Django autoescaping remains on for all three placements.
+
+The surrounding public-error behavior is outside this task: the existing 404 error handling/status is not altered or independently HTTP-tested, and the `خطای ۴۰۴` badge, `کد خطا: 404`, original navigation help, home (`/`) and `search:search_page` links and destinations, layout, template inheritance, other 400/403/500 error templates, SEO routes, settings, providers, accessors, migrations and deployment operations remain unchanged.
+
+Five database-free tests in `apps/main/test_production_settings_hygiene.py` verify exactly three brand slots, unchanged default display and links, sequential buyer independence, separate Latin/Persian overrides and HTML escaping. Tests-only RED commit `8aa02e8ee1382b008e785d4882b3995c72f81423` failed as expected in GitHub Actions `39473521490` (zero existing binding slots). A successful native GitHub CI run on the final head is required for GREEN; this task does not certify full-suite, real HTTP 404, browser or production behavior.
+
+**Phase 2 NOT COMPLETE. Phase 3 BLOCKED.** No deployment is authorized.

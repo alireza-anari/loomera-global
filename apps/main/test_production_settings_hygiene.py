@@ -4758,3 +4758,110 @@ class BadRequest400MetadataDeploymentBrandTests(SimpleTestCase):
         )
         self.assertNotIn("Aurora & <New>", rendered)
         self.assertNotIn("آرورا & <جدید>", rendered)
+
+
+class NotFound404DeploymentBrandTests(SimpleTestCase):
+    """Public 404 page uses separate Latin and Persian deployment names."""
+
+    @staticmethod
+    def _source():
+        return (Path(settings.BASE_DIR) / "templates" / "404.html").read_text(
+            encoding="utf-8"
+        )
+
+    @staticmethod
+    def _render():
+        return render_to_string(
+            "404.html",
+            {
+                "deployment_brand": get_deployment_brand_config(),
+                "deployment_brand_assets": get_deployment_brand_asset_config(),
+                "deployment_brand_colors": get_deployment_brand_color_config(),
+                "hide_navbar": True,
+                "hide_footer": True,
+            },
+        )
+
+    def test_exactly_three_brand_slots_preserve_error_navigation(self):
+        from django.urls import reverse
+
+        source = self._source()
+        self.assertEqual(source.count("{{ deployment_brand.display_name }}"), 1)
+        self.assertEqual(source.count("{{ deployment_brand.display_name_fa }}"), 2)
+        self.assertNotIn("Loomera", source)
+        self.assertNotIn("لومرا", source)
+        self.assertNotIn("get_deployment_brand_config", source)
+        self.assertNotIn("BRAND_DISPLAY_NAME", source)
+        self.assertIn('data-page="error_404"', source)
+        self.assertIn("خطای ۴۰۴", source)
+        self.assertIn("کد خطا: 404", source)
+        self.assertIn('href="/"', source)
+        self.assertIn("{% url 'search:search_page' %}", source)
+        self.assertIn("اگر از لینک قدیمی وارد شده‌ای", source)
+        self.assertIn("صفحه پیدا نشد، اما مسیر رزرو", source)
+        self.assertEqual(reverse("search:search_page"), "/search/")
+
+    def test_default_loomera_title_meta_heading_and_links_remain(self):
+        self.assertEqual(get_deployment_brand_config().display_name, "Loomera")
+        self.assertEqual(get_deployment_brand_config().display_name_fa, "لومرا")
+        rendered = self._render()
+        self.assertIn("<title>صفحه پیدا نشد | Loomera</title>", rendered)
+        self.assertIn("صفحه‌ای که دنبال آن هستید در لومرا پیدا نشد.", rendered)
+        self.assertIn("این صفحه در لومرا پیدا نشد", rendered)
+        self.assertIn('href="/"', rendered)
+        self.assertIn('href="/search/"', rendered)
+        self.assertIn("کد خطا: 404", rendered)
+        self.assertIn("جستجوی مجموعه‌ها", rendered)
+
+    def test_two_sequential_deployments_have_isolated_error_copy(self):
+        for latin, persian in (("Aurora", "آرورا"), ("Second Buyer", "نیلوفر")):
+            with self.subTest(latin=latin, persian=persian):
+                with override_settings(
+                    BRAND_DISPLAY_NAME=latin, BRAND_DISPLAY_NAME_FA=persian
+                ):
+                    rendered = self._render()
+                    self.assertIn(
+                        f"<title>صفحه پیدا نشد | {latin}</title>", rendered
+                    )
+                    self.assertIn(
+                        f"صفحه‌ای که دنبال آن هستید در {persian} پیدا نشد.",
+                        rendered,
+                    )
+                    self.assertIn(f"این صفحه در {persian} پیدا نشد", rendered)
+                    self.assertNotIn("<title>صفحه پیدا نشد | Loomera</title>", rendered)
+                    self.assertNotIn("این صفحه در لومرا پیدا نشد", rendered)
+                    self.assertIn('href="/search/"', rendered)
+        self.assertEqual(get_deployment_brand_config().display_name, "Loomera")
+        self.assertEqual(get_deployment_brand_config().display_name_fa, "لومرا")
+
+    def test_latin_only_and_persian_only_overrides_are_independent(self):
+        with override_settings(BRAND_DISPLAY_NAME="Aurora"):
+            rendered = self._render()
+            self.assertIn("<title>صفحه پیدا نشد | Aurora</title>", rendered)
+            self.assertIn("این صفحه در لومرا پیدا نشد", rendered)
+            self.assertIn("در لومرا پیدا نشد.", rendered)
+        with override_settings(BRAND_DISPLAY_NAME_FA="آرورا"):
+            rendered = self._render()
+            self.assertIn("<title>صفحه پیدا نشد | Loomera</title>", rendered)
+            self.assertIn("این صفحه در آرورا پیدا نشد", rendered)
+            self.assertIn("در آرورا پیدا نشد.", rendered)
+
+    @override_settings(
+        BRAND_DISPLAY_NAME="Aurora & <New>",
+        BRAND_DISPLAY_NAME_FA="آرورا & <جدید>",
+    )
+    def test_title_meta_and_heading_escape_brand_name(self):
+        rendered = self._render()
+        self.assertIn(
+            "<title>صفحه پیدا نشد | Aurora &amp; &lt;New&gt;</title>",
+            rendered,
+        )
+        self.assertIn(
+            "صفحه‌ای که دنبال آن هستید در آرورا &amp; &lt;جدید&gt; پیدا نشد.",
+            rendered,
+        )
+        self.assertIn(
+            "این صفحه در آرورا &amp; &lt;جدید&gt; پیدا نشد", rendered
+        )
+        self.assertNotIn("Aurora & <New>", rendered)
+        self.assertNotIn("آرورا & <جدید>", rendered)
