@@ -5090,3 +5090,92 @@ class ServerError500DeploymentBrandTests(SimpleTestCase):
         self.assertNotIn("Aurora & <New>", rendered)
         self.assertNotIn("آرورا & <جدید>", rendered)
         self.assertIn("قبل از پرداخت دوباره، وضعیت نوبت یا کیف پول", rendered)
+
+# Isolated URLconf for an actual Django DEBUG=False HTTP 500 response.
+# Include live application routes so template {% url %} tags still reverse.
+from django.urls import include as _test_include, path as _test_path
+
+
+def _raise_controlled_500(request):
+    raise RuntimeError("sensitive-internal-secret")
+
+
+handler500 = "apps.main.views.server_error_view"
+urlpatterns = [
+    _test_path("_test/500/", _raise_controlled_500),
+    _test_path("", _test_include("loomera.urls")),
+]
+
+
+@override_settings(DEBUG=False, ROOT_URLCONF=__name__)
+class ServerError500HandlerTests(SimpleTestCase):
+    """The real 500 handler must provide brand context without processors."""
+
+    def test_500_handler_registered_in_root_urlconf(self):
+        from django.urls import get_resolver
+
+        handler = get_resolver("loomera.urls").resolve_error_handler(500)
+        self.assertEqual(handler.__module__, "apps.main.views")
+        self.assertEqual(handler.__name__, "server_error_view")
+
+    def test_client_real_500_uses_custom_deployment_brand(self):
+        from django.test import Client
+        from django.urls import reverse
+
+        for latin, persian in (("Aurora", "آرورا"), ("Second Buyer", "نیلوفر")):
+            with self.subTest(latin=latin, persian=persian):
+                with override_settings(
+                    BRAND_DISPLAY_NAME=latin, BRAND_DISPLAY_NAME_FA=persian
+                ):
+                    response = Client(raise_request_exception=False).get(
+                        "/_test/500/"
+                    )
+                    self.assertEqual(response.status_code, 500)
+                    html = response.content.decode("utf-8")
+                    self.assertIn(f"<title>اختلال موقت | {latin}</title>", html)
+                    self.assertIn(
+                        f"در حال حاضر اختلال موقتی در {persian} رخ داده است.",
+                        html,
+                    )
+                    self.assertNotIn("sensitive-internal-secret", html)
+                    self.assertIn("قبل از پرداخت دوباره، وضعیت نوبت یا کیف پول", html)
+                    self.assertIn("از ارسال چندباره پرداخت خودداری کن.", html)
+                    self.assertIn('href="/"', html)
+                    self.assertIn(
+                        f'href="{reverse("accounts:customer_panel")}"', html
+                    )
+                    self.assertIn(f'href="{reverse("support")}"', html)
+
+    @override_settings(
+        BRAND_DISPLAY_NAME="Aurora & <New>",
+        BRAND_DISPLAY_NAME_FA="آرورا & <جدید>",
+    )
+    def test_client_real_500_escapes_independent_brand_names(self):
+        from django.test import Client
+
+        response = Client(raise_request_exception=False).get("/_test/500/")
+        self.assertEqual(response.status_code, 500)
+        html = response.content.decode("utf-8")
+        self.assertIn(
+            "<title>اختلال موقت | Aurora &amp; &lt;New&gt;</title>", html
+        )
+        self.assertIn(
+            "در حال حاضر اختلال موقتی در آرورا &amp; &lt;جدید&gt; رخ داده است.",
+            html,
+        )
+        self.assertNotIn("Aurora & <New>", html)
+        self.assertNotIn("آرورا & <جدید>", html)
+
+    def test_500_handler_does_not_call_brand_asset_context_processor(self):
+        from django.test import RequestFactory
+        from apps.main.views import server_error_view
+
+        with patch(
+            "loomera.branding.context_processors.get_deployment_brand_asset_config",
+            side_effect=RuntimeError("processor-should-not-run"),
+        ):
+            response = server_error_view(RequestFactory().get("/_test/500/"))
+        self.assertEqual(response.status_code, 500)
+        html = response.content.decode("utf-8")
+        self.assertIn("<title>اختلال موقت | Loomera</title>", html)
+        self.assertNotIn("processor-should-not-run", html)
