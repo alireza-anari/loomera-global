@@ -4045,3 +4045,98 @@ class HelpSearchCategoryDeploymentBrandTests(SimpleTestCase):
             with self.subTest(title=expected):
                 self.assertIn(expected, rendered)
                 self.assertNotIn("آرورا & <جدید>", rendered)
+
+
+class HelpCenterHomeMetadataDeploymentBrandTests(SimpleTestCase):
+    """Public Help Center home metadata follows the deployment's Persian name."""
+
+    @staticmethod
+    def _source():
+        return (
+            Path(settings.BASE_DIR) / "templates" / "help_center" / "home.html"
+        ).read_text(encoding="utf-8")
+
+    @staticmethod
+    def _render():
+        return render_to_string(
+            "help_center/home.html",
+            {
+                "deployment_brand": get_deployment_brand_config(),
+                "deployment_brand_assets": get_deployment_brand_asset_config(),
+                "deployment_brand_colors": get_deployment_brand_color_config(),
+                "hide_navbar": True,
+                "hide_footer": True,
+                "help_role_label": "مشتری",
+                "categories": [],
+                "featured_articles": [],
+                "troubleshooting_articles": [],
+                "legal_documents": [],
+            },
+        )
+
+    def test_only_two_homepage_metadata_slots_use_shared_persian_brand(self):
+        from django.urls import reverse
+
+        source = self._source()
+        self.assertEqual(source.count("{{ deployment_brand.display_name_fa }}"), 2)
+        self.assertEqual(source.count("لومرا"), 1)
+        self.assertIn("<h2>قوانین و مقررات لومرا</h2>", source)
+        self.assertNotIn("get_deployment_brand_config", source)
+        self.assertNotIn("BRAND_DISPLAY_NAME_FA", source)
+        self.assertIn("{% url 'help_center:search' %}", source)
+        self.assertIn("{% url 'help_center:legal_index' %}", source)
+        self.assertIn("{% url 'support' %}", source)
+        self.assertIn("data-help-open-assistant", source)
+        self.assertEqual(reverse("help_center:home"), "/help/")
+        self.assertEqual(reverse("help_center:legal_index"), "/help/legal/")
+
+    def test_default_brand_preserves_existing_metadata_and_legal_heading(self):
+        self.assertEqual(get_deployment_brand_config().display_name_fa, "لومرا")
+        rendered = self._render()
+        self.assertIn("<title>مرکز راهنمای لومرا</title>", rendered)
+        self.assertIn("راهنمای ساده و مرحله‌به‌مرحله استفاده از لومرا", rendered)
+        self.assertIn("<h2>قوانین و مقررات لومرا</h2>", rendered)
+        self.assertIn('action="/help/search/"', rendered)
+        self.assertIn('href="/help/legal/"', rendered)
+        self.assertIn("راهنمای مشتری", rendered)
+
+    def test_sequential_buyer_names_are_isolated_in_title_and_description(self):
+        for latin, persian in (("Aurora", "آرورا"), ("Second Buyer", "نیلوفر")):
+            with self.subTest(latin=latin, persian=persian):
+                with override_settings(
+                    BRAND_DISPLAY_NAME=latin, BRAND_DISPLAY_NAME_FA=persian
+                ):
+                    rendered = self._render()
+                    self.assertEqual(
+                        get_deployment_brand_config().display_name_fa, persian
+                    )
+                    self.assertIn(f"<title>مرکز راهنمای {persian}</title>", rendered)
+                    self.assertIn(
+                        f"راهنمای ساده و مرحله‌به‌مرحله استفاده از {persian}",
+                        rendered,
+                    )
+                    self.assertNotIn("<title>مرکز راهنمای لومرا</title>", rendered)
+                    self.assertNotIn(
+                        "راهنمای ساده و مرحله‌به‌مرحله استفاده از لومرا",
+                        rendered,
+                    )
+                    self.assertIn("<h2>قوانین و مقررات لومرا</h2>", rendered)
+        self.assertEqual(get_deployment_brand_config().display_name_fa, "لومرا")
+
+    @override_settings(BRAND_DISPLAY_NAME="Aurora")
+    def test_latin_name_only_does_not_infer_a_persian_name(self):
+        self.assertEqual(get_deployment_brand_config().display_name_fa, "لومرا")
+        rendered = self._render()
+        self.assertIn("<title>مرکز راهنمای لومرا</title>", rendered)
+        self.assertIn("راهنمای ساده و مرحله‌به‌مرحله استفاده از لومرا", rendered)
+
+    @override_settings(BRAND_DISPLAY_NAME_FA="آرورا & <جدید>")
+    def test_buyer_name_is_html_escaped_in_title_and_description(self):
+        rendered = self._render()
+        escaped = "آرورا &amp; &lt;جدید&gt;"
+        self.assertIn(f"<title>مرکز راهنمای {escaped}</title>", rendered)
+        self.assertIn(
+            f"راهنمای ساده و مرحله‌به‌مرحله استفاده از {escaped}", rendered
+        )
+        self.assertNotIn("آرورا & <جدید>", rendered)
+        self.assertIn("<h2>قوانین و مقررات لومرا</h2>", rendered)
