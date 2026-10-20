@@ -58,15 +58,41 @@ def csrf_failure_view(request, reason=""):
     return render(request, "403.html", {"is_csrf_failure": True}, status=403)
 
 
-def server_error_view(request):
-    """Render HTTP 500 with minimal deployment branding and no RequestContext."""
+def _safe_server_error_brand_label(config, attribute, default):
+    """Normalize emergency brand identity without trusting broken configuration."""
 
-    config = get_deployment_brand_config()
+    try:
+        label = getattr(config, attribute, None)
+    except Exception:
+        return default
+    return label if isinstance(label, str) and label.strip() else default
+
+
+def server_error_view(request):
+    """Render HTTP 500 without request processors; recover from nested failures."""
+
+    try:
+        config = get_deployment_brand_config()
+    except Exception:
+        config = None
+
     deployment_brand = SimpleNamespace(
-        display_name=config.display_name,
-        display_name_fa=config.display_name_fa,
+        display_name=_safe_server_error_brand_label(
+            config, "display_name", "Loomera"
+        ),
+        display_name_fa=_safe_server_error_brand_label(
+            config, "display_name_fa", "لومرا"
+        ),
     )
-    html = get_template("500.html").render({"deployment_brand": deployment_brand})
+
+    try:
+        html = get_template("500.html").render({"deployment_brand": deployment_brand})
+    except Exception:
+        return HttpResponseServerError(
+            "در حال حاضر اختلال موقتی رخ داده است. لطفاً کمی بعد دوباره تلاش کنید.",
+            content_type="text/plain; charset=utf-8",
+        )
+
     return HttpResponseServerError(html)
 
 
