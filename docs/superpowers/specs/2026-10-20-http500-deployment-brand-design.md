@@ -34,8 +34,8 @@ The draft PR #50 currently contains **tests only**, commit `f46258a882fd0dba8e34
 
 ## 5. Emergency fallbacks and security
 
-- If the deployment-brand accessor raises an exception or returns a missing/empty required display label, the handler substitutes the existing safe defaults: Latin `Loomera`, Persian `لومرا`. Fallback is specific to this emergency handler and does not mutate global settings.
-- If loading or rendering `500.html` fails, return a minimal static HTTP 500 response (safe Persian service-unavailable guidance, no traceback, paths, credentials, request details or exception text). Do not re-enter ordinary template rendering or recursively invoke the handler.
+- If the deployment-brand accessor raises an exception or returns a missing, non-string or empty/whitespace-only required display label, the handler substitutes the existing safe defaults: Latin `Loomera`, Persian `لومرا`. Fallback is specific to this emergency handler and does not mutate global settings.
+- If loading or rendering `500.html` fails, return a minimal static HTTP 500 response with `Content-Type: text/plain; charset=utf-8` and the exact text `در حال حاضر اختلال موقتی رخ داده است. لطفاً کمی بعد دوباره تلاش کنید.` (no traceback, paths, credentials, request details or exception text). Do not re-enter ordinary template rendering or recursively invoke the handler.
 - Do not call template context processors, notifications, payment services, providers, network endpoints or database code to create an emergency response. The handler must not alter security exception classification or turn a 500 into a 200/302.
 - Django template autoescaping must prevent HTML injection in both metadata slots. No use of `mark_safe`, global state or request-sourced branding is allowed.
 - As with Django's standard 500 view, this applies to errors handled by Django with `DEBUG=False`; it does not claim to cover infrastructure-generated 500/502/503 responses.
@@ -46,7 +46,7 @@ Use test-driven development on the existing draft PR:
 
 1. Preserve the five existing database-free metadata regressions (exact slots, original default/payment guidance, sequential independent deployments, separate Latin/Persian overrides, autoescaping). The tests-only RED baseline is already recorded.
 2. Add failing handler and URLconf registration tests **before** implementing the handler: resolve `handler500`, force an actual Django error response with `DEBUG=False` via a controlled test-only URLconf/raising view and `Client(raise_request_exception=False)`, and assert status 500 plus branded HTML.
-3. Test handler resilience with a simulated brand-accessor failure and an isolated template-rendering failure; both must return status 500 with non-sensitive fallback content. Verify context processors are not required by the handler even if they would raise.
+3. Test handler resilience with a simulated brand-accessor failure, a whitespace-only label and an isolated template-rendering failure; each must return status 500 with the specified non-sensitive fallback names or static content. Verify context processors are not required by the handler even if they would raise.
 4. Test custom-brand HTML escaping and independent overrides in the actual handler response. Confirm home, customer panel and support links plus payment and booking cautions are unchanged in the ordinary 500 template rendering path.
 5. Run natural GitHub CI on final SHA (Django checks, migration drift, deployment guards, production-settings hygiene); record test counts and any skipped checks accurately. Full-suite, browser, live infrastructure and deployment results must not be inferred.
 
