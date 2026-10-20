@@ -5111,7 +5111,7 @@ urlpatterns = [
 class ServerError500HandlerTests(SimpleTestCase):
     """The real 500 handler must provide brand context without processors."""
 
-    def test_500_handler_registered_in_root_urlconf(self):
+    def test_500_a_handler_registered_in_root_urlconf(self):
         from django.urls import get_resolver
 
         handler = get_resolver("loomera.urls").resolve_error_handler(500)
