@@ -2,8 +2,8 @@
 {% load static %}
 {% load articles_extras %}
 
-{% block title %}مجله لومرا | آموزش زیبایی، مقالات متخصصان و استوری مجموعه‌ها{% endblock %}
-{% block meta_description %}مجله لومرا؛ آموزش‌های تخصصی زیبایی، راهنمای انتخاب خدمات، مقاله‌های متخصصان و محتوای تازه مجموعه‌های مورد علاقه شما{% endblock %}
+{% block title %}مجله {{ deployment_brand.display_name_fa }} | آموزش زیبایی، مقالات متخصصان و استوری مجموعه‌ها{% endblock %}
+{% block meta_description %}مجله {{ deployment_brand.display_name_fa }}؛ آموزش‌های تخصصی زیبایی، راهنمای انتخاب خدمات، مقاله‌های متخصصان و محتوای تازه مجموعه‌های مورد علاقه شما{% endblock %}
 {% block main_class %}bg-loomera-bg text-loomera-textPrimary{% endblock %}
 {% block body_attrs %}data-page="magazine"{% endblock %}
 
@@ -12,7 +12,7 @@
   <header class="border-b border-loomera-borderSoft bg-white">
     <div class="mx-auto flex w-full max-w-7xl items-start justify-between gap-4 px-4 py-6 sm:items-center sm:px-6 sm:py-8 xl:px-0">
       <div class="min-w-0">
-        <p class="text-xs font-black text-loomera-primary">مجله لومرا</p>
+        <p class="text-xs font-black text-loomera-primary">مجله {{ deployment_brand.display_name_fa }}</p>
         <h1 class="mt-1 text-2xl font-black leading-10 text-loomera-textPrimary sm:text-3xl">
           برای انتخاب بهتر بخوان و ببین
         </h1>
@@ -36,7 +36,7 @@
       <section aria-labelledby="magazine-stories-title" class="rounded-[1.75rem] border border-loomera-borderSoft bg-white p-4 shadow-lm-soft sm:p-5">
         <div class="mb-4 flex items-center justify-between gap-3">
           <div>
-            <p class="text-[11px] font-black text-loomera-primary">استوری‌های لومرا</p>
+            <p class="text-[11px] font-black text-loomera-primary">استوری‌های {{ deployment_brand.display_name_fa }}</p>
             <h2 id="magazine-stories-title" class="mt-1 text-lg font-black text-loomera-textPrimary">تازه‌ها را سریع ببین</h2>
           </div>
           <a href="{% url 'articles:story_explore' %}" class="inline-flex items-center gap-1 text-xs font-black text-loomera-primary">
