@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
-{% block title %}دسترسی مجاز نیست | Loomera{% endblock %}
-{% block meta_description %}دسترسی به این بخش از لومرا برای این درخواست مجاز نیست.{% endblock %}
+{% block title %}دسترسی مجاز نیست | {{ deployment_brand.display_name }}{% endblock %}
+{% block meta_description %}دسترسی به این بخش از {{ deployment_brand.display_name_fa }} برای این درخواست مجاز نیست.{% endblock %}
 {% block main_class %}bg-loomera-bg text-loomera-textPrimary{% endblock %}
 {% block body_attrs %}data-page="error_403"{% endblock %}
 
@@ -20,7 +20,7 @@
         {% if is_csrf_failure %}
           برای حفظ امنیت حساب، صفحه را تازه‌سازی کنید و عملیات را دوباره انجام دهید.
         {% else %}
-          با حساب دارای دسترسی مناسب وارد شوید یا به بخش دیگری از لومرا برگردید. جزئیات فنی این خطا نمایش داده نمی‌شود.
+          با حساب دارای دسترسی مناسب وارد شوید یا به بخش دیگری از {{ deployment_brand.display_name_fa }} برگردید. جزئیات فنی این خطا نمایش داده نمی‌شود.
         {% endif %}
       </p>
     </div>
