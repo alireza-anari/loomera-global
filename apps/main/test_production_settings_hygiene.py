@@ -3699,3 +3699,111 @@ class WorkspaceChooserDeploymentBrandTests(SimpleTestCase):
             [ast.literal_eval(arg) for arg in assignments[0].args],
             ["BRAND_WORKSPACE_LOGO_STATIC_PATH", self.default_logo_path],
         )
+
+
+class PartnerPageDeploymentBrandTests(SimpleTestCase):
+    """The public partners landing page uses only the shared Persian brand identity."""
+
+    @staticmethod
+    def _source():
+        return (
+            Path(settings.BASE_DIR) / "templates" / "main" / "partners.html"
+        ).read_text(encoding="utf-8")
+
+    @staticmethod
+    def _render():
+        return render_to_string(
+            "main/partners.html",
+            {
+                "deployment_brand": get_deployment_brand_config(),
+                "deployment_brand_assets": get_deployment_brand_asset_config(),
+                "deployment_brand_colors": get_deployment_brand_color_config(),
+                "hide_navbar": True,
+                "hide_footer": True,
+            },
+        )
+
+    def test_seven_persian_display_slots_use_shared_context_not_fixed_literals(self):
+        from django.urls import reverse
+
+        source = self._source()
+        self.assertEqual(source.count("{{ deployment_brand.display_name_fa }}"), 7)
+        self.assertEqual(source.count("?topic=درخواست همکاری مجموعه با لومرا"), 2)
+        visible_copy_only = source.replace(
+            "?topic=درخواست همکاری مجموعه با لومرا", ""
+        )
+        self.assertNotIn("لومرا", visible_copy_only)
+        self.assertNotIn("get_deployment_brand_config", source)
+        self.assertNotIn("BRAND_DISPLAY_NAME_FA", source)
+        self.assertIn('data-page="partners"', source)
+        self.assertIn("{% url 'support' %}?topic=درخواست همکاری مجموعه با لومرا", source)
+        self.assertEqual(reverse("partners"), "/partners/")
+        self.assertEqual(reverse("join_loomera"), "/join-loomera/")
+
+    def test_default_persian_brand_keeps_existing_partners_copy(self):
+        self.assertEqual(get_deployment_brand_config().display_name_fa, "لومرا")
+        rendered = self._render()
+        for expected in (
+            "<title>همکاری با لومرا | جذب مجموعه زیبایی و مرکز خدمات</title>",
+            "با لومرا مجموعه، کلینیک زیبایی یا مرکز خدمات خود را آنلاین کنید",
+            "همکاری با لومرا",
+            "لومرا برای مجموعه‌های زیبایی",
+            "لومرا چه چیزی را ساده‌تر می‌کند؟",
+            "آماده‌اید مجموعه خود را وارد لومرا کنید؟",
+        ):
+            with self.subTest(copy=expected):
+                self.assertIn(expected, rendered)
+        self.assertEqual(
+            rendered.count("?topic=درخواست همکاری مجموعه با لومرا"), 2
+        )
+
+    def test_two_sequential_buyers_override_persian_display_copy(self):
+        for latin, persian in (
+            ("Aurora", "آرورا"),
+            ("Second Buyer", "نیلوفر"),
+        ):
+            with self.subTest(latin=latin, persian=persian):
+                with override_settings(
+                    BRAND_DISPLAY_NAME=latin, BRAND_DISPLAY_NAME_FA=persian
+                ):
+                    self.assertEqual(
+                        get_deployment_brand_config().display_name_fa, persian
+                    )
+                    rendered = self._render()
+                    for expected in (
+                        f"<title>همکاری با {persian} | جذب مجموعه زیبایی و مرکز خدمات</title>",
+                        f"با {persian} مجموعه، کلینیک زیبایی یا مرکز خدمات",
+                        f"همکاری با {persian}",
+                        f"{persian} برای مجموعه‌های زیبایی",
+                        f"{persian} چه چیزی را ساده‌تر می‌کند؟",
+                        f"آماده‌اید مجموعه خود را وارد {persian} کنید؟",
+                    ):
+                        self.assertIn(expected, rendered)
+                    self.assertNotIn(
+                        "<title>همکاری با لومرا | جذب", rendered
+                    )
+                    self.assertEqual(
+                        rendered.count("?topic=درخواست همکاری مجموعه با لومرا"),
+                        2,
+                    )
+        self.assertEqual(get_deployment_brand_config().display_name_fa, "لومرا")
+
+    @override_settings(BRAND_DISPLAY_NAME="Aurora")
+    def test_latin_name_alone_does_not_infer_persian_display_name(self):
+        self.assertEqual(get_deployment_brand_config().display_name_fa, "لومرا")
+        self.assertIn(
+            "<title>همکاری با لومرا | جذب مجموعه زیبایی و مرکز خدمات</title>",
+            self._render(),
+        )
+
+    @override_settings(BRAND_DISPLAY_NAME_FA="آرورا & <جدید>")
+    def test_persian_brand_is_html_escaped_in_metadata_and_visible_copy(self):
+        rendered = self._render()
+        escaped = "آرورا &amp; &lt;جدید&gt;"
+        self.assertIn(
+            f"<title>همکاری با {escaped} | جذب مجموعه زیبایی و مرکز خدمات</title>",
+            rendered,
+        )
+        self.assertIn(f"با {escaped} مجموعه، کلینیک زیبایی", rendered)
+        self.assertIn(f"{escaped} چه چیزی را ساده‌تر می‌کند؟", rendered)
+        self.assertNotIn("آرورا & <جدید>", rendered)
