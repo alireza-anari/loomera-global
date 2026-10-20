@@ -3903,3 +3903,145 @@ class HelpArticleDeploymentBrandTests(SimpleTestCase):
         self.assertIn(f"<span>راهنمای {escaped}</span>", rendered)
         self.assertIn(f"در {escaped} شو.", rendered)
         self.assertNotIn("آرورا & <جدید>", rendered)
+
+
+class HelpSearchCategoryDeploymentBrandTests(SimpleTestCase):
+    """Help Center search and category titles share deployment Persian identity."""
+
+    @staticmethod
+    def _source(template_name):
+        return (
+            Path(settings.BASE_DIR) / "templates" / "help_center" / template_name
+        ).read_text(encoding="utf-8")
+
+    @staticmethod
+    def _context():
+        return {
+            "deployment_brand": get_deployment_brand_config(),
+            "deployment_brand_assets": get_deployment_brand_asset_config(),
+            "deployment_brand_colors": get_deployment_brand_color_config(),
+            "hide_navbar": True,
+            "hide_footer": True,
+        }
+
+    @classmethod
+    def _render_search(cls):
+        return render_to_string(
+            "help_center/search.html",
+            {
+                **cls._context(),
+                "query": "رزرو",
+                "results": [],
+                "categories": [],
+                "article_types": [],
+                "selected_category": "",
+                "selected_type": "",
+            },
+        )
+
+    @classmethod
+    def _render_category(cls):
+        return render_to_string(
+            "help_center/category.html",
+            {
+                **cls._context(),
+                "category": {
+                    "slug": "bookings",
+                    "title": "رزرو و نوبت‌ها",
+                    "description": "راهنمای رزرو و نوبت‌ها",
+                    "article_count": 0,
+                },
+                "articles": [],
+                "article_types": [],
+                "selected_type": "",
+            },
+        )
+
+    def test_both_titles_use_one_shared_persian_brand_slot_each(self):
+        from django.urls import reverse
+
+        for file_name in ("search.html", "category.html"):
+            with self.subTest(file_name=file_name):
+                source = self._source(file_name)
+                self.assertEqual(
+                    source.count("{{ deployment_brand.display_name_fa }}"), 1
+                )
+                self.assertNotIn("لومرا", source)
+                self.assertNotIn("get_deployment_brand_config", source)
+                self.assertNotIn("BRAND_DISPLAY_NAME_FA", source)
+                self.assertIn("{% url 'help_center:home' %}", source)
+        self.assertIn('name="q"', self._source("search.html"))
+        self.assertIn('name="category"', self._source("search.html"))
+        self.assertIn('name="type"', self._source("search.html"))
+        self.assertIn('data-help-open-assistant', self._source("search.html"))
+        self.assertIn('{{ category.title }}', self._source("category.html"))
+        self.assertIn('{% url \'help_center:search\' %}', self._source("category.html"))
+        self.assertEqual(reverse("help_center:search"), "/help/search/")
+        self.assertEqual(
+            reverse("help_center:category", args=["bookings"]),
+            "/help/category/bookings/",
+        )
+
+    def test_compatibility_default_preserves_both_titles_and_page_flows(self):
+        self.assertEqual(get_deployment_brand_config().display_name_fa, "لومرا")
+        search = self._render_search()
+        category = self._render_category()
+        self.assertIn("<title>جستجو در مرکز راهنمای لومرا</title>", search)
+        self.assertIn(
+            "<title>رزرو و نوبت‌ها | مرکز راهنمای لومرا</title>", category
+        )
+        self.assertIn("برای این جستجو چیزی پیدا نکردیم", search)
+        self.assertIn('href="/help/search/"', search)
+        self.assertIn('name="category" value="bookings"', category)
+        self.assertIn("رزرو و نوبت‌ها", category)
+
+    def test_two_sequential_buyers_receive_their_own_search_and_category_titles(self):
+        for latin, persian in (("Aurora", "آرورا"), ("Second Buyer", "نیلوفر")):
+            with self.subTest(latin=latin, persian=persian):
+                with override_settings(
+                    BRAND_DISPLAY_NAME=latin, BRAND_DISPLAY_NAME_FA=persian
+                ):
+                    search = self._render_search()
+                    category = self._render_category()
+                    self.assertEqual(
+                        get_deployment_brand_config().display_name_fa, persian
+                    )
+                    self.assertIn(
+                        f"<title>جستجو در مرکز راهنمای {persian}</title>", search
+                    )
+                    self.assertIn(
+                        f"<title>رزرو و نوبت‌ها | مرکز راهنمای {persian}</title>",
+                        category,
+                    )
+                    self.assertNotIn("مرکز راهنمای لومرا</title>", search)
+                    self.assertNotIn("مرکز راهنمای لومرا</title>", category)
+        self.assertEqual(get_deployment_brand_config().display_name_fa, "لومرا")
+
+    @override_settings(BRAND_DISPLAY_NAME="Aurora")
+    def test_latin_only_override_keeps_default_persian_titles(self):
+        self.assertEqual(get_deployment_brand_config().display_name_fa, "لومرا")
+        self.assertIn(
+            "<title>جستجو در مرکز راهنمای لومرا</title>",
+            self._render_search(),
+        )
+        self.assertIn(
+            "<title>رزرو و نوبت‌ها | مرکز راهنمای لومرا</title>",
+            self._render_category(),
+        )
+
+    @override_settings(BRAND_DISPLAY_NAME_FA="آرورا & <جدید>")
+    def test_buyer_farsi_identity_is_html_escaped_in_both_titles(self):
+        escaped = "آرورا &amp; &lt;جدید&gt;"
+        for rendered, expected in (
+            (
+                self._render_search(),
+                f"<title>جستجو در مرکز راهنمای {escaped}</title>",
+            ),
+            (
+                self._render_category(),
+                f"<title>رزرو و نوبت‌ها | مرکز راهنمای {escaped}</title>",
+            ),
+        ):
+            with self.subTest(title=expected):
+                self.assertIn(expected, rendered)
+                self.assertNotIn("آرورا & <جدید>", rendered)
