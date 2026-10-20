@@ -5,6 +5,9 @@ from pathlib import Path
 from urllib.parse import urlencode
 
 from django.contrib.staticfiles import finders
+
+from loomera.branding.assets import get_deployment_brand_asset_config
+from loomera.branding.config import get_deployment_brand_config
 from django.http import HttpResponse
 
 from django.db.models import Count, Q, Sum
@@ -886,10 +889,8 @@ def _report_pdf_font_paths():
     return regular, bold
 
 
-def _report_pdf_logo_path():
-    return _static_file_path(
-        "branding/logo/loomera-logo-horizontal-rtl-transparent-360.png"
-    )
+def _report_pdf_logo_path(assets):
+    return _static_file_path(assets.logo_header_path)
 
 
 def _pdf_ensure_space(pdf, needed_mm):
@@ -1098,9 +1099,11 @@ def _pdf_detail_rows(pdf, table):
 
 
 def _build_reports_pdf_bytes(reports_dashboard, salon):
+    brand = get_deployment_brand_config()
+    brand_assets = get_deployment_brand_asset_config()
     FPDF = _report_pdf_dependencies()
     regular_font, bold_font = _report_pdf_font_paths()
-    logo_path = _report_pdf_logo_path()
+    logo_path = _report_pdf_logo_path(brand_assets)
 
     class LoomeraReportPDF(FPDF):
         def footer(self):
@@ -1110,7 +1113,7 @@ def _build_reports_pdf_bytes(reports_dashboard, salon):
             self.cell(
                 0,
                 4,
-                f"loomera.ir  |  صفحه {to_persian_digits(self.page_no())}",
+                f"{brand.domain}  |  صفحه {to_persian_digits(self.page_no())}",
                 align="C",
             )
 
@@ -1121,8 +1124,8 @@ def _build_reports_pdf_bytes(reports_dashboard, salon):
     pdf.add_font("Yekan", "B", bold_font)
     pdf.set_font("Yekan", "", 9)
     pdf.set_text_shaping(True, direction="rtl", script="arab")
-    pdf.set_title(str(reports_dashboard.get("workspace", {}).get("page_title") or "گزارش Loomera"))
-    pdf.set_author("Loomera")
+    pdf.set_title(str(reports_dashboard.get("workspace", {}).get("page_title") or f"گزارش {brand.display_name}"))
+    pdf.set_author(brand.display_name)
     pdf.add_page()
 
     # Brand header.
@@ -1146,7 +1149,7 @@ def _build_reports_pdf_bytes(reports_dashboard, salon):
         except Exception:
             pass
 
-    salon_name = str(getattr(salon, "salon_name", "") or "مجموعه Loomera")
+    salon_name = str(getattr(salon, "salon_name", "") or f"مجموعه {brand.display_name}")
     pdf.set_xy(pdf.l_margin + 42, header_y + 5)
     pdf.set_font("Yekan", "B", 14)
     pdf.set_text_color(47, 40, 61)

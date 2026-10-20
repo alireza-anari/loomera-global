@@ -982,6 +982,7 @@ class SharedBrandConfigurationBoundaryTests(SimpleTestCase):
             [
                 "apps/api/v1/views.py",
                 "apps/articles/views.py",
+                "apps/dashboards/reports_components.py",
                 "apps/help_center/ai.py",
                 "apps/main/seo.py",
                 "apps/notifications/delivery.py",
@@ -991,6 +992,107 @@ class SharedBrandConfigurationBoundaryTests(SimpleTestCase):
                 "loomera/branding/context_processors.py",
             ],
         )
+
+
+class ReportsPdfDeploymentBrandIdentityTests(SimpleTestCase):
+    """Active FPDF export uses deployment identity without changing report data."""
+
+    @staticmethod
+    def _report_source():
+        return (
+            Path(settings.BASE_DIR) / "apps" / "dashboards" / "reports_components.py"
+        ).read_text(encoding="utf-8")
+
+    def test_pdf_source_reads_fresh_brand_and_asset_snapshots(self):
+        source = self._report_source()
+        self.assertIn("get_deployment_brand_config()", source)
+        self.assertIn("get_deployment_brand_asset_config()", source)
+        self.assertIn("logo_header_path", source)
+        self.assertNotIn("loomera.ir  |  صفحه", source)
+        self.assertNotIn('pdf.set_author("Loomera")', source)
+        self.assertNotIn('or "گزارش Loomera"', source)
+        self.assertNotIn('or "مجموعه Loomera"', source)
+        self.assertIn('filename = f"loomera-salon-report-{salon.id}.pdf"', source)
+        self.assertIn("def build_reports_csv_response(request, salon):", source)
+
+    def test_pdf_identity_resolves_default_and_sequential_buyers(self):
+        from apps.dashboards import reports_components as report_module
+
+        instances = []
+
+        class FakeFPDF:
+            def __init__(self, *args, **kwargs):
+                self.w = 210
+                self.l_margin = 12
+                self.r_margin = 12
+                self.calls = []
+                instances.append(self)
+
+            def __getattr__(self, name):
+                def record(*args, **kwargs):
+                    self.calls.append((name, args, kwargs))
+                return record
+
+            def page_no(self):
+                return 1
+
+            def output(self):
+                return b"%PDF-stub"
+
+        with ExitStack() as stack:
+            stack.enter_context(patch.object(
+                report_module, "_report_pdf_dependencies", return_value=FakeFPDF,
+            ))
+            stack.enter_context(patch.object(
+                report_module, "_report_pdf_font_paths",
+                return_value=("regular.woff2", "bold.woff2"),
+            ))
+            resolver = stack.enter_context(patch.object(
+                report_module, "_static_file_path",
+                side_effect=lambda asset_path: f"/bundled/{asset_path}",
+            ))
+            for helper in (
+                "_pdf_section_title",
+                "_pdf_kpi_grid",
+                "_pdf_status_breakdown",
+                "_pdf_rank_list",
+                "_pdf_detail_rows",
+            ):
+                stack.enter_context(patch.object(report_module, helper))
+
+            for latin, domain, asset_path in (
+                ("Loomera", "loomera.local", "branding/logo/loomera-logo-header.png"),
+                ("Aurora", "aurora.example", "buyer/aurora/logo.png"),
+                ("Second Buyer", "second.example", "buyer/second/logo.png"),
+            ):
+                with self.subTest(brand=latin):
+                    with override_settings(
+                        BRAND_DISPLAY_NAME=latin,
+                        BRAND_DOMAIN=domain,
+                        BRAND_LOGO_HEADER_STATIC_PATH=asset_path,
+                    ):
+                        result = report_module._build_reports_pdf_bytes(
+                            {"workspace": {}, "filter_summary": {}},
+                            SimpleNamespace(salon_name=""),
+                        )
+                        self.assertEqual(result, b"%PDF-stub")
+                        pdf = instances[-1]
+                        pdf.footer()
+                        self.assertIn(("set_title", (f"گزارش {latin}",), {}), pdf.calls)
+                        self.assertIn(("set_author", (latin,), {}), pdf.calls)
+                        self.assertTrue(any(
+                            name == "cell" and f"گزارش عملکرد مجموعه {latin}" in args
+                            for name, args, _ in pdf.calls
+                        ))
+                        self.assertTrue(any(
+                            name == "cell" and f"{domain}  |  صفحه ۱" in args
+                            for name, args, _ in pdf.calls
+                        ))
+                        self.assertTrue(any(
+                            name == "image" and args[0] == f"/bundled/{asset_path}"
+                            for name, args, _ in pdf.calls
+                        ))
+                        self.assertEqual(resolver.call_args.args, (asset_path,))
 
 
 class CalendarRuntimeBrandIdentityTests(SimpleTestCase):
@@ -2014,6 +2116,7 @@ class SharedBrandAssetConfigurationTests(SimpleTestCase):
             occurrences,
             [
                 "apps/orders/quick_link_print_templates.py",
+                "apps/dashboards/reports_components.py",
                 "apps/orders/quick_link_qr.py",
                 "apps/orders/management/commands/quick_link_readiness_check.py",
                 "loomera/branding/context_processors.py",

@@ -342,6 +342,18 @@ The homepage's surrounding Persian sentences, classes, layout, forms, routes, Ja
 
 **Phase 2 NOT COMPLETE. Phase 3 BLOCKED** pending a fresh residual audit.
 
+## Active Manager PDF Report Brand Identity
+
+The active report export path `dashboards:reports` keeps its legacy query parameter `export=csv` and `build_reports_csv_response()` compatibility entry point, which already generate `application/pdf` output with the same `loomera-salon-report-<id>.pdf` download filename. The fpdf2 producer is `apps/dashboards/reports_components.py`; this work does not modify the separate `templates/dashboards/reports_pdf.html` HTML document, whose usage requires an independent audit.
+
+For each generated PDF, the producer reads **one fresh** `get_deployment_brand_config()` snapshot and **one fresh** `get_deployment_brand_asset_config()` snapshot. The PDF's visible footer host is `DeploymentBrandConfig.domain` (`BRAND_DOMAIN`); author metadata and the title/salon fallback use `DeploymentBrandConfig.display_name` (`BRAND_DISPLAY_NAME`). The report header logo resolves through the existing `DeploymentBrandAssetConfig.logo_header_path` (`BRAND_LOGO_HEADER_STATIC_PATH`) and the existing staticfiles resolver. All settings retain their existing import-time defaults and validation; no new environment variable, dynamic request branding, or new image assets are introduced.
+
+The default display name stays `Loomera`. The default header logo path `branding/logo/loomera-logo-header.png` has the same Git blob as the previously fixed PDF logo `branding/logo/loomera-logo-horizontal-rtl-transparent-360.png`, preserving default logo pixels. The default `BRAND_DOMAIN` is `loomera.local`, so a deployment that needs `loomera.ir` (or a buyer domain) in its PDF footer must explicitly configure `BRAND_DOMAIN`; no fixed domain is inferred. Separately overriding two deployment brands in one process yields fresh PDF metadata, footer and logo selection.
+
+Report authorization, manager/salon ownership, selected filters, data queries and financial calculations, PDF formatting/layout, text shaping, fonts, file naming, response headers/content type and route semantics are unchanged. The internal class name `LoomeraReportPDF` and historical filename are technical compatibility identifiers and remain unchanged. The change extends the approved Python consumers of the shared brand identity and asset boundaries to include `apps/dashboards/reports_components.py`, with no caching or additional context processor.
+
+**Phase 2 NOT COMPLETE. Phase 3 BLOCKED.** Remaining email, legal, auth, marketing, older HTML-PDF template and embedded artwork branding require separate review.
+
 ## Quick-Link Print Brand Identity
 
 Task 2.15 wires `apps/orders/quick_link_print_templates.py` to the existing deployment brand identity and asset boundaries. The generated print logo now resolves from `DeploymentBrandAssetConfig.logo_header_path`, backed by the existing `BRAND_LOGO_HEADER_STATIC_PATH`; no print-specific logo setting or environment variable is added. At this migration point the default `branding/logo/loomera-logo-header.png` and the previous fixed `branding/logo/loomera-logo-horizontal-rtl-transparent-360.png` are byte-identical Git blobs (`8512a25cac6fd0971427151dd27febb1eddf646a`), so default Loomera print-logo pixels remain compatible.
