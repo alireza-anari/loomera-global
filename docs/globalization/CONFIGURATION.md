@@ -529,3 +529,14 @@ The surrounding public-error behavior is outside this task: the existing 404 err
 Five database-free tests in `apps/main/test_production_settings_hygiene.py` verify exactly three brand slots, unchanged default display and links, sequential buyer independence, separate Latin/Persian overrides and HTML escaping. Tests-only RED commit `8aa02e8ee1382b008e785d4882b3995c72f81423` failed as expected in GitHub Actions `39473521490` (zero existing binding slots). A successful native GitHub CI run on the final head is required for GREEN; this task does not certify full-suite, real HTTP 404, browser or production behavior.
 
 **Phase 2 NOT COMPLETE. Phase 3 BLOCKED.** No deployment is authorized.
+
+
+## HTTP 403 Page Deployment Brand Identity
+
+The public HTTP 403 template (`templates/403.html`) uses the existing request-scoped `deployment_brand` config in **exactly three display-identity slots**: the Latin browser-title suffix (`دسترسی مجاز نیست | <brand>`) reads `deployment_brand.display_name`, while the Persian meta description and the non-CSRF access-denied guidance (`به بخش دیگری از <brand> برگردید`) read `deployment_brand.display_name_fa`. Defaults remain **Loomera** and **لومرا**, Latin and Persian settings remain independent, and Django autoescaping protects all three placements.
+
+**Security and operational boundary:** Both `is_csrf_failure` rendering branches remain intact. The expired-request heading and refresh guidance for CSRF failures, the access-denied heading, technical-error confidentiality guidance, the HTTP 403 indicator, root/home and `accounts:login` links, error status/handling, markup/layout, authentication and authorization logic, context processors, settings, providers, migrations, other error pages and deployment behavior are unchanged. No live HTTP 403 or CSRF-handling claim is made from template-render tests.
+
+Five database-free regressions in `apps/main/test_production_settings_hygiene.py` cover the exact three slots and both security branches, original default and navigation behavior, sequential independent deployments, separate Latin/Persian overrides and HTML escaping. Tests-only RED commit `c2e307bafe0e49a52cdf865e2724670e50ea9d8f` failed as expected in GitHub Actions `39478302847` (the fixed Latin title did not vary). Successful GitHub CI on the final implementation head is required before merge; these checks do not certify the full test suite, browser QA, HTTP-level behavior or production.
+
+**Phase 2 NOT COMPLETE. Phase 3 BLOCKED.** No deployment is authorized.
