@@ -5180,3 +5180,84 @@ class ServerError500HandlerTests(SimpleTestCase):
         html = response.content.decode("utf-8")
         self.assertIn("<title>اختلال موقت | Loomera</title>", html)
         self.assertNotIn("processor-should-not-run", html)
+
+
+@override_settings(DEBUG=False)
+class ServerError500FallbackTests(SimpleTestCase):
+    """An error in branding or rendering must still produce a safe HTTP 500."""
+
+    def _response_without_exceptions(self):
+        from django.test import RequestFactory
+        from apps.main.views import server_error_view
+
+        try:
+            return server_error_view(RequestFactory().get("/_test/500/"))
+        except Exception as exc:
+            self.fail(f"Emergency handler leaked {type(exc).__name__}")
+
+    def test_500_brand_lookup_failure_uses_safe_defaults(self):
+        with patch(
+            "apps.main.views.get_deployment_brand_config",
+            side_effect=RuntimeError("private-accessor-token"),
+        ):
+            response = self._response_without_exceptions()
+
+        self.assertEqual(response.status_code, 500)
+        html = response.content.decode("utf-8")
+        self.assertIn("<title>اختلال موقت | Loomera</title>", html)
+        self.assertIn("در حال حاضر اختلال موقتی در لومرا رخ داده است.", html)
+        self.assertNotIn("private-accessor-token", html)
+
+    def test_500_missing_or_blank_names_use_defaults(self):
+        cases = (
+            ("blank Latin", SimpleNamespace(display_name="  ", display_name_fa="آرورا"), "Loomera", "آرورا"),
+            ("blank Persian", SimpleNamespace(display_name="Aurora", display_name_fa="  "), "Aurora", "لومرا"),
+            ("invalid types", SimpleNamespace(display_name=42, display_name_fa=[]), "Loomera", "لومرا"),
+            ("missing attributes", SimpleNamespace(), "Loomera", "لومرا"),
+        )
+
+        for case_name, config, latin, persian in cases:
+            with self.subTest(case=case_name):
+                with patch(
+                    "apps.main.views.get_deployment_brand_config",
+                    return_value=config,
+                ):
+                    response = self._response_without_exceptions()
+
+                self.assertEqual(response.status_code, 500)
+                html = response.content.decode("utf-8")
+                self.assertIn(f"<title>اختلال موقت | {latin}</title>", html)
+                self.assertIn(
+                    f"در حال حاضر اختلال موقتی در {persian} رخ داده است.",
+                    html,
+                )
+
+    def test_500_template_failure_returns_static_safe_response(self):
+        message = "در حال حاضر اختلال موقتی رخ داده است. لطفاً کمی بعد دوباره تلاش کنید."
+
+        for failure_mode in ("loading", "rendering"):
+            with self.subTest(failure=failure_mode):
+                if failure_mode == "loading":
+                    failing_template = patch(
+                        "apps.main.views.get_template",
+                        side_effect=RuntimeError("private-template-load-token"),
+                    )
+                else:
+                    template = Mock()
+                    template.render.side_effect = RuntimeError(
+                        "private-template-render-token"
+                    )
+                    failing_template = patch(
+                        "apps.main.views.get_template",
+                        return_value=template,
+                    )
+
+                with failing_template:
+                    response = self._response_without_exceptions()
+
+                self.assertEqual(response.status_code, 500)
+                self.assertEqual(
+                    response["Content-Type"], "text/plain; charset=utf-8"
+                )
+                self.assertEqual(response.content.decode("utf-8"), message)
+                self.assertNotIn("private-template", response.content.decode("utf-8"))
