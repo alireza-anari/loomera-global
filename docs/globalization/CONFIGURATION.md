@@ -489,3 +489,13 @@ This is a presentation-only boundary. Story model and payload data, read/visibil
 Five database-free regressions in `apps/main/test_production_settings_hygiene.py` verify exact three bindings, default page and filters, two independent sequential buyer names, Latin/Persian separation and HTML escaping. Tests-only RED SHA `99785d4631e4a16b884ce156ffcc95a42f40f412` was observed failing in GitHub Actions run `39465813470` (0 template bindings vs 3). Final-head CI must independently pass; no claim of full-suite, browser, or deployed behavior is made.
 
 **Phase 2 NOT COMPLETE. Phase 3 BLOCKED.** No deployment is authorized.
+
+## Article Detail Magazine Backlink Persian Brand Identity
+
+The active public article detail template (`templates/articles/article_detail.html`, route `/magazine/<slug>/`) uses existing `deployment_brand.display_name_fa` context in **exactly one** website-chrome slot: the link back to the magazine home (`مجله <brand>`). `BRAND_DISPLAY_NAME_FA` configures the independent Persian display name and the default remains **لومرا**; a Latin-only `BRAND_DISPLAY_NAME` override does not change the Persian label. Standard Django autoescaping remains enabled for this text.
+
+**Deliberate isolation:** The article's `effective_seo_title`, `effective_seo_description`, title, author, category, body and stored data, canonical URL, structured-data snippets, article card, read-time/related services, gallery/FAQ, links and routes, and `ContentReport` form/JS are unchanged. Both existing moderation text literals (`تبلیغ خارج از لومرا`, `گزارش ثبت شد و تیم لومرا آن را بررسی می‌کند.`) are **intentionally preserved** and remain separately scoped for moderation/legal review. No provider/locale inference, new settings, context processors, migrations, browser behavior, or deployment changes are introduced.
+
+Five database-free regressions in `apps/main/test_production_settings_hygiene.py` exercise the default article wrapper, one shared brand slot, sequential independent buyer brands, Latin/Persian separation, HTML escaping, unchanged SEO metadata and report message, and article/magazine routes. The tests-only RED commit `cc45bfd614f0a4b0ae2ce7b883bc9204920d0ca4` failed as expected in GitHub Actions `39467728035` (0 brand slots instead of 1). A separately checked successful final-head CI run is required to establish GREEN; complete test suite, database and browser QA are not implied.
+
+**Phase 2 NOT COMPLETE. Phase 3 BLOCKED.** No deployment is authorized.
