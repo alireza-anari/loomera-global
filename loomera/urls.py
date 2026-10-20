@@ -39,6 +39,7 @@ from apps.services.sitemaps import ServiceGroupSitemap, ServiceSitemap
 
 handler400 = "apps.main.views.bad_request_view"
 handler403 = "apps.main.views.permission_denied_view"
+handler500 = "apps.main.views.server_error_view"
 
 
 sitemaps = {
