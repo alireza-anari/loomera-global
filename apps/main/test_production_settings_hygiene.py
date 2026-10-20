@@ -1009,6 +1009,7 @@ class SharedBrandConfigurationBoundaryTests(SimpleTestCase):
                 "apps/dashboards/reports_components.py",
                 "apps/help_center/ai.py",
                 "apps/main/seo.py",
+                "apps/main/views.py",
                 "apps/notifications/delivery.py",
                 "apps/orders/notification_delivery.py",
                 "apps/orders/quick_link_print_templates.py",
@@ -4988,3 +4989,275 @@ class Forbidden403DeploymentBrandTests(SimpleTestCase):
             self.assertNotIn("آرورا & <جدید>", rendered)
         self.assertIn("به بخش دیگری از آرورا &amp; &lt;جدید&gt; برگردید.", denied)
         self.assertNotIn("به بخش دیگری از", csrf)
+
+
+class ServerError500DeploymentBrandTests(SimpleTestCase):
+    """Public 500 metadata uses independent deployment names, preserving payment help."""
+
+    @staticmethod
+    def _source():
+        return (Path(settings.BASE_DIR) / "templates" / "500.html").read_text(
+            encoding="utf-8"
+        )
+
+    @staticmethod
+    def _render():
+        return render_to_string(
+            "500.html",
+            {
+                "deployment_brand": get_deployment_brand_config(),
+                "deployment_brand_assets": get_deployment_brand_asset_config(),
+                "deployment_brand_colors": get_deployment_brand_color_config(),
+                "hide_navbar": True,
+                "hide_footer": True,
+            },
+        )
+
+    def test_exactly_two_metadata_slots_preserve_500_recovery_guidance(self):
+        source = self._source()
+        self.assertEqual(source.count("{{ deployment_brand.display_name }}"), 1)
+        self.assertEqual(source.count("{{ deployment_brand.display_name_fa }}"), 1)
+        self.assertNotIn("Loomera", source)
+        self.assertNotIn("لومرا", source)
+        self.assertNotIn("get_deployment_brand_config", source)
+        self.assertNotIn("BRAND_DISPLAY_NAME", source)
+        self.assertIn('data-page="error_500"', source)
+        self.assertIn("خطای ۵۰۰", source)
+        self.assertIn("فعلاً مشکلی در اجرای صفحه پیش آمده است", source)
+        self.assertIn("قبل از پرداخت دوباره، وضعیت نوبت یا کیف پول", source)
+        self.assertIn("از ارسال چندباره پرداخت خودداری کن.", source)
+        self.assertIn('href="/"', source)
+        self.assertIn("{% url 'accounts:customer_panel' %}", source)
+        self.assertIn("{% url 'support' %}", source)
+
+    def test_default_loomera_metadata_and_recovery_links_remain(self):
+        from django.urls import reverse
+
+        self.assertEqual(get_deployment_brand_config().display_name, "Loomera")
+        self.assertEqual(get_deployment_brand_config().display_name_fa, "لومرا")
+        rendered = self._render()
+        self.assertIn("<title>اختلال موقت | Loomera</title>", rendered)
+        self.assertIn("در حال حاضر اختلال موقتی در لومرا رخ داده است.", rendered)
+        self.assertIn("خطای ۵۰۰", rendered)
+        self.assertIn("فعلاً مشکلی در اجرای صفحه پیش آمده است", rendered)
+        self.assertIn("قبل از پرداخت دوباره، وضعیت نوبت یا کیف پول", rendered)
+        self.assertIn("از ارسال چندباره پرداخت خودداری کن.", rendered)
+        self.assertIn('href="/"', rendered)
+        self.assertIn(f'href="{reverse("accounts:customer_panel")}"', rendered)
+        self.assertIn(f'href="{reverse("support")}"', rendered)
+
+    def test_two_sequential_deployments_have_isolated_500_metadata(self):
+        for latin, persian in (("Aurora", "آرورا"), ("Second Buyer", "نیلوفر")):
+            with self.subTest(latin=latin, persian=persian):
+                with override_settings(
+                    BRAND_DISPLAY_NAME=latin, BRAND_DISPLAY_NAME_FA=persian
+                ):
+                    rendered = self._render()
+                    self.assertIn(f"<title>اختلال موقت | {latin}</title>", rendered)
+                    self.assertIn(
+                        f"در حال حاضر اختلال موقتی در {persian} رخ داده است.",
+                        rendered,
+                    )
+                    self.assertNotIn("<title>اختلال موقت | Loomera</title>", rendered)
+                    self.assertNotIn("اختلال موقتی در لومرا رخ داده است.", rendered)
+                    self.assertIn("در صورت پرداخت، کیف پول یا نوبت‌ها را بررسی کن.", rendered)
+        self.assertEqual(get_deployment_brand_config().display_name, "Loomera")
+        self.assertEqual(get_deployment_brand_config().display_name_fa, "لومرا")
+
+    def test_latin_and_persian_500_metadata_overrides_are_independent(self):
+        with override_settings(BRAND_DISPLAY_NAME="Aurora"):
+            rendered = self._render()
+            self.assertIn("<title>اختلال موقت | Aurora</title>", rendered)
+            self.assertIn("در حال حاضر اختلال موقتی در لومرا رخ داده است.", rendered)
+        with override_settings(BRAND_DISPLAY_NAME_FA="آرورا"):
+            rendered = self._render()
+            self.assertIn("<title>اختلال موقت | Loomera</title>", rendered)
+            self.assertIn("در حال حاضر اختلال موقتی در آرورا رخ داده است.", rendered)
+
+    @override_settings(
+        BRAND_DISPLAY_NAME="Aurora & <New>",
+        BRAND_DISPLAY_NAME_FA="آرورا & <جدید>",
+    )
+    def test_500_title_and_meta_escape_untrusted_brand_labels(self):
+        rendered = self._render()
+        self.assertIn(
+            "<title>اختلال موقت | Aurora &amp; &lt;New&gt;</title>",
+            rendered,
+        )
+        self.assertIn(
+            "در حال حاضر اختلال موقتی در آرورا &amp; &lt;جدید&gt; رخ داده است.",
+            rendered,
+        )
+        self.assertNotIn("Aurora & <New>", rendered)
+        self.assertNotIn("آرورا & <جدید>", rendered)
+        self.assertIn("قبل از پرداخت دوباره، وضعیت نوبت یا کیف پول", rendered)
+
+# Isolated URLconf for an actual Django DEBUG=False HTTP 500 response.
+# Include live application routes so template {% url %} tags still reverse.
+from django.urls import include as _test_include, path as _test_path
+
+
+def _raise_controlled_500(request):
+    raise RuntimeError("sensitive-internal-secret")
+
+
+handler500 = "apps.main.views.server_error_view"
+urlpatterns = [
+    _test_path("_test/500/", _raise_controlled_500),
+    _test_path("", _test_include("loomera.urls")),
+]
+
+
+@override_settings(DEBUG=False, ROOT_URLCONF=__name__)
+class ServerError500HandlerTests(SimpleTestCase):
+    """The real 500 handler must provide brand context without processors."""
+
+    def test_500_a_handler_registered_in_root_urlconf(self):
+        from django.urls import get_resolver
+
+        handler = get_resolver("loomera.urls").resolve_error_handler(500)
+        self.assertEqual(handler.__module__, "apps.main.views")
+        self.assertEqual(handler.__name__, "server_error_view")
+
+    def test_client_real_500_uses_custom_deployment_brand(self):
+        from django.test import Client
+        from django.urls import reverse
+
+        for latin, persian in (("Aurora", "آرورا"), ("Second Buyer", "نیلوفر")):
+            with self.subTest(latin=latin, persian=persian):
+                with override_settings(
+                    BRAND_DISPLAY_NAME=latin, BRAND_DISPLAY_NAME_FA=persian
+                ):
+                    response = Client(raise_request_exception=False).get(
+                        "/_test/500/", secure=True
+                    )
+                    self.assertEqual(response.status_code, 500)
+                    html = response.content.decode("utf-8")
+                    self.assertIn(f"<title>اختلال موقت | {latin}</title>", html)
+                    self.assertIn(
+                        f"در حال حاضر اختلال موقتی در {persian} رخ داده است.",
+                        html,
+                    )
+                    self.assertNotIn("sensitive-internal-secret", html)
+                    self.assertIn("قبل از پرداخت دوباره، وضعیت نوبت یا کیف پول", html)
+                    self.assertIn("از ارسال چندباره پرداخت خودداری کن.", html)
+                    self.assertIn('href="/"', html)
+                    self.assertIn(
+                        f'href="{reverse("accounts:customer_panel")}"', html
+                    )
+                    self.assertIn(f'href="{reverse("support")}"', html)
+
+    @override_settings(
+        BRAND_DISPLAY_NAME="Aurora & <New>",
+        BRAND_DISPLAY_NAME_FA="آرورا & <جدید>",
+    )
+    def test_client_real_500_escapes_independent_brand_names(self):
+        from django.test import Client
+
+        response = Client(raise_request_exception=False).get("/_test/500/", secure=True)
+        self.assertEqual(response.status_code, 500)
+        html = response.content.decode("utf-8")
+        self.assertIn(
+            "<title>اختلال موقت | Aurora &amp; &lt;New&gt;</title>", html
+        )
+        self.assertIn(
+            "در حال حاضر اختلال موقتی در آرورا &amp; &lt;جدید&gt; رخ داده است.",
+            html,
+        )
+        self.assertNotIn("Aurora & <New>", html)
+        self.assertNotIn("آرورا & <جدید>", html)
+
+    def test_500_handler_does_not_call_brand_asset_context_processor(self):
+        from django.test import RequestFactory
+        from apps.main.views import server_error_view
+
+        with patch(
+            "loomera.branding.context_processors.get_deployment_brand_asset_config",
+            side_effect=RuntimeError("processor-should-not-run"),
+        ):
+            response = server_error_view(RequestFactory().get("/_test/500/"))
+        self.assertEqual(response.status_code, 500)
+        html = response.content.decode("utf-8")
+        self.assertIn("<title>اختلال موقت | Loomera</title>", html)
+        self.assertNotIn("processor-should-not-run", html)
+
+
+@override_settings(DEBUG=False)
+class ServerError500FallbackTests(SimpleTestCase):
+    """An error in branding or rendering must still produce a safe HTTP 500."""
+
+    def _response_without_exceptions(self):
+        from django.test import RequestFactory
+        from apps.main.views import server_error_view
+
+        try:
+            return server_error_view(RequestFactory().get("/_test/500/"))
+        except Exception as exc:
+            self.fail(f"Emergency handler leaked {type(exc).__name__}")
+
+    def test_500_brand_lookup_failure_uses_safe_defaults(self):
+        with patch(
+            "apps.main.views.get_deployment_brand_config",
+            side_effect=RuntimeError("private-accessor-token"),
+        ):
+            response = self._response_without_exceptions()
+
+        self.assertEqual(response.status_code, 500)
+        html = response.content.decode("utf-8")
+        self.assertIn("<title>اختلال موقت | Loomera</title>", html)
+        self.assertIn("در حال حاضر اختلال موقتی در لومرا رخ داده است.", html)
+        self.assertNotIn("private-accessor-token", html)
+
+    def test_500_missing_or_blank_names_use_defaults(self):
+        cases = (
+            ("blank Latin", SimpleNamespace(display_name="  ", display_name_fa="آرورا"), "Loomera", "آرورا"),
+            ("blank Persian", SimpleNamespace(display_name="Aurora", display_name_fa="  "), "Aurora", "لومرا"),
+            ("invalid types", SimpleNamespace(display_name=42, display_name_fa=[]), "Loomera", "لومرا"),
+            ("missing attributes", SimpleNamespace(), "Loomera", "لومرا"),
+        )
+
+        for case_name, config, latin, persian in cases:
+            with self.subTest(case=case_name):
+                with patch(
+                    "apps.main.views.get_deployment_brand_config",
+                    return_value=config,
+                ):
+                    response = self._response_without_exceptions()
+
+                self.assertEqual(response.status_code, 500)
+                html = response.content.decode("utf-8")
+                self.assertIn(f"<title>اختلال موقت | {latin}</title>", html)
+                self.assertIn(
+                    f"در حال حاضر اختلال موقتی در {persian} رخ داده است.",
+                    html,
+                )
+
+    def test_500_template_failure_returns_static_safe_response(self):
+        message = "در حال حاضر اختلال موقتی رخ داده است. لطفاً کمی بعد دوباره تلاش کنید."
+
+        for failure_mode in ("loading", "rendering"):
+            with self.subTest(failure=failure_mode):
+                if failure_mode == "loading":
+                    failing_template = patch(
+                        "apps.main.views.get_template",
+                        side_effect=RuntimeError("private-template-load-token"),
+                    )
+                else:
+                    template = Mock()
+                    template.render.side_effect = RuntimeError(
+                        "private-template-render-token"
+                    )
+                    failing_template = patch(
+                        "apps.main.views.get_template",
+                        return_value=template,
+                    )
+
+                with failing_template:
+                    response = self._response_without_exceptions()
+
+                self.assertEqual(response.status_code, 500)
+                self.assertEqual(
+                    response["Content-Type"], "text/plain; charset=utf-8"
+                )
+                self.assertEqual(response.content.decode("utf-8"), message)
+                self.assertNotIn("private-template", response.content.decode("utf-8"))

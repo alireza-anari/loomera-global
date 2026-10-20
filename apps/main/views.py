@@ -1,12 +1,14 @@
 from apps.main.ui_feedback import stash_form_errors, user_error_message
 import mimetypes
 from pathlib import PurePosixPath
+from types import SimpleNamespace
 import logging
 
 from django.conf import settings
 from django.core.files.storage import default_storage
 from django.contrib import messages
 from django.shortcuts import get_object_or_404, redirect, render
+from django.template.loader import get_template
 from django.urls import reverse
 from django.views import View
 from django.db import connection, transaction
@@ -15,11 +17,13 @@ from django.http import (
     Http404,
     HttpResponse,
     HttpResponseForbidden,
+    HttpResponseServerError,
     JsonResponse,
 )
 from django.core.exceptions import ValidationError
 from .forms import SupportForm, SupportTicketReplyForm
 from .models import SupportTicket, SupportTicketMessage
+from loomera.branding.config import get_deployment_brand_config
 
 from apps.dashboards.jalali_utils import format_jalali_with_weekday, format_time_fa
 from apps.accounts.notifications import (
@@ -52,6 +56,44 @@ def csrf_failure_view(request, reason=""):
     """Render CSRF failures in Persian while intentionally hiding the raw reason."""
 
     return render(request, "403.html", {"is_csrf_failure": True}, status=403)
+
+
+def _safe_server_error_brand_label(config, attribute, default):
+    """Normalize emergency brand identity without trusting broken configuration."""
+
+    try:
+        label = getattr(config, attribute, None)
+    except Exception:
+        return default
+    return label if isinstance(label, str) and label.strip() else default
+
+
+def server_error_view(request):
+    """Render HTTP 500 without request processors; recover from nested failures."""
+
+    try:
+        config = get_deployment_brand_config()
+    except Exception:
+        config = None
+
+    deployment_brand = SimpleNamespace(
+        display_name=_safe_server_error_brand_label(
+            config, "display_name", "Loomera"
+        ),
+        display_name_fa=_safe_server_error_brand_label(
+            config, "display_name_fa", "لومرا"
+        ),
+    )
+
+    try:
+        html = get_template("500.html").render({"deployment_brand": deployment_brand})
+    except Exception:
+        return HttpResponseServerError(
+            "در حال حاضر اختلال موقتی رخ داده است. لطفاً کمی بعد دوباره تلاش کنید.",
+            content_type="text/plain; charset=utf-8",
+        )
+
+    return HttpResponseServerError(html)
 
 
 class RobotsTxtView(View):
