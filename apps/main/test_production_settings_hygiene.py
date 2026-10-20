@@ -4457,3 +4457,113 @@ class StoryExploreDeploymentBrandTests(SimpleTestCase):
         self.assertIn(f"استوری‌های مجموعه‌های زیبایی در {escaped}", rendered)
         self.assertIn(f"مجله {escaped}\n      </a>", rendered)
         self.assertNotIn("آرورا & <جدید>", rendered)
+
+
+class ArticleDetailBacklinkDeploymentBrandTests(SimpleTestCase):
+    """Article detail's magazine backlink uses deployment-scoped Persian identity."""
+
+    @staticmethod
+    def _source():
+        return (
+            Path(settings.BASE_DIR) / "templates" / "articles" / "article_detail.html"
+        ).read_text(encoding="utf-8")
+
+    @staticmethod
+    def _render():
+        return render_to_string(
+            "articles/article_detail.html",
+            {
+                "deployment_brand": get_deployment_brand_config(),
+                "deployment_brand_assets": get_deployment_brand_asset_config(),
+                "deployment_brand_colors": get_deployment_brand_color_config(),
+                "hide_navbar": True,
+                "hide_footer": True,
+                "article": {
+                    "id": 7,
+                    "title": "راهنمای رزرو",
+                    "effective_seo_title": "عنوان مستقل مقاله",
+                    "effective_seo_description": "توضیح مستقل مقاله",
+                    "summary": "خلاصه مقاله",
+                    "content": "متن نمونه مقاله",
+                    "reading_time_minutes": 4,
+                    "author_display_name": "نویسنده نمونه",
+                    "cover_image": None,
+                    "category": None,
+                    "allow_indexing": True,
+                    "gallery_images": {"all": []},
+                    "faqs": {"all": []},
+                    "author_salon": None,
+                    "related_services": {"all": []},
+                },
+                "canonical_url": "https://example.invalid/magazine/sample/",
+                "article_schema_json": "{}",
+                "breadcrumb_schema_json": "{}",
+                "faq_schema_json": "",
+                "related_articles": [],
+                "public_article_summary": "",
+                "public_article_content": "",
+            },
+        )
+
+    def test_one_shared_brand_slot_only_and_moderation_contract_preserved(self):
+        from django.urls import reverse
+
+        source = self._source()
+        self.assertEqual(source.count("{{ deployment_brand.display_name_fa }}"), 1)
+        self.assertEqual(source.count("لومرا"), 2)
+        self.assertNotIn("get_deployment_brand_config", source)
+        self.assertNotIn("BRAND_DISPLAY_NAME_FA", source)
+        self.assertIn("{{ article.effective_seo_title }}", source)
+        self.assertIn("{{ article.effective_seo_description }}", source)
+        self.assertIn("{% url 'articles:magazine_home' %}", source)
+        self.assertIn("{{ public_article_content|default:article.content|linebreaks }}", source)
+        self.assertIn('value="off_platform">تبلیغ خارج از لومرا', source)
+        self.assertIn("گزارش ثبت شد و تیم لومرا آن را بررسی می‌کند.", source)
+        self.assertIn("window.LoomeraFeedback?.success?", source)
+        self.assertIn("data-content-report-section", source)
+        self.assertEqual(reverse("articles:magazine_home"), "/magazine/")
+        self.assertEqual(
+            reverse("articles:article_detail", args=["sample"]),
+            "/magazine/sample/",
+        )
+
+    def test_default_loomera_backlink_and_article_metadata_are_unchanged(self):
+        self.assertEqual(get_deployment_brand_config().display_name_fa, "لومرا")
+        rendered = self._render()
+        self.assertIn("<title>عنوان مستقل مقاله</title>", rendered)
+        self.assertIn('content="توضیح مستقل مقاله"', rendered)
+        self.assertIn("مجله لومرا\n          </a>", rendered)
+        self.assertIn('href="/magazine/"', rendered)
+        self.assertIn("راهنمای رزرو", rendered)
+        self.assertIn("متن نمونه مقاله", rendered)
+        self.assertIn("گزارش ثبت شد و تیم لومرا آن را بررسی می‌کند.", rendered)
+
+    def test_sequential_buyers_render_independent_persian_backlinks(self):
+        for latin, persian in (("Aurora", "آرورا"), ("Second Buyer", "نیلوفر")):
+            with self.subTest(latin=latin, persian=persian):
+                with override_settings(
+                    BRAND_DISPLAY_NAME=latin, BRAND_DISPLAY_NAME_FA=persian
+                ):
+                    rendered = self._render()
+                    self.assertEqual(
+                        get_deployment_brand_config().display_name_fa, persian
+                    )
+                    self.assertIn(f"مجله {persian}\n          </a>", rendered)
+                    self.assertNotIn("مجله لومرا\n          </a>", rendered)
+                    self.assertIn("<title>عنوان مستقل مقاله</title>", rendered)
+                    self.assertIn("گزارش ثبت شد و تیم لومرا آن را بررسی می‌کند.", rendered)
+                    self.assertIn('href="/magazine/"', rendered)
+        self.assertEqual(get_deployment_brand_config().display_name_fa, "لومرا")
+
+    @override_settings(BRAND_DISPLAY_NAME="Aurora")
+    def test_latin_only_name_preserves_default_persian_backlink(self):
+        self.assertEqual(get_deployment_brand_config().display_name_fa, "لومرا")
+        self.assertIn("مجله لومرا\n          </a>", self._render())
+
+    @override_settings(BRAND_DISPLAY_NAME_FA="آرورا & <جدید>")
+    def test_persian_backlink_is_html_escaped(self):
+        rendered = self._render()
+        escaped = "آرورا &amp; &lt;جدید&gt;"
+        self.assertIn(f"مجله {escaped}\n          </a>", rendered)
+        self.assertNotIn("آرورا & <جدید>", rendered)
+        self.assertIn("<title>عنوان مستقل مقاله</title>", rendered)
