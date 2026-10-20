@@ -72,6 +72,7 @@ print(
             "BRAND_APP_ICON_STATIC_PATH": base.BRAND_APP_ICON_STATIC_PATH,
             "BRAND_LOGO_HEADER_STATIC_PATH": base.BRAND_LOGO_HEADER_STATIC_PATH,
             "BRAND_LOGO_PRIMARY_STATIC_PATH": base.BRAND_LOGO_PRIMARY_STATIC_PATH,
+            "BRAND_WORKSPACE_LOGO_STATIC_PATH": base.BRAND_WORKSPACE_LOGO_STATIC_PATH,
             "BRAND_FAVICON_SVG_STATIC_PATH": base.BRAND_FAVICON_SVG_STATIC_PATH,
             "BRAND_FAVICON_ICO_STATIC_PATH": base.BRAND_FAVICON_ICO_STATIC_PATH,
             "BRAND_FAVICON_16_STATIC_PATH": base.BRAND_FAVICON_16_STATIC_PATH,
@@ -303,6 +304,28 @@ class ProductionSettingsHygieneTests(SimpleTestCase):
                 self._assert_invalid_configuration(
                     "BRAND_LOGO_GLYPH_STATIC_PATH",
                     BRAND_LOGO_GLYPH_STATIC_PATH=invalid_value,
+                )
+
+    def test_workspace_logo_setting_preserves_default_and_rejects_unsafe_paths(self):
+        name = "BRAND_WORKSPACE_LOGO_STATIC_PATH"
+        default = "branding/logo/loomera-logo-horizontal-rtl-transparent-240.png"
+        self.assertEqual(self._loaded_values()[name], default)
+        self.assertEqual(
+            self._loaded_values(BRAND_WORKSPACE_LOGO_STATIC_PATH=" buyer/workspace/logo.png ")[name],
+            "buyer/workspace/logo.png",
+        )
+        for invalid_value in (
+            "",
+            "/buyer/workspace.png",
+            "https://cdn.example.com/workspace.png",
+            "buyer\\workspace.png",
+            "buyer/../workspace.png",
+            "buyer/workspace.png?version=1",
+            "buyer/workspace.png#logo",
+        ):
+            with self.subTest(value=invalid_value):
+                self._assert_invalid_configuration(
+                    name, BRAND_WORKSPACE_LOGO_STATIC_PATH=invalid_value
                 )
 
     def test_quick_link_art_settings_use_exact_defaults_and_existing_validator(self):
@@ -712,6 +735,7 @@ BRAND_ASSET_SETTING_NAMES = (
     "BRAND_APP_ICON_STATIC_PATH",
     "BRAND_LOGO_HEADER_STATIC_PATH",
     "BRAND_LOGO_PRIMARY_STATIC_PATH",
+    "BRAND_WORKSPACE_LOGO_STATIC_PATH",
     "BRAND_FAVICON_SVG_STATIC_PATH",
     "BRAND_FAVICON_ICO_STATIC_PATH",
     "BRAND_FAVICON_16_STATIC_PATH",
@@ -1901,6 +1925,7 @@ class SharedBrandAssetConfigurationTests(SimpleTestCase):
         "app_icon_path",
         "logo_header_path",
         "logo_primary_path",
+        "workspace_logo_path",
         "favicon_svg_path",
         "favicon_ico_path",
         "favicon_16_path",
@@ -1938,6 +1963,7 @@ class SharedBrandAssetConfigurationTests(SimpleTestCase):
         self.assertEqual(config.app_icon_path, "branding/logo/loomera-app-icon.png")
         self.assertEqual(config.logo_header_path, "branding/logo/loomera-logo-header.png")
         self.assertEqual(config.logo_primary_path, "branding/logo/loomera-logo-primary.png")
+        self.assertEqual(config.workspace_logo_path, "branding/logo/loomera-logo-horizontal-rtl-transparent-240.png")
         self.assertEqual(config.favicon_svg_path, "branding/favicon/favicon.svg")
         self.assertEqual(config.favicon_ico_path, "branding/favicon/favicon.ico")
         self.assertEqual(config.favicon_16_path, "branding/favicon/favicon-16x16.png")
@@ -1962,7 +1988,7 @@ class SharedBrandAssetConfigurationTests(SimpleTestCase):
         self.assertEqual(config.social_image_width, 1254)
         self.assertEqual(config.social_image_height, 1254)
 
-    def test_all_twenty_four_settings_are_defined_once_with_the_expected_validators(self):
+    def test_all_twenty_five_settings_are_defined_once_with_the_expected_validators(self):
         settings_path = Path(settings.BASE_DIR) / "loomera" / "settings" / "base.py"
         tree = ast.parse(
             settings_path.read_text(encoding="utf-8"),
@@ -2002,7 +2028,7 @@ class SharedBrandAssetConfigurationTests(SimpleTestCase):
             tuple(field.name for field in fields(DeploymentBrandAssetConfig)),
             self.expected_field_names,
         )
-        self.assertEqual(len(fields(DeploymentBrandAssetConfig)), 24)
+        self.assertEqual(len(fields(DeploymentBrandAssetConfig)), 25)
         self.assertEqual(
             brand_asset_config_module.__all__,
             (
@@ -2018,7 +2044,7 @@ class SharedBrandAssetConfigurationTests(SimpleTestCase):
         self.assertIsNot(first, second)
         self.assertEqual(first, second)
 
-    def test_accessor_reads_exactly_the_twenty_four_resolved_asset_settings(self):
+    def test_accessor_reads_exactly_the_twenty_five_resolved_asset_settings(self):
         assets_path = Path(settings.BASE_DIR) / "loomera" / "branding" / "assets.py"
         source = assets_path.read_text(encoding="utf-8")
         tree = ast.parse(source, filename=str(assets_path))
@@ -2032,7 +2058,7 @@ class SharedBrandAssetConfigurationTests(SimpleTestCase):
         }
 
         self.assertEqual(setting_reads, set(BRAND_ASSET_SETTING_NAMES))
-        self.assertEqual(len(setting_reads), 24)
+        self.assertEqual(len(setting_reads), 25)
         self.assertNotIn("os.environ", source)
         self.assertNotIn("import environ", source)
         self.assertNotIn("loomera.settings.base", source)
@@ -3279,7 +3305,7 @@ class QuickLinkQRGlyphBoundaryTests(SimpleTestCase):
         second = get_deployment_brand_asset_config()
         self.assertEqual(first.quick_link_qr_glyph_path, self.default_path)
         self.assertIsNot(first, second)
-        self.assertEqual(len(fields(first)), 24)
+        self.assertEqual(len(fields(first)), 25)
         with self.assertRaises(FrozenInstanceError):
             first.quick_link_qr_glyph_path = "buyer/other.png"
         generated = self._generate()
@@ -3425,7 +3451,7 @@ class AuthenticationArtworkDeploymentBoundaryTests(SimpleTestCase):
 
     def test_defaults_render_existing_artwork_and_signup_glyph(self):
         snapshot = get_deployment_brand_asset_config()
-        self.assertEqual(len(fields(snapshot)), 24)
+        self.assertEqual(len(fields(snapshot)), 25)
         self.assertEqual(snapshot.logo_glyph_path, "branding/logo/loomera-glyph-mark.png")
         for template_name, field, default in self.template_assets:
             with self.subTest(template=template_name):
