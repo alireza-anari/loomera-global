@@ -159,6 +159,10 @@ BRAND_LOGO_PRIMARY_STATIC_PATH = _read_brand_static_path(
     "BRAND_LOGO_PRIMARY_STATIC_PATH",
     "branding/logo/loomera-logo-primary.png",
 )
+BRAND_WORKSPACE_LOGO_STATIC_PATH = _read_brand_static_path(
+    "BRAND_WORKSPACE_LOGO_STATIC_PATH",
+    "branding/logo/loomera-logo-horizontal-rtl-transparent-240.png",
+)
 BRAND_FAVICON_SVG_STATIC_PATH = _read_brand_static_path(
     "BRAND_FAVICON_SVG_STATIC_PATH",
     "branding/favicon/favicon.svg",

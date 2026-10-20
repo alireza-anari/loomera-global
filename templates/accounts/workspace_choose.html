@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}انتخاب محیط فعالیت | لومرا{% endblock %}
+{% block title %}انتخاب محیط فعالیت | {{ deployment_brand.display_name_fa }}{% endblock %}
 {% block head %}
   {{ block.super }}
   <link rel="stylesheet" href="{% static 'css/pages/workspace_choose.css' %}?v=20260925-workspace-ui2">
@@ -17,8 +17,8 @@
   <div class="lm-workspace-shell">
     <header class="lm-workspace-hero">
       <div class="lm-workspace-hero__copy">
-        <a href="{% url 'accounts:customer_panel' %}" class="lm-workspace-brand" aria-label="لومرا — حساب من">
-          <img src="{% static 'branding/logo/loomera-logo-horizontal-rtl-transparent-240.png' %}" alt="لومرا" class="lm-workspace-brand__logo">
+        <a href="{% url 'accounts:customer_panel' %}" class="lm-workspace-brand" aria-label="{{ deployment_brand.display_name_fa }} — حساب من">
+          <img src="{% static deployment_brand_assets.workspace_logo_path %}" alt="{{ deployment_brand.display_name_fa }}" class="lm-workspace-brand__logo">
         </a>
 
         <span class="lm-workspace-eyebrow">
@@ -101,7 +101,7 @@
               <span class="lm-workspace-empty__icon" aria-hidden="true"><i class="fa-regular fa-circle-question"></i></span>
               <div>
                 <strong>فعلاً محیط فعالی برای این حساب وجود ندارد</strong>
-                <p>می‌توانی از بخش افزودن نقش، فعالیت حرفه‌ای خودت را در لومرا شروع کنی.</p>
+                <p>می‌توانی از بخش افزودن نقش، فعالیت حرفه‌ای خودت را در {{ deployment_brand.display_name_fa }} شروع کنی.</p>
               </div>
             </div>
           {% endfor %}

@@ -151,7 +151,7 @@ It defines exactly two public symbols:
 - `DeploymentBrandAssetConfig` — a frozen immutable snapshot of the resolved deployment brand asset settings;
 - `get_deployment_brand_asset_config()` — constructs a fresh snapshot from `django.conf.settings` on every call.
 
-The deployment asset snapshot has exactly **24 frozen fields** (15 original fields, four Task 2.16 quick-link print artwork paths, the Task 2.17 QR glyph path, and four Task 2.18 authentication hero paths). The settings map exactly as follows:
+The deployment asset snapshot has exactly **25 frozen fields** (15 original fields, four Task 2.16 quick-link print artwork paths, the Task 2.17 QR glyph path, four Task 2.18 authentication hero paths, and one workspace-chooser logo path). The settings map exactly as follows:
 
 | Django/environment setting | Snapshot field | Loomera compatibility default |
 | --- | --- | --- |
@@ -159,6 +159,7 @@ The deployment asset snapshot has exactly **24 frozen fields** (15 original fiel
 | `BRAND_APP_ICON_STATIC_PATH` | `app_icon_path` | `branding/logo/loomera-app-icon.png` |
 | `BRAND_LOGO_HEADER_STATIC_PATH` | `logo_header_path` | `branding/logo/loomera-logo-header.png` |
 | `BRAND_LOGO_PRIMARY_STATIC_PATH` | `logo_primary_path` | `branding/logo/loomera-logo-primary.png` |
+| `BRAND_WORKSPACE_LOGO_STATIC_PATH` | `workspace_logo_path` | `branding/logo/loomera-logo-horizontal-rtl-transparent-240.png` |
 | `BRAND_FAVICON_SVG_STATIC_PATH` | `favicon_svg_path` | `branding/favicon/favicon.svg` |
 | `BRAND_FAVICON_ICO_STATIC_PATH` | `favicon_ico_path` | `branding/favicon/favicon.ico` |
 | `BRAND_FAVICON_16_STATIC_PATH` | `favicon_16_path` | `branding/favicon/favicon-16x16.png` |
@@ -353,6 +354,16 @@ The default display name stays `Loomera`. The default header logo path `branding
 Report authorization, manager/salon ownership, selected filters, data queries and financial calculations, PDF formatting/layout, text shaping, fonts, file naming, response headers/content type and route semantics are unchanged. The internal class name `LoomeraReportPDF` and historical filename are technical compatibility identifiers and remain unchanged. The change extends the approved Python consumers of the shared brand identity and asset boundaries to include `apps/dashboards/reports_components.py`, with no caching or additional context processor.
 
 **Phase 2 NOT COMPLETE. Phase 3 BLOCKED.** Remaining email, legal, auth, marketing, older HTML-PDF template and embedded artwork branding require separate review.
+
+## Workspace Chooser Deployment Brand Identity
+
+The active multi-role chooser (`accounts:workspace_choose`, `templates/accounts/workspace_choose.html`) now renders its four fixed Persian brand-identity positions from the existing fresh template `deployment_brand.display_name_fa` snapshot, backed by independently configured `BRAND_DISPLAY_NAME_FA`: the page title, brand-link accessible name, logo alternative text, and the empty-state invitation. With no override, these positions still render **لومرا**. Deployments requiring both Latin and Persian names to change must configure `BRAND_DISPLAY_NAME` and `BRAND_DISPLAY_NAME_FA` independently.
+
+The workspace-specific 240-pixel RTL logo uses `deployment_brand_assets.workspace_logo_path`, backed by the new `BRAND_WORKSPACE_LOGO_STATIC_PATH`. Its exact original default `branding/logo/loomera-logo-horizontal-rtl-transparent-240.png` is preserved (the existing `BRAND_LOGO_HEADER_STATIC_PATH` default is a distinct 360-pixel file). Like other `BRAND_*_STATIC_PATH` values, settings import validates a non-empty staticfiles-relative path with the existing `_read_brand_static_path` validator. A buyer supplies an image through packaged Django staticfiles and configures the new path; there is no URL fetching, automatic image generation, or fallback to a different Loomera image when the override is missing.
+
+No workspace permissions, role availability, ownership rules, POST data, CSRF behavior, redirects, URL routes, frontend interactions, CSS, layout or surrounding Persian wording change. The shared brand snapshots remain deployment-scoped and fresh; the chooser adds no new direct Python accessor consumer, context processor, locale inference or per-salon branding. The original image bytes and all other static assets remain unchanged.
+
+**Phase 2 NOT COMPLETE. Phase 3 BLOCKED.** Legal, help/bot/notification content, media and other exit-audit residuals remain independently scoped.
 
 ## Quick-Link Print Brand Identity
 
