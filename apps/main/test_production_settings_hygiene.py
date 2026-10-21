@@ -5377,3 +5377,78 @@ class SocialLoginInfoDeploymentBrandTests(SimpleTestCase):
         )
         self.assertNotIn("Aurora & <New>", rendered)
         self.assertNotIn("آرورا & <جدید>", rendered)
+
+
+class RecoveryCodeVerifyDeploymentBrandTests(SimpleTestCase):
+    """Recovery verification page labels use the independent Latin deployment name."""
+
+    @staticmethod
+    def _source():
+        return (
+            Path(settings.BASE_DIR) / "templates" / "accounts" / "verify_code.html"
+        ).read_text(encoding="utf-8")
+
+    @staticmethod
+    def _render():
+        from django import forms
+
+        return render_to_string(
+            "accounts/verify_code.html",
+            {
+                "deployment_brand": get_deployment_brand_config(),
+                "deployment_brand_assets": get_deployment_brand_asset_config(),
+                "deployment_brand_colors": get_deployment_brand_color_config(),
+                "hide_navbar": True,
+                "hide_footer": True,
+                "form": forms.Form(),
+            },
+        )
+
+    def test_exact_two_latin_identity_slots_preserve_recovery_workflow(self):
+        source = self._source()
+        self.assertEqual(source.count("{{ deployment_brand.display_name }}"), 2)
+        self.assertNotIn('alt="Loomera"', source)
+        self.assertNotIn("امنیت حساب Loomera", source)
+        self.assertIn("loomera-logo-horizontal-transparent.png", source)
+        self.assertIn("تایید کد بازیابی", source)
+        self.assertIn("{% csrf_token %}", source)
+        self.assertIn('data-auth-form', source)
+        self.assertIn("{% url 'accounts:remember_password' %}", source)
+        self.assertIn("{% url 'accounts:login' %}", source)
+
+    def test_default_identity_and_form_navigation_are_unchanged(self):
+        self.assertEqual(get_deployment_brand_config().display_name, "Loomera")
+        rendered = self._render()
+        self.assertIn('alt="Loomera"', rendered)
+        self.assertIn("امنیت حساب Loomera", rendered)
+        self.assertIn("تایید کد بازیابی", rendered)
+        self.assertIn("بازگشت به ورود", rendered)
+        self.assertIn("ویرایش اطلاعات", rendered)
+        self.assertIn('data-auth-form', rendered)
+
+    def test_sequential_buyers_render_separate_identity_without_leakage(self):
+        for latin, persian in (("Aurora", "آرورا"), ("Second Buyer", "نیلوفر")):
+            with self.subTest(latin=latin, persian=persian):
+                with override_settings(
+                    BRAND_DISPLAY_NAME=latin, BRAND_DISPLAY_NAME_FA=persian
+                ):
+                    rendered = self._render()
+                    self.assertIn(f'alt="{latin}"', rendered)
+                    self.assertIn(f"امنیت حساب {latin}", rendered)
+                    self.assertNotIn('alt="Loomera"', rendered)
+                    self.assertNotIn("امنیت حساب Loomera", rendered)
+                    self.assertIn("تایید کد بازیابی", rendered)
+        self.assertEqual(get_deployment_brand_config().display_name, "Loomera")
+
+    def test_persian_only_override_does_not_infer_latin_name(self):
+        with override_settings(BRAND_DISPLAY_NAME_FA="آرورا"):
+            rendered = self._render()
+            self.assertIn('alt="Loomera"', rendered)
+            self.assertIn("امنیت حساب Loomera", rendered)
+
+    @override_settings(BRAND_DISPLAY_NAME="Aurora & <New>")
+    def test_identity_slots_escape_html_and_attribute_content(self):
+        rendered = self._render()
+        self.assertIn('alt="Aurora &amp; &lt;New&gt;"', rendered)
+        self.assertIn("امنیت حساب Aurora &amp; &lt;New&gt;", rendered)
+        self.assertNotIn("Aurora & <New>", rendered)
