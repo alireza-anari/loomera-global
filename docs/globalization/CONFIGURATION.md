@@ -594,3 +594,14 @@ The active `accounts:add_role` view renders `templates/accounts/add_role.html` f
 Five database-free regression tests cover the exact title binding, default buyer behavior for both role kinds, sequential buyer isolation, Latin-only settings, and HTML escaping. The test-only RED commit `de55b38d62c553d3e3638040c35f4713fdc67a97` failed as expected in [GitHub Actions #39640433473](https://github.com/alireza-anari/loomera-global/actions/runs/39640433473) with zero-versus-one binding. Final-head GREEN GitHub CI and independent scope review are required before merge. Full-suite, browser, and deployment testing are not claimed.
 
 **Phase 2 NOT COMPLETE. Phase 3 BLOCKED.** No deployment authorized.
+
+
+## Customer Settings Header — Deployment Persian Brand
+
+The active authenticated `accounts:customer_settings` route renders `templates/accounts/customer_settings.html`. Its visible header description is `اطلاعات شخصی، امنیت و روش‌های ارتباط با {{ deployment_brand.display_name_fa }}`, resolved from the existing deployment-level `BRAND_DISPLAY_NAME_FA` setting. The default output remains `اطلاعات شخصی، امنیت و روش‌های ارتباط با لومرا`, independent of the Latin `BRAND_DISPLAY_NAME` value. Django autoescaping protects untrusted Persian display names.
+
+**Compatibility boundary:** Only this one visible Persian label is replaced. The page title, role/authentication guards, account data/address count, navigation links to profile, addresses, password, communications, legal/privacy and deletion, and all related models, views, routes, forms, scripts, and security policies are unchanged. No new settings, assets or migrations were introduced.
+
+Five database-free regression tests in `apps/main/test_production_settings_hygiene.py` check exactly one binding, default identity and navigation, two sequential buyer identities, Latin-only override, and HTML escaping. The test-only RED SHA `c7b69a8899d04b72b77b9445f63ce63c69777d3a` failed as expected in [GitHub Actions #39642741256](https://github.com/alireza-anari/loomera-global/actions/runs/39642741256) with zero rather than one dynamic identity slot. Require GREEN CI on the final PR head and independent structural review before Squash Merge. Full-suite, browser or production tests are not claimed.
+
+**Phase 2 NOT COMPLETE. Phase 3 BLOCKED.** No deployment authorized.
