@@ -573,3 +573,13 @@ The active public `accounts:social_login_info` TemplateView (`/accounts/social-l
 Five database-free regression tests in `apps/main/test_production_settings_hygiene.py` check exact template slots and stable link names, default content, two sequential independent buyer deployments, Latin-only versus Persian-only setting overrides, HTML escaping and unchanged disabled-status guidance. The tests-only RED SHA `fe42d7084de184983a7f5297e8d96efdd9a5c46a` failed as expected in GitHub Actions `39544993936` (zero dynamic brand slots in the original template). A separate final-head GREEN CI run is mandatory before Merge; targeted hygiene coverage does not certify full-suite, browser or production deployment behavior.
 
 **Phase 2 NOT COMPLETE. Phase 3 BLOCKED.** This task does not authorize deployment.
+
+## Recovery Code Verification Latin Identity Labels
+
+The password-recovery verification template (`templates/accounts/verify_code.html`) now uses the existing `deployment_brand.display_name` in exactly **two Latin identity slots**: the image's accessible `alt` label and the visible `امنیت حساب <brand>` security badge. `BRAND_DISPLAY_NAME` is independent of `BRAND_DISPLAY_NAME_FA`, and defaults to **Loomera**. Django autoescaping protects both normal text and the HTML attribute.
+
+**Deliberately preserved asset boundary:** the static `branding/logo/loomera-logo-horizontal-transparent.png` image, its layout, the recovery verification form, CSRF, hidden/visible form fields, input enhancements, URLs, authentication state, token validation, password-change behavior, and all other account pages remain unchanged. Visual logo artwork may still reflect Loomera and requires a separately scoped asset branding task; relabeling accessible text does not replace image content.
+
+Five database-free tests in `apps/main/test_production_settings_hygiene.py` cover exactly two bindings, unchanged default behavior, sequential buyer isolation, independent Persian override, and HTML escaping. The test-only RED commit `df56beebe22e08835928cd2c31e337948e5704ee` failed in GitHub Actions run `39551279718` with zero bindings instead of two. GREEN CI on the final head must be confirmed before merge; browser or full-suite coverage is not claimed.
+
+**Phase 2 NOT COMPLETE. Phase 3 BLOCKED.** No deployment is authorized.
