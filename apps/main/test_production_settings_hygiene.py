@@ -5625,3 +5625,122 @@ class CustomerSettingsPersianBrandCopyTests(SimpleTestCase):
             rendered,
         )
         self.assertNotIn("آرورا & <جدید>", rendered)
+
+
+class CustomerCommunicationSettingsDeploymentBrandTests(SimpleTestCase):
+    """Visible messaging/settings identity is scoped to the Persian deployment brand."""
+
+    identity_labels = (
+        "دریافت پیام‌های نوبت در ربات {}",
+        "دریافت نوبت، تغییر زمان و لغو در ربات تلگرام {}",
+        "اعلان‌های داخلی {} مستقل باقی می‌مانند.",
+        "پیام‌های غیرضروری و پیشنهادهای {}",
+        "خبرها و پیشنهادهای {}",
+        "پیشنهادها و خبرها در ربات {}",
+        "مدیریت اتصال ربات {}",
+        "مدیریت اتصال ربات تلگرام {}",
+    )
+
+    @staticmethod
+    def _source():
+        return (
+            Path(settings.BASE_DIR) / "templates" / "accounts"
+            / "customer_communication_settings.html"
+        ).read_text(encoding="utf-8")
+
+    @staticmethod
+    def _render():
+        return render_to_string(
+            "accounts/customer_communication_settings.html",
+            {
+                "deployment_brand": get_deployment_brand_config(),
+                "deployment_brand_assets": get_deployment_brand_asset_config(),
+                "deployment_brand_colors": get_deployment_brand_color_config(),
+                "customer": SimpleNamespace(
+                    notify_appointment_sms=True,
+                    notify_appointment_email=False,
+                    notify_marketing_sms=False,
+                    notify_marketing_email=True,
+                ),
+                "audience_role_label": "مشتری",
+                "settings_return_url": "/accounts/customer_settings/",
+                "notification_center_url": "/accounts/notifications/",
+                "messaging_privacy_url": "/messaging/privacy/",
+                "bale_connect_url": "#",
+                "telegram_connect_url": "#",
+                "bale_connected": False,
+                "bale_ready": True,
+                "bale_operational": True,
+                "bale_marketing": False,
+                "telegram_connected": False,
+                "telegram_ready": True,
+                "telegram_operational": False,
+                "telegram_marketing": True,
+                "hide_navbar": True,
+                "hide_footer": True,
+            },
+        )
+
+    def test_exact_eight_persian_brand_slots_preserve_all_switch_contracts(self):
+        from django.urls import reverse
+
+        source = self._source()
+        self.assertEqual(source.count("{{ deployment_brand.display_name_fa }}"), 8)
+        self.assertNotIn("لومرا", source)
+        self.assertIn('data-page="customer-communication-settings"', source)
+        self.assertIn('{% csrf_token %}', source)
+        self.assertIn('<form method="post">', source)
+        self.assertEqual(
+            reverse("accounts:customer_communication_settings"),
+            "/accounts/communications/",
+        )
+        for name in (
+            "appointment_sms", "appointment_email",
+            "bale_operational", "telegram_operational",
+            "marketing_sms", "marketing_email",
+            "bale_marketing", "telegram_marketing",
+        ):
+            with self.subTest(name=name):
+                self.assertIn(f'name="{name}"', source)
+        self.assertIn('{% url \'messaging:disconnect\' telegram_connection.identity.id %}', source)
+
+    def test_default_brand_and_provider_states_remain_unchanged(self):
+        self.assertEqual(get_deployment_brand_config().display_name_fa, "لومرا")
+        rendered = self._render()
+        for label in self.identity_labels:
+            with self.subTest(label=label):
+                self.assertIn(label.format("لومرا"), rendered)
+        self.assertIn("<title>اعلان‌ها و ارتباطات</title>", rendered)
+        self.assertIn('name="appointment_sms"', rendered)
+        self.assertIn('name="bale_operational"', rendered)
+        self.assertIn("اتصال به تلگرام", rendered)
+        self.assertIn("اتصال به بله", rendered)
+        self.assertIn("ذخیره تنظیمات", rendered)
+
+    def test_sequential_buyer_names_replace_all_eight_labels_without_leakage(self):
+        for latin, persian in (("Aurora", "آرورا"), ("Second Buyer", "نیلوفر")):
+            with self.subTest(latin=latin, persian=persian):
+                with override_settings(
+                    BRAND_DISPLAY_NAME=latin, BRAND_DISPLAY_NAME_FA=persian
+                ):
+                    rendered = self._render()
+                    for label in self.identity_labels:
+                        self.assertIn(label.format(persian), rendered)
+                        self.assertNotIn(label.format("لومرا"), rendered)
+                    self.assertIn('name="telegram_marketing"', rendered)
+        self.assertEqual(get_deployment_brand_config().display_name_fa, "لومرا")
+
+    @override_settings(BRAND_DISPLAY_NAME="Aurora")
+    def test_latin_only_override_does_not_infer_persian_identity(self):
+        rendered = self._render()
+        for label in self.identity_labels:
+            self.assertIn(label.format("لومرا"), rendered)
+
+    @override_settings(BRAND_DISPLAY_NAME_FA="آرورا & <جدید>")
+    def test_all_brand_labels_are_html_escaped(self):
+        rendered = self._render()
+        escaped = "آرورا &amp; &lt;جدید&gt;"
+        for label in self.identity_labels:
+            with self.subTest(label=label):
+                self.assertIn(label.format(escaped), rendered)
+                self.assertNotIn(label.format("آرورا & <جدید>"), rendered)
