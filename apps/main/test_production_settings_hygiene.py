@@ -4571,7 +4571,7 @@ class ArticleDetailBacklinkDeploymentBrandTests(SimpleTestCase):
 
 
 class SupportSuccessTitleDeploymentBrandTests(SimpleTestCase):
-    """Support confirmation browser title uses only the Latin deployment identity."""
+    """Support confirmation title and team identity use independent deployment names."""
 
     @staticmethod
     def _source():
@@ -4592,14 +4592,19 @@ class SupportSuccessTitleDeploymentBrandTests(SimpleTestCase):
             },
         )
 
-    def test_one_latin_title_slot_preserves_support_message_and_urls(self):
+    def test_exact_brand_slots_and_original_support_routes(self):
         from django.urls import reverse
 
         source = self._source()
         self.assertEqual(source.count("{{ deployment_brand.display_name }}"), 1)
+        self.assertEqual(source.count("{{ deployment_brand.display_name_fa }}"), 1)
         self.assertNotIn("Loomera", source)
-        self.assertEqual(source.count("لومرا"), 1)
-        self.assertIn("پاسخ تیم لومرا در همان بخش نمایش داده می‌شود.", source)
+        self.assertNotIn("لومرا", source)
+        self.assertIn(
+            "در صورت نیاز، پاسخ تیم {{ deployment_brand.display_name_fa }} "
+            "در همان بخش نمایش داده می‌شود.",
+            source,
+        )
         self.assertIn("{% url 'main:contact' %}", source)
         self.assertIn("{% url 'accounts:login' %}", source)
         self.assertIn("{% url 'accounts:customer_panel' %}", source)
@@ -4610,51 +4615,62 @@ class SupportSuccessTitleDeploymentBrandTests(SimpleTestCase):
         self.assertEqual(reverse("main:contact"), "/main/contact/")
 
     def test_default_loomera_title_and_support_actions_remain(self):
-        self.assertEqual(get_deployment_brand_config().display_name, "Loomera")
+        brand = get_deployment_brand_config()
+        self.assertEqual((brand.display_name, brand.display_name_fa), ("Loomera", "لومرا"))
         rendered = self._render()
         self.assertIn("<title>درخواست ثبت شد | Loomera</title>", rendered)
         self.assertIn("درخواست شما ثبت شد", rendered)
+        self.assertIn("نتیجه بررسی از صفحه پشتیبانی قابل پیگیری است.", rendered)
         self.assertIn("پاسخ تیم لومرا در همان بخش نمایش داده می‌شود.", rendered)
         self.assertIn('href="/main/contact/"', rendered)
         self.assertIn("ثبت یا پیگیری درخواست", rendered)
         self.assertIn("بازگشت", rendered)
 
-    def test_two_sequential_buyers_render_independent_latin_title_names(self):
+    def test_two_sequential_buyers_use_independent_latin_and_persian_names(self):
         for latin, persian in (("Aurora", "آرورا"), ("Second Buyer", "نیلوفر")):
             with self.subTest(latin=latin, persian=persian):
                 with override_settings(
                     BRAND_DISPLAY_NAME=latin, BRAND_DISPLAY_NAME_FA=persian
                 ):
                     rendered = self._render()
-                    self.assertEqual(
-                        get_deployment_brand_config().display_name, latin
-                    )
+                    self.assertIn(f"<title>درخواست ثبت شد | {latin}</title>", rendered)
                     self.assertIn(
-                        f"<title>درخواست ثبت شد | {latin}</title>", rendered
+                        f"پاسخ تیم {persian} در همان بخش نمایش داده می‌شود.",
+                        rendered,
                     )
-                    self.assertNotIn("<title>درخواست ثبت شد | Loomera</title>", rendered)
-                    self.assertIn(
+                    self.assertNotIn(
                         "پاسخ تیم لومرا در همان بخش نمایش داده می‌شود.", rendered
                     )
                     self.assertIn('href="/main/contact/"', rendered)
-        self.assertEqual(get_deployment_brand_config().display_name, "Loomera")
+        self.assertEqual(get_deployment_brand_config().display_name_fa, "لومرا")
+
+    @override_settings(BRAND_DISPLAY_NAME="Aurora")
+    def test_latin_only_override_preserves_default_persian_team_name(self):
+        rendered = self._render()
+        self.assertIn("<title>درخواست ثبت شد | Aurora</title>", rendered)
+        self.assertIn("پاسخ تیم لومرا در همان بخش نمایش داده می‌شود.", rendered)
 
     @override_settings(BRAND_DISPLAY_NAME_FA="آرورا")
-    def test_persian_only_override_does_not_infer_a_latin_name(self):
-        self.assertEqual(get_deployment_brand_config().display_name, "Loomera")
-        self.assertIn(
-            "<title>درخواست ثبت شد | Loomera</title>", self._render()
-        )
+    def test_persian_only_override_preserves_default_latin_title(self):
+        rendered = self._render()
+        self.assertIn("<title>درخواست ثبت شد | Loomera</title>", rendered)
+        self.assertIn("پاسخ تیم آرورا در همان بخش نمایش داده می‌شود.", rendered)
 
-    @override_settings(BRAND_DISPLAY_NAME="Aurora & <New>")
-    def test_latin_brand_title_uses_normal_html_escaping(self):
+    @override_settings(
+        BRAND_DISPLAY_NAME="Aurora & <New>",
+        BRAND_DISPLAY_NAME_FA="آرورا & <جدید>",
+    )
+    def test_both_untrusted_brand_names_use_html_autoescaping(self):
         rendered = self._render()
         self.assertIn(
-            "<title>درخواست ثبت شد | Aurora &amp; &lt;New&gt;</title>",
+            "<title>درخواست ثبت شد | Aurora &amp; &lt;New&gt;</title>", rendered
+        )
+        self.assertIn(
+            "پاسخ تیم آرورا &amp; &lt;جدید&gt; در همان بخش نمایش داده می‌شود.",
             rendered,
         )
         self.assertNotIn("Aurora & <New>", rendered)
-        self.assertIn("پاسخ تیم لومرا در همان بخش نمایش داده می‌شود.", rendered)
+        self.assertNotIn("آرورا & <جدید>", rendered)
 
 
 class BadRequest400MetadataDeploymentBrandTests(SimpleTestCase):
