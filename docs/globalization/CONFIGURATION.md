@@ -583,3 +583,14 @@ The password-recovery verification template (`templates/accounts/verify_code.htm
 Five database-free tests in `apps/main/test_production_settings_hygiene.py` cover exactly two bindings, unchanged default behavior, sequential buyer isolation, independent Persian override, and HTML escaping. The test-only RED commit `df56beebe22e08835928cd2c31e337948e5704ee` failed in GitHub Actions run `39551279718` with zero bindings instead of two. GREEN CI on the final head must be confirmed before merge; browser or full-suite coverage is not claimed.
 
 **Phase 2 NOT COMPLETE. Phase 3 BLOCKED.** No deployment is authorized.
+
+
+## Active Role Attachment Page — Persian Browser Title
+
+The active `accounts:add_role` view renders `templates/accounts/add_role.html` for the stylist and manager role-attachment routes. Its browser title is `افزودن نقش | {{ deployment_brand.display_name_fa }}`, using the existing deployment-wide `BRAND_DISPLAY_NAME_FA` configuration. The default stays `افزودن نقش | لومرا`; `BRAND_DISPLAY_NAME` remains independent. Django's template autoescaping protects the title from HTML injection.
+
+**Preserved behavior:** role attachment and permissions, accepted `kind` values, POST and CSRF behavior, expert input/validation, routes, form copy, role data and redirects are unchanged. No new brand settings, migrations, authentication logic, assets, translations, or deployment are part of this task.
+
+Five database-free regression tests cover the exact title binding, default buyer behavior for both role kinds, sequential buyer isolation, Latin-only settings, and HTML escaping. The test-only RED commit `de55b38d62c553d3e3638040c35f4713fdc67a97` failed as expected in [GitHub Actions #39640433473](https://github.com/alireza-anari/loomera-global/actions/runs/39640433473) with zero-versus-one binding. Final-head GREEN GitHub CI and independent scope review are required before merge. Full-suite, browser, and deployment testing are not claimed.
+
+**Phase 2 NOT COMPLETE. Phase 3 BLOCKED.** No deployment authorized.

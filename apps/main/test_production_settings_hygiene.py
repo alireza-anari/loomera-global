@@ -5452,3 +5452,89 @@ class RecoveryCodeVerifyDeploymentBrandTests(SimpleTestCase):
         self.assertIn('alt="Aurora &amp; &lt;New&gt;"', rendered)
         self.assertIn("امنیت حساب Aurora &amp; &lt;New&gt;", rendered)
         self.assertNotIn("Aurora & <New>", rendered)
+
+
+class AddRoleTitleDeploymentBrandTests(SimpleTestCase):
+    """The active role-attachment page takes its Persian title from deployment branding."""
+
+    @staticmethod
+    def _source():
+        return (
+            Path(settings.BASE_DIR) / "templates" / "accounts" / "add_role.html"
+        ).read_text(encoding="utf-8")
+
+    @staticmethod
+    def _render(kind="stylist"):
+        return render_to_string(
+            "accounts/add_role.html",
+            {
+                "kind": kind,
+                "deployment_brand": get_deployment_brand_config(),
+                "deployment_brand_assets": get_deployment_brand_asset_config(),
+                "deployment_brand_colors": get_deployment_brand_color_config(),
+                "hide_navbar": True,
+                "hide_footer": True,
+            },
+        )
+
+    def test_one_persian_title_binding_preserves_role_attachment_markup(self):
+        from django.urls import reverse
+
+        source = self._source()
+        self.assertEqual(source.count("{{ deployment_brand.display_name_fa }}"), 1)
+        self.assertNotIn("افزودن نقش | لومرا", source)
+        self.assertIn("{% if kind == 'stylist' %}", source)
+        self.assertIn('name="expert"', source)
+        self.assertIn('{% csrf_token %}', source)
+        self.assertIn('method="post"', source)
+        self.assertEqual(
+            reverse("accounts:add_role", kwargs={"kind": "stylist"}),
+            "/accounts/add-role/stylist/",
+        )
+        self.assertEqual(
+            reverse("accounts:add_role", kwargs={"kind": "manager"}),
+            "/accounts/add-role/manager/",
+        )
+
+    def test_default_brand_preserves_role_titles_and_fields(self):
+        self.assertEqual(get_deployment_brand_config().display_name_fa, "لومرا")
+        for kind, title in (
+            ("stylist", "افزودن نقش متخصص"),
+            ("manager", "افزودن نقش مدیر سالن"),
+        ):
+            with self.subTest(kind=kind):
+                rendered = self._render(kind)
+                self.assertIn("<title>افزودن نقش | لومرا</title>", rendered)
+                self.assertIn(title, rendered)
+                self.assertIn("این نقش به حساب فعلی شما اضافه می‌شود.", rendered)
+                self.assertIn("تأیید و ادامه", rendered)
+                self.assertEqual('name="expert"' in rendered, kind == "stylist")
+
+    def test_two_buyers_use_independent_persian_names_without_leakage(self):
+        for latin, persian in (
+            ("Aurora", "آرورا"),
+            ("Second Buyer", "نیلوفر"),
+        ):
+            with self.subTest(latin=latin, persian=persian):
+                with override_settings(
+                    BRAND_DISPLAY_NAME=latin,
+                    BRAND_DISPLAY_NAME_FA=persian,
+                ):
+                    rendered = self._render("manager")
+                    self.assertIn(f"<title>افزودن نقش | {persian}</title>", rendered)
+                    self.assertNotIn("<title>افزودن نقش | لومرا</title>", rendered)
+                    self.assertIn("افزودن نقش مدیر سالن", rendered)
+        self.assertEqual(get_deployment_brand_config().display_name_fa, "لومرا")
+
+    @override_settings(BRAND_DISPLAY_NAME="Aurora")
+    def test_latin_only_override_keeps_default_persian_title(self):
+        self.assertIn("<title>افزودن نقش | لومرا</title>", self._render())
+
+    @override_settings(BRAND_DISPLAY_NAME_FA="آرورا & <جدید>")
+    def test_persian_name_in_title_is_html_escaped(self):
+        rendered = self._render()
+        self.assertIn(
+            "<title>افزودن نقش | آرورا &amp; &lt;جدید&gt;</title>",
+            rendered,
+        )
+        self.assertNotIn("آرورا & <جدید>", rendered)
