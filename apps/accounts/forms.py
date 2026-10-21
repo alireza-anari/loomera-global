@@ -1,6 +1,7 @@
 import os
 
 from apps.main.ui_feedback import user_error_message
+from loomera.branding.config import get_deployment_brand_config
 
 from PIL import Image, ImageSequence, UnidentifiedImageError
 from django.conf import settings
@@ -942,3 +943,20 @@ class DeleteAccountReasonForm(forms.Form):
             }
         ),
     )
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        display_name = get_deployment_brand_config().display_name
+        self.fields["reason"].choices = [
+            (
+                key,
+                f"دیگر از {display_name} استفاده نمی‌کنم."
+                if key == "not_using"
+                else label,
+            )
+            for key, label in self.REASON_CHOICES
+        ]
+        self.fields["confirm_bookings"].label = (
+            f"می‌دانم که پس از حذف حساب، امکان رزرو از طریق {display_name} "
+            "برای من متوقف می‌شود."
+        )

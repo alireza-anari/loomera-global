@@ -1004,6 +1004,7 @@ class SharedBrandConfigurationBoundaryTests(SimpleTestCase):
         self.assertCountEqual(
             occurrences,
             [
+                "apps/accounts/forms.py",
                 "apps/api/v1/views.py",
                 "apps/articles/views.py",
                 "apps/dashboards/reports_components.py",
@@ -5744,3 +5745,151 @@ class CustomerCommunicationSettingsDeploymentBrandTests(SimpleTestCase):
             with self.subTest(label=label):
                 self.assertIn(label.format(escaped), rendered)
                 self.assertNotIn(label.format("آرورا & <جدید>"), rendered)
+
+
+class DeleteAccountDeploymentBrandCopyTests(SimpleTestCase):
+    """Account-deletion display text follows the Latin deployment identity."""
+
+    @staticmethod
+    def _template_source():
+        return (
+            Path(settings.BASE_DIR) / "templates" / "accounts" / "delete_account.html"
+        ).read_text(encoding="utf-8")
+
+    @staticmethod
+    def _form():
+        from apps.accounts.forms import DeleteAccountReasonForm
+
+        return DeleteAccountReasonForm()
+
+    @classmethod
+    def _render(cls, blockers=None):
+        return render_to_string(
+            "accounts/delete_account.html",
+            {
+                "deployment_brand": get_deployment_brand_config(),
+                "deployment_brand_assets": get_deployment_brand_asset_config(),
+                "deployment_brand_colors": get_deployment_brand_color_config(),
+                "form": cls._form(),
+                "user_email": "customer@example.com",
+                "deletion_blockers": blockers if blockers is not None else [],
+                "hide_navbar": True,
+                "hide_footer": True,
+            },
+        )
+
+    def test_single_template_brand_slot_and_deletion_safety_contract(self):
+        from django.urls import reverse
+
+        source = self._template_source()
+        self.assertEqual(source.count("{{ deployment_brand.display_name }}"), 1)
+        self.assertNotIn("رزرو از طریق Loomera برای من متوقف", source)
+        self.assertEqual(source.count("window.LoomeraFeedback?.error?."), 4)
+        for field in ("reason", "confirm_appointments", "confirm_bookings"):
+            self.assertIn(f'name="{field}"', source)
+        self.assertIn("{% csrf_token %}", source)
+        self.assertIn('<form method="post" id="deleteAccountForm"', source)
+        self.assertIn("data-delete-blocked=", source)
+        self.assertIn("{{ form.password }}", source)
+        self.assertEqual(reverse("accounts:delete_account"), "/accounts/delete-account/")
+        self.assertIn("{% url 'accounts:customer_settings' %}", source)
+
+    def test_default_latin_identity_and_existing_reason_choices(self):
+        form = self._form()
+        self.assertEqual(get_deployment_brand_config().display_name, "Loomera")
+        self.assertEqual(
+            dict(form.fields["reason"].choices)["not_using"],
+            "دیگر از Loomera استفاده نمی‌کنم.",
+        )
+        self.assertEqual(
+            form.fields["confirm_bookings"].label,
+            "می‌دانم که پس از حذف حساب، امکان رزرو از طریق Loomera برای من متوقف می‌شود.",
+        )
+        rendered = self._render()
+        self.assertIn("دیگر از Loomera استفاده نمی‌کنم.", rendered)
+        self.assertIn("امکان رزرو از طریق Loomera برای من متوقف می‌شود.", rendered)
+        self.assertIn("حذف حساب یک عملیات حساس است", rendered)
+        self.assertIn("id=\"deleteAccountForm\"", rendered)
+
+    def test_buyer_names_are_isolated_on_sequential_requests(self):
+        for latin, persian in (("Aurora", "آرورا"), ("Second Buyer", "نیلوفر")):
+            with self.subTest(latin=latin):
+                with override_settings(
+                    BRAND_DISPLAY_NAME=latin, BRAND_DISPLAY_NAME_FA=persian
+                ):
+                    form = self._form()
+                    self.assertEqual(
+                        dict(form.fields["reason"].choices)["not_using"],
+                        f"دیگر از {latin} استفاده نمی‌کنم.",
+                    )
+                    self.assertIn(
+                        f"رزرو از طریق {latin} برای من متوقف می‌شود.",
+                        form.fields["confirm_bookings"].label,
+                    )
+                    rendered = self._render()
+                    self.assertIn(f"دیگر از {latin} استفاده نمی‌کنم.", rendered)
+                    self.assertIn(
+                        f"رزرو از طریق {latin} برای من متوقف می‌شود.", rendered
+                    )
+                    self.assertNotIn("رزرو از طریق Loomera برای من متوقف", rendered)
+        self.assertEqual(
+            dict(self._form().fields["reason"].choices)["not_using"],
+            "دیگر از Loomera استفاده نمی‌کنم.",
+        )
+
+    @override_settings(BRAND_DISPLAY_NAME_FA="آرورا")
+    def test_persian_only_override_keeps_latin_consent_identity(self):
+        self.assertIn("رزرو از طریق Loomera برای من متوقف", self._render())
+        self.assertEqual(
+            dict(self._form().fields["reason"].choices)["not_using"],
+            "دیگر از Loomera استفاده نمی‌کنم.",
+        )
+
+    @override_settings(BRAND_DISPLAY_NAME="Aurora & <Unsafe>")
+    def test_display_and_choice_are_escaped_and_validation_unchanged(self):
+        form = self._form()
+        self.assertEqual(
+            [key for key, _ in form.fields["reason"].choices],
+            [
+                "not_using", "too_many_notifications", "privacy_concern",
+                "bad_experience", "found_alternative", "other",
+            ],
+        )
+        html = self._render()
+        self.assertIn("دیگر از Aurora &amp; &lt;Unsafe&gt; استفاده نمی‌کنم.", html)
+        self.assertIn(
+            "رزرو از طریق Aurora &amp; &lt;Unsafe&gt; برای من متوقف می‌شود.",
+            html,
+        )
+        self.assertNotIn("رزرو از طریق Aurora & <Unsafe>", html)
+        from apps.accounts.forms import DeleteAccountReasonForm
+
+        valid = DeleteAccountReasonForm(
+            data={
+                "reason": "not_using",
+                "confirm_appointments": "on",
+                "confirm_bookings": "on",
+                "password": "any-test-password",
+            }
+        )
+        self.assertTrue(valid.is_valid(), valid.errors)
+        self.assertEqual(valid.cleaned_data["reason"], "not_using")
+        incomplete = DeleteAccountReasonForm(
+            data={"reason": "not_using", "password": "any-test-password"}
+        )
+        self.assertFalse(incomplete.is_valid())
+        self.assertIn("confirm_bookings", incomplete.errors)
+        self.assertIn("confirm_appointments", incomplete.errors)
+
+    def test_new_form_brand_consumer_is_explicit_and_narrow(self):
+        source = (
+            Path(settings.BASE_DIR) / "apps" / "accounts" / "forms.py"
+        ).read_text(encoding="utf-8")
+        self.assertEqual(
+            source.count("from loomera.branding.config import get_deployment_brand_config"),
+            1,
+        )
+        self.assertIn(
+            'display_name = get_deployment_brand_config().display_name', source
+        )
+        self.assertNotIn("settings.BRAND_DISPLAY_NAME", source)

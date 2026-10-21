@@ -214,7 +214,7 @@
                      class="mt-1 h-5 w-5 shrink-0 cursor-pointer rounded border-loomera-borderSoft accent-loomera-primary"
                      {% if form.confirm_bookings.value %}checked{% endif %}>
               <span class="text-sm font-bold leading-7 text-loomera-textPrimary">
-                می‌دانم که پس از حذف حساب، امکان رزرو از طریق Loomera برای من متوقف می‌شود.
+                می‌دانم که پس از حذف حساب، امکان رزرو از طریق {{ deployment_brand.display_name }} برای من متوقف می‌شود.
               </span>
             </label>
             {% if form.confirm_bookings.errors %}
