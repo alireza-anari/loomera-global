@@ -1004,6 +1004,7 @@ class SharedBrandConfigurationBoundaryTests(SimpleTestCase):
         self.assertCountEqual(
             occurrences,
             [
+                "apps/accounts/forms.py",
                 "apps/api/v1/views.py",
                 "apps/articles/views.py",
                 "apps/dashboards/reports_components.py",
@@ -5879,3 +5880,16 @@ class DeleteAccountDeploymentBrandCopyTests(SimpleTestCase):
         self.assertFalse(incomplete.is_valid())
         self.assertIn("confirm_bookings", incomplete.errors)
         self.assertIn("confirm_appointments", incomplete.errors)
+
+    def test_new_form_brand_consumer_is_explicit_and_narrow(self):
+        source = (
+            Path(settings.BASE_DIR) / "apps" / "accounts" / "forms.py"
+        ).read_text(encoding="utf-8")
+        self.assertEqual(
+            source.count("from loomera.branding.config import get_deployment_brand_config"),
+            1,
+        )
+        self.assertIn(
+            'display_name = get_deployment_brand_config().display_name', source
+        )
+        self.assertNotIn("settings.BRAND_DISPLAY_NAME", source)
