@@ -605,3 +605,14 @@ The active authenticated `accounts:customer_settings` route renders `templates/a
 Five database-free regression tests in `apps/main/test_production_settings_hygiene.py` check exactly one binding, default identity and navigation, two sequential buyer identities, Latin-only override, and HTML escaping. The test-only RED SHA `c7b69a8899d04b72b77b9445f63ce63c69777d3a` failed as expected in [GitHub Actions #39642741256](https://github.com/alireza-anari/loomera-global/actions/runs/39642741256) with zero rather than one dynamic identity slot. Require GREEN CI on the final PR head and independent structural review before Squash Merge. Full-suite, browser or production tests are not claimed.
 
 **Phase 2 NOT COMPLETE. Phase 3 BLOCKED.** No deployment authorized.
+
+
+## Customer Communications Settings — Persian Brand Identity in Visible Copy
+
+The active `accounts:customer_communication_settings` route uses `templates/accounts/customer_communication_settings.html`. Eight visible Persian identity labels — Bale and Telegram appointment guidance, independent in-app notification explanation, marketing section/email/Bale descriptions, and both messaging connection headings — now resolve from the existing request-scoped `deployment_brand.display_name_fa`. This is an independent `BRAND_DISPLAY_NAME_FA` display setting; the Latin `BRAND_DISPLAY_NAME` does not supply or infer the Persian name. The Loomera default renders the same original Persian text in all eight locations, with HTML autoescaping for configured names.
+
+**Strict behavior boundary:** Exactly eight static copy substitutions in one template. Message-channel availability, connection status, actual bot identities/usernames, provider delivery, role-specific notification preference storage, operational versus marketing opt-ins, checkbox names and values, POST and CSRF, connect/disconnect destinations, permission checks, scripts, styling, models, migrations, and authentication are not changed. Changing a displayed brand label does *not* rename/configure a Bale or Telegram bot; that needs its own independent provider/asset configuration and verification work.
+
+Five database-free regression tests in `apps/main/test_production_settings_hygiene.py` cover eight exact source bindings, original channel/switch routes and identifiers, default display, two sequential buyer identities without leakage, independent Latin override, and HTML escaping. RED-only commit `9e809604f04aaa8ce15e993fdbbc291271b0c38f` failed on fixed copy in [Actions #39665191984](https://github.com/alireza-anari/loomera-global/actions/runs/39665191984). Final-head GREEN CI and scope review are mandatory before Squash Merge. This targeted CI is not full-suite, live provider, browser or production validation.
+
+**Phase 2 NOT COMPLETE. Phase 3 BLOCKED.** No deployment authorized.
