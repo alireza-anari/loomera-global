@@ -552,3 +552,14 @@ If `500.html` cannot be loaded or rendered, the handler returns HTTP **500** wit
 Database-free regression coverage in `apps/main/test_production_settings_hygiene.py` includes the five original metadata tests, actual HTTPS client errors with `DEBUG=False`, unchanged navigation/payment guidance, independent deployment names and HTML escaping, a context-processor failure isolation test, and accessor/invalid-label/template failure paths. The initial metadata tests-only RED SHA `f46258a882fd0dba8e3479cb796ba6364a67b126` is recorded in GitHub Actions `39480554899`; the handler registration RED in `39489884279`; and emergency fallback RED in `39491180359`. Require a separate successful native GitHub CI run on the final implementation head; these checks do not certify the full test suite, browser/infrastructure handling or production deployment.
 
 **Phase 2 NOT COMPLETE. Phase 3 BLOCKED.** No deployment is authorized.
+
+
+## Support Confirmation Persian Team Brand Follow-up
+
+After the earlier support-success browser-title task, the confirmation at `/main/success/` now uses the existing shared template `deployment_brand.display_name_fa` in exactly **one visible Persian identity slot**: `در صورت نیاز، پاسخ تیم <brand> در همان بخش نمایش داده می‌شود.`. This deliberately supersedes the earlier title-only task's preservation of the fixed `تیم لومرا` wording; **the promise, workflow and surrounding sentence stay the same**. The existing Latin title independently continues using `deployment_brand.display_name`. The default deployment still renders `Loomera` and `لومرا` exactly as before.
+
+`BRAND_DISPLAY_NAME_FA` and `BRAND_DISPLAY_NAME` remain independently configured through the existing brand snapshot and context processor; neither is inferred from the other or read directly from a request. Django's normal template autoescaping protects user-configured label text. This follow-up adds no settings, accessor, context processor, caching, models or migrations.
+
+The success view, submission/tracking semantics, support-team response promise, authorized/anonymous return-link branches, `main:contact` and `accounts:login`/`accounts:customer_panel` URL references, static assets, CSS, CSRF, forms, authentication, notifications, payment and provider behavior are unchanged. The six database-free `SupportSuccessTitleDeploymentBrandTests` cover exact template bindings, unchanged default text/actions, sequential independent deployments, Latin/Persian separation, and HTML escaping. A tests-only RED CI result does not establish GREEN; successful final-head CI is required. No live browser, full-suite or production deployment claim is made.
+
+**Phase 2 NOT COMPLETE. Phase 3 BLOCKED.** No deployment is authorized.
