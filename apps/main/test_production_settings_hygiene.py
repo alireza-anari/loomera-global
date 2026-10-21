@@ -5538,3 +5538,90 @@ class AddRoleTitleDeploymentBrandTests(SimpleTestCase):
             rendered,
         )
         self.assertNotIn("آرورا & <جدید>", rendered)
+
+
+class CustomerSettingsPersianBrandCopyTests(SimpleTestCase):
+    """The active customer-settings header uses the deployment's Persian brand."""
+
+    @staticmethod
+    def _source():
+        return (
+            Path(settings.BASE_DIR) / "templates" / "accounts" / "customer_settings.html"
+        ).read_text(encoding="utf-8")
+
+    @staticmethod
+    def _render(address_count=0):
+        return render_to_string(
+            "accounts/customer_settings.html",
+            {
+                "deployment_brand": get_deployment_brand_config(),
+                "deployment_brand_assets": get_deployment_brand_asset_config(),
+                "deployment_brand_colors": get_deployment_brand_color_config(),
+                "address_count": address_count,
+                "hide_navbar": True,
+                "hide_footer": True,
+            },
+        )
+
+    def test_exact_one_persian_identity_binding_preserves_settings_routes(self):
+        from django.urls import reverse
+
+        source = self._source()
+        self.assertEqual(source.count("{{ deployment_brand.display_name_fa }}"), 1)
+        self.assertNotIn("روش‌های ارتباط با لومرا", source)
+        self.assertIn('data-page="customer-settings"', source)
+        self.assertIn("{% block title %}تنظیمات حساب{% endblock %}", source)
+        for route in (
+            "accounts:customer_panel",
+            "accounts:customerProfile",
+            "accounts:customer_addresses",
+            "accounts:change_password",
+            "accounts:customer_communication_settings",
+            "accounts:privacy_policy",
+            "accounts:terms_of_use",
+            "messaging:privacy",
+            "accounts:delete_account",
+        ):
+            self.assertIn("{% url '" + route + "' %}", source)
+        self.assertEqual(reverse("accounts:customer_settings"), "/accounts/customer_settings/")
+
+    def test_default_loomera_copy_and_settings_navigation_are_unchanged(self):
+        self.assertEqual(get_deployment_brand_config().display_name_fa, "لومرا")
+        rendered = self._render(address_count=3)
+        self.assertIn("اطلاعات شخصی، امنیت و روش‌های ارتباط با لومرا", rendered)
+        self.assertIn("<title>تنظیمات حساب</title>", rendered)
+        self.assertIn("آدرس‌های ذخیره‌شده و آدرس پیش‌فرض", rendered)
+        self.assertIn('href="/accounts/change_password/"', rendered)
+        self.assertIn('href="/accounts/delete-account/"', rendered)
+        self.assertIn("حریم خصوصی و قوانین", rendered)
+        self.assertIn("اعلان‌ها و ارتباطات", rendered)
+
+    def test_sequential_buyer_persian_names_do_not_leak_between_deployments(self):
+        for latin, persian in (("Aurora", "آرورا"), ("Second Buyer", "نیلوفر")):
+            with self.subTest(latin=latin, persian=persian):
+                with override_settings(
+                    BRAND_DISPLAY_NAME=latin, BRAND_DISPLAY_NAME_FA=persian
+                ):
+                    rendered = self._render()
+                    self.assertIn(
+                        f"اطلاعات شخصی، امنیت و روش‌های ارتباط با {persian}",
+                        rendered,
+                    )
+                    self.assertNotIn("روش‌های ارتباط با لومرا", rendered)
+                    self.assertIn("<title>تنظیمات حساب</title>", rendered)
+        self.assertEqual(get_deployment_brand_config().display_name_fa, "لومرا")
+
+    @override_settings(BRAND_DISPLAY_NAME="Aurora")
+    def test_latin_only_override_does_not_change_persian_settings_copy(self):
+        self.assertIn(
+            "اطلاعات شخصی، امنیت و روش‌های ارتباط با لومرا", self._render()
+        )
+
+    @override_settings(BRAND_DISPLAY_NAME_FA="آرورا & <جدید>")
+    def test_persian_identity_in_settings_header_is_html_escaped(self):
+        rendered = self._render()
+        self.assertIn(
+            "اطلاعات شخصی، امنیت و روش‌های ارتباط با آرورا &amp; &lt;جدید&gt;",
+            rendered,
+        )
+        self.assertNotIn("آرورا & <جدید>", rendered)
