@@ -5277,3 +5277,103 @@ class ServerError500FallbackTests(SimpleTestCase):
                 )
                 self.assertEqual(response.content.decode("utf-8"), message)
                 self.assertNotIn("private-template", response.content.decode("utf-8"))
+
+
+class SocialLoginInfoDeploymentBrandTests(SimpleTestCase):
+    """Public social-login guidance keeps deployment labels separate from policy."""
+
+    @staticmethod
+    def _source():
+        return (
+            Path(settings.BASE_DIR) / "templates" / "accounts" / "social_login_info.html"
+        ).read_text(encoding="utf-8")
+
+    @staticmethod
+    def _render():
+        return render_to_string(
+            "accounts/social_login_info.html",
+            {
+                "deployment_brand": get_deployment_brand_config(),
+                "deployment_brand_assets": get_deployment_brand_asset_config(),
+                "deployment_brand_colors": get_deployment_brand_color_config(),
+                "hide_navbar": True,
+                "hide_footer": True,
+            },
+        )
+
+    def test_exact_two_identity_slots_and_existing_login_guidance(self):
+        from django.urls import reverse
+
+        source = self._source()
+        self.assertEqual(source.count("{{ deployment_brand.display_name }}"), 1)
+        self.assertEqual(source.count("{{ deployment_brand.display_name_fa }}"), 1)
+        self.assertNotIn("Loomera", source)
+        self.assertNotIn("لومرا", source)
+        self.assertNotIn("BRAND_DISPLAY_NAME", source)
+        self.assertNotIn("get_deployment_brand_config", source)
+        self.assertIn("این قابلیت فعلاً فعال نیست", source)
+        self.assertIn("ورود اصلی", source)
+        self.assertIn("شماره موبایل و رمز عبور", source)
+        self.assertIn("اتصال گوگل، اپل یا سایر شبکه‌ها", source)
+        self.assertIn("{% url 'accounts:customer_settings' %}", source)
+        self.assertIn("{% url 'accounts:change_password' %}", source)
+        self.assertIn("{% url 'main:contact' %}?issue=other", source)
+        self.assertEqual(
+            reverse("accounts:social_login_info"), "/accounts/social-login-info/"
+        )
+
+    def test_default_brand_and_disabled_status_are_unchanged(self):
+        rendered = self._render()
+        self.assertIn("<span>روش‌های ورود Loomera</span>", rendered)
+        self.assertIn(
+            "در حال حاضر ورود اصلی لومرا با شماره موبایل و رمز عبور انجام می‌شود",
+            rendered,
+        )
+        self.assertIn("این قابلیت فعلاً فعال نیست", rendered)
+        self.assertIn("اتصال گوگل، اپل یا سایر شبکه‌ها", rendered)
+        self.assertIn("تغییر رمز عبور", rendered)
+        self.assertIn("تماس با پشتیبانی", rendered)
+        self.assertIn('href="/accounts/customer_settings/"', rendered)
+        self.assertIn('href="/main/contact/?issue=other"', rendered)
+
+    def test_sequential_deployments_render_independent_latin_and_persian_names(self):
+        for latin, persian in (("Aurora", "آرورا"), ("Second Buyer", "نیلوفر")):
+            with self.subTest(latin=latin, persian=persian):
+                with override_settings(
+                    BRAND_DISPLAY_NAME=latin, BRAND_DISPLAY_NAME_FA=persian
+                ):
+                    rendered = self._render()
+                    self.assertIn(f"<span>روش‌های ورود {latin}</span>", rendered)
+                    self.assertIn(
+                        f"در حال حاضر ورود اصلی {persian} با شماره موبایل",
+                        rendered,
+                    )
+                    self.assertNotIn("روش‌های ورود Loomera", rendered)
+                    self.assertNotIn("ورود اصلی لومرا", rendered)
+                    self.assertIn("این قابلیت فعلاً فعال نیست", rendered)
+        self.assertEqual(get_deployment_brand_config().display_name, "Loomera")
+        self.assertEqual(get_deployment_brand_config().display_name_fa, "لومرا")
+
+    def test_latin_and_persian_settings_remain_independent(self):
+        with override_settings(BRAND_DISPLAY_NAME="Aurora"):
+            rendered = self._render()
+            self.assertIn("روش‌های ورود Aurora", rendered)
+            self.assertIn("ورود اصلی لومرا", rendered)
+        with override_settings(BRAND_DISPLAY_NAME_FA="آرورا"):
+            rendered = self._render()
+            self.assertIn("روش‌های ورود Loomera", rendered)
+            self.assertIn("ورود اصلی آرورا", rendered)
+
+    @override_settings(
+        BRAND_DISPLAY_NAME="Aurora & <New>",
+        BRAND_DISPLAY_NAME_FA="آرورا & <جدید>",
+    )
+    def test_identity_slots_autoescape_html(self):
+        rendered = self._render()
+        self.assertIn("<span>روش‌های ورود Aurora &amp; &lt;New&gt;</span>", rendered)
+        self.assertIn(
+            "در حال حاضر ورود اصلی آرورا &amp; &lt;جدید&gt; با شماره موبایل",
+            rendered,
+        )
+        self.assertNotIn("Aurora & <New>", rendered)
+        self.assertNotIn("آرورا & <جدید>", rendered)
