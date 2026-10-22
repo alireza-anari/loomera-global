@@ -638,3 +638,16 @@ The authenticated `main:support_ticket_detail` route renders `templates/main/sup
 Five database-free tests in `apps/main/test_production_settings_hygiene.py` cover one brand slot, original contract links and unchanged dispute copy, Loomera default, sequential buyer isolation, Persian-only override and HTML escaping. RED-only test commit `09764ecd8f9c194f4a56d1ff8e9d3c0b28f134c0` failed as expected in [GitHub Actions #39724404368](https://github.com/alireza-anari/loomera-global/actions/runs/39724404368). Require final-head GREEN GitHub CI and independent structural review before Squash Merge. Full-suite, browser, real dispute-handling and production checks are not claimed.
 
 **Phase 2 NOT COMPLETE. Phase 3 BLOCKED.** No deployment authorized.
+
+
+## Partners to Support — Canonical Issue Key
+
+The active `/partners/` and legacy `/join-loomera/` partner landing routes render `templates/main/partners.html`. Their two "درخواست تماس" CTAs now link to the existing public `/support/?issue_type=account_join` route. The issue code `account_join` already exists as a validated value of `SupportForm.ISSUE_TYPE_CHOICES`; it is a deployment/locale-independent **classification identifier**, not customer-visible brand identity.
+
+Previously both links passed `?topic=درخواست همکاری مجموعه با لومرا`. `SupportView.get()` maps `topic` into the **different** `support_reason` ChoiceField, but this literal text is not an allowed choice, so the form could not select the intended partner support category. The new GET prefill accepts **only** exactly `issue_type=account_join`, allowing the existing form and JS to select the business onboarding branch and its fields. Other `issue_type` query strings cannot preselect categories; existing legacy `topic` input behavior remains supported and unchanged.
+
+**Compatibility boundary:** No changes to the partner page's seven `deployment_brand.display_name_fa` display slots, route paths, account/role onboarding links, form choice values, validation requirements, POST handling, support ticket persistence/subjects, permissions, notifications, or provider operations. Query parameter `issue_type` is deliberately a stable machine key: it must not interpolate, translate, or infer `BRAND_DISPLAY_NAME` or `BRAND_DISPLAY_NAME_FA`. Changing fixed text labels in `SupportForm.ISSUE_TYPE_CHOICES` is a separate copy-only task.
+
+Five database-free regression tests in `apps/main/test_production_settings_hygiene.py` check both exact links, live support GET preselection, untrusted/nonpartner query rejection, legacy `topic` compatibility, and two sequential buyers with brand-free routing keys. Existing partner-page branding tests were revised for the corrected link contract. The RED-only commit `b074c8d66ef621cbde324290d4dc8f600d368cde` failed as expected in [Actions #39725522802](https://github.com/alireza-anari/loomera-global/actions/runs/39725522802). Require final-head GREEN GitHub CI and independent diff review before Squash Merge; no end-to-end browser or production validation is claimed.
+
+**Phase 2 NOT COMPLETE. Phase 3 BLOCKED.** No deployment authorized.

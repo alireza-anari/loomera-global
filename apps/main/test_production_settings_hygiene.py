@@ -3730,15 +3730,15 @@ class PartnerPageDeploymentBrandTests(SimpleTestCase):
 
         source = self._source()
         self.assertEqual(source.count("{{ deployment_brand.display_name_fa }}"), 7)
-        self.assertEqual(source.count("?topic=درخواست همکاری مجموعه با لومرا"), 2)
+        self.assertEqual(source.count("?issue_type=account_join"), 2)
         visible_copy_only = source.replace(
-            "?topic=درخواست همکاری مجموعه با لومرا", ""
+            "?issue_type=account_join", ""
         )
         self.assertNotIn("لومرا", visible_copy_only)
         self.assertNotIn("get_deployment_brand_config", source)
         self.assertNotIn("BRAND_DISPLAY_NAME_FA", source)
         self.assertIn('data-page="partners"', source)
-        self.assertIn("{% url 'support' %}?topic=درخواست همکاری مجموعه با لومرا", source)
+        self.assertIn("{% url 'support' %}?issue_type=account_join", source)
         self.assertEqual(reverse("partners"), "/partners/")
         self.assertEqual(reverse("join_loomera"), "/join-loomera/")
 
@@ -3756,7 +3756,7 @@ class PartnerPageDeploymentBrandTests(SimpleTestCase):
             with self.subTest(copy=expected):
                 self.assertIn(expected, rendered)
         self.assertEqual(
-            rendered.count("?topic=درخواست همکاری مجموعه با لومرا"), 2
+            rendered.count("?issue_type=account_join"), 2
         )
 
     def test_two_sequential_buyers_override_persian_display_copy(self):
@@ -3785,7 +3785,7 @@ class PartnerPageDeploymentBrandTests(SimpleTestCase):
                         "<title>همکاری با لومرا | جذب", rendered
                     )
                     self.assertEqual(
-                        rendered.count("?topic=درخواست همکاری مجموعه با لومرا"),
+                        rendered.count("?issue_type=account_join"),
                         2,
                     )
         self.assertEqual(get_deployment_brand_config().display_name_fa, "لومرا")
@@ -6003,3 +6003,107 @@ class SupportTicketDetailTitleDeploymentBrandTests(SimpleTestCase):
             rendered,
         )
         self.assertNotIn("Aurora & <Buyer>", rendered)
+
+
+class PartnerSupportHandoffStableKeyTests(SimpleTestCase):
+    """Partner CTAs must select the actual validated support issue category."""
+
+    @staticmethod
+    def _partners_source():
+        return (
+            Path(settings.BASE_DIR) / "templates" / "main" / "partners.html"
+        ).read_text(encoding="utf-8")
+
+    @staticmethod
+    def _partners_render():
+        return render_to_string(
+            "main/partners.html",
+            {
+                "deployment_brand": get_deployment_brand_config(),
+                "deployment_brand_assets": get_deployment_brand_asset_config(),
+                "deployment_brand_colors": get_deployment_brand_color_config(),
+                "hide_navbar": True,
+                "hide_footer": True,
+            },
+        )
+
+    def test_exact_two_ctas_use_stable_partner_issue_key(self):
+        from django.urls import reverse
+        from apps.main.forms import SupportForm
+
+        source = self._partners_source()
+        self.assertEqual(source.count("{% url 'support' %}?issue_type=account_join"), 2)
+        self.assertNotIn("?topic=درخواست همکاری مجموعه با لومرا", source)
+        self.assertEqual(reverse("support"), "/support/")
+        self.assertIn(
+            "account_join", dict(SupportForm.ISSUE_TYPE_CHOICES)
+        )
+        self.assertIn('{% url \'accounts:register\' %}', source)
+        self.assertIn('{% url \'accounts:stylist_signup\' %}', source)
+
+    def test_live_support_get_preselects_partner_issue_type(self):
+        from django.contrib.auth.models import AnonymousUser
+        from django.test import RequestFactory
+        from apps.main.views import SupportView
+
+        request = RequestFactory().get("/support/", {"issue_type": "account_join"})
+        request.user = AnonymousUser()
+        request.session = {}
+        response = SupportView.as_view()(request)
+        self.assertEqual(response.status_code, 200)
+        html = response.content.decode("utf-8")
+        self.assertRegex(html, r'value="account_join"[^>]*checked')
+        self.assertIn("id=\"supportForm\"", html)
+        self.assertIn("fullNameField", html)
+        self.assertIn("cityField", html)
+        self.assertIn("mobileField", html)
+
+    def test_untrusted_issue_type_is_not_preselected(self):
+        from django.contrib.auth.models import AnonymousUser
+        from django.test import RequestFactory
+        from apps.main.views import SupportView
+
+        for issue in ("appointment", "<script>unsafe</script>", "account_join_extra"):
+            with self.subTest(issue=issue):
+                request = RequestFactory().get("/support/", {"issue_type": issue})
+                request.user = AnonymousUser()
+                request.session = {}
+                response = SupportView.as_view()(request)
+                self.assertEqual(response.status_code, 200)
+                self.assertNotRegex(
+                    response.content.decode("utf-8"),
+                    r'value="account_join"[^>]*checked',
+                )
+                self.assertNotIn("<script>unsafe</script>", response.content.decode("utf-8"))
+
+    def test_legacy_topic_prefill_is_not_removed(self):
+        from django.contrib.auth.models import AnonymousUser
+        from django.test import RequestFactory
+        from unittest.mock import patch
+        from apps.main.views import SupportView
+
+        request = RequestFactory().get("/support/", {"topic": "appointments"})
+        request.user = AnonymousUser()
+        request.session = {}
+        with patch("apps.main.views.render") as mock_render:
+            SupportView.as_view()(request)
+        form = mock_render.call_args.args[2]["form"]
+        self.assertEqual(form.initial["support_reason"], "appointments")
+        self.assertNotIn("issue_type", form.initial)
+
+    def test_buyer_brand_does_not_leak_into_routing_keys(self):
+        for latin, persian in (("Aurora", "آرورا"), ("Second Buyer", "نیلوفر")):
+            with self.subTest(latin=latin):
+                with override_settings(
+                    BRAND_DISPLAY_NAME=latin, BRAND_DISPLAY_NAME_FA=persian
+                ):
+                    html = self._partners_render()
+                    self.assertEqual(
+                        html.count('href="/support/?issue_type=account_join"'), 2
+                    )
+                    self.assertNotIn("درخواست همکاری مجموعه با لومرا", html)
+                    self.assertIn(f"همکاری با {persian}", html)
+        self.assertEqual(
+            self._partners_render().count('href="/support/?issue_type=account_join"'),
+            2,
+        )
