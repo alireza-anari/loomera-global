@@ -1009,6 +1009,7 @@ class SharedBrandConfigurationBoundaryTests(SimpleTestCase):
                 "apps/articles/views.py",
                 "apps/dashboards/reports_components.py",
                 "apps/help_center/ai.py",
+                "apps/main/forms.py",
                 "apps/main/seo.py",
                 "apps/main/views.py",
                 "apps/notifications/delivery.py",
