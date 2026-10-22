@@ -673,3 +673,14 @@ The active `SupportForm` in `apps/main/forms.py` resolves Latin `BRAND_DISPLAY_N
 Five database-free tests in `apps/main/test_production_settings_hygiene.py` cover default copy, stable keys and radio widget, sequential buyer identities, Persian-only override, escaped HTML, canonical partner links and required conditional validation. Test-only RED commit `0482af83c370c079dabfd78a1a9943157b2eac79` failed as expected in [GitHub Actions #39734652367](https://github.com/alireza-anari/loomera-global/actions/runs/39734652367). Final-head GREEN GitHub CI and independent review are mandatory before Squash Merge.
 
 **Phase 2 incomplete. Phase 3 blocked. No deployment.**
+
+
+## Messaging Preferences — Deployment Brand in Presentation Only
+
+The active authenticated `messaging:preferences` route is handled by `MessagingPreferencesView` and renders `templates/messaging/preferences.html`. Its Latin browser title and the sentence explaining that **in-app notifications remain independent of external messaging providers** now use the existing request `deployment_brand.display_name` (`BRAND_DISPLAY_NAME`). Unconfigured installations continue to show `Loomera`; `BRAND_DISPLAY_NAME_FA` remains independent. Django template autoescapes configured HTML characters.
+
+**Boundary:** No user/audience role keys or GET/POST parameters change; `audience_role`, per-channel `*_operational` and `*_marketing` checkbox names, per-provider connection/disconnection routes, provider names (Bale and Telegram), CSRF, preference persistence, queue revalidation, provider feature flags, privacy version, and guarantees about disabled external messages remain untouched. The change does **not** label messaging provider identities with the deployment brand.
+
+Five database-free tests in `apps/main/test_production_settings_hygiene.py` require exactly two visible deployment brand slots, original default, independent Persian setting, sequential brand swaps without leakage, correct escaping, and unchanged operational markup and URLs. Test-only RED SHA `6a18a68481471c9cdbe85e8ad73fed2a3c0f7ba5` failed as expected in [GitHub Actions #39810280134](https://github.com/alireza-anari/loomera-global/actions/runs/39810280134). Final-head GREEN GitHub CI and independent changed-file/patch review are required for Squash Merge. No local/full-suite/browser/prod execution is claimed.
+
+**Phase 2 NOT COMPLETE. Phase 3 BLOCKED. No deployment.**
