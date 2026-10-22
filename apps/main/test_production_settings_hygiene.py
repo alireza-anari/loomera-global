@@ -6338,3 +6338,89 @@ class MessagingPreferencesDeploymentBrandCopyTests(SimpleTestCase):
         self.assertIn(f"<title>تنظیمات اعلان پیام‌رسان‌ها | {escaped}</title>", rendered)
         self.assertIn(f"اعلان‌های داخلی {escaped} مستقل باقی می‌مانند.", rendered)
         self.assertNotIn("اعلان‌های داخلی Aurora & <Unsafe>", rendered)
+
+
+class MessagingStatusDeploymentBrandCopyTests(SimpleTestCase):
+    """Active Bale connection page uses deployment Latin identity only for display."""
+
+    @staticmethod
+    def _source():
+        return (
+            Path(settings.BASE_DIR) / "templates" / "messaging" / "status.html"
+        ).read_text(encoding="utf-8")
+
+    @staticmethod
+    def _render():
+        return render_to_string(
+            "messaging/status.html",
+            {
+                "deployment_brand": get_deployment_brand_config(),
+                "deployment_brand_assets": get_deployment_brand_asset_config(),
+                "deployment_brand_colors": get_deployment_brand_color_config(),
+                "bale_ready": False,
+                "active_connections": [],
+                "identities": [],
+                "connect_ttl_minutes": 30,
+                "hide_navbar": True,
+                "hide_footer": True,
+            },
+        )
+
+    def test_two_brand_slots_preserve_messaging_connection_contract(self):
+        from django.urls import reverse
+
+        source = self._source()
+        self.assertEqual(source.count("{{ deployment_brand.display_name }}"), 2)
+        self.assertNotIn("Loomera", source)
+        self.assertIn("از این صفحه می‌توانید حساب {{ deployment_brand.display_name }} خود را", source)
+        self.assertIn("{% url 'messaging:preferences' %}", source)
+        self.assertIn("{% url 'messaging:disconnect' connection.identity.id %}", source)
+        self.assertIn("{% csrf_token %}", source)
+        self.assertIn("{% if not bale_ready %}", source)
+        self.assertIn("{% if active_connections %}", source)
+        self.assertIn("{% if connect_token %}", source)
+        self.assertIn("{% if connect_start_url %}", source)
+        self.assertIn("{{ connect_start_url }}", source)
+        self.assertIn("{{ connect_start_payload }}", source)
+        self.assertIn("BALE_BOT_USERNAME", source)
+        self.assertIn("BALE_BOT_START_URL_TEMPLATE", source)
+        self.assertEqual(reverse("messaging:status"), "/messaging/")
+        self.assertEqual(reverse("messaging:preferences"), "/messaging/preferences/")
+        self.assertEqual(reverse("messaging:disconnect", args=[42]), "/messaging/disconnect/42/")
+        self.assertEqual(reverse("messaging:bale_quick_connect"), "/messaging/connect/bale/")
+
+    def test_default_loomera_copy_and_bale_provider_name_remain(self):
+        self.assertEqual(get_deployment_brand_config().display_name, "Loomera")
+        rendered = self._render()
+        self.assertIn("<title>اتصال پیام‌رسان‌ها | Loomera</title>", rendered)
+        self.assertIn("از این صفحه می‌توانید حساب Loomera خود را با ربات بله وصل کنید", rendered)
+        self.assertIn("ربات بله هنوز برای این محیط فعال نیست", rendered)
+        self.assertIn("ایجاد توکن اتصال بله", rendered)
+        self.assertIn('disabled', rendered)
+
+    def test_sequential_brand_swaps_are_isolated_from_provider_identity(self):
+        for latin, persian in (("Aurora", "آرورا"), ("Second Buyer", "نیلوفر")):
+            with self.subTest(latin=latin):
+                with override_settings(
+                    BRAND_DISPLAY_NAME=latin, BRAND_DISPLAY_NAME_FA=persian
+                ):
+                    rendered = self._render()
+                    self.assertIn(f"<title>اتصال پیام‌رسان‌ها | {latin}</title>", rendered)
+                    self.assertIn(f"از این صفحه می‌توانید حساب {latin} خود را با ربات بله وصل کنید", rendered)
+                    self.assertNotIn("حساب Loomera خود را با ربات بله", rendered)
+                    self.assertIn("ایجاد توکن اتصال بله", rendered)
+        self.assertIn("<title>اتصال پیام‌رسان‌ها | Loomera</title>", self._render())
+
+    @override_settings(BRAND_DISPLAY_NAME_FA="آرورا")
+    def test_persian_only_brand_override_keeps_latin_copy(self):
+        rendered = self._render()
+        self.assertIn("<title>اتصال پیام‌رسان‌ها | Loomera</title>", rendered)
+        self.assertIn("حساب Loomera خود را با ربات بله وصل کنید", rendered)
+
+    @override_settings(BRAND_DISPLAY_NAME="Aurora & <Unsafe>")
+    def test_html_escapes_brand_in_title_and_connection_explanation(self):
+        rendered = self._render()
+        escaped = "Aurora &amp; &lt;Unsafe&gt;"
+        self.assertIn(f"<title>اتصال پیام‌رسان‌ها | {escaped}</title>", rendered)
+        self.assertIn(f"حساب {escaped} خود را با ربات بله وصل کنید", rendered)
+        self.assertNotIn("حساب Aurora & <Unsafe>", rendered)

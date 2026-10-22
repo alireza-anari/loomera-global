@@ -684,3 +684,14 @@ The active authenticated `messaging:preferences` route is handled by `MessagingP
 Five database-free tests in `apps/main/test_production_settings_hygiene.py` require exactly two visible deployment brand slots, original default, independent Persian setting, sequential brand swaps without leakage, correct escaping, and unchanged operational markup and URLs. Test-only RED SHA `6a18a68481471c9cdbe85e8ad73fed2a3c0f7ba5` failed as expected in [GitHub Actions #39810280134](https://github.com/alireza-anari/loomera-global/actions/runs/39810280134). Final-head GREEN GitHub CI and independent changed-file/patch review are required for Squash Merge. No local/full-suite/browser/prod execution is claimed.
 
 **Phase 2 NOT COMPLETE. Phase 3 BLOCKED. No deployment.**
+
+
+## Messaging Connection Status — Deployment Site Identity vs. Bale Provider
+
+The active authenticated `messaging:status` route uses `MessagingStatusView` and renders `templates/messaging/status.html`. Exactly two previously hard-coded Latin `Loomera` references—browser title and the explanatory sentence about connecting the user's platform account to the Bale bot—now use `{{ deployment_brand.display_name }}` (existing `BRAND_DISPLAY_NAME` context). Default installations retain `Loomera`, Persian-only brand overrides do not change the Latin copy, and Django autoescapes the configured name.
+
+**Safety and provider identity boundary:** This does not rename the actual **Bale** messaging provider/bot or change its deployment readiness, `BALE_BOT_USERNAME`, `BALE_BOT_START_URL_TEMPLATE`, token issue/TTL/single-use protections, rendered token payload/link, `MessagingStatusView` logic, user authentication, connection identity/chat IDs, active connections, disconnect/POST/CSRF, provider feature flags, or any backend persistence or external messaging behavior. The tokens and provider controls remain exactly as before.
+
+Five database-free tests in `apps/main/test_production_settings_hygiene.py` cover two exact slots, unchanged paths and security markup, default wording, sequential buyer isolation, independent Persian override, escaped HTML, and retained Bale provider wording. RED test-only SHA `e8e3250d9c3368481d6b5ce03687749418484238` failed as expected in [GitHub Actions #39814204059](https://github.com/alireza-anari/loomera-global/actions/runs/39814204059). Final-head GREEN GitHub CI and independent scope review are mandatory before Squash Merge; no unexecuted tests are claimed.
+
+**Phase 2 NOT COMPLETE. Phase 3 BLOCKED. No deployment.**
