@@ -6067,7 +6067,7 @@ class PartnerSupportHandoffStableKeyTests(SimpleTestCase):
             with self.subTest(issue=issue):
                 request = RequestFactory().get("/support/", {"issue_type": issue})
                 request.user = AnonymousUser()
-        request.session = {}
+                request.session = {}
                 response = SupportView.as_view()(request)
                 self.assertEqual(response.status_code, 200)
                 self.assertNotRegex(
