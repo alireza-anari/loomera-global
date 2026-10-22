@@ -366,6 +366,8 @@ class SupportView(View):
         initial = {}
         if request.GET.get("topic"):
             initial["support_reason"] = request.GET.get("topic")
+        if request.GET.get("issue_type") == "account_join":
+            initial["issue_type"] = "account_join"
 
         if request.user.is_authenticated:
             initial.update({
