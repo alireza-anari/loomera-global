@@ -1,4 +1,5 @@
 from django import forms
+from loomera.branding.config import get_deployment_brand_config
 from django.core.exceptions import ValidationError
 from apps.dashboards.jalali_utils import to_english_digits
 from pathlib import Path
@@ -264,6 +265,21 @@ class SupportForm(forms.Form):
             }
         ),
     )
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        brand = get_deployment_brand_config().display_name
+        self.fields["issue_type"].choices = [
+            (
+                key,
+                f"می‌خواهم کسب‌وکارم را در {brand} معرفی کنم"
+                if key == "account_join"
+                else f"برای یکی از نوبت‌هایم در {brand} به راهنمایی نیاز دارم"
+                if key == "appointment"
+                else label,
+            )
+            for key, label in self.ISSUE_TYPE_CHOICES
+        ]
 
     def clean_attachment(self):
         attachment = self.cleaned_data.get("attachment")
