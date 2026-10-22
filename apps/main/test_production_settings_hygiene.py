@@ -6107,3 +6107,74 @@ class PartnerSupportHandoffStableKeyTests(SimpleTestCase):
             self._partners_render().count('href="/support/?issue_type=account_join"'),
             2,
         )
+
+
+class ManagerCommunicationPersianBrandCopyTests(SimpleTestCase):
+    """Active manager communications label resolves deployment Persian identity."""
+
+    @staticmethod
+    def _source():
+        return (
+            Path(settings.BASE_DIR) / "templates" / "dashboards"
+            / "manager_communication_settings.html"
+        ).read_text(encoding="utf-8")
+
+    @staticmethod
+    def _render_notice():
+        from django.template import Context, Template
+
+        source = ManagerCommunicationPersianBrandCopyTests._source()
+        start = source.index("بله و تلگرام مستقل از هم هستند.")
+        end = source.index("</p>", start)
+        notice = source[start:end]
+        return Template(notice).render(
+            Context({"deployment_brand": get_deployment_brand_config()})
+        )
+
+    def test_one_brand_slot_and_existing_messaging_contract(self):
+        from django.urls import reverse
+
+        source = self._source()
+        self.assertEqual(source.count("{{ deployment_brand.display_name_fa }}"), 1)
+        self.assertNotIn("اعلان‌های داخلی لومرا", source)
+        self.assertIn('data-dashboard-page="communication-settings"', source)
+        self.assertIn("{% csrf_token %}", source)
+        for name in ("bale_operational", "telegram_operational",
+                     "bale_marketing", "telegram_marketing"):
+            self.assertIn(f'name="{name}"', source)
+        self.assertIn('href="{{ notification_center_url }}"', source)
+        self.assertIn("dashboards/partials/loomi_share_links.html", source)
+        self.assertTrue(reverse("dashboards:manager_communication_settings"))
+
+    def test_default_persian_copy_remains_exact(self):
+        self.assertEqual(get_deployment_brand_config().display_name_fa, "لومرا")
+        self.assertIn(
+            "اعلان‌های داخلی لومرا مستقل باقی می‌مانند.",
+            self._render_notice(),
+        )
+
+    def test_sequential_buyer_persian_identity_is_independent(self):
+        for latin, persian in (("Aurora", "آرورا"), ("Second Buyer", "نیلوفر")):
+            with self.subTest(latin=latin, persian=persian):
+                with override_settings(
+                    BRAND_DISPLAY_NAME=latin, BRAND_DISPLAY_NAME_FA=persian
+                ):
+                    self.assertIn(
+                        f"اعلان‌های داخلی {persian} مستقل باقی می‌مانند.",
+                        self._render_notice(),
+                    )
+                    self.assertNotIn("اعلان‌های داخلی لومرا", self._render_notice())
+        self.assertIn("اعلان‌های داخلی لومرا", self._render_notice())
+
+    @override_settings(BRAND_DISPLAY_NAME="Aurora")
+    def test_latin_only_override_does_not_change_persian_copy(self):
+        self.assertIn("اعلان‌های داخلی لومرا", self._render_notice())
+
+    @override_settings(BRAND_DISPLAY_NAME_FA="آرورا & <جدید>")
+    def test_persian_name_is_html_escaped(self):
+        rendered = self._render_notice()
+        self.assertIn(
+            "اعلان‌های داخلی آرورا &amp; &lt;جدید&gt; مستقل باقی می‌مانند.",
+            rendered,
+        )
+        self.assertNotIn("آرورا & <جدید>", rendered)

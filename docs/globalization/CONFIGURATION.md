@@ -651,3 +651,14 @@ Previously both links passed `?topic=درخواست همکاری مجموعه ب
 Five database-free regression tests in `apps/main/test_production_settings_hygiene.py` check both exact links, live support GET preselection, untrusted/nonpartner query rejection, legacy `topic` compatibility, and two sequential buyers with brand-free routing keys. Existing partner-page branding tests were revised for the corrected link contract. The RED-only commit `b074c8d66ef621cbde324290d4dc8f600d368cde` failed as expected in [Actions #39725522802](https://github.com/alireza-anari/loomera-global/actions/runs/39725522802). Require final-head GREEN GitHub CI and independent diff review before Squash Merge; no end-to-end browser or production validation is claimed.
 
 **Phase 2 NOT COMPLETE. Phase 3 BLOCKED.** No deployment authorized.
+
+
+## Manager Communications Settings — Internal Notification Identity
+
+The active `dashboards:manager_communication_settings` route renders `templates/dashboards/manager_communication_settings.html`. Its one visible Persian notice about Bale/Telegram opt-outs and independent in-app notifications now uses `{{ deployment_brand.display_name_fa }}` in place of the fixed platform name. `BRAND_DISPLAY_NAME_FA` determines the Persian identity; the Latin `BRAND_DISPLAY_NAME` remains independent. The default notice continues to say `اعلان‌های داخلی لومرا مستقل باقی می‌مانند.`, with Django HTML escaping enabled.
+
+**Compatibility boundary:** Only this one static description changes. Manager/stylist roles and guards, operations/marketing preferences, checkbox values, POST/CSRF, Bale and Telegram provider identities and connections, notification center route, share links, dashboard navigation and theme classes remain unmodified. No delivery, database, provider, endpoint, authorization, business data, or deployment changes.
+
+Five database-free tests in `apps/main/test_production_settings_hygiene.py` verify exactly one binding and original messaging contracts, default copy, two sequential buyer names, Latin-only independence, and HTML escaping. RED-only SHA `f95dc669f62018987e4479bb8159482af4fb438f` failed as expected with zero brand bindings in [Actions #39726681501](https://github.com/alireza-anari/loomera-global/actions/runs/39726681501). Require final-head GREEN CI and independent review before Squash Merge. This CI is not a live messaging/provider, browser, full-suite, or production validation.
+
+**Phase 2 NOT COMPLETE. Phase 3 BLOCKED.** No deployment authorized.
