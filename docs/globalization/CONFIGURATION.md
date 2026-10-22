@@ -662,3 +662,14 @@ The active `dashboards:manager_communication_settings` route renders `templates/
 Five database-free tests in `apps/main/test_production_settings_hygiene.py` verify exactly one binding and original messaging contracts, default copy, two sequential buyer names, Latin-only independence, and HTML escaping. RED-only SHA `f95dc669f62018987e4479bb8159482af4fb438f` failed as expected with zero brand bindings in [Actions #39726681501](https://github.com/alireza-anari/loomera-global/actions/runs/39726681501). Require final-head GREEN CI and independent review before Squash Merge. This CI is not a live messaging/provider, browser, full-suite, or production validation.
 
 **Phase 2 NOT COMPLETE. Phase 3 BLOCKED.** No deployment authorized.
+
+
+## Active Support Form Issue-Type Labels
+
+The active `SupportForm` in `apps/main/forms.py` resolves Latin `BRAND_DISPLAY_NAME` through `get_deployment_brand_config()` **per form instance** for the two visible issue-type options `account_join` (business introduction) and `appointment` (booking assistance). `Loomera` remains the compatibility default. Changing only `BRAND_DISPLAY_NAME_FA` does not change these Latin labels. Django radio widgets escape the configured identity in HTML.
+
+**Operational contract:** `account_join`, `appointment`, and other `issue_type` keys are unchanged; the two partner links continue to use `?issue_type=account_join` instead of localized `topic`. The view still initializes and persists the canonical key, applies existing conditional validation and ticket creation, and retains rate-limit, attachment, notification and redirect behavior. The new runtime brand reader is explicitly added to the CI hygiene consumer allowlist.
+
+Five database-free tests in `apps/main/test_production_settings_hygiene.py` cover default copy, stable keys and radio widget, sequential buyer identities, Persian-only override, escaped HTML, canonical partner links and required conditional validation. Test-only RED commit `0482af83c370c079dabfd78a1a9943157b2eac79` failed as expected in [GitHub Actions #39734652367](https://github.com/alireza-anari/loomera-global/actions/runs/39734652367). Final-head GREEN GitHub CI and independent review are mandatory before Squash Merge.
+
+**Phase 2 incomplete. Phase 3 blocked. No deployment.**
