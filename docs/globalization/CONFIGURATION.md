@@ -627,3 +627,14 @@ The active authenticated `accounts:delete_account` page uses `DeleteAccountReaso
 Six database-free tests in `apps/main/test_production_settings_hygiene.py` verify one visible template binding, four untouched JS error handlers, form/route/CSRF safety, default display, two sequential buyer identities with no leakage, Persian-only override, HTML escaping, original reason keys, and required confirmation validation. Test-only RED commit `0c164b84aa6840ca9cf1141758e235eaa1471324` failed as expected in [GitHub Actions #39668138145](https://github.com/alireza-anari/loomera-global/actions/runs/39668138145). A GREEN GitHub CI on the final PR head and independent scope review are required before Squash Merge. No browser or full-suite/production tests are claimed.
 
 **Phase 2 NOT COMPLETE. Phase 3 BLOCKED.** No deployment authorized.
+
+
+## Active Support Ticket Detail — Latin Browser Title
+
+The authenticated `main:support_ticket_detail` route renders `templates/main/support/ticket_detail.html`. Its document title is now `درخواست پشتیبانی #{{ ticket.id }} | {{ deployment_brand.display_name }}`, resolved from the existing request-scoped deployment-wide `BRAND_DISPLAY_NAME`. Defaults remain `درخواست پشتیبانی #42 | Loomera` for ticket 42, and `BRAND_DISPLAY_NAME_FA` stays independent. Django template autoescaping protects the title.
+
+**Deliberately preserved boundary:** The separate wording `برای این تیکت پرونده رسمی اختلاف ثبت شده و توسط تیم Loomera بررسی می‌شود.` is **not** white-labeled here. It is a conditional representation of dispute handling and may identify a specific operating/review team. This requires an independent determination of responsible operating entity, not a silent replacement with the marketing brand. The support ticket ID, status, subject, owner/authorization checks, SLA, dispute links, replies, attachment URLs, POST/CSRF and close actions, URLs, views, persistence, and operational behavior are unchanged.
+
+Five database-free tests in `apps/main/test_production_settings_hygiene.py` cover one brand slot, original contract links and unchanged dispute copy, Loomera default, sequential buyer isolation, Persian-only override and HTML escaping. RED-only test commit `09764ecd8f9c194f4a56d1ff8e9d3c0b28f134c0` failed as expected in [GitHub Actions #39724404368](https://github.com/alireza-anari/loomera-global/actions/runs/39724404368). Require final-head GREEN GitHub CI and independent structural review before Squash Merge. Full-suite, browser, real dispute-handling and production checks are not claimed.
+
+**Phase 2 NOT COMPLETE. Phase 3 BLOCKED.** No deployment authorized.
