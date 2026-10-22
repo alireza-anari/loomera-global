@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}اتصال پیام‌رسان‌ها | Loomera{% endblock %}
+{% block title %}اتصال پیام‌رسان‌ها | {{ deployment_brand.display_name }}{% endblock %}
 {% block body_class %}lm-messaging-page{% endblock %}
 
 {% block content %}
@@ -11,7 +11,7 @@
                 <p class="text-xs font-semibold uppercase tracking-[0.28em] text-[color:var(--lm-muted)]">Messaging</p>
                 <h1 class="mt-2 text-2xl font-bold text-[color:var(--lm-text)] sm:text-3xl">اتصال ربات بله</h1>
                 <p class="mt-3 max-w-2xl text-sm leading-7 text-[color:var(--lm-muted)]">
-                    از این صفحه می‌توانید حساب Loomera خود را با ربات بله وصل کنید یا اتصال‌های قبلی را قطع کنید.
+                    از این صفحه می‌توانید حساب {{ deployment_brand.display_name }} خود را با ربات بله وصل کنید یا اتصال‌های قبلی را قطع کنید.
                     اتصال حساب، منوها، اعلان‌ها و تنظیمات پیام‌رسان از همین بخش مدیریت می‌شود. ارسال واقعی همچنان به feature flag و فعال بودن provider وابسته است.
                 </p>
             </div>
