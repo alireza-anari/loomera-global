@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}تنظیمات اعلان پیام‌رسان‌ها | Loomera{% endblock %}
+{% block title %}تنظیمات اعلان پیام‌رسان‌ها | {{ deployment_brand.display_name }}{% endblock %}
 {% block body_class %}lm-messaging-preferences-page{% endblock %}
 {% block content %}
 <section class="mx-auto max-w-5xl px-4 py-6 sm:py-10">
@@ -22,7 +22,7 @@
 
     <div class="mt-6 rounded-3xl border border-sky-200 bg-sky-50 p-4 text-sm leading-7 text-sky-900">
       خاموش کردن یک پیام‌رسان، ارسال خارجی همان Provider را متوقف می‌کند؛ حتی برای اعلان‌های مهم.
-      اعلان‌های داخلی Loomera مستقل باقی می‌مانند.
+      اعلان‌های داخلی {{ deployment_brand.display_name }} مستقل باقی می‌مانند.
     </div>
 
     <form method="get" class="mt-6 rounded-3xl border border-[color:var(--lm-border)] bg-[color:var(--lm-surface-soft)] p-4">
