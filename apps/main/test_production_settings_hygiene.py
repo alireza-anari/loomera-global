@@ -6178,3 +6178,69 @@ class ManagerCommunicationPersianBrandCopyTests(SimpleTestCase):
             rendered,
         )
         self.assertNotIn("آرورا & <جدید>", rendered)
+
+
+class SupportFormDeploymentBrandLabelsTests(SimpleTestCase):
+    """Support form displays deployment identity without changing canonical routing keys."""
+
+    @staticmethod
+    def _form():
+        from apps.main.forms import SupportForm
+
+        return SupportForm()
+
+    def test_default_labels_and_canonical_keys(self):
+        form = self._form()
+        choices = dict(form.fields["issue_type"].choices)
+        self.assertEqual(choices["account_join"], "می‌خواهم کسب‌وکارم را در Loomera معرفی کنم")
+        self.assertEqual(choices["appointment"], "برای یکی از نوبت‌هایم در Loomera به راهنمایی نیاز دارم")
+        self.assertEqual(
+            [k for k, _ in form.fields["issue_type"].choices],
+            ["", "account_existing", "account_join", "appointment", "other"],
+        )
+        self.assertEqual(form.fields["issue_type"].widget.__class__.__name__, "RadioSelect")
+
+    def test_sequential_buyer_names_do_not_leak(self):
+        for latin, persian in (("Aurora", "آرورا"), ("Second Buyer", "نیلوفر")):
+            with self.subTest(latin=latin):
+                with override_settings(
+                    BRAND_DISPLAY_NAME=latin, BRAND_DISPLAY_NAME_FA=persian
+                ):
+                    choices = dict(self._form().fields["issue_type"].choices)
+                    self.assertIn(f"در {latin} معرفی کنم", choices["account_join"])
+                    self.assertIn(f"در {latin} به راهنمایی", choices["appointment"])
+                    self.assertNotIn("Loomera", choices["account_join"])
+        self.assertIn("Loomera", dict(self._form().fields["issue_type"].choices)["account_join"])
+
+    @override_settings(BRAND_DISPLAY_NAME_FA="آرورا")
+    def test_persian_brand_override_is_independent(self):
+        self.assertIn("Loomera", dict(self._form().fields["issue_type"].choices)["appointment"])
+
+    @override_settings(BRAND_DISPLAY_NAME="Aurora & <Buyer>")
+    def test_choices_render_escaped_without_changing_stored_values(self):
+        form = self._form()
+        rendered = form["issue_type"].as_widget()
+        self.assertIn("Aurora &amp; &lt;Buyer&gt;", rendered)
+        self.assertNotIn("Aurora & <Buyer>", rendered)
+        self.assertIn('value="account_join"', rendered)
+        self.assertIn('value="appointment"', rendered)
+
+    def test_existing_support_validations_and_partner_handoff_remain(self):
+        from django.urls import reverse
+        from apps.main.forms import SupportForm
+
+        source = (
+            Path(settings.BASE_DIR) / "templates" / "main" / "partners.html"
+        ).read_text(encoding="utf-8")
+        self.assertEqual(source.count("?issue_type=account_join"), 2)
+        self.assertEqual(reverse("main:contact"), "/main/contact/")
+        incomplete = SupportForm(data={"issue_type": "account_join", "email": "hi@example.com"})
+        self.assertFalse(incomplete.is_valid())
+        for key in ("full_name", "city", "mobile", "description"):
+            self.assertIn(key, incomplete.errors)
+        appointment = SupportForm(data={
+            "issue_type": "appointment", "email": "hi@example.com"
+        })
+        self.assertFalse(appointment.is_valid())
+        self.assertIn("support_reason", appointment.errors)
+        self.assertIn("description", appointment.errors)
