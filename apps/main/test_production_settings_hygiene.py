@@ -6048,6 +6048,7 @@ class PartnerSupportHandoffStableKeyTests(SimpleTestCase):
 
         request = RequestFactory().get("/support/", {"issue_type": "account_join"})
         request.user = AnonymousUser()
+        request.session = {}
         response = SupportView.as_view()(request)
         self.assertEqual(response.status_code, 200)
         html = response.content.decode("utf-8")
@@ -6066,6 +6067,7 @@ class PartnerSupportHandoffStableKeyTests(SimpleTestCase):
             with self.subTest(issue=issue):
                 request = RequestFactory().get("/support/", {"issue_type": issue})
                 request.user = AnonymousUser()
+        request.session = {}
                 response = SupportView.as_view()(request)
                 self.assertEqual(response.status_code, 200)
                 self.assertNotRegex(
@@ -6082,6 +6084,7 @@ class PartnerSupportHandoffStableKeyTests(SimpleTestCase):
 
         request = RequestFactory().get("/support/", {"topic": "appointments"})
         request.user = AnonymousUser()
+        request.session = {}
         with patch("apps.main.views.render") as mock_render:
             SupportView.as_view()(request)
         form = mock_render.call_args.args[2]["form"]
