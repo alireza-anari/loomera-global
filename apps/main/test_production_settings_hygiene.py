@@ -3730,15 +3730,15 @@ class PartnerPageDeploymentBrandTests(SimpleTestCase):
 
         source = self._source()
         self.assertEqual(source.count("{{ deployment_brand.display_name_fa }}"), 7)
-        self.assertEqual(source.count("?topic=درخواست همکاری مجموعه با لومرا"), 2)
+        self.assertEqual(source.count("?issue_type=account_join"), 2)
         visible_copy_only = source.replace(
-            "?topic=درخواست همکاری مجموعه با لومرا", ""
+            "?issue_type=account_join", ""
         )
         self.assertNotIn("لومرا", visible_copy_only)
         self.assertNotIn("get_deployment_brand_config", source)
         self.assertNotIn("BRAND_DISPLAY_NAME_FA", source)
         self.assertIn('data-page="partners"', source)
-        self.assertIn("{% url 'support' %}?topic=درخواست همکاری مجموعه با لومرا", source)
+        self.assertIn("{% url 'support' %}?issue_type=account_join", source)
         self.assertEqual(reverse("partners"), "/partners/")
         self.assertEqual(reverse("join_loomera"), "/join-loomera/")
 
@@ -3756,7 +3756,7 @@ class PartnerPageDeploymentBrandTests(SimpleTestCase):
             with self.subTest(copy=expected):
                 self.assertIn(expected, rendered)
         self.assertEqual(
-            rendered.count("?topic=درخواست همکاری مجموعه با لومرا"), 2
+            rendered.count("?issue_type=account_join"), 2
         )
 
     def test_two_sequential_buyers_override_persian_display_copy(self):
@@ -3785,7 +3785,7 @@ class PartnerPageDeploymentBrandTests(SimpleTestCase):
                         "<title>همکاری با لومرا | جذب", rendered
                     )
                     self.assertEqual(
-                        rendered.count("?topic=درخواست همکاری مجموعه با لومرا"),
+                        rendered.count("?issue_type=account_join"),
                         2,
                     )
         self.assertEqual(get_deployment_brand_config().display_name_fa, "لومرا")
