@@ -46,6 +46,12 @@ jobs:
 
       - name: Install system dependencies
         run: |
+          # GitHub-hosted Ubuntu runners may prefer the Azure mirror, which can
+          # stall large GDAL dependency downloads until the job times out.
+          # Keep all packages and checks; use the public Ubuntu archive instead.
+          if [ -f /etc/apt/apt-mirrors.txt ]; then
+            printf '%s\n' 'https://archive.ubuntu.com/ubuntu/' | sudo tee /etc/apt/apt-mirrors.txt
+          fi
           sudo apt-get update
           sudo apt-get install --yes \
             gdal-bin \
