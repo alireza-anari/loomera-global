@@ -5893,3 +5893,113 @@ class DeleteAccountDeploymentBrandCopyTests(SimpleTestCase):
             'display_name = get_deployment_brand_config().display_name', source
         )
         self.assertNotIn("settings.BRAND_DISPLAY_NAME", source)
+
+
+class SupportTicketDetailTitleDeploymentBrandTests(SimpleTestCase):
+    """Live support ticket browser title uses deployment-wide Latin identity."""
+
+    @staticmethod
+    def _source():
+        return (
+            Path(settings.BASE_DIR) / "templates" / "main"
+            / "support" / "ticket_detail.html"
+        ).read_text(encoding="utf-8")
+
+    @staticmethod
+    def _render(dispute=False):
+        ticket = SimpleNamespace(
+            id=42,
+            pk=42,
+            subject="سؤال رزرو",
+            support_reason="",
+            get_issue_type_display="عمومی",
+            get_status_display="باز",
+            get_priority_display="عادی",
+            get_category_display="عمومی",
+            get_assigned_team_display="پشتیبانی",
+            sla_due_at=None,
+            is_open=False,
+            dispute_cases=SimpleNamespace(all=lambda: [object()] if dispute else []),
+        )
+        return render_to_string(
+            "main/support/ticket_detail.html",
+            {
+                "ticket": ticket,
+                "messages_list": [],
+                "deployment_brand": get_deployment_brand_config(),
+                "deployment_brand_assets": get_deployment_brand_asset_config(),
+                "deployment_brand_colors": get_deployment_brand_color_config(),
+                "hide_navbar": True,
+                "hide_footer": True,
+            },
+        )
+
+    def test_exact_one_title_binding_preserves_support_contracts(self):
+        from django.urls import reverse
+
+        source = self._source()
+        self.assertEqual(source.count("{{ deployment_brand.display_name }}"), 1)
+        self.assertNotIn("درخواست پشتیبانی #{{ ticket.id }} | Loomera", source)
+        self.assertIn(
+            "برای این تیکت پرونده رسمی اختلاف ثبت شده و توسط تیم Loomera بررسی می‌شود.",
+            source,
+        )
+        self.assertIn("{{ ticket.id }}", source)
+        self.assertIn("{{ ticket.get_status_display }}", source)
+        self.assertIn("{{ message.body }}", source)
+        self.assertIn("{{ attachment.file.url }}", source)
+        self.assertIn("{% csrf_token %}", source)
+        self.assertIn("{% url 'main:support_ticket_reply' ticket.pk %}", source)
+        self.assertIn("{% url 'main:support_ticket_close' ticket.pk %}", source)
+        self.assertIn("{% url 'main:support_ticket_list' %}", source)
+        self.assertEqual(
+            reverse("main:support_ticket_detail", kwargs={"pk": 42}),
+            "/main/support/tickets/42/",
+        )
+
+    def test_loomera_default_and_dispute_wording_remain(self):
+        self.assertEqual(get_deployment_brand_config().display_name, "Loomera")
+        rendered = self._render(dispute=True)
+        self.assertIn("<title>درخواست پشتیبانی #42 | Loomera</title>", rendered)
+        self.assertIn("سؤال رزرو", rendered)
+        self.assertIn("درخواست‌های من", rendered)
+        self.assertIn(
+            "برای این تیکت پرونده رسمی اختلاف ثبت شده و توسط تیم Loomera بررسی می‌شود.",
+            rendered,
+        )
+
+    def test_sequential_buyer_titles_do_not_leak(self):
+        for latin, persian in (("Aurora", "آرورا"), ("Second Buyer", "نیلوفر")):
+            with self.subTest(latin=latin):
+                with override_settings(
+                    BRAND_DISPLAY_NAME=latin, BRAND_DISPLAY_NAME_FA=persian
+                ):
+                    rendered = self._render()
+                    self.assertIn(
+                        f"<title>درخواست پشتیبانی #42 | {latin}</title>",
+                        rendered,
+                    )
+                    self.assertNotIn(
+                        "<title>درخواست پشتیبانی #42 | Loomera</title>",
+                        rendered,
+                    )
+        self.assertIn(
+            "<title>درخواست پشتیبانی #42 | Loomera</title>",
+            self._render(),
+        )
+
+    @override_settings(BRAND_DISPLAY_NAME_FA="آرورا")
+    def test_persian_only_override_does_not_change_latin_title(self):
+        self.assertIn(
+            "<title>درخواست پشتیبانی #42 | Loomera</title>",
+            self._render(),
+        )
+
+    @override_settings(BRAND_DISPLAY_NAME="Aurora & <Buyer>")
+    def test_configured_title_identity_is_html_escaped(self):
+        rendered = self._render()
+        self.assertIn(
+            "<title>درخواست پشتیبانی #42 | Aurora &amp; &lt;Buyer&gt;</title>",
+            rendered,
+        )
+        self.assertNotIn("Aurora & <Buyer>", rendered)
