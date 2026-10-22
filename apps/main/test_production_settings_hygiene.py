@@ -6245,3 +6245,96 @@ class SupportFormDeploymentBrandLabelsTests(SimpleTestCase):
         self.assertFalse(appointment.is_valid())
         self.assertIn("support_reason", appointment.errors)
         self.assertIn("description", appointment.errors)
+
+
+class MessagingPreferencesDeploymentBrandCopyTests(SimpleTestCase):
+    """Active messenger preference page uses the Latin deployment brand in identity copy."""
+
+    @staticmethod
+    def _source():
+        return (
+            Path(settings.BASE_DIR) / "templates" / "messaging" / "preferences.html"
+        ).read_text(encoding="utf-8")
+
+    @staticmethod
+    def _render():
+        return render_to_string(
+            "messaging/preferences.html",
+            {
+                "deployment_brand": get_deployment_brand_config(),
+                "deployment_brand_assets": get_deployment_brand_asset_config(),
+                "deployment_brand_colors": get_deployment_brand_color_config(),
+                "roles": [],
+                "selected_role": "customer",
+                "selected_role_label": "مشتری",
+                "preference_rows": [],
+                "privacy_version": "v1",
+                "hide_navbar": True,
+                "hide_footer": True,
+            },
+        )
+
+    def test_two_brand_slots_and_messaging_operational_contract(self):
+        from django.urls import reverse
+
+        source = self._source()
+        self.assertEqual(source.count("{{ deployment_brand.display_name }}"), 2)
+        self.assertNotIn("Loomera", source)
+        self.assertIn("{% url 'messaging:status' %}", source)
+        self.assertIn("{% url 'messaging:privacy' %}", source)
+        self.assertIn("{% url 'messaging:disconnect' row.connected_identity_id %}", source)
+        self.assertIn("{% url 'messaging:provider_quick_connect' row.provider_key %}", source)
+        self.assertIn("{% csrf_token %}", source)
+        self.assertIn('name="audience_role"', source)
+        self.assertIn('name="{{ row.channel }}_operational"', source)
+        self.assertIn('name="{{ row.channel }}_marketing"', source)
+        self.assertIn("تنظیمات در backend ذخیره می‌شوند", source)
+        self.assertIn("بله و تلگرام مستقل از هم کنترل می‌شوند", source)
+        self.assertEqual(reverse("messaging:status"), "/messaging/")
+        self.assertEqual(reverse("messaging:preferences"), "/messaging/preferences/")
+        self.assertEqual(reverse("messaging:privacy"), "/messaging/privacy/")
+
+    def test_default_loomera_title_and_internal_notification_note(self):
+        self.assertEqual(get_deployment_brand_config().display_name, "Loomera")
+        rendered = self._render()
+        self.assertIn("<title>تنظیمات اعلان پیام‌رسان‌ها | Loomera</title>", rendered)
+        self.assertIn("اعلان‌های داخلی Loomera مستقل باقی می‌مانند.", rendered)
+        self.assertIn("خاموش کردن یک پیام‌رسان، ارسال خارجی همان Provider را متوقف می‌کند", rendered)
+        self.assertIn('name="audience_role" value="customer"', rendered)
+        self.assertIn("نسخه حریم خصوصی: v1", rendered)
+
+    def test_sequential_buyer_identity_without_leakage(self):
+        for latin, persian in (("Aurora", "آرورا"), ("Second Buyer", "نیلوفر")):
+            with self.subTest(latin=latin):
+                with override_settings(
+                    BRAND_DISPLAY_NAME=latin, BRAND_DISPLAY_NAME_FA=persian
+                ):
+                    rendered = self._render()
+                    self.assertIn(
+                        f"<title>تنظیمات اعلان پیام‌رسان‌ها | {latin}</title>",
+                        rendered,
+                    )
+                    self.assertIn(
+                        f"اعلان‌های داخلی {latin} مستقل باقی می‌مانند.",
+                        rendered,
+                    )
+                    self.assertNotIn("اعلان‌های داخلی Loomera", rendered)
+                    self.assertNotIn(
+                        "<title>تنظیمات اعلان پیام‌رسان‌ها | Loomera</title>",
+                        rendered,
+                    )
+        self.assertIn("اعلان‌های داخلی Loomera مستقل باقی می‌مانند.", self._render())
+
+    @override_settings(BRAND_DISPLAY_NAME_FA="آرورا")
+    def test_persian_only_override_does_not_change_latin_identity(self):
+        rendered = self._render()
+        self.assertIn("<title>تنظیمات اعلان پیام‌رسان‌ها | Loomera</title>", rendered)
+        self.assertIn("اعلان‌های داخلی Loomera مستقل باقی می‌مانند.", rendered)
+
+    @override_settings(BRAND_DISPLAY_NAME="Aurora & <Unsafe>")
+    def test_title_and_notification_note_html_escape_configured_identity(self):
+        rendered = self._render()
+        escaped = "Aurora &amp; &lt;Unsafe&gt;"
+        self.assertIn(f"<title>تنظیمات اعلان پیام‌رسان‌ها | {escaped}</title>", rendered)
+        self.assertIn(f"اعلان‌های داخلی {escaped} مستقل باقی می‌مانند.", rendered)
+        self.assertNotIn("اعلان‌های داخلی Aurora & <Unsafe>", rendered)
