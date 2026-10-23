@@ -10,14 +10,7 @@ register = template.Library()
 # Only these existing, audited *static* browser feedback strings may cross from
 # server flash messages into non-Persian UI. No user data, provider errors,
 # formatting arguments or domain-specific message text is translated here.
-_TRUSTED_FLASH_KEYS = (
-    "feedback.default.error",
-    "feedback.default.success",
-    "feedback.default.warning",
-    "feedback.default.info",
-    "validation.notice",
-    "validation.server_form",
-)
+_TRUSTED_ERROR_KEYS = ("validation.notice", "validation.server_form")
 _CATALOG_LANGUAGES = ("fa", "en", "ar")
 
 
@@ -40,8 +33,11 @@ def _approved_flash_body(value, tone, language):
     """
     raw = str(value or "").strip()
     allowed_msgid = None
+    keys = ("feedback.default." + tone,)
+    if tone in {"error", "warning"}:
+        keys += _TRUSTED_ERROR_KEYS
     if raw and len(raw) <= 300:
-        for key in _TRUSTED_FLASH_KEYS:
+        for key in keys:
             msgid = MESSAGE_IDS[key]
             if raw == msgid:
                 allowed_msgid = msgid
