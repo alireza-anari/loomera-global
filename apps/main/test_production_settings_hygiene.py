@@ -2954,7 +2954,10 @@ class LoginBrandIdentityTests(SimpleTestCase):
         self.assertNotIn("branding/logo/loomera-glyph-mark.png", source)
         self.assertNotIn("صفحه اصلی Loomera", source)
         self.assertNotIn("ورود به لومرا", source)
-        self.assertNotIn("Loomera", source)
+        # The preapproved browser i18n API is not a hardcoded buyer brand.
+        # Still reject every other literal display-brand reference.
+        self.assertEqual(source.count("LoomeraI18n"), 1)
+        self.assertNotIn("Loomera", source.replace("LoomeraI18n", ""))
         self.assertNotIn("لومرا", source)
         self.assertEqual(source.count("{% static deployment_brand_assets.login_hero_path %}"), 1)
         self.assertIn("{% load static %}", source)
