@@ -6506,3 +6506,93 @@ class NotificationCenterDeploymentBrandTitleTests(SimpleTestCase):
         html = self._render()
         self.assertIn("<title>اعلان‌ها | Aurora &amp; &lt;Buyer&gt;</title>", html)
         self.assertNotIn("<title>اعلان‌ها | Aurora & <Buyer></title>", html)
+
+
+class MessagingWelcomePromptDeploymentBrandTests(SimpleTestCase):
+    """The active messaging onboarding prompt displays only the deployment's Persian site identity."""
+
+    @staticmethod
+    def _source():
+        return (
+            Path(settings.BASE_DIR) / "templates" / "partials"
+            / "messaging_welcome_prompt_body.html"
+        ).read_text(encoding="utf-8")
+
+    @staticmethod
+    def _render():
+        return render_to_string(
+            "partials/messaging_welcome_prompt_body.html",
+            {
+                "deployment_brand": get_deployment_brand_config(),
+                "messaging_role": "customer",
+                "messaging_role_label": "مشتری",
+                "messaging_context_text": "اعلان‌های نوبت مشتری",
+            },
+        )
+
+    def test_one_brand_slot_and_existing_onboarding_contract(self):
+        from django.urls import reverse
+
+        source = self._source()
+        parent = (
+            Path(settings.BASE_DIR) / "templates" / "partials"
+            / "messaging_welcome_prompt.html"
+        ).read_text(encoding="utf-8")
+        base = (Path(settings.BASE_DIR) / "templates" / "base.html").read_text(encoding="utf-8")
+        self.assertEqual(source.count("{{ deployment_brand.display_name_fa }}"), 1)
+        self.assertNotIn("اعلان‌های مهم لومرا", source)
+        self.assertIn('include "partials/messaging_welcome_prompt.html"', base)
+        self.assertIn("request.user.is_authenticated", parent)
+        self.assertIn("request.session.show_messaging_connect_prompt", parent)
+        self.assertIn('messaging_role="manager"', parent)
+        self.assertIn('messaging_role="stylist"', parent)
+        self.assertIn('messaging_role="customer"', parent)
+        self.assertIn('data-messaging-welcome', source)
+        self.assertIn('data-messaging-welcome-close', source)
+        self.assertIn('data-messaging-welcome-csrf', source)
+        self.assertIn("{% csrf_token %}", source)
+        self.assertIn("{% url 'accounts:dismiss_messaging_welcome' %}", source)
+        self.assertIn("{% url 'messaging:preferences' %}", source)
+        self.assertIn("{{ messaging_role }}", source)
+        self.assertIn("{{ messaging_context_text }}", source)
+        self.assertIn("{{ messaging_role_label }}", source)
+        self.assertIn("بله", source)
+        self.assertIn("تلگرام", source)
+        self.assertIn("fetch(dismissUrl", source)
+        self.assertIn("method: 'POST'", source)
+        self.assertIn("credentials: 'same-origin'", source)
+        self.assertEqual(
+            reverse("accounts:dismiss_messaging_welcome"),
+            "/accounts/api/messaging-welcome/dismiss/",
+        )
+        self.assertEqual(reverse("messaging:preferences"), "/messaging/preferences/")
+
+    def test_default_persian_copy_and_customer_handoff(self):
+        self.assertEqual(get_deployment_brand_config().display_name_fa, "لومرا")
+        html = self._render()
+        self.assertIn("اعلان‌های مهم لومرا را از دست نده", html)
+        self.assertIn('href="/messaging/preferences/?audience_role=customer"', html)
+        self.assertIn("اعلان‌های نوبت مشتری", html)
+        self.assertIn("ربات‌های بله و تلگرام", html)
+
+    def test_sequential_persian_brand_overrides_do_not_leak(self):
+        for latin, persian in (("Aurora", "آرورا"), ("Second Buyer", "نیلوفر")):
+            with self.subTest(persian=persian):
+                with override_settings(
+                    BRAND_DISPLAY_NAME=latin, BRAND_DISPLAY_NAME_FA=persian
+                ):
+                    html = self._render()
+                    self.assertIn(f"اعلان‌های مهم {persian} را از دست نده", html)
+                    self.assertNotIn("اعلان‌های مهم لومرا", html)
+                    self.assertIn("ربات‌های بله و تلگرام", html)
+        self.assertIn("اعلان‌های مهم لومرا را از دست نده", self._render())
+
+    @override_settings(BRAND_DISPLAY_NAME="Aurora")
+    def test_latin_only_override_does_not_change_persian_headline(self):
+        self.assertIn("اعلان‌های مهم لومرا را از دست نده", self._render())
+
+    @override_settings(BRAND_DISPLAY_NAME_FA="آرورا & <جدید>")
+    def test_html_escapes_persian_identity_inside_dialog_heading(self):
+        html = self._render()
+        self.assertIn("اعلان‌های مهم آرورا &amp; &lt;جدید&gt; را از دست نده", html)
+        self.assertNotIn("اعلان‌های مهم آرورا & <جدید>", html)
