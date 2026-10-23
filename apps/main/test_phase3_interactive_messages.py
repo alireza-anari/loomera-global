@@ -142,7 +142,7 @@ class InteractiveMessagesContractTests(SimpleTestCase):
         self.assertIn("isTrustedMessage?.(text)", source)
         self.assertIn("technicalPattern.test(text)", source)
         self.assertIn('node.setAttribute("role", meta.role)', source)
-        self.assertIn("body.textContent = text", source)
+        self.assertIn("body.textContent = messageText", source)
         self.assertIn('text("feedback.close"', source)
         for key in MESSAGE_IDS:
             if key.startswith("feedback."):
