@@ -336,3 +336,44 @@ English-first product defaults remain deferred.
 This is not a browser/screenshot accessibility audit, an end-to-end
 checkout test or a production deployment. Phase 3 remains open.
 
+## Phase 3 — Slice 3.6: Localized Safe Form Submission Progress
+
+The shared browser submit-pending indicator now uses 10 additional allowlisted
+Django gettext entries under `submit.*` (saving, registering, sending,
+creating, logging in, confirming, activating, deleting, cancelling and generic
+working). Source `django.po` and compiled `django.mo` catalogs for
+`fa/en/ar` include these entries; the reviewed request-specific
+`interactive_messages` map grows from 24 to 34 messages.
+The same `json_script` bridge supports `submit.*` keys without adding a
+request endpoint, database field or browser fetch.
+
+Existing buttons still infer a bounded action from their visible source text.
+For now, the shared form handler recognizes common Persian, Arabic and English
+action words; unknown labels display the generic `Working…` equivalent
+rather than inventing a new domain-specific message. An existing
+`data-lm-submitting-label` override is preserved without restriction in
+the default Persian compatibility path. In en/ar, explicit overrides are
+accepted only if they exactly match an allowlisted translated string; other
+overrides fall back to an inferred or generic approved message.
+
+**Security repair:** form submission markup no longer interpolates a
+dynamic label into `innerHTML`. The pending icon and `span` are created as
+DOM nodes and the label is assigned with `textContent`. The original button
+HTML is restored via the existing snapshot contract on `pageshow`;
+input submitter `value`, disabled/aria-busy state, opt-out flags, dirty-form
+logic and form submit event timing remain unchanged.
+
+A dedicated seven-test Django suite validates the expanded frozen message
+allowlist, actual gettext output for all 10 entries in three languages, locale
+isolation, disabled-language fallback, source security invariants and
+unchanged business defaults. Nine dependency-free Node VM tests execute the
+actual form handler and i18n bridge with simulated buttons/inputs to verify
+language-specific action matching, hostile explicit labels, legacy Persian
+overrides, state restoration, duplicate-submission idempotency and opt-out
+semantics. Existing Phase 3.5 and earlier tests remain in CI.
+
+This slice does **not** translate server validation, domain-specific form
+labels, form field data, booking/checkout/payment workflows or phone/currency
+formats. It does not constitute full browser-accessibility acceptance or a
+production deployment; Phase 3 remains open.
+

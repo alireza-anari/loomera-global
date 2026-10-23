@@ -55,25 +55,44 @@ function markSubmitterPending(submitter) {
   submitter.classList.add('lm-submit-pending');
 
   const rawLabel = (submitter.textContent || submitter.value || '').trim();
-  const inferredLabel = (() => {
-    if (/ذخیره|ویرایش/.test(rawLabel)) return 'در حال ذخیره…';
-    if (/ثبت/.test(rawLabel)) return 'در حال ثبت…';
-    if (/ارسال|کد/.test(rawLabel)) return 'در حال ارسال…';
-    if (/ساخت/.test(rawLabel)) return 'در حال ساخت…';
-    if (/ورود/.test(rawLabel)) return 'در حال ورود…';
-    if (/تأیید|تایید/.test(rawLabel)) return 'در حال تأیید…';
-    if (/فعال/.test(rawLabel)) return 'در حال فعال‌سازی…';
-    if (/حذف/.test(rawLabel)) return 'در حال حذف…';
-    if (/لغو/.test(rawLabel)) return 'در حال لغو…';
-    return 'در حال انجام…';
-  })();
-  const pendingLabel = submitter.dataset.lmSubmittingLabel || inferredLabel;
+  // Source labels may still be Persian/Arabic while the site is in LTR.
+  // Detect only a small, preapproved set of actions; unknown actions use
+  // a generic localized fallback rather than guessing domain semantics.
+  const actions = [
+    [/ذخیره|ویرایش|حفظ|تعديل|\b(save|edit|update)\b/i, 'submit.saving', 'در حال ذخیره…'],
+    [/ثبت|تسجيل|\b(register|sign[ -]?up)\b/i, 'submit.registering', 'در حال ثبت…'],
+    [/ارسال|کد|إرسال|رمز|\b(send|resend)\b/i, 'submit.sending', 'در حال ارسال…'],
+    [/ساخت|إنشاء|\b(create)\b/i, 'submit.creating', 'در حال ساخت…'],
+    [/ورود|دخول|\b(log[ -]?in|sign[ -]?in)\b/i, 'submit.logging_in', 'در حال ورود…'],
+    [/تأیید|تایید|تأكيد|\b(confirm|verify)\b/i, 'submit.confirming', 'در حال تأیید…'],
+    [/فعال|تفعيل|\b(activate|enable)\b/i, 'submit.activating', 'در حال فعال‌سازی…'],
+    [/حذف|\b(delete|remove)\b/i, 'submit.deleting', 'در حال حذف…'],
+    [/لغو|إلغاء|\b(cancel)\b/i, 'submit.cancelling', 'در حال لغو…'],
+  ];
+  const action = actions.find(([pattern]) => pattern.test(rawLabel));
+  const key = action?.[1] || 'submit.working';
+  const legacyLabel = action?.[2] || 'در حال انجام…';
+  const locale = window.LoomeraI18n?.language || 'fa';
+  const explicit = submitter.dataset.lmSubmittingLabel;
+  // Preserve explicit overrides in Persian; for en/ar use only catalog
+  // approved messages to avoid displaying arbitrary untranslated content.
+  const pendingLabel = locale === 'fa' && explicit
+    ? explicit
+    : locale !== 'fa' && explicit && window.LoomeraI18n?.isTrustedMessage?.(explicit)
+      ? explicit
+      : uiText(key, legacyLabel);
+
   if (submitter instanceof HTMLInputElement) {
     submitter.dataset.lmOriginalValue = submitter.value;
     submitter.value = pendingLabel;
   } else {
     submitter.dataset.lmOriginalHtml = submitter.innerHTML;
-    submitter.innerHTML = `<i class="fa-solid fa-circle-notch fa-spin" aria-hidden="true"></i><span>${pendingLabel}</span>`;
+    const icon = document.createElement('i');
+    icon.className = 'fa-solid fa-circle-notch fa-spin';
+    icon.setAttribute('aria-hidden', 'true');
+    const label = document.createElement('span');
+    label.textContent = pendingLabel;
+    submitter.replaceChildren(icon, label);
   }
 }
 

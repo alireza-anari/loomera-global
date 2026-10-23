@@ -111,3 +111,43 @@ msgstr "لطفاً موارد مشخص‌شده زیر فیلدها را اصل�
 msgid "The form information is invalid. Please review it."
 msgstr "اطلاعات فرم معتبر نیست. لطفاً آن را بررسی کنید."
 
+#: static/js/pages/form_interactions.js
+msgid "Saving…"
+msgstr "در حال ذخیره…"
+
+#: static/js/pages/form_interactions.js
+msgid "Registering…"
+msgstr "در حال ثبت…"
+
+#: static/js/pages/form_interactions.js
+msgid "Sending…"
+msgstr "در حال ارسال…"
+
+#: static/js/pages/form_interactions.js
+msgid "Creating…"
+msgstr "در حال ساخت…"
+
+#: static/js/pages/form_interactions.js
+msgid "Signing in…"
+msgstr "در حال ورود…"
+
+#: static/js/pages/form_interactions.js
+msgid "Confirming…"
+msgstr "در حال تأیید…"
+
+#: static/js/pages/form_interactions.js
+msgid "Activating…"
+msgstr "در حال فعال‌سازی…"
+
+#: static/js/pages/form_interactions.js
+msgid "Deleting…"
+msgstr "در حال حذف…"
+
+#: static/js/pages/form_interactions.js
+msgid "Cancelling…"
+msgstr "در حال لغو…"
+
+#: static/js/pages/form_interactions.js
+msgid "Working…"
+msgstr "در حال انجام…"
+

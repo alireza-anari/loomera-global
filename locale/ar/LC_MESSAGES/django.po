@@ -111,3 +111,43 @@ msgstr "يرجى تصحيح الحقول المحددة."
 msgid "The form information is invalid. Please review it."
 msgstr "بيانات النموذج غير صالحة. يرجى مراجعتها."
 
+#: static/js/pages/form_interactions.js
+msgid "Saving…"
+msgstr "جارٍ الحفظ…"
+
+#: static/js/pages/form_interactions.js
+msgid "Registering…"
+msgstr "جارٍ التسجيل…"
+
+#: static/js/pages/form_interactions.js
+msgid "Sending…"
+msgstr "جارٍ الإرسال…"
+
+#: static/js/pages/form_interactions.js
+msgid "Creating…"
+msgstr "جارٍ الإنشاء…"
+
+#: static/js/pages/form_interactions.js
+msgid "Signing in…"
+msgstr "جارٍ تسجيل الدخول…"
+
+#: static/js/pages/form_interactions.js
+msgid "Confirming…"
+msgstr "جارٍ التأكيد…"
+
+#: static/js/pages/form_interactions.js
+msgid "Activating…"
+msgstr "جارٍ التفعيل…"
+
+#: static/js/pages/form_interactions.js
+msgid "Deleting…"
+msgstr "جارٍ الحذف…"
+
+#: static/js/pages/form_interactions.js
+msgid "Cancelling…"
+msgstr "جارٍ الإلغاء…"
+
+#: static/js/pages/form_interactions.js
+msgid "Working…"
+msgstr "جارٍ التنفيذ…"
+
