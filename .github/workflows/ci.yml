@@ -89,3 +89,8 @@ jobs:
           python manage.py test \
             apps.main.test_phase2_buyer_brand_smoke \
             --failfast
+      - name: Phase 3 request locale and bidirectional shell guards
+        run: |
+          python manage.py test \
+            apps.main.test_phase3_locale_shell \
+            --failfast
