@@ -133,6 +133,12 @@ jobs:
             apps.main.test_phase3_otp_pluralization \
             --failfast
 
+      - name: Phase 3 verification and password recovery page locale guards
+        run: |
+          python manage.py test \
+            apps.main.test_phase3_recovery_verify_pages \
+            --failfast
+
       - name: Production settings hygiene
         run: |
           python manage.py test \

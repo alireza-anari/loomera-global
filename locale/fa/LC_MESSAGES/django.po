@@ -434,3 +434,104 @@ msgid_plural "کد وارد شده اشتباه است. %(count)d تلاش دی�
 msgstr[0] "کد وارد شده اشتباه است. %(count)d تلاش دیگر باقی مانده است."
 msgstr[1] "کد وارد شده اشتباه است. %(count)d تلاش دیگر باقی مانده است."
 
+#: templates/accounts/verify.html templates/accounts/remember_password.html apps/accounts/views.py apps/accounts/forms.py
+msgid "تأیید کد"
+msgstr "تأیید کد"
+
+#: templates/accounts/verify.html templates/accounts/remember_password.html apps/accounts/views.py apps/accounts/forms.py
+msgid "فرم تأیید کد"
+msgstr "فرم تأیید کد"
+
+#: templates/accounts/verify.html templates/accounts/remember_password.html apps/accounts/views.py apps/accounts/forms.py
+msgid "کد تأیید را وارد کن"
+msgstr "کد تأیید را وارد کن"
+
+#: templates/accounts/verify.html templates/accounts/remember_password.html apps/accounts/views.py apps/accounts/forms.py
+msgid "کد پیامک‌شده را بدون فاصله وارد کن."
+msgstr "کد پیامک‌شده را بدون فاصله وارد کن."
+
+#: templates/accounts/verify.html templates/accounts/remember_password.html apps/accounts/views.py apps/accounts/forms.py
+msgid "بعد از تأیید، به ادامه رزرو برمی‌گردی."
+msgstr "بعد از تأیید، به ادامه رزرو برمی‌گردی."
+
+#: templates/accounts/verify.html templates/accounts/remember_password.html apps/accounts/views.py apps/accounts/forms.py
+msgid "بازگشت"
+msgstr "بازگشت"
+
+#: templates/accounts/verify.html templates/accounts/remember_password.html apps/accounts/views.py apps/accounts/forms.py
+msgid "کد تأیید"
+msgstr "کد تأیید"
+
+#: templates/accounts/verify.html templates/accounts/remember_password.html apps/accounts/views.py apps/accounts/forms.py
+msgid "تغییر شماره یا بازگشت به مرحله قبل"
+msgstr "تغییر شماره یا بازگشت به مرحله قبل"
+
+#: templates/accounts/verify.html templates/accounts/remember_password.html apps/accounts/views.py apps/accounts/forms.py
+msgid "ادامه"
+msgstr "ادامه"
+
+#: templates/accounts/verify.html templates/accounts/remember_password.html apps/accounts/views.py apps/accounts/forms.py
+msgid "بازیابی رمز عبور"
+msgstr "بازیابی رمز عبور"
+
+#: templates/accounts/verify.html templates/accounts/remember_password.html apps/accounts/views.py apps/accounts/forms.py
+msgid "فراموشی رمز عبور"
+msgstr "فراموشی رمز عبور"
+
+#: templates/accounts/verify.html templates/accounts/remember_password.html apps/accounts/views.py apps/accounts/forms.py
+msgid "شماره موبایل یا اطلاعات لازم را وارد کن تا کد تایید برایت ارسال شود و بتوانی ادامه بدهی."
+msgstr "شماره موبایل یا اطلاعات لازم را وارد کن تا کد تایید برایت ارسال شود و بتوانی ادامه بدهی."
+
+#: templates/accounts/verify.html templates/accounts/remember_password.html apps/accounts/views.py apps/accounts/forms.py
+msgid "ارسال کد"
+msgstr "ارسال کد"
+
+#: templates/accounts/verify.html templates/accounts/remember_password.html apps/accounts/views.py apps/accounts/forms.py
+msgid "بازگشت به صفحه ورود"
+msgstr "بازگشت به صفحه ورود"
+
+#: templates/accounts/verify.html templates/accounts/remember_password.html apps/accounts/views.py apps/accounts/forms.py
+msgid "تایید کد"
+msgstr "تایید کد"
+
+#: templates/accounts/verify.html templates/accounts/remember_password.html apps/accounts/views.py apps/accounts/forms.py
+msgid "کد تایید را وارد کنید"
+msgstr "کد تایید را وارد کنید"
+
+#: templates/accounts/verify.html templates/accounts/remember_password.html apps/accounts/views.py apps/accounts/forms.py
+msgid "کد ارسال‌شده را وارد کنید تا بتوانید رمز عبور خود را تغییر دهید."
+msgstr "کد ارسال‌شده را وارد کنید تا بتوانید رمز عبور خود را تغییر دهید."
+
+#: templates/accounts/verify.html templates/accounts/remember_password.html apps/accounts/views.py apps/accounts/forms.py
+msgid "سالن و کسب‌وکار"
+msgstr "سالن و کسب‌وکار"
+
+#: templates/accounts/verify.html templates/accounts/remember_password.html apps/accounts/views.py apps/accounts/forms.py
+msgid "تایید شماره موبایل"
+msgstr "تایید شماره موبایل"
+
+#: templates/accounts/verify.html templates/accounts/remember_password.html apps/accounts/views.py apps/accounts/forms.py
+#, python-format
+msgid "کد فعال‌سازی %(role)s را وارد کنید"
+msgstr "کد فعال‌سازی %(role)s را وارد کنید"
+
+#: templates/accounts/verify.html templates/accounts/remember_password.html apps/accounts/views.py apps/accounts/forms.py
+msgid "کد ارسال‌شده به شماره موبایل شما را وارد کنید. پس از تأیید، ورود شما به‌صورت خودکار انجام می‌شود."
+msgstr "کد ارسال‌شده به شماره موبایل شما را وارد کنید. پس از تأیید، ورود شما به‌صورت خودکار انجام می‌شود."
+
+#: templates/accounts/verify.html templates/accounts/remember_password.html apps/accounts/views.py apps/accounts/forms.py
+msgid "تایید و ورود"
+msgstr "تایید و ورود"
+
+#: templates/accounts/verify.html templates/accounts/remember_password.html apps/accounts/views.py apps/accounts/forms.py
+msgid "کد فعالسازی "
+msgstr "کد فعالسازی "
+
+#: templates/accounts/verify.html templates/accounts/remember_password.html apps/accounts/views.py apps/accounts/forms.py
+msgid "کد دریافتی را وارد کنید "
+msgstr "کد دریافتی را وارد کنید "
+
+#: templates/accounts/verify.html templates/accounts/remember_password.html apps/accounts/views.py apps/accounts/forms.py
+msgid "موبایل را وارد کنید "
+msgstr "موبایل را وارد کنید "
+

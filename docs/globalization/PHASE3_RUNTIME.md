@@ -504,3 +504,57 @@ replace a browser/production acceptance gate. No default language,
 authentication, payment, booking, locale formatting or data schema is
 changed. Phase 3 is still open.
 
+
+## Phase 3 — Slice 3.10: Active OTP Verification and Password Recovery Pages
+
+This bounded localization slice covers **the active** `accounts/verify.html`
+and `accounts/remember_password.html` pages, request-time verification
+metadata built by `_build_verification_context()`, and presentation labels
+for `VerifyRegisterForm` / `RememberPasswordForm`. The legacy alias
+templates (`verify_code.html`, `remember_password_verify.html`,
+`new_password.html` and `reset_password.html`) are not used by the
+current authentication URL handlers and are intentionally unchanged.
+The interactive change-password screen is deferred to a separate slice.
+
+Selected headings, help text, accessible labels, button captions and
+return links now use Django `{% trans %}`; message IDs retain their exact
+historical Persian wording. The verify page receives a localized
+fallback title and submit label for standalone rendering. View context
+strings now use request-time `gettext()`, including the signup kind.
+The role-specific verification heading uses one named
+`%(role)s` placeholder and a translated, fixed allowlist of role labels.
+No account/user/profile data is interpolated into translation sources.
+
+The verify page's two **back** links now reverse the existing verified
+`verify_back_url` route name provided by the view context instead of
+referring to an undefined `verify_back_href` value. Absent context
+falls back to `/`; no POST, arbitrary URL or external redirect is added.
+
+For active recovery/verification forms, class-declared label and
+placeholder strings use `gettext_lazy()` so the selected locale is
+resolved at render time. Existing Persian trailing spaces in those
+specific form strings remain **exactly preserved**. The legacy
+mobile-number normalization, numeric one-time-code input direction,
+eight-digit client input cap, CSRF, OTP counter/lockout/TTL, session
+cleanup and password policy are not modified. The buyer-brand recovery
+logo and the exact branded `امنیت حساب {{ deployment_brand.display_name }}`
+source boundary are deliberately unchanged.
+
+25 reviewed gettext IDs are added to versioned source and compiled
+`fa/en/ar` Django catalogs; the prior ngettext six-form Arabic
+OTP-attempt plural entry remains in all regenerated binaries.
+
+The new no-database
+`apps.main.test_phase3_recovery_verify_pages` suite verifies actual
+page rendering in all three languages, live form label/placeholder
+translations, signup/customer/stylist/manager verification context and
+return paths, Persian snapshots, presence of security-sensitive input
+and CSRF controls, prior OTP plural behavior, and legacy-alias
+source compatibility. Existing prior-phase CI gates remain required.
+
+**Not yet covered:** the interactive change-password page, its inline
+password-strength JavaScript text, legacy recovery aliases, arbitrary
+server errors, real SMS, multilingual numeric/calendar formatting, and
+cross-browser visual/accessibility acceptance. No production deployment
+or underlying account security behavior changes. **Phase 3 remains open.**
+
