@@ -14,3 +14,100 @@ msgstr "اللغة"
 #: templates/partials/shell/language_switcher.html
 msgid "Apply language"
 msgstr "تطبيق اللغة"
+
+#: loomera/globalization/interactive_messages.py
+msgid "Not completed"
+msgstr "لم تكتمل العملية"
+
+#: loomera/globalization/interactive_messages.py
+msgid "Completed"
+msgstr "تمت العملية"
+
+#: loomera/globalization/interactive_messages.py
+msgid "Needs review"
+msgstr "تحتاج إلى مراجعة"
+
+#: loomera/globalization/interactive_messages.py
+msgid "Information"
+msgstr "معلومات"
+
+#: loomera/globalization/interactive_messages.py
+msgid "This action could not be completed. Please try again."
+msgstr "تعذّر إتمام العملية. يُرجى المحاولة مرة أخرى."
+
+#: loomera/globalization/interactive_messages.py
+msgid "The action completed successfully."
+msgstr "تمت العملية بنجاح."
+
+#: loomera/globalization/interactive_messages.py
+msgid "This item needs review."
+msgstr "هذا العنصر يحتاج إلى مراجعة."
+
+#: loomera/globalization/interactive_messages.py
+msgid "The information was updated."
+msgstr "تم تحديث المعلومات."
+
+#: loomera/globalization/interactive_messages.py
+msgid "Close message"
+msgstr "إغلاق الرسالة"
+
+#: loomera/globalization/interactive_messages.py
+msgid "The field value is invalid."
+msgstr "قيمة هذا الحقل غير صالحة."
+
+#: loomera/globalization/interactive_messages.py
+msgid "This field is required."
+msgstr "هذا الحقل مطلوب."
+
+#: loomera/globalization/interactive_messages.py
+msgid "Enter a valid email address."
+msgstr "أدخل عنوان بريد إلكتروني صالحًا."
+
+#: loomera/globalization/interactive_messages.py
+msgid "Enter a valid URL."
+msgstr "أدخل رابطًا صالحًا."
+
+#: loomera/globalization/interactive_messages.py
+msgid "The value does not match the field format."
+msgstr "القيمة لا تطابق صيغة الحقل."
+
+#: loomera/globalization/interactive_messages.py
+msgid "The value does not match the required pattern."
+msgstr "القيمة لا تطابق النمط المطلوب."
+
+#: loomera/globalization/interactive_messages.py
+msgid "Enter at least {min} characters."
+msgstr "أدخل {min} أحرف على الأقل."
+
+#: loomera/globalization/interactive_messages.py
+msgid "Enter no more than {max} characters."
+msgstr "أدخل {max} أحرف كحد أقصى."
+
+#: loomera/globalization/interactive_messages.py
+msgid "The value must be at least {min}."
+msgstr "يجب أن تكون القيمة {min} على الأقل."
+
+#: loomera/globalization/interactive_messages.py
+msgid "The value must be no more than {max}."
+msgstr "يجب ألا تتجاوز القيمة {max}."
+
+#: loomera/globalization/interactive_messages.py
+msgid "The value does not match the allowed step."
+msgstr "القيمة لا توافق الزيادة المسموح بها."
+
+#: loomera/globalization/interactive_messages.py
+msgid "The value could not be processed. Please check it."
+msgstr "تعذرت معالجة القيمة. يرجى التحقق منها."
+
+#: loomera/globalization/interactive_messages.py
+msgid "The field value is invalid. Please correct it."
+msgstr "قيمة هذا الحقل غير صالحة. يرجى تصحيحها."
+
+#: loomera/globalization/interactive_messages.py
+msgid "Please correct the highlighted fields."
+msgstr "يرجى تصحيح الحقول المحددة."
+
+#: loomera/globalization/interactive_messages.py
+msgid "The form information is invalid. Please review it."
+msgstr "بيانات النموذج غير صالحة. يرجى مراجعتها."
+

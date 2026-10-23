@@ -14,3 +14,100 @@ msgstr "زبان"
 #: templates/partials/shell/language_switcher.html
 msgid "Apply language"
 msgstr "تأیید زبان"
+
+#: loomera/globalization/interactive_messages.py
+msgid "Not completed"
+msgstr "انجام نشد"
+
+#: loomera/globalization/interactive_messages.py
+msgid "Completed"
+msgstr "انجام شد"
+
+#: loomera/globalization/interactive_messages.py
+msgid "Needs review"
+msgstr "نیاز به بررسی"
+
+#: loomera/globalization/interactive_messages.py
+msgid "Information"
+msgstr "اطلاع"
+
+#: loomera/globalization/interactive_messages.py
+msgid "This action could not be completed. Please try again."
+msgstr "انجام این عملیات با مشکل روبه‌رو شد. لطفاً دوباره تلاش کنید."
+
+#: loomera/globalization/interactive_messages.py
+msgid "The action completed successfully."
+msgstr "عملیات با موفقیت انجام شد."
+
+#: loomera/globalization/interactive_messages.py
+msgid "This item needs review."
+msgstr "این مورد نیاز به بررسی دارد."
+
+#: loomera/globalization/interactive_messages.py
+msgid "The information was updated."
+msgstr "اطلاعات به‌روزرسانی شد."
+
+#: loomera/globalization/interactive_messages.py
+msgid "Close message"
+msgstr "بستن پیام"
+
+#: loomera/globalization/interactive_messages.py
+msgid "The field value is invalid."
+msgstr "مقدار این فیلد معتبر نیست."
+
+#: loomera/globalization/interactive_messages.py
+msgid "This field is required."
+msgstr "تکمیل این فیلد الزامی است."
+
+#: loomera/globalization/interactive_messages.py
+msgid "Enter a valid email address."
+msgstr "ایمیل را با قالب معتبر وارد کنید."
+
+#: loomera/globalization/interactive_messages.py
+msgid "Enter a valid URL."
+msgstr "نشانی اینترنتی را با قالب معتبر وارد کنید."
+
+#: loomera/globalization/interactive_messages.py
+msgid "The value does not match the field format."
+msgstr "مقدار واردشده با قالب این فیلد هماهنگ نیست."
+
+#: loomera/globalization/interactive_messages.py
+msgid "The value does not match the required pattern."
+msgstr "مقدار واردشده با الگوی مورد انتظار هماهنگ نیست."
+
+#: loomera/globalization/interactive_messages.py
+msgid "Enter at least {min} characters."
+msgstr "حداقل {min} کاراکتر وارد کنید."
+
+#: loomera/globalization/interactive_messages.py
+msgid "Enter no more than {max} characters."
+msgstr "حداکثر {max} کاراکتر مجاز است."
+
+#: loomera/globalization/interactive_messages.py
+msgid "The value must be at least {min}."
+msgstr "مقدار باید حداقل {min} باشد."
+
+#: loomera/globalization/interactive_messages.py
+msgid "The value must be no more than {max}."
+msgstr "مقدار باید حداکثر {max} باشد."
+
+#: loomera/globalization/interactive_messages.py
+msgid "The value does not match the allowed step."
+msgstr "مقدار واردشده با فاصله‌های مجاز این فیلد هماهنگ نیست."
+
+#: loomera/globalization/interactive_messages.py
+msgid "The value could not be processed. Please check it."
+msgstr "مقدار واردشده قابل پردازش نیست. آن را بررسی کنید."
+
+#: loomera/globalization/interactive_messages.py
+msgid "The field value is invalid. Please correct it."
+msgstr "مقدار این فیلد معتبر نیست. لطفاً آن را اصلاح کنید."
+
+#: loomera/globalization/interactive_messages.py
+msgid "Please correct the highlighted fields."
+msgstr "لطفاً موارد مشخص‌شده زیر فیلدها را اصلاح کنید."
+
+#: loomera/globalization/interactive_messages.py
+msgid "The form information is invalid. Please review it."
+msgstr "اطلاعات فرم معتبر نیست. لطفاً آن را بررسی کنید."
+

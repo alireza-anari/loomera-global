@@ -14,3 +14,100 @@ msgstr "Language"
 #: templates/partials/shell/language_switcher.html
 msgid "Apply language"
 msgstr "Apply language"
+
+#: loomera/globalization/interactive_messages.py
+msgid "Not completed"
+msgstr "Not completed"
+
+#: loomera/globalization/interactive_messages.py
+msgid "Completed"
+msgstr "Completed"
+
+#: loomera/globalization/interactive_messages.py
+msgid "Needs review"
+msgstr "Needs review"
+
+#: loomera/globalization/interactive_messages.py
+msgid "Information"
+msgstr "Information"
+
+#: loomera/globalization/interactive_messages.py
+msgid "This action could not be completed. Please try again."
+msgstr "This action could not be completed. Please try again."
+
+#: loomera/globalization/interactive_messages.py
+msgid "The action completed successfully."
+msgstr "The action completed successfully."
+
+#: loomera/globalization/interactive_messages.py
+msgid "This item needs review."
+msgstr "This item needs review."
+
+#: loomera/globalization/interactive_messages.py
+msgid "The information was updated."
+msgstr "The information was updated."
+
+#: loomera/globalization/interactive_messages.py
+msgid "Close message"
+msgstr "Close message"
+
+#: loomera/globalization/interactive_messages.py
+msgid "The field value is invalid."
+msgstr "The field value is invalid."
+
+#: loomera/globalization/interactive_messages.py
+msgid "This field is required."
+msgstr "This field is required."
+
+#: loomera/globalization/interactive_messages.py
+msgid "Enter a valid email address."
+msgstr "Enter a valid email address."
+
+#: loomera/globalization/interactive_messages.py
+msgid "Enter a valid URL."
+msgstr "Enter a valid URL."
+
+#: loomera/globalization/interactive_messages.py
+msgid "The value does not match the field format."
+msgstr "The value does not match the field format."
+
+#: loomera/globalization/interactive_messages.py
+msgid "The value does not match the required pattern."
+msgstr "The value does not match the required pattern."
+
+#: loomera/globalization/interactive_messages.py
+msgid "Enter at least {min} characters."
+msgstr "Enter at least {min} characters."
+
+#: loomera/globalization/interactive_messages.py
+msgid "Enter no more than {max} characters."
+msgstr "Enter no more than {max} characters."
+
+#: loomera/globalization/interactive_messages.py
+msgid "The value must be at least {min}."
+msgstr "The value must be at least {min}."
+
+#: loomera/globalization/interactive_messages.py
+msgid "The value must be no more than {max}."
+msgstr "The value must be no more than {max}."
+
+#: loomera/globalization/interactive_messages.py
+msgid "The value does not match the allowed step."
+msgstr "The value does not match the allowed step."
+
+#: loomera/globalization/interactive_messages.py
+msgid "The value could not be processed. Please check it."
+msgstr "The value could not be processed. Please check it."
+
+#: loomera/globalization/interactive_messages.py
+msgid "The field value is invalid. Please correct it."
+msgstr "The field value is invalid. Please correct it."
+
+#: loomera/globalization/interactive_messages.py
+msgid "Please correct the highlighted fields."
+msgstr "Please correct the highlighted fields."
+
+#: loomera/globalization/interactive_messages.py
+msgid "The form information is invalid. Please review it."
+msgstr "The form information is invalid. Please review it."
+

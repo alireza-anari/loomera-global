@@ -96,6 +96,8 @@
         </div>
     {% endif %}
 
+    {{ interactive_messages|json_script:"loomera-interactive-messages" }}
+    <script src="{% static 'js/interactive_i18n.js' %}"></script>
     <script src="{% static 'js/feedback.js' %}"></script>
     <script src="{% static 'js/jalali.js' %}"></script>
     <script src="{% static 'vendor/jalalidatepicker/jalalidatepicker.min.js' %}"></script>
