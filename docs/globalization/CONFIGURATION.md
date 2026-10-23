@@ -829,3 +829,35 @@ For the evidence-based Phase 2 exit decision and the explicit remaining
 verification gaps, see `PHASE2_EXIT_AUDIT.md`. Phase 3 is not initiated
 by this documentation or asset task, and no deployment occurred.
 
+## Phase 2 Buyer Acceptance Smoke — Source/CI Contract
+
+The database-free `apps/main/test_phase2_buyer_brand_smoke.py` test module
+provides a coordinated buyer-configuration smoke rather than isolated brand
+setting assertions. Run:
+
+```bash
+python manage.py test apps.main.test_phase2_buyer_brand_smoke --failfast
+```
+
+The test imports environment-backed settings in separate default and buyer
+processes, applies alternate configuration in a single Django rendering
+context, verifies display-name isolation and default restoration, and checks
+brand-facing logo/head, favicon, color, OG/manifest, service schema, contact
+and email sender, public URLs, and calendar identifiers. It packages example
+buyer assets in a temporary staticfiles directory and validates Django
+staticfiles discovery. These examples are **test fixtures**; real buyers
+must supply their actual public logos, icons, manifest and contact domain
+assets and install them using their deployment's staticfiles process.
+
+The same CI step performs a source-level usage check for the two old
+`templates/email/loomera_*.html` layout stems. This check is **not**
+equivalent to discovering dynamic/external render consumers or sending HTML
+email; it prohibits an unreviewed direct static caller from silently
+activating those legacy default strings. Existing notification SMTP sender
+logic remains separate.
+
+The full evidence, engineering exit criteria, production limitations and
+Phase 3 dependency are recorded in `PHASE2_EXIT_AUDIT.md`. Passing this
+smoke does **not** claim a buyer production deployment, browser QA, real
+email delivery or locale runtime enablement.
+
