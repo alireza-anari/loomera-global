@@ -757,3 +757,39 @@ independence, HTML escaping, and service create/edit title modes. Validation is 
 the batch PR's final head using GitHub CI rather than separate RED/GREEN PRs per label.
 
 **Phase 2 incomplete. Phase 3 blocked. No deployment.**
+
+## Cross-Surface Site Identity — Admin Chrome, Services, Recovery Verification
+
+This consolidated Phase 2 batch migrates **nine site-identity presentation slots**
+across five Django templates, all using the already-supported request-level
+`deployment_brand` template context. The platform admin base shell now
+uses `deployment_brand.display_name` in its browser title and the mobile and
+desktop "Admin" labels, while the operations dashboard heading and infrastructure
+browser title use the same Latin deployment display name. These are admin
+**site identity labels**, not changes to admin role, authorization, system operation
+or navigation.
+
+The all-services public page uses `deployment_brand.display_name` for the
+ungrouped browser title and `deployment_brand.display_name_fa` for its
+Persian on-page brand eyebrow. Group-specific SEO title and description stay
+owned by the selected service group. The recovery-code verification page
+uses the Latin display name in its existing logo `alt` and account-security
+label; its **existing legacy logo file path** is retained as-is, not represented
+as a newly configurable artwork override.
+
+Default Loomera/لومرا output is preserved. Latin and Persian settings remain
+independent and Django autoescaping protects both. No third-party provider,
+trademark, CSS class, URL, locale, legal document/operator identity, JavaScript,
+authentication/OTP handling, form POST or CSRF, dashboard data, booking, payment,
+models or database migrations change. Changing site display identity does not
+imply changing legal ownership or the operator of any regulated service.
+
+Seven DB-free consolidated hygiene tests cover source slots, default copy,
+sequential buyer isolation, independent Latin/Persian overrides, HTML escaping,
+group-specific SEO invariance, and preservation of admin and recovery controls.
+Batch validation relies on one final-head GitHub Actions CI cycle and review,
+not individual micro-PR RED/GREEN cycles.
+
+**Phase 2 remains incomplete pending its exit criteria. Phase 3 not begun.
+No deployment.**
+

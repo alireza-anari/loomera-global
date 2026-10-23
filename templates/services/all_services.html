@@ -2,7 +2,7 @@
 {% load static %}
 {% load humanize %}
 
-{% block title %}{% if selected_group %}{{ selected_group.effective_seo_title }}{% else %}همه خدمات زیبایی | Loomera{% endif %}{% endblock %}
+{% block title %}{% if selected_group %}{{ selected_group.effective_seo_title }}{% else %}همه خدمات زیبایی | {{ deployment_brand.display_name }}{% endif %}{% endblock %}
 {% block meta_description %}{% if selected_group %}{{ selected_group.effective_seo_description }}{% else %}مشاهده خدمات زیبایی و انتخاب خدمات مورد نیاز.{% endif %}{% endblock %}
 {% block main_class %}bg-loomera-bg text-loomera-textPrimary{% endblock %}
 {% block body_attrs %}data-page="services"{% endblock %}
@@ -19,7 +19,7 @@
     <div class="mx-auto w-full max-w-7xl px-4 py-5 sm:px-6 sm:py-7 xl:px-0">
       <div class="flex items-center justify-between gap-4">
         <div class="min-w-0">
-          <p class="text-xs font-black text-loomera-primary">خدمات لومرا</p>
+          <p class="text-xs font-black text-loomera-primary">خدمات {{ deployment_brand.display_name_fa }}</p>
           <h1 class="mt-1 truncate text-2xl font-black text-loomera-textPrimary sm:text-3xl">
             {% if selected_group %}{{ selected_group.group_title }}{% else %}خدمات زیبایی{% endif %}
           </h1>
