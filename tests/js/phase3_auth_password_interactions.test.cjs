@@ -48,11 +48,11 @@ function prepare(page, language) {
     const classes = new Set(["fa-eye"]);
     const icon = { classList: { toggle(c) { classes.has(c) ? classes.delete(c) : classes.add(c); }, contains(c) { return classes.has(c); } } };
     return {
-      dataset: {input:id}, attrs, icon,
+      dataset: {input:id}, attrs, icon, handlers: {},
       setAttribute(k,v) {attrs[k]=v;},
       querySelector(selector) { assert.equal(selector,"i"); return icon; },
-      addEventListener(type,fn) {this[type]=fn;},
-      click() {this.click({preventDefault() {}});},
+      addEventListener(type,fn) {this.handlers[type]=fn;},
+      click() {this.handlers.click.call(this,{preventDefault() {}});},
     };
   });
   const hint = {textContent: "static default"};
