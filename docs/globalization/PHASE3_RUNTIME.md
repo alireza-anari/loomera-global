@@ -665,3 +665,45 @@ checking toggle accessibility and states, localized live hints, unchanged
 strength/length thresholds, hostile password values and phone sanitization.
 GitHub Actions executes both alongside all previous Phase 1–3 suites.
 Browser screen-reader and visual acceptance remain pending; no deployment.
+
+## Phase 3 — Slice 3.14: Recovery and OTP Presentation, A11y and Help-Text Safety
+
+Active pages only: `accounts/remember_password.html` and
+`accounts/verify.html`. The recovery security caption now uses the
+**existing, compiled** Django gettext string for “Account security” and
+continues to interpolate the deployment brand as escaped, dynamic text.
+The Persian caption preserves its exact original wording and spacing.
+There are no new catalog keys or binary catalog edits.
+
+Recovery field help text no longer bypasses template autoescaping via
+`|safe`. This is a defense-in-depth improvement if any future form
+configurations introduce non-literal help text; the currently active
+`RememberPasswordForm` does not provide field help markup. Generic form
+field styling still applies to editable inputs, but the script now pins
+`dir=ltr` only for the named `mobile_number` input, not every possible
+free-text/email/password input. Existing form names, mobile-number policy,
+views, CSRF, submission and redirects stay unchanged. Non-field errors
+expose an alert role.
+
+The OTP input now exposes `aria-invalid` and associates its existing
+help text and conditionally rendered validation error with `aria-describedby`.
+An actual invalid form render includes an alert element for the field error;
+a pristine form references only the help element. The same single OTP
+field, `autocomplete=one-time-code`, numeric keyboard, eight-character
+client cap and ASCII-digit filtering remain. An isolated stylesheet is
+loaded only by the active verify page; under English/LTR it mirrors the
+back and continue arrows without changing fa/ar RTL, numeric input
+direction or the shared application shell.
+
+An eight-case no-database Django suite tests compiled fa/en/ar brand
+copy, escaped hostile help text, actual rendered valid/invalid OTP ARIA
+references, stylesheet direction scoping, and business/security invariants.
+A dependency-free Node VM suite runs the **actual** active inline scripts,
+checking OTP focus, missing-control resilience, eight-digit input cap,
+sanitization, recovery form styling, trusted field direction and no
+user-value mutation. The dedicated GitHub CI step runs both alongside all
+existing Phase 1–3 checks.
+
+No backend signup/OTP attempt-count changes, migrations, SMS, new phone
+formatting, payment, deployment, browser-visual or assistive-technology
+acceptance. Phase 3 remains open.
