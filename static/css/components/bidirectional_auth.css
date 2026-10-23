@@ -1,0 +1,75 @@
+/* Phase 3.4: authentication direction bridge.
+ * Only changes presentation in explicit LTR deployments.
+ * Persian and Arabic auth composition, validation and existing form JS stay intact. */
+
+html[dir="ltr"] :is(
+  .lm-login-visual-card,
+  .lm-signup-card,
+  .lm-login-visual-toolbar,
+  .lm-signup-toolbar,
+  .lm-login-field-label,
+  .lm-signup-label,
+  .lm-login-return-copy,
+  .lm-signup-subtitle,
+  .lm-login-forgot-row,
+  .lm-signup-hint,
+  .lm-signup-error
+) {
+  text-align: start;
+}
+
+/* Match the forward action affordance to the LTR reading flow; avoid
+ * mirroring password-eye icons, numeric input or the brand glyph. */
+html[dir="ltr"] :is(.lm-login-submit, .lm-signup-submit) .fa-arrow-left {
+  transform: scaleX(-1);
+}
+
+/* The fields use the document's text direction, but authentication identifiers
+ * and password input may be safely typed in LTR. Mobile phone remains pinned
+ * LTR by the form markup in both directions. */
+html[dir="ltr"] :is(.lm-login-input, .lm-signup-input, .lm-signup-input-solo) {
+  text-align: start;
+}
+
+/* The desktop hero frame was designed around a right-side Persian card.
+ * Mirror only LTR frame placement, keeping the default asset and card sizes. */
+@media (min-width: 1024px) {
+  html[dir="ltr"] .lm-login-visual-panel {
+    right: auto;
+    left: clamp(2.5rem, 6vw, 7rem);
+  }
+
+  html[dir="ltr"] .lm-login-visual-background-softener,
+  html[dir="ltr"] .lm-signup-background-softener {
+    left: 0;
+    right: auto;
+    background: linear-gradient(
+      90deg,
+      rgba(255, 255, 255, 0.045),
+      rgba(255, 255, 255, 0.012) 60%,
+      transparent 100%
+    );
+  }
+
+  html[dir="ltr"] .lm-signup-frame {
+    justify-content: flex-start;
+  }
+
+  html[dir="ltr"] .lm-signup-panel {
+    margin-right: auto;
+    margin-left: clamp(1.75rem, 4.5vw, 5rem);
+  }
+}
+
+@media (min-width: 1440px) {
+  html[dir="ltr"] .lm-login-visual-panel {
+    left: clamp(4rem, 8vw, 8.75rem);
+  }
+
+  html[dir="ltr"] .lm-signup-panel {
+    margin-left: clamp(3rem, 6vw, 6.5rem);
+  }
+}
+
+/* The compact height breakpoint deliberately retains the existing
+ * viewport/scroll strategy, only the card's inline side is different. */

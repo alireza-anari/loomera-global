@@ -89,6 +89,12 @@ jobs:
             apps.main.test_phase3_bidirectional_shell \
             --failfast
 
+      - name: Phase 3 auth bidirectional presentation guards
+        run: |
+          python manage.py test \
+            apps.main.test_phase3_bidirectional_auth \
+            --failfast
+
       - name: Production settings hygiene
         run: |
           python manage.py test \
