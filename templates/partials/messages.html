@@ -1,4 +1,4 @@
-{% load ui_message_extras %}
+{% load i18n ui_message_extras %}
 <div data-lm-feedback-stack class="fixed top-4 left-1/2 z-[100] w-full max-w-md -translate-x-1/2 space-y-3 px-4" aria-live="polite" aria-atomic="false">
 {% if messages %}
     {% for message in messages %}
@@ -23,7 +23,7 @@
             </span>
             <div class="min-w-0">
               <p class="text-xs font-black leading-5">
-                {% if 'error' in message.tags or 'danger' in message.tags %}انجام نشد{% elif 'success' in message.tags %}انجام شد{% elif 'warning' in message.tags %}نیاز به بررسی{% else %}اطلاع{% endif %}
+                {% if 'error' in message.tags or 'danger' in message.tags %}{% trans "Not completed" %}{% elif 'success' in message.tags %}{% trans "Completed" %}{% elif 'warning' in message.tags %}{% trans "Needs review" %}{% else %}{% trans "Information" %}{% endif %}
               </p>
               <p class="mt-0.5 text-sm font-bold leading-6">{{ message|clean_ui_message:message.tags }}</p>
             </div>
@@ -33,7 +33,7 @@
             type="button"
             data-flash-close
             class="shrink-0 rounded-full p-1 opacity-70 transition hover:bg-white/70 hover:opacity-100"
-            aria-label="بستن پیام"
+            aria-label="{% trans 'Close message' %}"
           >
             <i class="fa-solid fa-xmark"></i>
           </button>
