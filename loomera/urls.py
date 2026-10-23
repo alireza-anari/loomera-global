@@ -21,6 +21,7 @@ from django.contrib import admin
 from django.contrib.sitemaps.views import sitemap
 from django.urls import include, path, re_path
 from django.views.static import serve
+from loomera.globalization.views import set_deployment_language
 from apps.main.views import (
     HealthCheckView,
     PartnerPageView,
@@ -54,6 +55,7 @@ sitemaps = {
 
 urlpatterns = [
     path("admin/", admin.site.urls),
+    path("language/", set_deployment_language, name="set_deployment_language"),
     path(
         "help/",
         include(

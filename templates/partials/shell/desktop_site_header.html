@@ -25,6 +25,7 @@
     </nav>
 
     <div class="lm-shell-desktop-actions">
+      {% include "partials/shell/language_switcher.html" with language_switcher_variant="desktop" %}
       {% if request.user.is_authenticated %}
         <div class="inline-flex items-center gap-2">
           {% include "partials/shell/workspace_switcher.html" with variant="desktop" %}

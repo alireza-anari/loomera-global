@@ -94,3 +94,8 @@ jobs:
           python manage.py test \
             apps.main.test_phase3_locale_shell \
             --failfast
+      - name: Phase 3 language selection persistence and catalog guards
+        run: |
+          python manage.py test \
+            apps.main.test_phase3_language_switch \
+            --failfast

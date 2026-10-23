@@ -1,6 +1,6 @@
 # Phase 3 — Slice 3.1: Request Locale and Bidirectional Shell
 
-**State:** Implementation candidate subject to PR GitHub CI and merge.  
+**State:** Slice 3.1 merged as PR #72; Slice 3.2 below is a separate implementation candidate subject to CI and review.  
 **Dependency:** Phase 2 engineering exit source/CI tests passed in PR #71.  
 **Scope:** language-selection middleware + shared document/email direction.  
 **Not in scope:** full translation, locale-switch UI endpoint, public locale URL prefixes, production deployment, calendar/weekday/timezone/currency/phone/payment changes.
@@ -93,3 +93,77 @@ GitHub CI runs this independently of the existing Phase 1/2 regression
 guards. Production deployment, public URL locale prefixes, persisted user
 preference, translation catalogs and the English-first switch are **not
 implied** by this slice. Phase 3 remains open after it merges.
+
+## Phase 3 — Slice 3.2: Explicit Language Choice, Persistence and Translation Catalog Seed
+
+The new POST-only endpoint `/language/` (`set_deployment_language`) provides
+a narrowly scoped way for a user to select an **enabled** deployment language.
+It is a presentation preference, not a user-profile or workspace setting and
+it does not change any model, permissions, business or authentication ownership.
+
+The POST form requires a valid CSRF token and exactly one `language` value
+matching the enabled locale list. On success, the view sets the existing
+`loomera_language` session key and the standard Django language cookie with
+the configured cookie age, path, domain, Secure and SameSite properties;
+HttpOnly is enforced because no client-side language-cookie access is required.
+The response redirects (302, `Cache-Control: no-store`) to the submitted
+site-local `next` path, or safely falls back to `/` if the supplied URL is
+absent, non-root-relative, scheme-qualified or otherwise unsafe. No off-site
+redirect is permitted. GET is not accepted; invalid/disabled choices yield
+HTTP 400 **without modifying the existing preference**.
+
+The existing Phase 3.1 resolver gives the saved session choice precedence
+over the language cookie and Accept-Language header. The locale middleware
+continues to run after the session and authentication middleware. Anonymous
+and authenticated users can use the selector. Login, logout, role/workspace
+authorization and user profile storage are not modified. Persistence lasts
+for the session and the configured language cookie lifetime; there is no
+new database-backed user language preference.
+
+The shared selector partial `templates/partials/shell/language_switcher.html`
+is included in public desktop/mobile headers and in the dashboard shell.
+It uses native HTML POST, a CSRF token, a safe-return hidden field and a
+language `select` plus explicit submit button (no JavaScript required).
+**The partial does not render for a deployment with only one enabled
+language**, retaining the exact default fa-only visual shell. For multi-locale
+deployments, native-language options make the selection accessible without
+assuming every product string is translated. English remains LTR; Persian
+and Arabic remain RTL through the already-shared document language context.
+Underlying existing fixed-side CSS/layout and datepickers remain future
+bidirectional review work, not silently claimed solved.
+
+### Versioned gettext catalogs
+
+`LOCALE_PATHS = [BASE_DIR / "locale"]` registers new app-owned
+`locale/en/LC_MESSAGES/django.{po,mo}`,
+`locale/fa/LC_MESSAGES/django.{po,mo}`, and
+`locale/ar/LC_MESSAGES/django.{po,mo}`. The source catalog initially contains
+only two **application-owned UI strings**: `Language` and
+`Apply language`. The compiled `.mo` files are committed alongside
+their `.po` sources so runtime Django can load them without build-time
+GNU gettext dependencies. Keep source and binary catalogs synchronized when
+changing translations (e.g. via `django-admin compilemessages` in a
+controlled build environment). The CI tests exercise `gettext` in each
+language and guard these exact initial compiled translations.
+
+This is **not a full English/Persian/Arabic product translation**. The
+selector's accessibility copy remains bilingual when catalogs are unavailable,
+and application-owned content outside this tiny initial set is still in its
+legacy language until the Phase 4 localization workstream. No user-entered
+business content is machine-translated or rewritten.
+
+### Security and compatibility checks
+
+`apps.main.test_phase3_language_switch` runs as a separate GitHub CI step
+and checks real Client POST/session/cookie round trips with a database-free
+signed-cookie test session, strict CSRF/method rejection, disabled/malformed
+languages, safe next-path redirects, session preservation, cookie security,
+shell inclusion and single-language invisibility, HTML output escaping,
+native language labels, and compiled gettext lookup. No authentication,
+booking, calendar, price/money, timezone, SMS, email-delivery or payment
+code is changed.
+
+**Phase 3 remains open.** Future slices own deeper RTL/LTR component
+regression patterns and rollout of product translation markers/catalogs.
+No production/staging deployment is performed by this PR.
+
