@@ -3338,7 +3338,7 @@ class QuickLinkQRGlyphBoundaryTests(SimpleTestCase):
         second = get_deployment_brand_asset_config()
         self.assertEqual(first.quick_link_qr_glyph_path, self.default_path)
         self.assertIsNot(first, second)
-        self.assertEqual(len(fields(first)), 25)
+        self.assertEqual(len(fields(first)), 26)
         with self.assertRaises(FrozenInstanceError):
             first.quick_link_qr_glyph_path = "buyer/other.png"
         generated = self._generate()
@@ -3484,7 +3484,7 @@ class AuthenticationArtworkDeploymentBoundaryTests(SimpleTestCase):
 
     def test_defaults_render_existing_artwork_and_signup_glyph(self):
         snapshot = get_deployment_brand_asset_config()
-        self.assertEqual(len(fields(snapshot)), 25)
+        self.assertEqual(len(fields(snapshot)), 26)
         self.assertEqual(snapshot.logo_glyph_path, "branding/logo/loomera-glyph-mark.png")
         for template_name, field, default in self.template_assets:
             with self.subTest(template=template_name):
@@ -3668,7 +3668,7 @@ class WorkspaceChooserDeploymentBrandTests(SimpleTestCase):
     def test_default_brand_and_exact_legacy_logo_path_remain_compatible(self):
         snapshot = get_deployment_brand_asset_config()
         self.assertEqual(snapshot.workspace_logo_path, self.default_logo_path)
-        self.assertEqual(len(fields(snapshot)), 25)
+        self.assertEqual(len(fields(snapshot)), 26)
         self.assertTrue((Path(settings.BASE_DIR) / "static" / self.default_logo_path).is_file())
         rendered = self._render()
         self.assertIn("<title>انتخاب محیط فعالیت | لومرا</title>", rendered)
