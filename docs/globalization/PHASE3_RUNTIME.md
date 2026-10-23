@@ -707,3 +707,34 @@ existing Phase 1–3 checks.
 No backend signup/OTP attempt-count changes, migrations, SMS, new phone
 formatting, payment, deployment, browser-visual or assistive-technology
 acceptance. Phase 3 remains open.
+
+## Phase 3 — Slice 3.15: Active Auth Field-Error Accessibility
+
+This scoped template-only improvement links server-side field validation
+feedback to the inputs in the active login, manager, customer and stylist
+signup pages. All 21 existing field controls (mobile/password for login;
+name/family/mobile/passwords/terms in manager/customer signup; plus expert
+in stylist signup) now render a matching `aria-invalid` state. When a
+field has server-side errors, its input conditionally references the
+single corresponding `small` error node via `aria-describedby`. The
+error nodes have stable ids and `role="alert"` for assistive technologies.
+
+The password1 input also always references its existing strength guidance
+paragraph (now assigned a stable id), with the error id appended only
+when validation fails. The already-localized browser password strength
+hint updater still uses `textContent`; no new gettext entries or JS
+handlers were added.
+
+All error states are derived from Django `form.<field>.errors`; no
+client-provided error state, arbitrary HTML interpolation, new validation
+policy, redirect, form action or data model is introduced. Exact Persian
+copy, en/ar gettext, legal consent wording/links, browser title/brand,
+CSRF, password-eye controls, signup roles and Iranian phone restrictions
+remain unchanged. This is source/template and Django-rendering validation,
+not a claim of real screen-reader or browser acceptance.
+
+The database-free `apps.main.test_phase3_auth_field_error_a11y` suite
+renders pristine and synthetic-invalid real templates in fa/en/ar and
+verifies each input's state, error linkage, escaping, preserved
+strength hints and unchanged security/identity contracts. GitHub CI runs
+it alongside the existing Phase 1–3 regressions. No production deployment.

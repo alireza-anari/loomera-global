@@ -45,58 +45,58 @@
           <div class="lm-signup-grid-2">
             <label class="lm-signup-field" for="id_name">
               <span class="lm-signup-label">{% trans "نام" %}</span>
-              <input class="lm-signup-input-solo" type="text" name="name" id="id_name" value="{{ form.name.value|default_if_none:'' }}" autocomplete="given-name" placeholder="{% trans 'نام' %}">
-              {% if form.name.errors %}<small class="lm-signup-error">{{ form.name.errors.0 }}</small>{% endif %}
+              <input class="lm-signup-input-solo" type="text" name="name" id="id_name" value="{{ form.name.value|default_if_none:'' }}" autocomplete="given-name" placeholder="{% trans 'نام' %}" aria-invalid="{% if form.name.errors %}true{% else %}false{% endif %}" {% if form.name.errors %}aria-describedby="id_name-error"{% endif %}>
+              {% if form.name.errors %}<small class="lm-signup-error" id="id_name-error" role="alert">{{ form.name.errors.0 }}</small>{% endif %}
             </label>
             <label class="lm-signup-field" for="id_family">
               <span class="lm-signup-label">{% trans "نام خانوادگی" %}</span>
-              <input class="lm-signup-input-solo" type="text" name="family" id="id_family" value="{{ form.family.value|default_if_none:'' }}" autocomplete="family-name" placeholder="{% trans 'نام خانوادگی' %}">
-              {% if form.family.errors %}<small class="lm-signup-error">{{ form.family.errors.0 }}</small>{% endif %}
+              <input class="lm-signup-input-solo" type="text" name="family" id="id_family" value="{{ form.family.value|default_if_none:'' }}" autocomplete="family-name" placeholder="{% trans 'نام خانوادگی' %}" aria-invalid="{% if form.family.errors %}true{% else %}false{% endif %}" {% if form.family.errors %}aria-describedby="id_family-error"{% endif %}>
+              {% if form.family.errors %}<small class="lm-signup-error" id="id_family-error" role="alert">{{ form.family.errors.0 }}</small>{% endif %}
             </label>
           </div>
 
           <label class="lm-signup-field" for="id_expert">
             <span class="lm-signup-label">{% trans "تخصص اصلی" %}</span>
-            <input class="lm-signup-input-solo" type="text" name="expert" id="id_expert" value="{{ form.expert.value|default_if_none:'' }}" placeholder="{% trans 'مثلاً رنگ مو، ناخن، ماساژ، پوست و زیبایی' %}">
-            {% if form.expert.errors %}<small class="lm-signup-error">{{ form.expert.errors.0 }}</small>{% endif %}
+            <input class="lm-signup-input-solo" type="text" name="expert" id="id_expert" value="{{ form.expert.value|default_if_none:'' }}" placeholder="{% trans 'مثلاً رنگ مو، ناخن، ماساژ، پوست و زیبایی' %}" aria-invalid="{% if form.expert.errors %}true{% else %}false{% endif %}" {% if form.expert.errors %}aria-describedby="id_expert-error"{% endif %}>
+            {% if form.expert.errors %}<small class="lm-signup-error" id="id_expert-error" role="alert">{{ form.expert.errors.0 }}</small>{% endif %}
           </label>
 
           <label class="lm-signup-field" for="id_mobile_number">
             <span class="lm-signup-label">{% trans "شماره موبایل" %}</span>
             <span class="lm-signup-control">
               <span class="lm-signup-control-icon"><i class="fa-solid fa-mobile-screen-button" aria-hidden="true"></i></span>
-              <input class="lm-signup-input" type="tel" name="mobile_number" id="id_mobile_number" value="{{ form.mobile_number.value|default_if_none:'' }}" inputmode="numeric" autocomplete="tel" placeholder="09xxxxxxxxx" dir="ltr" required>
+              <input class="lm-signup-input" type="tel" name="mobile_number" id="id_mobile_number" value="{{ form.mobile_number.value|default_if_none:'' }}" inputmode="numeric" autocomplete="tel" placeholder="09xxxxxxxxx" dir="ltr" required aria-invalid="{% if form.mobile_number.errors %}true{% else %}false{% endif %}" {% if form.mobile_number.errors %}aria-describedby="id_mobile_number-error"{% endif %}>
             </span>
-            {% if form.mobile_number.errors %}<small class="lm-signup-error">{{ form.mobile_number.errors.0 }}</small>{% endif %}
+            {% if form.mobile_number.errors %}<small class="lm-signup-error" id="id_mobile_number-error" role="alert">{{ form.mobile_number.errors.0 }}</small>{% endif %}
           </label>
 
           <label class="lm-signup-field" for="id_password1">
             <span class="lm-signup-label">{% trans "رمز عبور" %}</span>
             <span class="lm-signup-control">
               <span class="lm-signup-control-icon"><i class="fa-solid fa-key" aria-hidden="true"></i></span>
-              <input class="password-input lm-signup-input" type="password" name="password1" id="id_password1" autocomplete="new-password" placeholder="{% trans 'حداقل ۸ کاراکتر' %}" required>
+              <input class="password-input lm-signup-input" type="password" name="password1" id="id_password1" autocomplete="new-password" placeholder="{% trans 'حداقل ۸ کاراکتر' %}" required aria-invalid="{% if form.password1.errors %}true{% else %}false{% endif %}" aria-describedby="id_password1-hint{% if form.password1.errors %} id_password1-error{% endif %}">
               <button type="button" class="toggle-password lm-signup-password-toggle" data-input="id_password1" aria-controls="id_password1" aria-pressed="false" aria-label="{% trans 'نمایش یا پنهان‌کردن رمز عبور' %}"><i class="fa-solid fa-eye" aria-hidden="true"></i></button>
             </span>
             <div class="lm-signup-strength" aria-hidden="true"><span data-strength-bar class="bg-loomera-borderSoft"></span><span data-strength-bar class="bg-loomera-borderSoft"></span><span data-strength-bar class="bg-loomera-borderSoft"></span></div>
-            <p data-password-hint class="lm-signup-hint">حداقل ۸ کاراکتر؛ ترکیب حروف و عدد بهتر است.</p>
-            {% if form.password1.errors %}<small class="lm-signup-error">{{ form.password1.errors.0 }}</small>{% endif %}
+            <p id="id_password1-hint" data-password-hint class="lm-signup-hint">حداقل ۸ کاراکتر؛ ترکیب حروف و عدد بهتر است.</p>
+            {% if form.password1.errors %}<small class="lm-signup-error" id="id_password1-error" role="alert">{{ form.password1.errors.0 }}</small>{% endif %}
           </label>
 
           <label class="lm-signup-field" for="id_password2">
             <span class="lm-signup-label">{% trans "تکرار رمز عبور" %}</span>
             <span class="lm-signup-control">
               <span class="lm-signup-control-icon"><i class="fa-solid fa-shield-halved" aria-hidden="true"></i></span>
-              <input class="password-input lm-signup-input" type="password" name="password2" id="id_password2" autocomplete="new-password" placeholder="{% trans 'رمز عبور را دوباره وارد کن' %}" required>
+              <input class="password-input lm-signup-input" type="password" name="password2" id="id_password2" autocomplete="new-password" placeholder="{% trans 'رمز عبور را دوباره وارد کن' %}" required aria-invalid="{% if form.password2.errors %}true{% else %}false{% endif %}" {% if form.password2.errors %}aria-describedby="id_password2-error"{% endif %}>
               <button type="button" class="toggle-password lm-signup-password-toggle" data-input="id_password2" aria-controls="id_password2" aria-pressed="false" aria-label="{% trans 'نمایش یا پنهان‌کردن رمز عبور' %}"><i class="fa-solid fa-eye" aria-hidden="true"></i></button>
             </span>
-            {% if form.password2.errors %}<small class="lm-signup-error">{{ form.password2.errors.0 }}</small>{% endif %}
+            {% if form.password2.errors %}<small class="lm-signup-error" id="id_password2-error" role="alert">{{ form.password2.errors.0 }}</small>{% endif %}
           </label>
 
           <label class="lm-signup-terms" for="id_agree_to_terms">
-            <input type="checkbox" name="agree_to_terms" id="id_agree_to_terms" {% if form.agree_to_terms.value %}checked{% endif %}>
+            <input type="checkbox" name="agree_to_terms" id="id_agree_to_terms" {% if form.agree_to_terms.value %}checked{% endif %} aria-invalid="{% if form.agree_to_terms.errors %}true{% else %}false{% endif %}" {% if form.agree_to_terms.errors %}aria-describedby="id_agree_to_terms-error"{% endif %}>
             <span>با <a href="{% url 'accounts:terms_of_use' %}">شرایط استفاده</a> و <a href="{% url 'accounts:privacy_policy' %}">حریم خصوصی</a> موافقم.</span>
           </label>
-          {% if form.agree_to_terms.errors %}<small class="lm-signup-error">{{ form.agree_to_terms.errors.0 }}</small>{% endif %}
+          {% if form.agree_to_terms.errors %}<small class="lm-signup-error" id="id_agree_to_terms-error" role="alert">{{ form.agree_to_terms.errors.0 }}</small>{% endif %}
 
           <button type="submit" class="lm-signup-submit"><span>{% trans "ثبت‌نام متخصص" %}</span><i class="fa-solid fa-arrow-left text-xs" aria-hidden="true"></i></button>
         </form>
