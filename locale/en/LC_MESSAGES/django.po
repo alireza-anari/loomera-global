@@ -9,7 +9,7 @@ msgstr ""
 
 #: templates/partials/shell/language_switcher.html
 msgid "Language"
-msgstr "English"
+msgstr "Language"
 
 #: templates/partials/shell/language_switcher.html
 msgid "Apply language"
