@@ -427,3 +427,10 @@ msgstr "Enter a valid mobile number."
 msgid "شماره وارد شده در سیستم پیدا نشد."
 msgstr "The provided number was not found in the system."
 
+#: apps/accounts/views.py
+#, python-format
+msgid "کد وارد شده اشتباه است. %(count)d تلاش دیگر باقی مانده است."
+msgid_plural "کد وارد شده اشتباه است. %(count)d تلاش دیگر باقی مانده‌اند."
+msgstr[0] "The code is incorrect. %(count)d attempt remains."
+msgstr[1] "The code is incorrect. %(count)d attempts remain."
+
