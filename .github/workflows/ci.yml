@@ -83,6 +83,12 @@ jobs:
             apps.main.test_phase3_language_switch \
             --failfast
 
+      - name: Phase 3 bidirectional shared shell regression guards
+        run: |
+          python manage.py test \
+            apps.main.test_phase3_bidirectional_shell \
+            --failfast
+
       - name: Production settings hygiene
         run: |
           python manage.py test \

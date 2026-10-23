@@ -19,7 +19,7 @@
   position: absolute;
   z-index: 120;
   top: calc(100% + 0.65rem);
-  left: 0;
+  inset-inline-end: 0;
   width: 20.5rem;
   max-width: calc(100vw - 1.5rem);
   overflow: hidden;
@@ -28,7 +28,7 @@
   background: rgba(255, 255, 255, 0.99);
   box-shadow: 0 24px 64px rgba(37, 31, 53, 0.18);
   padding: 0.65rem;
-  direction: rtl;
+  direction: inherit;
 }
 
 .lm-workspace-switch__intro {
@@ -67,7 +67,7 @@
   box-shadow: none !important;
   color: #514b61 !important;
   font: inherit !important;
-  text-align: right !important;
+  text-align: start !important;
   cursor: pointer !important;
   transition: background-color 150ms ease, border-color 150ms ease, color 150ms ease;
 }
@@ -154,14 +154,13 @@
 
 /* Public/customer shell placement. */
 .lm-workspace-switch--shell .lm-workspace-switch__menu {
-  left: 0;
+  inset-inline-end: 0;
 }
 
 .lm-workspace-switch--mobile .lm-workspace-switch__menu {
   position: fixed;
   top: 4.4rem;
-  left: 0.75rem;
-  right: 0.75rem;
+  inset-inline: 0.75rem;
   width: auto;
   max-width: none;
 }
@@ -170,9 +169,17 @@
   .lm-workspace-switch--dashboard .lm-workspace-switch__menu {
     position: fixed;
     top: 4.55rem;
-    left: 0.75rem;
-    right: 0.75rem;
+    inset-inline: 0.75rem;
     width: auto;
     max-width: none;
   }
+}
+
+/* Phase 3: flow-relative trigger copy and directional action arrows. */
+.lm-workspace-switch__trigger-copy {
+  text-align: start;
+}
+
+html[dir="ltr"] .lm-workspace-switch__arrow .fa-arrow-left {
+  transform: scaleX(-1);
 }

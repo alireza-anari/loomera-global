@@ -10,7 +10,7 @@
           <i class="fa-solid fa-layer-group {% if variant == 'mobile' %}text-sm{% else %}text-xs{% endif %}" aria-hidden="true"></i>
         </span>
         {% if variant != 'mobile' %}
-          <span class="min-w-0 text-right">
+          <span class="min-w-0 text-right lm-workspace-switch__trigger-copy">
             <span class="block text-[10px] font-bold text-loomera-textMuted">محیط کاری</span>
             <span class="lm-workspace-switch__trigger-label text-xs font-black text-loomera-primaryText">
               {% if request.resolver_match.url_name == 'customer_panel' %}حساب مشتری{% elif request.user.workspace_preference.kind == 'manager' %}مدیریت سالن{% elif request.user.workspace_preference.kind == 'stylist' %}پنل متخصص{% else %}حساب مشتری{% endif %}

@@ -167,3 +167,58 @@ code is changed.
 regression patterns and rollout of product translation markers/catalogs.
 No production/staging deployment is performed by this PR.
 
+## Phase 3 — Slice 3.3: Shared-Shell RTL/LTR Navigation and Form Parity
+
+**Scope:** a CSS-only presentation bridge and a limited workspace-switcher
+CSS/markup normalization. It does not modify business logic, dashboard
+JavaScript state transitions, route targets, form actions, CSRF controls,
+access permissions, or locale persistence.
+
+The prior Phase 3.1 shell roots set the correct HTML language and direction,
+but several shared components still assumed a permanently Persian-side
+layout. The new `static/css/components/bidirectional_shell.css` is loaded
+**after** existing workspace-switcher CSS in both public and partner root
+templates. It is scoped under `html[dir="ltr"]` to preserve the exact
+`fa/ar` RTL presentation and all legacy RTL utility classes.
+
+- **Public customer mobile dock:** preserves the original five route targets,
+  active-state logic and DOM/focus order. The grid presentation mirrors for
+  English LTR while the prior RTL order remains unchanged.
+- **Partner dashboard sidebar and topbar:** mirrors fixed sidebar placement,
+  mobile hidden/visible translation, expanded and collapsed content padding
+  (22rem / 6rem), and topbar offsets. The existing JS continues to toggle
+  exactly the same `lg:pr-*`, `lg:right-*`, `translate-x-*` and sidebar
+  data-state classes; no storage, menu toggling, notification or role code
+  changes. Collapsed tooltips, close/collapse affordances and arrow glyph
+  receive scoped mirror treatment.
+- **Partner mobile navigation:** the glass dock's raised create-action
+  notch, backdrop mask, popover and smaller-screen offsets mirror only for
+  LTR. The default RTL dock remains unchanged.
+- **Workspace selector:** popovers and option labels now use CSS logical
+  properties and inherited direction; a trigger-copy semantic class replaces
+  a hardcoded alignment dependency. Arrow glyph presentation mirrors in LTR,
+  while the POST workspace-switch forms, CSRF token and data hooks are intact.
+- **Shared field labels and error messages:** LTR flow-relative text
+  alignment applies to a small explicit selector list. Phone/mobile, money,
+  numeric input and Jalali/calendar formatting rules are **not** changed.
+
+### Verification limits
+
+The database-free `apps.main.test_phase3_bidirectional_shell` suite covers
+root template inclusion/order, three-locale HTML lang/dir, LTR-scoped CSS,
+RTL compatibility source, mobile navigation route order, workspace form
+controls, JS collapse-state coupling, fixed/mobile sidebar offsets, partner
+mobile notch controls and logical form labels. CI must pass this suite
+alongside all existing Phase 1–3 regression suites:
+
+```bash
+python manage.py test apps.main.test_phase3_bidirectional_shell --failfast
+```
+
+These are **structural and rendering-contract tests**, not screenshots or
+actual cross-browser layout measurements. Browser-level QA at desktop and
+mobile widths for fa/ar/en, keyboard/focus navigation, overlay placement,
+collapsed sidebar and calendar controls must be completed at a future
+browser/deployment acceptance gate. Phase 3 and product translation remain
+open; no production deployment is performed by this task.
+
