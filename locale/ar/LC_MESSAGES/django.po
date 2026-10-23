@@ -315,3 +315,115 @@ msgstr "تم تسجيل الدخول بنجاح."
 msgid "برای ورود به پنل پلتفرم، صفحه مدیریت را باز کن یا از ورود امن مدیران استفاده کن."
 msgstr "للوصول إلى لوحة تحكم المنصة، افتح صفحة الإدارة أو استخدم تسجيل دخول المدير الآمن."
 
+#: apps/accounts/forms.py apps/accounts/views.py
+msgid "شماره موبایل باید ۱۱ رقم باشد و با 09 شروع شود"
+msgstr "يجب أن يتكون رقم الهاتف من 11 رقمًا وأن يبدأ بـ 09."
+
+#: apps/accounts/forms.py apps/accounts/views.py
+msgid "این شماره موبایل قبلاً با همین نقش ثبت شده است."
+msgstr "رقم الهاتف هذا مسجل بالفعل لنفس الدور."
+
+#: apps/accounts/forms.py apps/accounts/views.py
+msgid "این شماره موبایل قبلاً ثبت شده است"
+msgstr "رقم الهاتف هذا مسجل بالفعل"
+
+#: apps/accounts/forms.py apps/accounts/views.py
+msgid "رمز عبور و تأیید آن مطابقت ندارند"
+msgstr "كلمة المرور وتأكيدها غير متطابقين"
+
+#: apps/accounts/forms.py apps/accounts/views.py
+msgid "رمز عبور و تکرار آن مغایرت دارند"
+msgstr "إدخالا كلمة المرور غير متطابقين"
+
+#: apps/accounts/forms.py apps/accounts/views.py
+msgid "رمز عبور باید حداقل ۸ کاراکتر باشد"
+msgstr "يجب أن تتكون كلمة المرور من 8 أحرف على الأقل"
+
+#: apps/accounts/forms.py apps/accounts/views.py
+msgid "تخصص اصلی باید حداقل ۲ کاراکتر باشد."
+msgstr "يجب أن يتكون التخصص الرئيسي من حرفين على الأقل."
+
+#: apps/accounts/forms.py apps/accounts/views.py
+msgid "تخصص اصلی را وارد کنید."
+msgstr "أدخل تخصصك الرئيسي."
+
+#: apps/accounts/forms.py apps/accounts/views.py
+msgid "رمز عبور شرایط امنیتی لازم را ندارد."
+msgstr "كلمة المرور لا تستوفي متطلبات الأمان."
+
+#: apps/accounts/forms.py apps/accounts/views.py
+msgid "این فیلد نمی‌تواند خالی باشد"
+msgstr "لا يمكن ترك هذا الحقل فارغًا"
+
+#: apps/accounts/forms.py apps/accounts/views.py
+msgid "این فیلد نمی‌تواند خالی باشد "
+msgstr "لا يمكن ترك هذا الحقل فارغًا "
+
+#: apps/accounts/forms.py apps/accounts/views.py
+msgid "ابتدا شماره موبایل و کد دریافتی را ثبت کنید."
+msgstr "أدخل رقم هاتفك والرمز المستلم أولًا."
+
+#: apps/accounts/forms.py apps/accounts/views.py
+msgid "کد تایید منقضی شده است. لطفاً دوباره درخواست کد بدهید."
+msgstr "انتهت صلاحية رمز التحقق. اطلب رمزًا جديدًا."
+
+#: apps/accounts/forms.py apps/accounts/views.py
+msgid "جلسه بازیابی یا ثبت‌نام منقضی شده است."
+msgstr "انتهت صلاحية جلسة الاسترداد أو التسجيل."
+
+#: apps/accounts/forms.py apps/accounts/views.py
+msgid "تعداد تلاش‌های مجاز تمام شده است. لطفاً دوباره درخواست کد بدهید."
+msgstr "لقد استنفدت جميع المحاولات المسموح بها. اطلب رمزًا جديدًا."
+
+#: apps/accounts/forms.py apps/accounts/views.py
+msgid "اطلاعات وارد شده اشتباه است."
+msgstr "المعلومات المدخلة غير صحيحة."
+
+#: apps/accounts/forms.py apps/accounts/views.py
+msgid "کد تایید بیش از حد اشتباه وارد شد. لطفاً دوباره درخواست کد بدهید."
+msgstr "تم إدخال رمز تحقق خاطئ مرات كثيرة. اطلب رمزًا جديدًا."
+
+#: apps/accounts/forms.py apps/accounts/views.py
+msgid "کاربر مرتبط با این کد پیدا نشد."
+msgstr "لم يتم العثور على حساب مرتبط بهذا الرمز."
+
+#: apps/accounts/forms.py apps/accounts/views.py
+msgid "ثبت‌نام متخصص کامل شد. حالا پروفایل حرفه‌ای خودت را تکمیل کن."
+msgstr "اكتمل تسجيل المتخصص. يمكنك الآن إكمال ملفك المهني."
+
+#: apps/accounts/forms.py apps/accounts/views.py
+msgid "ثبت‌نام شما کامل شد و وارد حساب شدید."
+msgstr "اكتمل التسجيل وتم تسجيل دخولك."
+
+#: apps/accounts/forms.py apps/accounts/views.py
+msgid "ابتدا کد تایید بازیابی رمز را با موفقیت وارد کنید."
+msgstr "أدخل أولًا رمز تحقق صالحًا لاستعادة كلمة المرور."
+
+#: apps/accounts/forms.py apps/accounts/views.py
+msgid "حساب کاربری پیدا نشد."
+msgstr "لم يتم العثور على الحساب."
+
+#: apps/accounts/forms.py apps/accounts/views.py
+msgid "جلسه بازیابی رمز منقضی شده است. دوباره کد دریافت کنید."
+msgstr "انتهت صلاحية جلسة استعادة كلمة المرور. اطلب رمزًا جديدًا."
+
+#: apps/accounts/forms.py apps/accounts/views.py
+msgid "رمز عبور فعلی صحیح نیست."
+msgstr "كلمة المرور الحالية غير صحيحة."
+
+#: apps/accounts/forms.py apps/accounts/views.py
+msgid "رمز عبور با موفقیت تغییر کرد."
+msgstr "تم تغيير كلمة المرور بنجاح."
+
+#: apps/accounts/forms.py apps/accounts/views.py
+msgid "لطفاً فیلدهای مشخص‌شده را بررسی و اصلاح کنید."
+msgstr "يرجى مراجعة الحقول المحددة وتصحيحها."
+
+#: apps/accounts/forms.py apps/accounts/views.py
+msgid "شماره موبایل را درست وارد کنید."
+msgstr "أدخل رقم هاتف صالحًا."
+
+#: apps/accounts/forms.py apps/accounts/views.py
+msgid "شماره وارد شده در سیستم پیدا نشد."
+msgstr "لم يتم العثور على الرقم المدخل في النظام."
+

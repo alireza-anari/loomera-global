@@ -421,3 +421,44 @@ unchanged calendar/currency semantics. Existing Phase 2 and Phase 3
 regression suites remain in CI. Production rollout and real-browser
 accessibility/visual QA remain separate; **Phase 3 stays open**.
 
+## Phase 3 — Slice 3.8: Signup, OTP and Password Recovery Validation Text
+
+This engineering slice localizes **28 fixed Persian-source message identifiers**
+with reviewed English and Arabic gettext translations. The compiled
+`locale/{fa,en,ar}/LC_MESSAGES/django.mo` binaries and corresponding
+`django.po` sources are versioned together; no additional locales are
+enabled by default.
+
+`apps/accounts/forms.py` uses immediate `gettext()` for selected
+`ValidationError` branches evaluated during validation, and
+`gettext_lazy()` for static class-level `error_messages` mappings that
+must be evaluated in the current request language. Covered paths include
+the existing Iranian 11-digit mobile-number format check, already-registered
+role/number errors, password confirmation/minimum-length errors, specialist
+minimum-length errors and blank field messages for OTP/login/recovery forms.
+The existing validators, database access, password hashing and user
+permissions are unchanged.
+
+`apps/accounts/views.py` resolves a bounded set of **generic** OTP
+registration, password recovery and change-password status/error strings via
+request-time `gettext()`. It intentionally leaves the dynamic
+`remaining_attempts` f-string untouched: plural-sensitive count
+messages need a separate reviewed `ngettext()`/format contract. OTP
+attempt increments, expiry/TTL, session cleanup, hash updates, login/logout,
+and login/password recovery redirects were not changed.
+
+The new no-database
+`apps.main.test_phase3_auth_recovery_errors` suite runs ten regression
+tests. It executes real invalid-form and direct clean-method branches
+under fa/en/ar translations, validates compiled gettext for OTP/recovery
+messages, checks static form/deployment configuration and asserts that
+rate/attempt, phone-format and password-security hooks remain present.
+The CI workflow runs this suite alongside all earlier Phase 1–3 gates.
+
+**Limitations:** This is not a country-neutral mobile-number or recovery
+flow, an international SMS provider, a translation of arbitrary backend
+exception text, full signup page translation, or end-to-end browser/OTP
+acceptance. The existing `fa` policy and returned error strings are
+preserved exactly. No staging/production deployment is included;
+Phase 3 remains open.
+
