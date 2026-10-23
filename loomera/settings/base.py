@@ -487,7 +487,7 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "middlewares.middlewares.RequestMiddleware",
-    "django.middleware.locale.LocaleMiddleware",
+    "loomera.globalization.middleware.DeploymentLocaleMiddleware",
 ]
 
 if _module_available("whitenoise"):
@@ -529,6 +529,7 @@ TEMPLATES = [
                 "django.contrib.messages.context_processors.messages",
                 "django.template.context_processors.csrf",
                 "loomera.branding.context_processors.deployment_brand",
+                "loomera.globalization.context_processors.deployment_locale",
                 "apps.main.context_processors.redirect_form_errors",
                 "apps.main.views.madia_admin",
             ],
@@ -668,7 +669,13 @@ if LOOMERA_DEFAULT_CALENDAR not in {"gregorian", "jalali"}:
         "LOOMERA_DEFAULT_CALENDAR must be either 'gregorian' or 'jalali'."
     )
 
-# Current runtime settings remain unchanged until their owning future phases.
+# Phase 3: enabled locale choices are deployment-scoped. Keep the historical
+# fa Django compatibility default until the English-first product migration.
+_LANGUAGE_LABELS = {"fa": "فارسی", "en": "English", "ar": "العربية"}
+LANGUAGES = tuple(
+    (code, _LANGUAGE_LABELS.get(code, code))
+    for code in LOOMERA_ENABLED_LANGUAGES
+)
 LANGUAGE_CODE = "fa"
 TIME_ZONE = "Asia/Tehran"
 USE_I18N = True
