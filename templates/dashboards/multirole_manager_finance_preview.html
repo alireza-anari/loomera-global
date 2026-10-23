@@ -1,6 +1,6 @@
 {% extends "dashboard_template.html" %}
 {% load l10n %}
-{% block title %}نمای مالی {{ salon.salon_name }} | لومرا{% endblock %}
+{% block title %}نمای مالی {{ salon.salon_name }} | {{ deployment_brand.display_name_fa }}{% endblock %}
 {% block content %}
 <div class="space-y-5" aria-labelledby="finance-title">
   <header class="rounded-[28px] border border-loomera-borderSoft bg-white p-5 shadow-lm-card sm:p-6"><p class="text-xs font-black text-loomera-primary">مالی خواندنی</p><h1 id="finance-title" class="mt-1 text-xl font-black">نمای مالی {{ salon.salon_name }}</h1><p class="mt-2 text-sm leading-7 text-loomera-textMuted">این صفحه فقط اطلاعات مالی ثبت‌شده همین سالن را نمایش می‌دهد؛ تسویه، برداشت و تغییر تنظیمات مالی از این مسیر فعال نیست.</p></header>

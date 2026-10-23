@@ -1,6 +1,6 @@
 {% extends "dashboard_template.html" %}
 {% load l10n %}
-{% block title %}اسناد تسویه {{ salon.salon_name }} | لومرا{% endblock %}
+{% block title %}اسناد تسویه {{ salon.salon_name }} | {{ deployment_brand.display_name_fa }}{% endblock %}
 {% block content %}
 <div class="space-y-5" aria-labelledby="ledger-title">
   <header class="rounded-[28px] border border-loomera-borderSoft bg-white p-5 shadow-lm-card sm:p-6"><p class="text-xs font-black text-loomera-primary">دفتر تسویه خواندنی</p><h1 id="ledger-title" class="mt-1 text-xl font-black">اسناد تسویه {{ salon.salon_name }}</h1><p class="mt-2 text-sm leading-7 text-loomera-textMuted">فقط اسناد ثبت‌شده همین سالن نمایش داده می‌شوند و هیچ عملیات مالی از این صفحه انجام نمی‌شود.</p></header>

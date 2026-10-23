@@ -730,3 +730,30 @@ The reusable `templates/messaging/components/bale_connect_card.html` displays th
 Five database-free tests in `apps/main/test_production_settings_hygiene.py` cover the one presentation slot, three UI states, stable provider and URLs, default wording, sequential buyer isolation, independent Latin override and HTML escaping. Test-only RED SHA `873a223f841d8e2401f6cf197ca92a8000d8e1e3` failed as expected in [GitHub Actions #39904348721](https://github.com/alireza-anari/loomera-global/actions/runs/39904348721). Final-head GREEN GitHub CI and independent 3-file scope review are required for Squash Merge; no local tests, production rendering or deployment is claimed.
 
 **Phase 2 incomplete. Phase 3 blocked. No deployment.**
+
+## Multirole Manager Dashboard Browser Titles — Batch Identity Migration
+
+Eleven existing `templates/dashboards/multirole_manager_*.html` manager pages now use
+`{{ deployment_brand.display_name_fa }}` in their **browser title only**, replacing
+the literal Persian site name `لومرا` after the title separator. These pages cover
+salon overview, team and membership title editing, bookings and manual booking/cancel,
+customers, services and service create/edit, read-only finance preview, and settlement ledger.
+The existing `dashboard_template.html` already supplies the shared deployment brand
+template context.
+
+Default deployments retain identical Persian titles. `BRAND_DISPLAY_NAME_FA`
+configures the Persian title suffix independently of Latin `BRAND_DISPLAY_NAME`.
+Django template autoescaping protects deployment identity and salon names.
+The service form still distinguishes create from edit. No change is made to permissions,
+routes, dashboard content, CSRF, booking/cancel actions, customer isolation, financial
+records, settlement semantics, templates' functional markup, provider brands, or
+stored identifiers. No database migration, frontend behavior change or production
+deployment is involved.
+
+Six database-free consolidated regression tests in
+`apps/main/test_production_settings_hygiene.py` cover all eleven template source
+contracts, default title compatibility, sequential buyer overrides, Latin-setting
+independence, HTML escaping, and service create/edit title modes. Validation is at
+the batch PR's final head using GitHub CI rather than separate RED/GREEN PRs per label.
+
+**Phase 2 incomplete. Phase 3 blocked. No deployment.**

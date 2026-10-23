@@ -6681,3 +6681,103 @@ class BaleConnectCardDeploymentBrandTests(SimpleTestCase):
             html,
         )
         self.assertNotIn("حساب بله شما به آرورا & <جدید>", html)
+
+class MultiroleManagerDashboardBrandTitlesTests(SimpleTestCase):
+    """Eleven multirole manager page titles use the Persian deployment identity."""
+
+    TITLE_CASES = (
+        ("multirole_manager_salon_overview.html", "نمای کلی سالن نمونه"),
+        ("multirole_manager_team.html", "تیم سالن نمونه"),
+        ("multirole_manager_team_member_form.html", "عنوان همکاری"),
+        ("multirole_manager_bookings.html", "نوبت‌های سالن نمونه"),
+        ("multirole_manager_manual_booking.html", "رزرو دستی سالن نمونه"),
+        ("multirole_manager_manual_booking_cancel.html", "تأیید لغو رزرو دستی"),
+        ("multirole_manager_customers.html", "مشتریان سالن نمونه"),
+        ("multirole_manager_services.html", "خدمات سالن نمونه"),
+        ("multirole_manager_service_form.html", "افزودن خدمت"),
+        ("multirole_manager_finance_preview.html", "نمای مالی سالن نمونه"),
+        ("multirole_manager_settlement_ledger.html", "اسناد تسویه سالن نمونه"),
+    )
+
+    @staticmethod
+    def _source(filename):
+        return (
+            Path(settings.BASE_DIR) / "templates" / "dashboards" / filename
+        ).read_text(encoding="utf-8")
+
+    @classmethod
+    def _render_title(cls, filename, *, salon_name="سالن نمونه", service=None):
+        source = cls._source(filename)
+        title = source.split("{% block title %}", 1)[1].split(
+            "{% endblock %}", 1
+        )[0]
+        return engines["django"].from_string(title).render(
+            {
+                "deployment_brand": get_deployment_brand_config(),
+                "salon": SimpleNamespace(salon_name=salon_name),
+                "service": service,
+            }
+        )
+
+    def test_all_titles_use_exactly_one_persian_brand_slot(self):
+        for filename, _ in self.TITLE_CASES:
+            with self.subTest(filename=filename):
+                source = self._source(filename)
+                self.assertTrue(
+                    source.startswith('{% extends "dashboard_template.html" %}')
+                )
+                self.assertIn("{% block content %}", source)
+                self.assertEqual(source.count("{% block title %}"), 1)
+                self.assertEqual(
+                    source.count("{{ deployment_brand.display_name_fa }}"), 1
+                )
+                self.assertNotIn(" | لومرا{% endblock %}", source)
+
+    def test_default_titles_preserve_existing_persian_copy(self):
+        self.assertEqual(get_deployment_brand_config().display_name_fa, "لومرا")
+        for filename, title in self.TITLE_CASES:
+            with self.subTest(filename=filename):
+                self.assertEqual(self._render_title(filename), f"{title} | لومرا")
+
+    def test_sequential_buyers_are_isolated_across_all_titles(self):
+        for latin, persian in (("Aurora", "آرورا"), ("Second Buyer", "نیلوفر")):
+            with override_settings(
+                BRAND_DISPLAY_NAME=latin, BRAND_DISPLAY_NAME_FA=persian
+            ):
+                for filename, title in self.TITLE_CASES:
+                    with self.subTest(filename=filename, persian=persian):
+                        self.assertEqual(
+                            self._render_title(filename), f"{title} | {persian}"
+                        )
+        self.assertEqual(
+            self._render_title("multirole_manager_team.html"), "تیم سالن نمونه | لومرا"
+        )
+
+    @override_settings(BRAND_DISPLAY_NAME="Aurora")
+    def test_latin_only_override_does_not_change_persian_titles(self):
+        for filename, title in self.TITLE_CASES:
+            with self.subTest(filename=filename):
+                self.assertEqual(self._render_title(filename), f"{title} | لومرا")
+
+    @override_settings(BRAND_DISPLAY_NAME_FA="آرورا & <جدید>")
+    def test_title_brand_and_salon_name_are_html_escaped(self):
+        for filename, title in self.TITLE_CASES:
+            with self.subTest(filename=filename):
+                rendered = self._render_title(filename)
+                self.assertEqual(rendered, f"{title} | آرورا &amp; &lt;جدید&gt;")
+                self.assertNotIn("آرورا & <جدید>", rendered)
+        self.assertEqual(
+            self._render_title(
+                "multirole_manager_team.html", salon_name="سالن & <آزمایش>"
+            ),
+            "تیم سالن &amp; &lt;آزمایش&gt; | آرورا &amp; &lt;جدید&gt;",
+        )
+
+    def test_service_form_create_and_edit_titles_preserve_mode(self):
+        filename = "multirole_manager_service_form.html"
+        self.assertEqual(self._render_title(filename), "افزودن خدمت | لومرا")
+        self.assertEqual(
+            self._render_title(filename, service=SimpleNamespace(pk=42)),
+            "ویرایش خدمت | لومرا",
+        )
+

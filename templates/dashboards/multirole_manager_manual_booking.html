@@ -1,5 +1,5 @@
 {% extends "dashboard_template.html" %}
-{% block title %}رزرو دستی {{ salon.salon_name }} | لومرا{% endblock %}
+{% block title %}رزرو دستی {{ salon.salon_name }} | {{ deployment_brand.display_name_fa }}{% endblock %}
 {% block content %}
 <div class="mx-auto max-w-3xl space-y-5">
   <header class="rounded-[28px] border border-loomera-borderSoft bg-white p-5 shadow-lm-card sm:p-6"><p class="text-xs font-black text-loomera-primary">رزرو دستی</p><h1 class="mt-1 text-xl font-black">{{ salon.salon_name }}</h1><p class="mt-2 text-sm leading-7 text-loomera-textMuted">مشتری، خدمت، متخصص و زمان آزاد را برای همین سالن انتخاب کنید؛ مبلغ هنگام مراجعه پرداخت می‌شود.</p></header>

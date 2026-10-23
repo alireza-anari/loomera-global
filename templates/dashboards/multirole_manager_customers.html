@@ -1,5 +1,5 @@
 {% extends "dashboard_template.html" %}
-{% block title %}مشتریان {{ salon.salon_name }} | لومرا{% endblock %}
+{% block title %}مشتریان {{ salon.salon_name }} | {{ deployment_brand.display_name_fa }}{% endblock %}
 {% block content %}
 <div class="space-y-5">
   <header class="rounded-[28px] border border-loomera-borderSoft bg-white p-5 shadow-lm-card sm:p-6"><p class="text-xs font-black text-loomera-primary">مشتریان سالن</p><h1 class="mt-1 text-xl font-black">مشتریان {{ salon.salon_name }}</h1><p class="mt-2 text-sm leading-7 text-loomera-textMuted">این فهرست در محیط چندسالنی فعلاً فقط خواندنی است.</p></header>
