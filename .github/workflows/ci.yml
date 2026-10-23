@@ -116,6 +116,12 @@ jobs:
             --failfast
           node --test tests/js/phase3_flash_ui_parity.test.cjs
 
+      - name: Phase 3 server flash safe body locale policy
+        run: |
+          python manage.py test \
+            apps.main.test_phase3_server_flash_safe_locale \
+            --failfast
+
       - name: Phase 3 localized submission progress guards
         run: |
           python manage.py test \

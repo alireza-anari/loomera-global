@@ -777,3 +777,46 @@ existing Persian safe fallback; the larger request-locale flash-body
 policy is a separately reviewed workstream. No auth/payment/booking,
 calendar, phone, migrations, locale defaults, browser-screen-reader
 acceptance or production deployment changes occur.
+
+## Phase 3 — Slice 3.17: Safe Server Flash Body Locale Policy
+
+The active server-rendered flash partial continues to call
+`clean_ui_message:message.tags`, which preserves the exact Persian
+sanitizer and historical visible copy when the language is `fa`.
+
+In English and Arabic, this filter now renders only exact, audited
+gettext literals from the **existing 41-key message catalog**. For each
+flash tone (error/danger, warning, success, info/neutral), its matching
+`feedback.default.*` message is accepted from the original English
+msgid or a compiled fa/en/ar translation, then emitted in the active
+locale. The existing `validation.notice` and
+`validation.server_form` messages are also allowed for error/warning
+tones only. No custom message, user name, mobile number, raw exception,
+backend error, business-specific detail, HTML fragment, interpolation,
+near match or unknown catalog string is automatically translated.
+
+Anything not an exact approved literal uses that tone's existing
+localized `feedback.default.*` value. The filter checks the currently
+active Django render language and uses bounded `translation.override()`
+contexts to avoid leaking locale state. In Persian, the unchanged
+`user_error_message` and `user_ui_message` functions continue to
+handle all server flash bodies, including legitimate safe domain text.
+
+This is an intentional progressive-localization trade-off: an
+untranslated, application-specific server message in an en/ar session
+will be replaced by a safe generic message until it has a separately
+reviewed i18n contract. The template still autoescapes all text.
+No new translation keys or `.po/.mo` changes are required.
+
+The new database-free `apps.main.test_phase3_server_flash_safe_locale`
+suite tests actual flash rendering for each tone, both alternate
+languages, hostile/technical/PII-like inputs, all approved source
+locales, strict matching and tone isolation, language switching,
+historical Persian responses, and unchanged default currency/calendar.
+The existing server/browser flash regression suite is updated to expect
+the new typed fallback in English/Arabic. GitHub CI executes both.
+
+No account/payment/booking/OTP/authorization logic, redirects,
+data schema, browser i18n bridge, client feedback sanitizer, or
+production deployment is changed. Cross-browser and screen-reader
+acceptance are not claimed. Phase 3 remains open.
