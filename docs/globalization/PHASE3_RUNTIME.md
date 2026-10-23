@@ -738,3 +738,42 @@ renders pristine and synthetic-invalid real templates in fa/en/ar and
 verifies each input's state, error linkage, escaping, preserved
 strength hints and unchanged security/identity contracts. GitHub CI runs
 it alongside the existing Phase 1–3 regressions. No production deployment.
+
+## Phase 3 — Slice 3.16: Server and Browser Flash UI Parity
+
+This cross-shell flash presentation slice reuses the already-reviewed,
+versioned `feedback.title.*` and `feedback.close` gettext messages.
+Server-rendered `partials/messages.html` now translates its four
+static status/error/warning/information titles and accessible close button
+label through Django i18n in fa/en/ar. The Persian default remains exactly
+"انجام نشد", "انجام شد", "نیاز به بررسی", "اطلاع" and "بستن پیام".
+The shared template, flash roles, icons, DOM selectors, dismissal duration
+and `clean_ui_message` sanitization filter are otherwise unchanged.
+
+A runtime issue also affected all browser-created feedback: within
+`feedback.js` the local normalized message variable was named `text`,
+shadowing the already-existing translation lookup function `text`.
+The close-button aria-label tried to call the string as a function,
+preventing successful construction of browser feedback nodes. Renaming
+only that local message variable to `messageText` restores creation
+of all four tones without changing sanitizer policy, trusted-message
+allowlist, fallback messages or any content insertion API. Dynamic body
+content still goes through `textContent`, never user-controlled HTML.
+
+A no-database Django suite verifies exact compiled fa/en/ar
+server-rendered headings and close labels, original safe flash body
+sanitization (including technical-string suppression), stable markup,
+and deployment locale defaults. A dependency-free Node VM suite executes
+the real browser i18n bridge and feedback script with a simulated DOM
+to test construction, localized labels, role/state, vetted en/ar
+messages, hostile server messages, historical fa behavior, missing
+catalog fallback, close handling and timeout cleanup. The dedicated
+CI step runs both alongside all previous Phase 1–3 tests.
+
+This slice deliberately does not change the Persian-only server-side
+message body sanitizer or attempt to translate arbitrary server payloads.
+Under en/ar an unapproved server flash body can still resolve to the
+existing Persian safe fallback; the larger request-locale flash-body
+policy is a separately reviewed workstream. No auth/payment/booking,
+calendar, phone, migrations, locale defaults, browser-screen-reader
+acceptance or production deployment changes occur.
