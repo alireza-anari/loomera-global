@@ -695,3 +695,14 @@ The active authenticated `messaging:status` route uses `MessagingStatusView` and
 Five database-free tests in `apps/main/test_production_settings_hygiene.py` cover two exact slots, unchanged paths and security markup, default wording, sequential buyer isolation, independent Persian override, escaped HTML, and retained Bale provider wording. RED test-only SHA `e8e3250d9c3368481d6b5ce03687749418484238` failed as expected in [GitHub Actions #39814204059](https://github.com/alireza-anari/loomera-global/actions/runs/39814204059). Final-head GREEN GitHub CI and independent scope review are mandatory before Squash Merge; no unexecuted tests are claimed.
 
 **Phase 2 NOT COMPLETE. Phase 3 BLOCKED. No deployment.**
+
+
+## Notification Center Browser Title — Presentation-Only Brand
+
+The authenticated `NotificationCenterView` handles `notifications:center` and renders `templates/notifications/notification_center.html`. Its single previously static browser title `اعلان‌ها | Loomera` now renders `اعلان‌ها | {{ deployment_brand.display_name }}` using the shared request-level Latin deployment identity (`BRAND_DISPLAY_NAME`). The unconfigured default stays `Loomera`; Persian-only overrides (`BRAND_DISPLAY_NAME_FA`) do not change the Latin title, buyer changes do not leak between rendered requests, and Django automatically escapes configured HTML characters.
+
+**Operational boundary:** No notification models, stored notification title/body/icon/category, action URLs, recipient IDs, per-user authorization, audience roles, filter query values (`all`, `unread`, `read`), unread counts, pagination, read/read-all POST routes, CSRF, or CSS design tokens are altered. The `loomera-` CSS identifiers are styling contracts, not brand copy. Five database-free tests in `apps/main/test_production_settings_hygiene.py` cover the source contract and URLs, unchanged default/empty-state output, sequential buyer isolation, independent Persian override, and HTML escaping.
+
+Test-only RED SHA `aa3ee405ab29a1303c0e1a0174364e1c4064f63f` failed as expected in [GitHub Actions #39901915321](https://github.com/alireza-anari/loomera-global/actions/runs/39901915321). Require final-head GREEN GitHub CI, independent patch/scope review and a matching main base before Squash Merge. No local or deployment execution is claimed.
+
+**Phase 2 incomplete. Phase 3 blocked. No deployment.**
