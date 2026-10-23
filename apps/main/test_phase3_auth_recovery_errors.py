@@ -40,7 +40,10 @@ class AuthenticationRecoveryValidationLocaleTests(SimpleTestCase):
                     ):
                         form = form_class(data={})
                         self.assertFalse(form.is_valid())
-                        self.assertEqual(form.errors[field][0], expected)
+                        self.assertEqual(form.errors[field][0].strip(), expected)
+                        if form_class is RememberPasswordForm:
+                            # Legacy trailing space remains part of the source msgid.
+                            self.assertTrue(form.errors[field][0].endswith(" "))
                     # Historical trailing space on login's required message
                     # is intentionally preserved in every locale.
                     login = LoginUserForm(data={})
