@@ -2906,9 +2906,11 @@ class PasswordRecoveryBrandIdentityTests(SimpleTestCase):
             source,
         )
         self.assertIn(
-            "امنیت حساب {{ deployment_brand.display_name }}",
+            '{% trans "امنیت حساب" %} {{ deployment_brand.display_name }}',
             source,
         )
+        self.assertEqual(source.count("deployment_brand.display_name"), 1)
+        self.assertNotIn("امنیت حساب {{ deployment_brand.display_name }}", source)
         self.assertIn('<a href="/" class="inline-flex items-center">', source)
         self.assertNotIn("branding/logo/loomera-logo-horizontal-transparent.png", source)
         self.assertNotIn('alt="Loomera"', source)
