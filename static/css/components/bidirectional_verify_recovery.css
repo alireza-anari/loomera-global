@@ -1,0 +1,6 @@
+/* Phase 3.14: active OTP verification directional cues only.
+ * Never modify the RTL source layout or reverse the numeric OTP input. */
+html[dir="ltr"] [data-auth-flow="verify"] .lm-verify-back-icon,
+html[dir="ltr"] [data-auth-flow="verify"] .lm-verify-next-icon {
+  transform: scaleX(-1);
+}

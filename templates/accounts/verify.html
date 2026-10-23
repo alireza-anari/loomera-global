@@ -1,6 +1,10 @@
 {% extends "base.html" %}
 {% load static i18n %}
 
+{% block head %}
+<link rel="stylesheet" href="{% static 'css/components/bidirectional_verify_recovery.css' %}">
+{% endblock %}
+
 {% block title %}{% trans "تأیید کد" as fallback_verify_title %}{{ verify_page_title|default:fallback_verify_title }}{% endblock %}
 {% block body_attrs %}data-page="auth" data-auth-flow="verify"{% endblock %}
 {% block main_class %}!px-0{% endblock %}
@@ -24,12 +28,12 @@
         <div>
           <span class="inline-flex rounded-full {% if verification_mode == 'signup' %}bg-loomera-accentSoft text-loomera-textPrimary{% else %}bg-loomera-primarySoft text-loomera-primary{% endif %} px-3 py-1 text-xs font-black">{{ verify_page_title|default:fallback_verify_title }}</span>
           <h2 id="verify-title" class="mt-4 text-2xl font-black text-loomera-textPrimary">{% trans "کد تأیید را وارد کن" %}</h2>
-          <p class="mt-2 text-sm leading-7 text-loomera-textMuted">{% trans "کد پیامک‌شده را بدون فاصله وارد کن." %}</p>
+          <p id="verify-otp-help" class="mt-2 text-sm leading-7 text-loomera-textMuted">{% trans "کد پیامک‌شده را بدون فاصله وارد کن." %}</p>
           {% if mobile_number %}<p class="mt-2 text-sm font-black tracking-wide text-loomera-textPrimary" dir="ltr">{{ mobile_number }}</p>{% endif %}
           {% if next_url %}<p class="mt-2 text-xs font-bold leading-6 text-loomera-primary">{% trans "بعد از تأیید، به ادامه رزرو برمی‌گردی." %}</p>{% endif %}
         </div>
         <a href="{{ localized_verify_back_href|default:'/' }}" class="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-loomera-borderSoft bg-white text-loomera-textPrimary shadow-sm transition hover:border-loomera-primary/30 hover:bg-loomera-primarySoft hover:text-loomera-primary" aria-label="{% trans 'بازگشت' %}">
-          <i class="fa-solid fa-chevron-right text-sm" aria-hidden="true"></i>
+          <i class="fa-solid fa-chevron-right lm-verify-back-icon text-sm" aria-hidden="true"></i>
         </a>
       </div>
 
@@ -46,14 +50,14 @@
           <span class="mb-2 block text-sm font-black text-loomera-textPrimary">{% trans "کد تأیید" %}</span>
           <span class="flex items-center overflow-hidden rounded-2xl border border-loomera-borderSoft bg-loomera-bgSubtle transition focus-within:border-loomera-primary focus-within:bg-white focus-within:ring-4 focus-within:ring-loomera-primary/10">
             <span class="flex h-12 w-12 shrink-0 items-center justify-center text-loomera-primary"><i class="fa-solid fa-shield-halved" aria-hidden="true"></i></span>
-            <input class="min-w-0 flex-1 bg-transparent px-3 py-3 text-center text-2xl font-black tracking-[0.45em] text-loomera-textPrimary outline-none placeholder:text-loomera-textMuted/50" type="text" name="active_code" id="id_active_code" value="{{ form.active_code.value|default_if_none:'' }}" inputmode="numeric" autocomplete="one-time-code" maxlength="8" placeholder="••••" dir="ltr" required>
+            <input class="min-w-0 flex-1 bg-transparent px-3 py-3 text-center text-2xl font-black tracking-[0.45em] text-loomera-textPrimary outline-none placeholder:text-loomera-textMuted/50" type="text" name="active_code" id="id_active_code" value="{{ form.active_code.value|default_if_none:'' }}" inputmode="numeric" autocomplete="one-time-code" maxlength="8" placeholder="••••" dir="ltr" aria-invalid="{% if form.active_code.errors %}true{% else %}false{% endif %}" aria-describedby="verify-otp-help{% if form.active_code.errors %} verify-otp-error{% endif %}" required>
           </span>
-          {% if form.active_code.errors %}<small class="mt-2 block text-xs font-bold text-red-600">{{ form.active_code.errors.0 }}</small>{% endif %}
+          {% if form.active_code.errors %}<small id="verify-otp-error" role="alert" class="mt-2 block text-xs font-bold text-red-600">{{ form.active_code.errors.0 }}</small>{% endif %}
         </label>
 
         <button type="submit" class="inline-flex w-full items-center justify-center gap-2 rounded-full bg-loomera-primary px-6 py-3.5 text-sm font-black text-white shadow-lm-soft transition hover:bg-loomera-primaryHover focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-loomera-primary/20">
           <span>{{ verify_submit_label|default:fallback_submit_label }}</span>
-          <i class="fa-solid fa-arrow-left text-xs" aria-hidden="true"></i>
+          <i class="fa-solid fa-arrow-left lm-verify-next-icon text-xs" aria-hidden="true"></i>
         </button>
       </form>
       <p class="mt-5 text-center text-sm font-bold text-loomera-textMuted"><a href="{{ localized_verify_back_href|default:'/' }}" class="text-loomera-primary hover:text-loomera-primaryHover">{% trans "تغییر شماره یا بازگشت به مرحله قبل" %}</a></p>

@@ -55,7 +55,7 @@ class VerificationAndRecoveryPageLocaleTests(SimpleTestCase):
         source = self.source("templates/accounts/remember_password.html")
         self.assertIn("{% load i18n %}", source)
         self.assertIn('{% include "partials/brand/logo.html" with variant="full" size="lg" %}', source)
-        self.assertIn("امنیت حساب {{ deployment_brand.display_name }}", source)
+        self.assertIn('{% trans "امنیت حساب" %} {{ deployment_brand.display_name }}', source)
         self.assertIn("{% csrf_token %}", source)
         self.assertIn('method="post"', source)
         self.assertIn("form.non_field_errors.0", source)
