@@ -20,6 +20,7 @@ from django.db.models import Avg, Sum, F, Q, Value, Case, When, IntegerField
 from django.http import Http404, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils import timezone
+from django.utils.translation import gettext
 from django.utils.http import url_has_allowed_host_and_scheme
 from django.views import View
 from django.views.decorators.csrf import csrf_exempt
@@ -1227,7 +1228,7 @@ class LoginUserView(View):
         next_url = _clean_next_url(request)
 
         if not form.is_valid():
-            messages.error(request, "لطفاً تمام فیلدها را به درستی پر کنید.", "danger")
+            messages.error(request, gettext("لطفاً تمام فیلدها را به درستی پر کنید."), "danger")
             return render(
                 request,
                 self.template_name,
@@ -1241,7 +1242,7 @@ class LoginUserView(View):
         )
 
         if user is None:
-            messages.error(request, "شماره موبایل یا رمز عبور اشتباه است.", "danger")
+            messages.error(request, gettext("شماره موبایل یا رمز عبور اشتباه است."), "danger")
             return render(
                 request,
                 self.template_name,
@@ -1249,7 +1250,7 @@ class LoginUserView(View):
             )
 
         if not user.is_active:
-            messages.error(request, "حساب کاربری شما فعال نمی‌باشد.", "danger")
+            messages.error(request, gettext("حساب کاربری شما فعال نمی‌باشد."), "danger")
             return render(
                 request,
                 self.template_name,
@@ -1259,7 +1260,7 @@ class LoginUserView(View):
         if user.is_admin and not (next_url or "").startswith("/platform/"):
             messages.warning(
                 request,
-                "برای ورود به پنل پلتفرم، صفحه مدیریت را باز کن یا از ورود امن مدیران استفاده کن.",
+                gettext("برای ورود به پنل پلتفرم، صفحه مدیریت را باز کن یا از ورود امن مدیران استفاده کن."),
                 "warning",
             )
             return render(
@@ -1269,7 +1270,7 @@ class LoginUserView(View):
             )
 
         login(request, user)
-        messages.success(request, "ورود با موفقیت انجام شد.", "success")
+        messages.success(request, gettext("ورود با موفقیت انجام شد."), "success")
         return _redirect_after_auth(request, user, next_url=next_url)
 
 

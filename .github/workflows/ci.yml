@@ -115,6 +115,12 @@ jobs:
             apps.main.test_phase3_submit_pending \
             --failfast
 
+      - name: Phase 3 shared auth copy and login feedback gettext guards
+        run: |
+          python manage.py test \
+            apps.main.test_phase3_auth_shared_copy \
+            --failfast
+
       - name: Production settings hygiene
         run: |
           python manage.py test \

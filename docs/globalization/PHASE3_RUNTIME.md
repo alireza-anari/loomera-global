@@ -377,3 +377,47 @@ labels, form field data, booking/checkout/payment workflows or phone/currency
 formats. It does not constitute full browser-accessibility acceptance or a
 production deployment; Phase 3 remains open.
 
+## Phase 3 — Slice 3.7: Shared Authentication Copy and Controlled Login Feedback
+
+**Scope:** static form copy in the four existing authentication entry pages
+(`login`, customer signup, professional signup and business-manager signup)
+and five generic messages emitted by the `LoginUserView`. This is not a
+redesign of identity, permission, password policy or OTP handling.
+
+The templates now load Django's `i18n` tag library and mark selected shared
+labels, role/action links, accessible password-toggle labels, form-section
+labels, submit CTAs and introductory explanations with `{% trans %}`.
+Translation keys deliberately use the existing Persian source strings, with
+compiled `en/fa/ar` Django gettext catalogs providing the alternate text.
+In the default Persian deployment, the translated output is the exact
+existing Persian wording. The four browser `title` blocks and branded
+home-link accessibility labels are **intentionally unchanged** to preserve
+the independently verified Phase 2 buyer-brand identity contract and
+associated regression tests. The shell and direction switching still follow
+the deployment's Phase 3 locale.
+
+Five hardcoded, generic login feedback messages now use request-time Django
+`gettext` under the already-activated request locale: invalid form fields,
+invalid credentials, inactive account, denied platform-admin entry and
+successful sign-in. Existing authentication branches, permission and
+workspace predicates, login session semantics and safe return destination
+are unchanged. Messages do not interpolate account credentials or
+secret/user-specific data and are not used to make authorization decisions.
+
+This slice **does not modify** Persian legal acceptance wording or legal
+content, the Iranian mobile-number validation policy, signup/password and
+OTP server error strings, the page-specific inline JavaScript password
+strength hints, SMS copy, or user-generated data. Those are separate
+reviewed localization tasks. In particular, the new generic login flash
+messages may still be reduced to a safe generic fallback by the
+conservative en/ar browser feedback sanitizer introduced in Phase 3.5;
+they are not a license to display untrusted backend errors.
+
+Nine database-free Django tests cover the four active templates' tag
+integration and rendered common labels in fa/en/ar, compiled catalog
+lookups, login feedback gettext, Phase 2 brand-sensitive title and
+metadata invariants, preserved form/CSRF/mobile/direction contracts and
+unchanged calendar/currency semantics. Existing Phase 2 and Phase 3
+regression suites remain in CI. Production rollout and real-browser
+accessibility/visual QA remain separate; **Phase 3 stays open**.
+

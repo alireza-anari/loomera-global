@@ -151,3 +151,167 @@ msgstr "در حال لغو…"
 msgid "Working…"
 msgstr "در حال انجام…"
 
+#: templates/accounts/*.html apps/accounts/views.py
+msgid "شماره موبایل"
+msgstr "شماره موبایل"
+
+#: templates/accounts/*.html apps/accounts/views.py
+msgid "رمز عبور"
+msgstr "رمز عبور"
+
+#: templates/accounts/*.html apps/accounts/views.py
+msgid "نمایش یا پنهان‌کردن رمز عبور"
+msgstr "نمایش یا پنهان‌کردن رمز عبور"
+
+#: templates/accounts/*.html apps/accounts/views.py
+msgid "نام"
+msgstr "نام"
+
+#: templates/accounts/*.html apps/accounts/views.py
+msgid "نام خانوادگی"
+msgstr "نام خانوادگی"
+
+#: templates/accounts/*.html apps/accounts/views.py
+msgid "حداقل ۸ کاراکتر"
+msgstr "حداقل ۸ کاراکتر"
+
+#: templates/accounts/*.html apps/accounts/views.py
+msgid "تأیید رمز عبور"
+msgstr "تأیید رمز عبور"
+
+#: templates/accounts/*.html apps/accounts/views.py
+msgid "تکرار رمز عبور"
+msgstr "تکرار رمز عبور"
+
+#: templates/accounts/*.html apps/accounts/views.py
+msgid "رمز عبور را تکرار کنید"
+msgstr "رمز عبور را تکرار کنید"
+
+#: templates/accounts/*.html apps/accounts/views.py
+msgid "رمز عبور را تکرار کن"
+msgstr "رمز عبور را تکرار کن"
+
+#: templates/accounts/*.html apps/accounts/views.py
+msgid "رمز عبور را دوباره وارد کن"
+msgstr "رمز عبور را دوباره وارد کن"
+
+#: templates/accounts/*.html apps/accounts/views.py
+msgid "ورود"
+msgstr "ورود"
+
+#: templates/accounts/*.html apps/accounts/views.py
+msgid "ثبت مجموعه"
+msgstr "ثبت مجموعه"
+
+#: templates/accounts/*.html apps/accounts/views.py
+msgid "مشتری"
+msgstr "مشتری"
+
+#: templates/accounts/*.html apps/accounts/views.py
+msgid "متخصص"
+msgstr "متخصص"
+
+#: templates/accounts/*.html apps/accounts/views.py
+msgid "مدیر مجموعه"
+msgstr "مدیر مجموعه"
+
+#: templates/accounts/*.html apps/accounts/views.py
+msgid "حساب نداری؟"
+msgstr "حساب نداری؟"
+
+#: templates/accounts/*.html apps/accounts/views.py
+msgid "قبلاً حساب داری؟"
+msgstr "قبلاً حساب داری؟"
+
+#: templates/accounts/*.html apps/accounts/views.py
+msgid "رمز عبور را فراموش کرده‌ام"
+msgstr "رمز عبور را فراموش کرده‌ام"
+
+#: templates/accounts/*.html apps/accounts/views.py
+msgid "دریافت کد تأیید"
+msgstr "دریافت کد تأیید"
+
+#: templates/accounts/*.html apps/accounts/views.py
+msgid "ادامه و دریافت کد تأیید"
+msgstr "ادامه و دریافت کد تأیید"
+
+#: templates/accounts/*.html apps/accounts/views.py
+msgid "ثبت‌نام متخصص"
+msgstr "ثبت‌نام متخصص"
+
+#: templates/accounts/*.html apps/accounts/views.py
+msgid "تخصص اصلی"
+msgstr "تخصص اصلی"
+
+#: templates/accounts/*.html apps/accounts/views.py
+msgid "مثلاً رنگ مو، ناخن، ماساژ، پوست و زیبایی"
+msgstr "مثلاً رنگ مو، ناخن، ماساژ، پوست و زیبایی"
+
+#: templates/accounts/*.html apps/accounts/views.py
+msgid "ورود به "
+msgstr "ورود به "
+
+#: templates/accounts/*.html apps/accounts/views.py
+msgid "ثبت‌نام "
+msgstr "ثبت‌نام "
+
+#: templates/accounts/*.html apps/accounts/views.py
+msgid "برای مجموعه ثبت‌نام می‌کنی؟"
+msgstr "برای مجموعه ثبت‌نام می‌کنی؟"
+
+#: templates/accounts/*.html apps/accounts/views.py
+msgid "برای ادامه رزرو وارد حساب مشتری شو؛ بعد از ورود به همین مرحله برمی‌گردی."
+msgstr "برای ادامه رزرو وارد حساب مشتری شو؛ بعد از ورود به همین مرحله برمی‌گردی."
+
+#: templates/accounts/*.html apps/accounts/views.py
+msgid "اطلاعات مدیر حساب را وارد کن؛ بعد از تأیید شماره موبایل وارد مسیر تکمیل مجموعه می‌شوی."
+msgstr "اطلاعات مدیر حساب را وارد کن؛ بعد از تأیید شماره موبایل وارد مسیر تکمیل مجموعه می‌شوی."
+
+#: templates/accounts/*.html apps/accounts/views.py
+msgid "بعد از تأیید شماره موبایل، دقیقاً به ادامه رزرو برمی‌گردی."
+msgstr "بعد از تأیید شماره موبایل، دقیقاً به ادامه رزرو برمی‌گردی."
+
+#: templates/accounts/*.html apps/accounts/views.py
+msgid "حساب مشتری را بساز؛ شماره موبایل در مرحله بعد با کد تأیید می‌شود."
+msgstr "حساب مشتری را بساز؛ شماره موبایل در مرحله بعد با کد تأیید می‌شود."
+
+#: templates/accounts/*.html apps/accounts/views.py
+msgid "حساب حرفه‌ای خودت را بساز؛ شماره موبایل در مرحله بعد با کد پیامکی تأیید می‌شود."
+msgstr "حساب حرفه‌ای خودت را بساز؛ شماره موبایل در مرحله بعد با کد پیامکی تأیید می‌شود."
+
+#: templates/accounts/*.html apps/accounts/views.py
+msgid "فرم ورود"
+msgstr "فرم ورود"
+
+#: templates/accounts/*.html apps/accounts/views.py
+msgid "فرم ثبت‌نام مشتری"
+msgstr "فرم ثبت‌نام مشتری"
+
+#: templates/accounts/*.html apps/accounts/views.py
+msgid "فرم ثبت‌نام متخصص"
+msgstr "فرم ثبت‌نام متخصص"
+
+#: templates/accounts/*.html apps/accounts/views.py
+msgid "فرم ثبت‌نام مدیر مجموعه"
+msgstr "فرم ثبت‌نام مدیر مجموعه"
+
+#: templates/accounts/*.html apps/accounts/views.py
+msgid "لطفاً تمام فیلدها را به درستی پر کنید."
+msgstr "لطفاً تمام فیلدها را به درستی پر کنید."
+
+#: templates/accounts/*.html apps/accounts/views.py
+msgid "شماره موبایل یا رمز عبور اشتباه است."
+msgstr "شماره موبایل یا رمز عبور اشتباه است."
+
+#: templates/accounts/*.html apps/accounts/views.py
+msgid "حساب کاربری شما فعال نمی‌باشد."
+msgstr "حساب کاربری شما فعال نمی‌باشد."
+
+#: templates/accounts/*.html apps/accounts/views.py
+msgid "ورود با موفقیت انجام شد."
+msgstr "ورود با موفقیت انجام شد."
+
+#: templates/accounts/*.html apps/accounts/views.py
+msgid "برای ورود به پنل پلتفرم، صفحه مدیریت را باز کن یا از ورود امن مدیران استفاده کن."
+msgstr "برای ورود به پنل پلتفرم، صفحه مدیریت را باز کن یا از ورود امن مدیران استفاده کن."
+
