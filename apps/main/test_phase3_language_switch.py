@@ -90,6 +90,8 @@ class DeploymentLanguageSelectionTests(SimpleTestCase):
         current["workspace_id"] = 91
         current["user_custom"] = {"choice": 2}
         current.save()
+        # Signed-cookie test sessions require reflecting the saved key on Client.
+        client.cookies[settings.SESSION_COOKIE_NAME] = current.session_key
         response = client.post(self.url, {"language": "en"})
         self.assertEqual(response.status_code, 302)
         self.assertEqual(client.session["workspace_id"], 91)
