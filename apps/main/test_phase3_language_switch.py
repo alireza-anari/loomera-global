@@ -21,6 +21,7 @@ ENABLED = (("en", "English"), ("ar", "العربية"), ("fa", "فارسی"))
 
 
 @override_settings(
+    SECURE_SSL_REDIRECT=False,  # Test endpoint responses; production HTTPS remains enforced.
     SESSION_ENGINE="django.contrib.sessions.backends.signed_cookies",
     LOOMERA_DEFAULT_LANGUAGE="en",
     LOOMERA_ENABLED_LANGUAGES=["en", "ar", "fa"],
