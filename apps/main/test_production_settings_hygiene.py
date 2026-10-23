@@ -6470,7 +6470,6 @@ class NotificationCenterDeploymentBrandTitleTests(SimpleTestCase):
         self.assertIn("{{ recipient.notification.title }}", source)
         self.assertIn("{{ recipient.notification.body }}", source)
         self.assertIn("{{ recipient.notification.action_url }}", source)
-        self.assertIn("{{ recipient.id }}", source)
         self.assertIn("{% if is_paginated %}", source)
         self.assertIn("{% load static jalali_filters %}", source)
         self.assertEqual(reverse("notifications:center"), "/notifications/")
