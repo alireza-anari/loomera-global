@@ -315,3 +315,115 @@ msgstr "Signed in successfully."
 msgid "برای ورود به پنل پلتفرم، صفحه مدیریت را باز کن یا از ورود امن مدیران استفاده کن."
 msgstr "To access the platform dashboard, open the administration page or use secure administrator sign-in."
 
+#: apps/accounts/forms.py apps/accounts/views.py
+msgid "شماره موبایل باید ۱۱ رقم باشد و با 09 شروع شود"
+msgstr "The mobile number must have 11 digits and start with 09."
+
+#: apps/accounts/forms.py apps/accounts/views.py
+msgid "این شماره موبایل قبلاً با همین نقش ثبت شده است."
+msgstr "This mobile number is already registered for this role."
+
+#: apps/accounts/forms.py apps/accounts/views.py
+msgid "این شماره موبایل قبلاً ثبت شده است"
+msgstr "This mobile number is already registered"
+
+#: apps/accounts/forms.py apps/accounts/views.py
+msgid "رمز عبور و تأیید آن مطابقت ندارند"
+msgstr "The password and confirmation do not match"
+
+#: apps/accounts/forms.py apps/accounts/views.py
+msgid "رمز عبور و تکرار آن مغایرت دارند"
+msgstr "The password entries do not match"
+
+#: apps/accounts/forms.py apps/accounts/views.py
+msgid "رمز عبور باید حداقل ۸ کاراکتر باشد"
+msgstr "The password must be at least 8 characters long"
+
+#: apps/accounts/forms.py apps/accounts/views.py
+msgid "تخصص اصلی باید حداقل ۲ کاراکتر باشد."
+msgstr "The main specialty must be at least 2 characters long."
+
+#: apps/accounts/forms.py apps/accounts/views.py
+msgid "تخصص اصلی را وارد کنید."
+msgstr "Enter your main specialty."
+
+#: apps/accounts/forms.py apps/accounts/views.py
+msgid "رمز عبور شرایط امنیتی لازم را ندارد."
+msgstr "The password does not meet the security requirements."
+
+#: apps/accounts/forms.py apps/accounts/views.py
+msgid "این فیلد نمی‌تواند خالی باشد"
+msgstr "This field cannot be empty"
+
+#: apps/accounts/forms.py apps/accounts/views.py
+msgid "این فیلد نمی‌تواند خالی باشد "
+msgstr "This field cannot be empty "
+
+#: apps/accounts/forms.py apps/accounts/views.py
+msgid "ابتدا شماره موبایل و کد دریافتی را ثبت کنید."
+msgstr "First enter your mobile number and the received code."
+
+#: apps/accounts/forms.py apps/accounts/views.py
+msgid "کد تایید منقضی شده است. لطفاً دوباره درخواست کد بدهید."
+msgstr "The verification code has expired. Request a new code."
+
+#: apps/accounts/forms.py apps/accounts/views.py
+msgid "جلسه بازیابی یا ثبت‌نام منقضی شده است."
+msgstr "The recovery or registration session has expired."
+
+#: apps/accounts/forms.py apps/accounts/views.py
+msgid "تعداد تلاش‌های مجاز تمام شده است. لطفاً دوباره درخواست کد بدهید."
+msgstr "You have used all allowed attempts. Request a new code."
+
+#: apps/accounts/forms.py apps/accounts/views.py
+msgid "اطلاعات وارد شده اشتباه است."
+msgstr "The entered information is incorrect."
+
+#: apps/accounts/forms.py apps/accounts/views.py
+msgid "کد تایید بیش از حد اشتباه وارد شد. لطفاً دوباره درخواست کد بدهید."
+msgstr "Too many incorrect verification codes. Request a new code."
+
+#: apps/accounts/forms.py apps/accounts/views.py
+msgid "کاربر مرتبط با این کد پیدا نشد."
+msgstr "No account associated with this code was found."
+
+#: apps/accounts/forms.py apps/accounts/views.py
+msgid "ثبت‌نام متخصص کامل شد. حالا پروفایل حرفه‌ای خودت را تکمیل کن."
+msgstr "Professional registration is complete. You can now finish your profile."
+
+#: apps/accounts/forms.py apps/accounts/views.py
+msgid "ثبت‌نام شما کامل شد و وارد حساب شدید."
+msgstr "Registration is complete and you have signed in."
+
+#: apps/accounts/forms.py apps/accounts/views.py
+msgid "ابتدا کد تایید بازیابی رمز را با موفقیت وارد کنید."
+msgstr "First enter a valid password recovery verification code."
+
+#: apps/accounts/forms.py apps/accounts/views.py
+msgid "حساب کاربری پیدا نشد."
+msgstr "Account not found."
+
+#: apps/accounts/forms.py apps/accounts/views.py
+msgid "جلسه بازیابی رمز منقضی شده است. دوباره کد دریافت کنید."
+msgstr "The password recovery session has expired. Request a new code."
+
+#: apps/accounts/forms.py apps/accounts/views.py
+msgid "رمز عبور فعلی صحیح نیست."
+msgstr "The current password is incorrect."
+
+#: apps/accounts/forms.py apps/accounts/views.py
+msgid "رمز عبور با موفقیت تغییر کرد."
+msgstr "The password was changed successfully."
+
+#: apps/accounts/forms.py apps/accounts/views.py
+msgid "لطفاً فیلدهای مشخص‌شده را بررسی و اصلاح کنید."
+msgstr "Please review and correct the highlighted fields."
+
+#: apps/accounts/forms.py apps/accounts/views.py
+msgid "شماره موبایل را درست وارد کنید."
+msgstr "Enter a valid mobile number."
+
+#: apps/accounts/forms.py apps/accounts/views.py
+msgid "شماره وارد شده در سیستم پیدا نشد."
+msgstr "The provided number was not found in the system."
+

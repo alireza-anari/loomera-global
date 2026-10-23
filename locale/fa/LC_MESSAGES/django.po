@@ -315,3 +315,115 @@ msgstr "ورود با موفقیت انجام شد."
 msgid "برای ورود به پنل پلتفرم، صفحه مدیریت را باز کن یا از ورود امن مدیران استفاده کن."
 msgstr "برای ورود به پنل پلتفرم، صفحه مدیریت را باز کن یا از ورود امن مدیران استفاده کن."
 
+#: apps/accounts/forms.py apps/accounts/views.py
+msgid "شماره موبایل باید ۱۱ رقم باشد و با 09 شروع شود"
+msgstr "شماره موبایل باید ۱۱ رقم باشد و با 09 شروع شود"
+
+#: apps/accounts/forms.py apps/accounts/views.py
+msgid "این شماره موبایل قبلاً با همین نقش ثبت شده است."
+msgstr "این شماره موبایل قبلاً با همین نقش ثبت شده است."
+
+#: apps/accounts/forms.py apps/accounts/views.py
+msgid "این شماره موبایل قبلاً ثبت شده است"
+msgstr "این شماره موبایل قبلاً ثبت شده است"
+
+#: apps/accounts/forms.py apps/accounts/views.py
+msgid "رمز عبور و تأیید آن مطابقت ندارند"
+msgstr "رمز عبور و تأیید آن مطابقت ندارند"
+
+#: apps/accounts/forms.py apps/accounts/views.py
+msgid "رمز عبور و تکرار آن مغایرت دارند"
+msgstr "رمز عبور و تکرار آن مغایرت دارند"
+
+#: apps/accounts/forms.py apps/accounts/views.py
+msgid "رمز عبور باید حداقل ۸ کاراکتر باشد"
+msgstr "رمز عبور باید حداقل ۸ کاراکتر باشد"
+
+#: apps/accounts/forms.py apps/accounts/views.py
+msgid "تخصص اصلی باید حداقل ۲ کاراکتر باشد."
+msgstr "تخصص اصلی باید حداقل ۲ کاراکتر باشد."
+
+#: apps/accounts/forms.py apps/accounts/views.py
+msgid "تخصص اصلی را وارد کنید."
+msgstr "تخصص اصلی را وارد کنید."
+
+#: apps/accounts/forms.py apps/accounts/views.py
+msgid "رمز عبور شرایط امنیتی لازم را ندارد."
+msgstr "رمز عبور شرایط امنیتی لازم را ندارد."
+
+#: apps/accounts/forms.py apps/accounts/views.py
+msgid "این فیلد نمی‌تواند خالی باشد"
+msgstr "این فیلد نمی‌تواند خالی باشد"
+
+#: apps/accounts/forms.py apps/accounts/views.py
+msgid "این فیلد نمی‌تواند خالی باشد "
+msgstr "این فیلد نمی‌تواند خالی باشد "
+
+#: apps/accounts/forms.py apps/accounts/views.py
+msgid "ابتدا شماره موبایل و کد دریافتی را ثبت کنید."
+msgstr "ابتدا شماره موبایل و کد دریافتی را ثبت کنید."
+
+#: apps/accounts/forms.py apps/accounts/views.py
+msgid "کد تایید منقضی شده است. لطفاً دوباره درخواست کد بدهید."
+msgstr "کد تایید منقضی شده است. لطفاً دوباره درخواست کد بدهید."
+
+#: apps/accounts/forms.py apps/accounts/views.py
+msgid "جلسه بازیابی یا ثبت‌نام منقضی شده است."
+msgstr "جلسه بازیابی یا ثبت‌نام منقضی شده است."
+
+#: apps/accounts/forms.py apps/accounts/views.py
+msgid "تعداد تلاش‌های مجاز تمام شده است. لطفاً دوباره درخواست کد بدهید."
+msgstr "تعداد تلاش‌های مجاز تمام شده است. لطفاً دوباره درخواست کد بدهید."
+
+#: apps/accounts/forms.py apps/accounts/views.py
+msgid "اطلاعات وارد شده اشتباه است."
+msgstr "اطلاعات وارد شده اشتباه است."
+
+#: apps/accounts/forms.py apps/accounts/views.py
+msgid "کد تایید بیش از حد اشتباه وارد شد. لطفاً دوباره درخواست کد بدهید."
+msgstr "کد تایید بیش از حد اشتباه وارد شد. لطفاً دوباره درخواست کد بدهید."
+
+#: apps/accounts/forms.py apps/accounts/views.py
+msgid "کاربر مرتبط با این کد پیدا نشد."
+msgstr "کاربر مرتبط با این کد پیدا نشد."
+
+#: apps/accounts/forms.py apps/accounts/views.py
+msgid "ثبت‌نام متخصص کامل شد. حالا پروفایل حرفه‌ای خودت را تکمیل کن."
+msgstr "ثبت‌نام متخصص کامل شد. حالا پروفایل حرفه‌ای خودت را تکمیل کن."
+
+#: apps/accounts/forms.py apps/accounts/views.py
+msgid "ثبت‌نام شما کامل شد و وارد حساب شدید."
+msgstr "ثبت‌نام شما کامل شد و وارد حساب شدید."
+
+#: apps/accounts/forms.py apps/accounts/views.py
+msgid "ابتدا کد تایید بازیابی رمز را با موفقیت وارد کنید."
+msgstr "ابتدا کد تایید بازیابی رمز را با موفقیت وارد کنید."
+
+#: apps/accounts/forms.py apps/accounts/views.py
+msgid "حساب کاربری پیدا نشد."
+msgstr "حساب کاربری پیدا نشد."
+
+#: apps/accounts/forms.py apps/accounts/views.py
+msgid "جلسه بازیابی رمز منقضی شده است. دوباره کد دریافت کنید."
+msgstr "جلسه بازیابی رمز منقضی شده است. دوباره کد دریافت کنید."
+
+#: apps/accounts/forms.py apps/accounts/views.py
+msgid "رمز عبور فعلی صحیح نیست."
+msgstr "رمز عبور فعلی صحیح نیست."
+
+#: apps/accounts/forms.py apps/accounts/views.py
+msgid "رمز عبور با موفقیت تغییر کرد."
+msgstr "رمز عبور با موفقیت تغییر کرد."
+
+#: apps/accounts/forms.py apps/accounts/views.py
+msgid "لطفاً فیلدهای مشخص‌شده را بررسی و اصلاح کنید."
+msgstr "لطفاً فیلدهای مشخص‌شده را بررسی و اصلاح کنید."
+
+#: apps/accounts/forms.py apps/accounts/views.py
+msgid "شماره موبایل را درست وارد کنید."
+msgstr "شماره موبایل را درست وارد کنید."
+
+#: apps/accounts/forms.py apps/accounts/views.py
+msgid "شماره وارد شده در سیستم پیدا نشد."
+msgstr "شماره وارد شده در سیستم پیدا نشد."
+

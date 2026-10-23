@@ -10,6 +10,7 @@ from django import forms
 from django.contrib.auth.forms import ReadOnlyPasswordHashField
 from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ValidationError
+from django.utils.translation import gettext, gettext_lazy
 import jdatetime
 
 from .models import Customer, CustomerAddress, CustomUser, SalonManager, Stylist
@@ -244,7 +245,7 @@ class BaseSignupForm(forms.ModelForm):
         )
 
         if len(mobile_number) != 11 or not mobile_number.startswith("09"):
-            raise ValidationError("شماره موبایل باید ۱۱ رقم باشد و با 09 شروع شود")
+            raise ValidationError(gettext("شماره موبایل باید ۱۱ رقم باشد و با 09 شروع شود"))
 
         self._reuse_user = None
         queryset = CustomUser.objects.filter(mobile_number=mobile_number)
@@ -280,9 +281,9 @@ class BaseSignupForm(forms.ModelForm):
                 return mobile_number
 
             if current_profile_name and hasattr(existing_user, current_profile_name):
-                raise ValidationError("این شماره موبایل قبلاً با همین نقش ثبت شده است.")
+                raise ValidationError(gettext("این شماره موبایل قبلاً با همین نقش ثبت شده است."))
 
-            raise ValidationError("این شماره موبایل قبلاً ثبت شده است")
+            raise ValidationError(gettext("این شماره موبایل قبلاً ثبت شده است"))
 
         return mobile_number
 
@@ -291,10 +292,10 @@ class BaseSignupForm(forms.ModelForm):
         password2 = self.cleaned_data.get("password2")
 
         if password1 and password2 and password1 != password2:
-            raise ValidationError("رمز عبور و تأیید آن مطابقت ندارند")
+            raise ValidationError(gettext("رمز عبور و تأیید آن مطابقت ندارند"))
 
         if password1 and len(password1) < 8:
-            raise ValidationError("رمز عبور باید حداقل ۸ کاراکتر باشد")
+            raise ValidationError(gettext("رمز عبور باید حداقل ۸ کاراکتر باشد"))
 
         if password1:
             try:
@@ -305,7 +306,7 @@ class BaseSignupForm(forms.ModelForm):
             except ValidationError as exc:
                 raise ValidationError(
                     user_error_message(
-                        exc, fallback="رمز عبور شرایط امنیتی لازم را ندارد."
+                        exc, fallback=gettext("رمز عبور شرایط امنیتی لازم را ندارد.")
                     )
                 )
 
@@ -338,7 +339,7 @@ class StylistSignupForm(BaseSignupForm):
         label="تخصص اصلی",
         max_length=100,
         required=True,
-        error_messages={"required": "تخصص اصلی را وارد کنید."},
+        error_messages={"required": gettext_lazy("تخصص اصلی را وارد کنید.")},
         widget=forms.TextInput(
             attrs={
                 "class": "form-control",
@@ -350,7 +351,7 @@ class StylistSignupForm(BaseSignupForm):
     def clean_expert(self):
         value = (self.cleaned_data.get("expert") or "").strip()
         if len(value) < 2:
-            raise ValidationError("تخصص اصلی باید حداقل ۲ کاراکتر باشد.")
+            raise ValidationError(gettext("تخصص اصلی باید حداقل ۲ کاراکتر باشد."))
         return value
 
 
@@ -392,7 +393,7 @@ class SpecialistSignupForm(BaseSignupForm):
     def clean_expert(self):
         value = (self.cleaned_data.get("expert") or "").strip()
         if not value:
-            raise ValidationError("تخصص اصلی را وارد کنید.")
+            raise ValidationError(gettext("تخصص اصلی را وارد کنید."))
         return value
 
 
@@ -401,7 +402,7 @@ class SpecialistSignupForm(BaseSignupForm):
 class VerifyRegisterForm(forms.Form):
     active_code = forms.CharField(
         label="کد فعالسازی ",
-        error_messages={"required": "این فیلد نمی‌تواند خالی باشد"},
+        error_messages={"required": gettext_lazy("این فیلد نمی‌تواند خالی باشد")},
         widget=forms.TextInput(
             attrs={
                 "class": "register-input-group",
@@ -416,7 +417,7 @@ class VerifyRegisterForm(forms.Form):
 class LoginUserForm(forms.Form):
     mobile_number = forms.CharField(
         label="شماره موبایل",
-        error_messages={"required": "این فیلد نمی‌تواند خالی باشد "},
+        error_messages={"required": gettext_lazy("این فیلد نمی‌تواند خالی باشد ")},
         widget=forms.TextInput(
             attrs={
                 "class": "register-input-group",
@@ -426,7 +427,7 @@ class LoginUserForm(forms.Form):
     )
     password = forms.CharField(
         label="رمز عبور ",
-        error_messages={"required": "این فیلد نمی‌تواند خالی باشد "},
+        error_messages={"required": gettext_lazy("این فیلد نمی‌تواند خالی باشد ")},
         widget=forms.PasswordInput(
             attrs={
                 "class": "register-input-group",
@@ -442,7 +443,7 @@ class ChangePasswordForm(forms.Form):
     current_password = forms.CharField(
         label="رمز عبور فعلی",
         required=False,
-        error_messages={"required": "این فیلد نمی‌تواند خالی باشد"},
+        error_messages={"required": gettext_lazy("این فیلد نمی‌تواند خالی باشد")},
         widget=forms.PasswordInput(
             attrs={
                 "class": "form-control",
@@ -452,7 +453,7 @@ class ChangePasswordForm(forms.Form):
     )
     password1 = forms.CharField(
         label="رمز عبور جدید",
-        error_messages={"required": "این فیلد نمی‌تواند خالی باشد"},
+        error_messages={"required": gettext_lazy("این فیلد نمی‌تواند خالی باشد")},
         widget=forms.PasswordInput(
             attrs={
                 "class": "form-control",
@@ -462,7 +463,7 @@ class ChangePasswordForm(forms.Form):
     )
     password2 = forms.CharField(
         label="تکرار رمز عبور جدید",
-        error_messages={"required": "این فیلد نمی‌تواند خالی باشد"},
+        error_messages={"required": gettext_lazy("این فیلد نمی‌تواند خالی باشد")},
         widget=forms.PasswordInput(
             attrs={
                 "class": "form-control",
@@ -487,10 +488,10 @@ class ChangePasswordForm(forms.Form):
         password2 = cd.get("password2")
 
         if password1 and password2 and password1 != password2:
-            raise ValidationError("رمز عبور و تکرار آن مغایرت دارند")
+            raise ValidationError(gettext("رمز عبور و تکرار آن مغایرت دارند"))
 
         if password1 and len(password1) < 8:
-            raise ValidationError("رمز عبور باید حداقل ۸ کاراکتر باشد")
+            raise ValidationError(gettext("رمز عبور باید حداقل ۸ کاراکتر باشد"))
 
         if password1:
             try:
@@ -498,7 +499,7 @@ class ChangePasswordForm(forms.Form):
             except ValidationError as exc:
                 raise ValidationError(
                     user_error_message(
-                        exc, fallback="رمز عبور شرایط امنیتی لازم را ندارد."
+                        exc, fallback=gettext("رمز عبور شرایط امنیتی لازم را ندارد.")
                     )
                 )
 
@@ -510,7 +511,7 @@ class ChangePasswordForm(forms.Form):
 class RememberPasswordForm(forms.Form):
     mobile_number = forms.CharField(
         label="شماره موبایل",
-        error_messages={"required": "این فیلد نمی‌تواند خالی باشد "},
+        error_messages={"required": gettext_lazy("این فیلد نمی‌تواند خالی باشد ")},
         widget=forms.TextInput(
             attrs={
                 "class": "register-input-group",

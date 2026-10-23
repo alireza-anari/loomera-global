@@ -1062,7 +1062,7 @@ class VerifyRegisterView(View):
         user_session = request.session.get(USER_SESSION_KEY)
         if not user_session:
             messages.info(
-                request, "ابتدا شماره موبایل و کد دریافتی را ثبت کنید.", "info"
+                request, gettext("ابتدا شماره موبایل و کد دریافتی را ثبت کنید."), "info"
             )
             return redirect("accounts:login")
 
@@ -1071,7 +1071,7 @@ class VerifyRegisterView(View):
             request.session.pop(USER_SESSION_KEY, None)
             messages.error(
                 request,
-                "کد تایید منقضی شده است. لطفاً دوباره درخواست کد بدهید.",
+                gettext("کد تایید منقضی شده است. لطفاً دوباره درخواست کد بدهید."),
                 "danger",
             )
             return redirect(_verification_back_url(user_session))
@@ -1086,7 +1086,7 @@ class VerifyRegisterView(View):
     def post(self, request, *args, **kwargs):
         user_session = request.session.get(USER_SESSION_KEY)
         if not user_session:
-            messages.error(request, "جلسه بازیابی یا ثبت‌نام منقضی شده است.", "danger")
+            messages.error(request, gettext("جلسه بازیابی یا ثبت‌نام منقضی شده است."), "danger")
             return redirect("accounts:login")
 
         expires_at = int(user_session.get("otp_expires_at", 0) or 0)
@@ -1094,7 +1094,7 @@ class VerifyRegisterView(View):
             request.session.pop(USER_SESSION_KEY, None)
             messages.error(
                 request,
-                "کد تایید منقضی شده است. لطفاً دوباره درخواست کد بدهید.",
+                gettext("کد تایید منقضی شده است. لطفاً دوباره درخواست کد بدهید."),
                 "danger",
             )
             return redirect(_verification_back_url(user_session))
@@ -1106,14 +1106,14 @@ class VerifyRegisterView(View):
             request.session.pop(USER_SESSION_KEY, None)
             messages.error(
                 request,
-                "تعداد تلاش‌های مجاز تمام شده است. لطفاً دوباره درخواست کد بدهید.",
+                gettext("تعداد تلاش‌های مجاز تمام شده است. لطفاً دوباره درخواست کد بدهید."),
                 "danger",
             )
             return redirect(_verification_back_url(user_session))
 
         form = VerifyRegisterForm(request.POST)
         if not form.is_valid():
-            messages.error(request, "اطلاعات وارد شده اشتباه است.", "danger")
+            messages.error(request, gettext("اطلاعات وارد شده اشتباه است."), "danger")
             return render(
                 request,
                 "accounts/verify.html",
@@ -1136,7 +1136,7 @@ class VerifyRegisterView(View):
                 request.session.pop(USER_SESSION_KEY, None)
                 messages.error(
                     request,
-                    "کد تایید بیش از حد اشتباه وارد شد. لطفاً دوباره درخواست کد بدهید.",
+                    gettext("کد تایید بیش از حد اشتباه وارد شد. لطفاً دوباره درخواست کد بدهید."),
                     "danger",
                 )
                 return redirect(_verification_back_url(user_session))
@@ -1156,7 +1156,7 @@ class VerifyRegisterView(View):
             user = CustomUser.objects.get(mobile_number=user_session["mobile_number"])
         except CustomUser.DoesNotExist:
             request.session.pop(USER_SESSION_KEY, None)
-            messages.error(request, "کاربر مرتبط با این کد پیدا نشد.", "danger")
+            messages.error(request, gettext("کاربر مرتبط با این کد پیدا نشد."), "danger")
             return redirect("accounts:login")
 
         if user_session.get("remember_password"):
@@ -1185,12 +1185,12 @@ class VerifyRegisterView(View):
         if signup_kind == "stylist":
             messages.success(
                 request,
-                "ثبت‌نام متخصص کامل شد. حالا پروفایل حرفه‌ای خودت را تکمیل کن.",
+                gettext("ثبت‌نام متخصص کامل شد. حالا پروفایل حرفه‌ای خودت را تکمیل کن."),
                 "success",
             )
             return redirect("dashboards:stylist_profile")
 
-        messages.success(request, "ثبت‌نام شما کامل شد و وارد حساب شدید.", "success")
+        messages.success(request, gettext("ثبت‌نام شما کامل شد و وارد حساب شدید."), "success")
         return _redirect_user_by_role(user)
 
 
@@ -1331,7 +1331,7 @@ class ChangePasswordView(View):
             if not user_session:
                 messages.error(
                     request,
-                    "ابتدا کد تایید بازیابی رمز را با موفقیت وارد کنید.",
+                    gettext("ابتدا کد تایید بازیابی رمز را با موفقیت وارد کنید."),
                     "danger",
                 )
                 return redirect("accounts:remember_password")
@@ -1342,7 +1342,7 @@ class ChangePasswordView(View):
                 context["user_mobile"] = user.mobile_number
             except CustomUser.DoesNotExist:
                 request.session.pop(USER_SESSION_KEY, None)
-                messages.error(request, "حساب کاربری پیدا نشد.", "danger")
+                messages.error(request, gettext("حساب کاربری پیدا نشد."), "danger")
                 return redirect("accounts:login")
 
         return render(request, "accounts/change_password.html", context)
@@ -1364,7 +1364,7 @@ class ChangePasswordView(View):
             if not user_session:
                 messages.error(
                     request,
-                    "جلسه بازیابی رمز منقضی شده است. دوباره کد دریافت کنید.",
+                    gettext("جلسه بازیابی رمز منقضی شده است. دوباره کد دریافت کنید."),
                     "danger",
                 )
                 return redirect("accounts:remember_password")
@@ -1375,7 +1375,7 @@ class ChangePasswordView(View):
                 user_mobile = user.mobile_number
             except CustomUser.DoesNotExist:
                 request.session.pop(USER_SESSION_KEY, None)
-                messages.error(request, "حساب کاربری پیدا نشد.", "danger")
+                messages.error(request, gettext("حساب کاربری پیدا نشد."), "danger")
                 return redirect("accounts:login")
 
         if form.is_valid():
@@ -1383,7 +1383,7 @@ class ChangePasswordView(View):
 
             if request.user.is_authenticated:
                 if not user.check_password(data["current_password"]):
-                    messages.error(request, "رمز عبور فعلی صحیح نیست.", "danger")
+                    messages.error(request, gettext("رمز عبور فعلی صحیح نیست."), "danger")
                     return render(
                         request,
                         "accounts/change_password.html",
@@ -1400,14 +1400,14 @@ class ChangePasswordView(View):
             user.save(update_fields=["password", "active_code"])
             request.session.pop(USER_SESSION_KEY, None)
 
-            messages.success(request, "رمز عبور با موفقیت تغییر کرد.", "success")
+            messages.success(request, gettext("رمز عبور با موفقیت تغییر کرد."), "success")
 
             if request.user.is_authenticated:
                 logout(request)
 
             return redirect("accounts:login")
 
-        messages.error(request, "لطفاً فیلدهای مشخص‌شده را بررسی و اصلاح کنید.", "danger")
+        messages.error(request, gettext("لطفاً فیلدهای مشخص‌شده را بررسی و اصلاح کنید."), "danger")
         return render(
             request,
             "accounts/change_password.html",
@@ -1438,7 +1438,7 @@ class RememberPasswordView(View):
     def post(self, request, *args, **kwargs):
         form = RememberPasswordForm(request.POST)
         if not form.is_valid():
-            messages.error(request, "شماره موبایل را درست وارد کنید.", "danger")
+            messages.error(request, gettext("شماره موبایل را درست وارد کنید."), "danger")
             return render(
                 request,
                 "accounts/remember_password.html",
@@ -1449,7 +1449,7 @@ class RememberPasswordView(View):
         try:
             user = CustomUser.objects.get(mobile_number=data["mobile_number"])
         except CustomUser.DoesNotExist:
-            messages.error(request, "شماره وارد شده در سیستم پیدا نشد.", "danger")
+            messages.error(request, gettext("شماره وارد شده در سیستم پیدا نشد."), "danger")
             return render(
                 request,
                 "accounts/remember_password.html",
