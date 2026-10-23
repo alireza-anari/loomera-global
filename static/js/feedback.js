@@ -1,18 +1,21 @@
 (function () {
   "use strict";
 
+  const text = (key, fallback) => window.LoomeraI18n?.text?.(key, fallback) || fallback;
+  const locale = window.LoomeraI18n?.language || "fa";
+
   const META = {
-    error: { title: "انجام نشد", icon: "fa-circle-exclamation", role: "alert" },
-    success: { title: "انجام شد", icon: "fa-circle-check", role: "status" },
-    warning: { title: "نیاز به بررسی", icon: "fa-triangle-exclamation", role: "alert" },
-    info: { title: "اطلاع", icon: "fa-circle-info", role: "status" },
+    error: { title: text("feedback.title.error", "انجام نشد"), icon: "fa-circle-exclamation", role: "alert" },
+    success: { title: text("feedback.title.success", "انجام شد"), icon: "fa-circle-check", role: "status" },
+    warning: { title: text("feedback.title.warning", "نیاز به بررسی"), icon: "fa-triangle-exclamation", role: "alert" },
+    info: { title: text("feedback.title.info", "اطلاع"), icon: "fa-circle-info", role: "status" },
   };
 
   const DEFAULTS = {
-    error: "انجام این عملیات با مشکل روبه‌رو شد. لطفاً دوباره تلاش کنید.",
-    success: "عملیات با موفقیت انجام شد.",
-    warning: "این مورد نیاز به بررسی دارد.",
-    info: "اطلاعات به‌روزرسانی شد.",
+    error: text("feedback.default.error", "انجام این عملیات با مشکل روبه‌رو شد. لطفاً دوباره تلاش کنید."),
+    success: text("feedback.default.success", "عملیات با موفقیت انجام شد."),
+    warning: text("feedback.default.warning", "این مورد نیاز به بررسی دارد."),
+    info: text("feedback.default.info", "اطلاعات به‌روزرسانی شد."),
   };
 
   const latinPattern = /[A-Za-z]/;
@@ -40,6 +43,12 @@
 
   function normalizeMessage(value, fallback, allowLatinData = false) {
     let text = String(value || "").trim().replace(/\s+/g, " ");
+    // Non-Persian deployments only expose catalog-approved UI strings.
+    // Keep arbitrary server/error text behind a safe translated fallback.
+    if (locale !== "fa") {
+      if (!text || technicalPattern.test(text)) return fallback;
+      return window.LoomeraI18n?.isTrustedMessage?.(text) ? text : fallback;
+    }
     replacements.forEach(([pattern, replacement]) => {
       text = text.replace(pattern, replacement);
     });
@@ -121,7 +130,7 @@
     close.type = "button";
     close.dataset.flashClose = "true";
     close.className = "shrink-0 rounded-full p-1 opacity-70 transition hover:bg-white/70 hover:opacity-100";
-    close.setAttribute("aria-label", "بستن پیام");
+    close.setAttribute("aria-label", text("feedback.close", "بستن پیام"));
     close.innerHTML = '<i class="fa-solid fa-xmark" aria-hidden="true"></i>';
 
     row.append(content, close);

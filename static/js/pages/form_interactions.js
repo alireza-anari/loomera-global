@@ -3,6 +3,9 @@ const EDITABLE_SELECTOR = 'input:not([type="hidden"]):not([type="submit"]):not([
 
 let beforeUnloadBound = false;
 
+const uiText = (key, fallback) => window.LoomeraI18n?.text?.(key, fallback) || fallback;
+const uiFormat = (key, values, fallback) => window.LoomeraI18n?.format?.(key, values, fallback) || fallback;
+
 function fieldSnapshot(form) {
   const fields = Array.from(form.querySelectorAll(EDITABLE_SELECTOR));
   return fields.map((field) => {
@@ -113,23 +116,23 @@ function initForm(form) {
 
 function localizedConstraintMessage(field) {
   if (!(field instanceof HTMLInputElement || field instanceof HTMLSelectElement || field instanceof HTMLTextAreaElement)) {
-    return 'مقدار این فیلد معتبر نیست.';
+    return uiText('validation.invalid', 'مقدار این فیلد معتبر نیست.');
   }
   const validity = field.validity;
-  if (validity.valueMissing) return 'تکمیل این فیلد الزامی است.';
+  if (validity.valueMissing) return uiText('validation.required', 'تکمیل این فیلد الزامی است.');
   if (validity.typeMismatch) {
-    if (field.type === 'email') return 'ایمیل را با قالب معتبر وارد کنید.';
-    if (field.type === 'url') return 'نشانی اینترنتی را با قالب معتبر وارد کنید.';
-    return 'مقدار واردشده با قالب این فیلد هماهنگ نیست.';
+    if (field.type === 'email') return uiText('validation.email', 'ایمیل را با قالب معتبر وارد کنید.');
+    if (field.type === 'url') return uiText('validation.url', 'نشانی اینترنتی را با قالب معتبر وارد کنید.');
+    return uiText('validation.type', 'مقدار واردشده با قالب این فیلد هماهنگ نیست.');
   }
-  if (validity.patternMismatch) return 'مقدار واردشده با الگوی مورد انتظار هماهنگ نیست.';
-  if (validity.tooShort) return `حداقل ${field.minLength} کاراکتر وارد کنید.`;
-  if (validity.tooLong) return `حداکثر ${field.maxLength} کاراکتر مجاز است.`;
-  if (validity.rangeUnderflow) return `مقدار باید حداقل ${field.min} باشد.`;
-  if (validity.rangeOverflow) return `مقدار باید حداکثر ${field.max} باشد.`;
-  if (validity.stepMismatch) return 'مقدار واردشده با فاصله‌های مجاز این فیلد هماهنگ نیست.';
-  if (validity.badInput) return 'مقدار واردشده قابل پردازش نیست. آن را بررسی کنید.';
-  return 'مقدار این فیلد معتبر نیست. لطفاً آن را اصلاح کنید.';
+  if (validity.patternMismatch) return uiText('validation.pattern', 'مقدار واردشده با الگوی مورد انتظار هماهنگ نیست.');
+  if (validity.tooShort) return uiFormat("validation.too_short", { min: field.minLength }, `حداقل ${field.minLength} کاراکتر وارد کنید.`);
+  if (validity.tooLong) return uiFormat("validation.too_long", { max: field.maxLength }, `حداکثر ${field.maxLength} کاراکتر مجاز است.`);
+  if (validity.rangeUnderflow) return uiFormat("validation.range_under", { min: field.min }, `مقدار باید حداقل ${field.min} باشد.`);
+  if (validity.rangeOverflow) return uiFormat("validation.range_over", { max: field.max }, `مقدار باید حداکثر ${field.max} باشد.`);
+  if (validity.stepMismatch) return uiText('validation.step', 'مقدار واردشده با فاصله‌های مجاز این فیلد هماهنگ نیست.');
+  if (validity.badInput) return uiText('validation.bad_input', 'مقدار واردشده قابل پردازش نیست. آن را بررسی کنید.');
+  return uiText('validation.correct', 'مقدار این فیلد معتبر نیست. لطفاً آن را اصلاح کنید.');
 }
 
 function fieldShellFor(field) {
@@ -204,7 +207,7 @@ function hydrateSummaryFieldErrors(root = document) {
       markFieldInvalid(field, alreadyInline);
       return;
     }
-    ensureInlineError(field, item.dataset.errorMessage || item.textContent || 'مقدار این فیلد معتبر نیست.', 'server');
+    ensureInlineError(field, item.dataset.errorMessage || item.textContent || uiText('validation.invalid', 'مقدار این فیلد معتبر نیست.'), 'server');
   });
 }
 
@@ -223,7 +226,7 @@ function hydrateRedirectNonFieldErrors(root = document) {
       node.setAttribute('role', 'alert');
       form.prepend(node);
     }
-    node.textContent = item.dataset.errorMessage || 'اطلاعات فرم معتبر نیست. لطفاً آن را بررسی کنید.';
+    node.textContent = item.dataset.errorMessage || uiText('validation.server_form', 'اطلاعات فرم معتبر نیست. لطفاً آن را بررسی کنید.');
   });
 }
 
@@ -236,7 +239,7 @@ function handleClientInvalid(event) {
   const form = field.form;
   if (form && form.dataset.lmClientValidationNotice !== 'true') {
     form.dataset.lmClientValidationNotice = 'true';
-    window.LoomeraFeedback?.error?.('لطفاً موارد مشخص‌شده زیر فیلدها را اصلاح کنید.');
+    window.LoomeraFeedback?.error?.(uiText('validation.notice', 'لطفاً موارد مشخص‌شده زیر فیلدها را اصلاح کنید.'));
     window.setTimeout(() => { delete form.dataset.lmClientValidationNotice; }, 500);
   }
 }

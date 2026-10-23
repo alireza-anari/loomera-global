@@ -530,6 +530,7 @@ TEMPLATES = [
                 "django.template.context_processors.csrf",
                 "loomera.branding.context_processors.deployment_brand",
                 "loomera.globalization.context_processors.deployment_locale",
+                "loomera.globalization.interactive_messages.interactive_messages",
                 "apps.main.context_processors.redirect_form_errors",
                 "apps.main.views.madia_admin",
             ],

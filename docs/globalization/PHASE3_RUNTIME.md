@@ -266,3 +266,73 @@ catalog expansion, form-generated validation messages and production-level
 language usability must be addressed in the separate product-localization
 workstream. **Phase 3 remains open; no deployment was performed.**
 
+## Phase 3 — Slice 3.5: Trusted Interactive Messages and Validation Catalog
+
+**Scope:** app-owned, static interactive copy in the shared
+`form_interactions.js` client-validation renderer and `feedback.js` flash
+component. Existing Django form validation semantics, user-entered data,
+account authorization, booking/payment, calendar and currency are unchanged.
+
+### Request-to-browser catalog boundary
+
+`loomera.globalization.interactive_messages.interactive_messages` is a
+request context processor producing `{language, messages}` from a frozen
+allowlist of 24 named message keys. Message sources use English gettext
+`msgid` and versioned `en/fa/ar` `django.po` catalogs, compiled into
+matching `django.mo` files shipped in the repository. Translation is
+explicitly activated for the resolved allowed request locale; it does not
+read profile/workspace business identity or accept client-provided strings.
+
+Both shared document shells serialize this static mapping with Django
+`json_script`, which HTML-escapes the JSON, then load
+`static/js/interactive_i18n.js` **before** `feedback.js` and the primary
+application module. The lightweight runtime exposes `text`, `format` and
+a trusted-message predicate. The client allows only `feedback.*` and
+`validation.*` string values, bounded to 300 characters per entry.
+Dynamic min/max constraints are substituted into predefined catalog
+strings as text; no template interpolation into HTML occurs.
+
+If the catalog is absent or malformed, the old Persian fallback paths
+remain available, preserving the current default fa-only deployment.
+This fallback is a compatibility behavior, not a translated UI claim.
+
+### Language-dependent feedback safety
+
+In the default Persian path, the original Persian message sanitizer and
+technical-error filter remain unchanged. In enabled English or Arabic
+requests, `feedback.js` accepts only messages already present in the
+trusted catalog and rejects technical strings and arbitrary server/client
+free text to a **localized generic fallback**. This is deliberately
+conservative: arbitrary user/server/business messages are not translated,
+inferred, or exposed. Existing clients can still call
+`window.LoomeraFeedback`; API method names, roles and dismissal timing
+are preserved.
+
+The generic browser-side constraint error and notice texts are localized
+in the same catalog, including required/email/URL/pattern, length/range,
+step and invalid input messages. Server-origin field errors remain
+server-provided and are **not** guessed or translated; only generic
+fallback copy is localized.
+
+**Not yet covered:** page-specific interactive strings, auth labels,
+submission-pending button labels, Django model/form server errors, SMS
+templates, notifications payloads, legal content, amount/date/phone
+formatting, automated language detection, or full product translation.
+English-first product defaults remain deferred.
+
+### Test and rollout boundary
+
+- Django database-free `apps.main.test_phase3_interactive_messages`
+  validates the allowlist, compiled gettext lookups across three locales,
+  request isolation, disabled language fallback, XSS-safe JSON embedding,
+  both shell script order, and preserved numeric/calendar/form contracts.
+- Node's dependency-free `tests/js/phase3_interactive_i18n.test.cjs`
+  executes the browser runtime and flash component in an isolated VM,
+  verifying safe formatting, trusted-message filtering, fa compatibility,
+  malformed payload fail-closed behavior and unknown key blocking.
+- CI performs JavaScript syntax checks and runs both suites **on the
+  final PR head** alongside the previous Phase 1–3 guards.
+
+This is not a browser/screenshot accessibility audit, an end-to-end
+checkout test or a production deployment. Phase 3 remains open.
+

@@ -95,6 +95,19 @@ jobs:
             apps.main.test_phase3_bidirectional_auth \
             --failfast
 
+      - name: Phase 3 gettext interactive message guards
+        run: |
+          python manage.py test \
+            apps.main.test_phase3_interactive_messages \
+            --failfast
+
+      - name: Phase 3 browser interactive i18n runtime checks
+        run: |
+          node --check static/js/interactive_i18n.js
+          node --check static/js/feedback.js
+          node --input-type=module --check < static/js/pages/form_interactions.js
+          node --test tests/js/phase3_interactive_i18n.test.cjs
+
       - name: Production settings hygiene
         run: |
           python manage.py test \
