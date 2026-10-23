@@ -71,7 +71,7 @@
             <span class="lm-login-control">
               <span class="lm-login-control-icon"><i class="fa-solid fa-key" aria-hidden="true"></i></span>
               <input class="lm-login-input" type="password" name="password" id="id_password" autocomplete="current-password" placeholder="{% trans 'رمز عبور' %}">
-              <button type="button" class="toggle-password lm-login-password-toggle" data-input="id_password" aria-label="{% trans 'نمایش یا پنهان‌کردن رمز عبور' %}"><i class="fa-solid fa-eye" aria-hidden="true"></i></button>
+              <button type="button" class="toggle-password lm-login-password-toggle" data-input="id_password" aria-controls="id_password" aria-pressed="false" aria-label="{% trans 'نمایش یا پنهان‌کردن رمز عبور' %}"><i class="fa-solid fa-eye" aria-hidden="true"></i></button>
             </span>
             {% if form.password.errors %}<small class="mt-2 block text-xs font-bold text-red-600">{{ form.password.errors.0 }}</small>{% endif %}
           </label>
@@ -103,7 +103,14 @@
 {% block js %}
 <script>
   document.addEventListener('DOMContentLoaded', function () {
+    // Reuse the reviewed 41-key request-locale catalog; keep historical Persian hints.
+    var authPasswordText = function (key, fallback) {
+      var i18n = window.LoomeraI18n;
+      if (!i18n || i18n.language === 'fa') return fallback;
+      return i18n.text?.(key, fallback) || fallback;
+    };
     document.querySelectorAll('.toggle-password').forEach(function (btn) {
+      btn.setAttribute('aria-label', authPasswordText('password.show', 'نمایش رمز عبور'));
       btn.addEventListener('click', function (e) {
         e.preventDefault();
         var input = document.getElementById(this.dataset.input);
@@ -112,6 +119,10 @@
         input.type = input.type === 'password' ? 'text' : 'password';
         icon.classList.toggle('fa-eye');
         icon.classList.toggle('fa-eye-slash');
+        this.setAttribute('aria-pressed', input.type === 'text' ? 'true' : 'false');
+        this.setAttribute('aria-label', input.type === 'text'
+          ? authPasswordText('password.hide', 'مخفی کردن رمز عبور')
+          : authPasswordText('password.show', 'نمایش رمز عبور'));
       });
     });
     var mobileInput = document.getElementById('id_mobile_number');

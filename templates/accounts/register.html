@@ -70,7 +70,7 @@
             <span class="lm-signup-control">
               <span class="lm-signup-control-icon"><i class="fa-solid fa-key" aria-hidden="true"></i></span>
               <input class="password-input lm-signup-input" type="password" name="password1" id="id_password1" autocomplete="new-password" placeholder="{% trans 'حداقل ۸ کاراکتر' %}" required>
-              <button type="button" class="toggle-password lm-signup-password-toggle" data-input="id_password1" aria-label="{% trans 'نمایش یا پنهان‌کردن رمز عبور' %}"><i class="fa-solid fa-eye" aria-hidden="true"></i></button>
+              <button type="button" class="toggle-password lm-signup-password-toggle" data-input="id_password1" aria-controls="id_password1" aria-pressed="false" aria-label="{% trans 'نمایش یا پنهان‌کردن رمز عبور' %}"><i class="fa-solid fa-eye" aria-hidden="true"></i></button>
             </span>
             <div class="lm-signup-strength" aria-hidden="true"><span data-strength-bar class="bg-loomera-borderSoft"></span><span data-strength-bar class="bg-loomera-borderSoft"></span><span data-strength-bar class="bg-loomera-borderSoft"></span></div>
             <p data-password-hint class="lm-signup-hint">حداقل ۸ کاراکتر؛ ترکیب حروف و عدد بهتر است.</p>
@@ -82,7 +82,7 @@
             <span class="lm-signup-control">
               <span class="lm-signup-control-icon"><i class="fa-solid fa-check-double" aria-hidden="true"></i></span>
               <input class="lm-signup-input" type="password" name="password2" id="id_password2" autocomplete="new-password" placeholder="{% trans 'رمز عبور را تکرار کنید' %}" required>
-              <button type="button" class="toggle-password lm-signup-password-toggle" data-input="id_password2" aria-label="{% trans 'نمایش یا پنهان‌کردن رمز عبور' %}"><i class="fa-solid fa-eye" aria-hidden="true"></i></button>
+              <button type="button" class="toggle-password lm-signup-password-toggle" data-input="id_password2" aria-controls="id_password2" aria-pressed="false" aria-label="{% trans 'نمایش یا پنهان‌کردن رمز عبور' %}"><i class="fa-solid fa-eye" aria-hidden="true"></i></button>
             </span>
             {% if form.password2.errors %}<small class="lm-signup-error">{{ form.password2.errors.0 }}</small>{% endif %}
           </label>
@@ -106,7 +106,14 @@
 {% block js %}
 <script>
   document.addEventListener('DOMContentLoaded', function () {
+    // Reuse the reviewed 41-key request-locale catalog; keep historical Persian hints.
+    var authPasswordText = function (key, fallback) {
+      var i18n = window.LoomeraI18n;
+      if (!i18n || i18n.language === 'fa') return fallback;
+      return i18n.text?.(key, fallback) || fallback;
+    };
     document.querySelectorAll('.toggle-password').forEach(function (btn) {
+      btn.setAttribute('aria-label', authPasswordText('password.show', 'نمایش رمز عبور'));
       btn.addEventListener('click', function (e) {
         e.preventDefault();
         var input = document.getElementById(this.dataset.input);
@@ -115,6 +122,10 @@
         input.type = input.type === 'password' ? 'text' : 'password';
         icon.classList.toggle('fa-eye');
         icon.classList.toggle('fa-eye-slash');
+        this.setAttribute('aria-pressed', input.type === 'text' ? 'true' : 'false');
+        this.setAttribute('aria-label', input.type === 'text'
+          ? authPasswordText('password.hide', 'مخفی کردن رمز عبور')
+          : authPasswordText('password.show', 'نمایش رمز عبور'));
       });
     });
     var mobileInput = document.getElementById('id_mobile_number');
@@ -122,6 +133,7 @@
     var password = document.getElementById('id_password1');
     var bars = Array.from(document.querySelectorAll('[data-strength-bar]'));
     var hint = document.querySelector('[data-password-hint]');
+    if (hint) hint.textContent = authPasswordText('password.strength.guidance', 'حداقل ۸ کاراکتر؛ ترکیب حروف و عدد بهتر است.');
     if (password && bars.length) {
       password.addEventListener('input', function () {
         var v = password.value || '';
@@ -132,7 +144,11 @@
         bars.forEach(function (bar, index) {
           bar.className = index < score ? 'bg-loomera-primary' : 'bg-loomera-borderSoft';
         });
-        if (hint) hint.textContent = score >= 3 ? 'رمز قوی است.' : score === 2 ? 'رمز قابل قبول است؛ بهتر است قوی‌تر شود.' : 'حداقل ۸ کاراکتر؛ ترکیب حروف و عدد بهتر است.';
+        if (hint) hint.textContent = score >= 3
+          ? authPasswordText('password.strength.strong', 'رمز قوی است.')
+          : score === 2
+            ? authPasswordText('password.strength.acceptable', 'رمز قابل قبول است؛ بهتر است قوی‌تر شود.')
+            : authPasswordText('password.strength.guidance', 'حداقل ۸ کاراکتر؛ ترکیب حروف و عدد بهتر است.');
       });
     }
   });

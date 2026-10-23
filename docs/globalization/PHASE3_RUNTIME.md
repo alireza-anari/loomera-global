@@ -623,3 +623,45 @@ The database-free `apps.main.test_phase3_change_password_direction` suite checks
 stylesheet scope and load order, all three field hooks, visible navigation icons,
 preserved Persian-side classes and auth/security contracts. These structural tests
 are not cross-browser or visual accessibility acceptance. No deployment.
+
+## Phase 3 — Slice 3.13: Signup and Login Password Interaction Localization
+
+This slice improves the four **active** login/signup forms without modifying
+any server-side login, signup or password-policy logic. Their existing
+password visibility buttons now carry explicit `aria-controls` and initial
+`aria-pressed="false"` attributes. Existing click listeners update both the
+visible eye icon and pressed state, and supply the *current action* as the
+accessible name. The names reuse the versioned, trusted
+`password.show`/`password.hide` request-locale message catalog; the static
+Django-translated generic label remains useful before JS initialization.
+
+The manager and stylist three-bar password strength displays still use their
+exact existing score thresholds; their initial hints and input-driven weak,
+acceptable and strong messages use the preapproved
+`password.strength.{guidance,acceptable,strong}` keys. Customer signup
+continues to check **length only**, not three-bar strength, reusing the
+generic translated guidance/minimum-length/acceptable copy. No new browser
+message keys, gettext binary catalogs or untranslated arbitrary text are
+added. Historical Persian source wording remains unchanged, including the
+two different initial signup hints and the customer length-specific status
+messages, even when the bridge supplies compiled fa strings with different
+wording. If the bridge is absent, the same Persian fallback applies.
+English and Arabic render translated guidance immediately at load, not only
+after the first keystroke. Dynamic copy is assigned with `textContent`, never
+`innerHTML`, and password values are not used as message content.
+
+The four forms preserve the existing input IDs, show/hide behavior, explicit
+LTR mobile number input and digit filtering, register role, terms consent,
+CSRF and server validation. No migration, mobile-country rules, OTP, routing,
+authentication/session, authorization, brand-title, payment or production
+changes occur.
+
+`apps.main.test_phase3_auth_password_interactions` adds five database-free
+Django guards for all four active template/form contracts, compiled gettext
+lookups, fa compatibility and render output. The dependency-free
+`tests/js/phase3_auth_password_interactions.test.cjs` executes all four
+actual inline scripts in a Node VM under fa/en/ar/absent-bridge cases,
+checking toggle accessibility and states, localized live hints, unchanged
+strength/length thresholds, hostile password values and phone sanitization.
+GitHub Actions executes both alongside all previous Phase 1–3 suites.
+Browser screen-reader and visual acceptance remain pending; no deployment.
