@@ -111,3 +111,43 @@ msgstr "Please correct the highlighted fields."
 msgid "The form information is invalid. Please review it."
 msgstr "The form information is invalid. Please review it."
 
+#: static/js/pages/form_interactions.js
+msgid "Saving…"
+msgstr "Saving…"
+
+#: static/js/pages/form_interactions.js
+msgid "Registering…"
+msgstr "Registering…"
+
+#: static/js/pages/form_interactions.js
+msgid "Sending…"
+msgstr "Sending…"
+
+#: static/js/pages/form_interactions.js
+msgid "Creating…"
+msgstr "Creating…"
+
+#: static/js/pages/form_interactions.js
+msgid "Signing in…"
+msgstr "Signing in…"
+
+#: static/js/pages/form_interactions.js
+msgid "Confirming…"
+msgstr "Confirming…"
+
+#: static/js/pages/form_interactions.js
+msgid "Activating…"
+msgstr "Activating…"
+
+#: static/js/pages/form_interactions.js
+msgid "Deleting…"
+msgstr "Deleting…"
+
+#: static/js/pages/form_interactions.js
+msgid "Cancelling…"
+msgstr "Cancelling…"
+
+#: static/js/pages/form_interactions.js
+msgid "Working…"
+msgstr "Working…"
+

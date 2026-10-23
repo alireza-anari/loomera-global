@@ -107,6 +107,13 @@ jobs:
           node --check static/js/feedback.js
           node --input-type=module --check < static/js/pages/form_interactions.js
           node --test tests/js/phase3_interactive_i18n.test.cjs
+          node --test tests/js/phase3_submit_pending.test.cjs
+
+      - name: Phase 3 localized submission progress guards
+        run: |
+          python manage.py test \
+            apps.main.test_phase3_submit_pending \
+            --failfast
 
       - name: Production settings hygiene
         run: |

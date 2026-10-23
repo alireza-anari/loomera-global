@@ -38,7 +38,7 @@ class InteractiveMessagesContractTests(SimpleTestCase):
         translation.deactivate_all()
 
     def test_versioned_allowlist_has_no_dynamic_server_or_private_fields(self):
-        self.assertEqual(len(MESSAGE_IDS), 24)
+        self.assertEqual(len(MESSAGE_IDS), 34)
         self.assertEqual(set(MESSAGE_IDS), set(dict(MESSAGE_IDS)))
         self.assertTrue(all(k.startswith(("feedback.", "validation.")) for k in MESSAGE_IDS))
         self.assertEqual(MESSAGE_IDS["validation.required"], "This field is required.")

@@ -1,6 +1,6 @@
 """Versioned, request-scoped UI text for trusted browser form feedback.
 
-This contract is deliberately limited to generic client validation and flash UI.
+This contract is deliberately limited to generic client validation, flash UI and submit-pending feedback.
 It never transports raw server validation, business, payment or permission data.
 """
 from __future__ import annotations
@@ -24,6 +24,16 @@ MESSAGE_IDS = MappingProxyType({
     "feedback.default.warning": "This item needs review.",
     "feedback.default.info": "The information was updated.",
     "feedback.close": "Close message",
+    "submit.saving": "Saving…",
+    "submit.registering": "Registering…",
+    "submit.sending": "Sending…",
+    "submit.creating": "Creating…",
+    "submit.logging_in": "Signing in…",
+    "submit.confirming": "Confirming…",
+    "submit.activating": "Activating…",
+    "submit.deleting": "Deleting…",
+    "submit.cancelling": "Cancelling…",
+    "submit.working": "Working…",
     "validation.invalid": "The field value is invalid.",
     "validation.required": "This field is required.",
     "validation.email": "Enter a valid email address.",

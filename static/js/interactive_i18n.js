@@ -16,7 +16,7 @@
 
   const messages = Object.create(null);
   for (const [key, value] of Object.entries(payload.messages)) {
-    if (!/^(feedback|validation)\.[a-z_.]+$/.test(key)) continue;
+    if (!/^(feedback|validation|submit)\.[a-z_.]+$/.test(key)) continue;
     if (typeof value === "string" && value.length <= 300) messages[key] = value;
   }
   Object.freeze(messages);
