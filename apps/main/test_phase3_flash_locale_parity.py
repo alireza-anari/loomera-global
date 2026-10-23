@@ -17,7 +17,7 @@ from apps.main.ui_feedback import DEFAULT_ERROR_MESSAGE
 TITLES = {
     "fa": ("انجام نشد", "انجام شد", "نیاز به بررسی", "اطلاع", "بستن پیام"),
     "en": ("Not completed", "Completed", "Needs review", "Information", "Close message"),
-    "ar": ("لم يكتمل", "اكتمل", "يحتاج إلى مراجعة", "معلومات", "إغلاق الرسالة"),
+    "ar": ("لم تكتمل العملية", "تمت العملية", "تحتاج إلى مراجعة", "معلومات", "إغلاق الرسالة"),
 }
 TYPES = (
     (constants.ERROR, "error", "alert"),
