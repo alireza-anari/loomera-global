@@ -109,6 +109,13 @@ jobs:
           node --test tests/js/phase3_interactive_i18n.test.cjs
           node --test tests/js/phase3_submit_pending.test.cjs
 
+      - name: Phase 3 server and browser flash locale parity
+        run: |
+          python manage.py test \
+            apps.main.test_phase3_flash_locale_parity \
+            --failfast
+          node --test tests/js/phase3_flash_ui_parity.test.cjs
+
       - name: Phase 3 localized submission progress guards
         run: |
           python manage.py test \

@@ -97,7 +97,7 @@
     const tone = META[type] ? type : "info";
     const meta = META[tone];
     const allowLatinData = tone === "success" || tone === "info";
-    const text = normalizeMessage(message, DEFAULTS[tone], allowLatinData);
+    const messageText = normalizeMessage(message, DEFAULTS[tone], allowLatinData);
     const node = document.createElement("div");
     node.dataset.flashMessage = "true";
     node.dataset.dismissAfter = String(duration || 5000);
@@ -122,7 +122,7 @@
     title.textContent = meta.title;
     const body = document.createElement("p");
     body.className = "mt-0.5 text-sm font-bold leading-6";
-    body.textContent = text;
+    body.textContent = messageText;
     copy.append(title, body);
     content.append(icon, copy);
 
