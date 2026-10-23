@@ -153,7 +153,7 @@ class DeploymentLanguageSelectionTests(SimpleTestCase):
         self.assertTrue(cookie["httponly"])
         self.assertEqual(cookie["samesite"], "Strict")
         self.assertEqual(cookie["path"], "/")
-        self.assertEqual(cookie["max-age"], str(settings.LANGUAGE_COOKIE_AGE))
+        self.assertEqual(int(cookie["max-age"]), settings.LANGUAGE_COOKIE_AGE)
 
     def test_anonymous_selection_and_multi_deployment_constraints(self):
         client = Client()
