@@ -48,7 +48,17 @@ class FlashLocaleParityTests(SimpleTestCase):
                         self.assertIn(expected[4], html)
                         self.assertIn('data-flash-message', html)
                         self.assertIn('data-flash-close', html)
-                        self.assertIn("درخواست بررسی شد.", html)
+                        if locale == "fa":
+                            self.assertIn("درخواست بررسی شد.", html)
+                        else:
+                            self.assertNotIn("درخواست بررسی شد.", html)
+                            body_msgid = {
+                                "error": "This action could not be completed. Please try again.",
+                                "success": "The action completed successfully.",
+                                "warning": "This item needs review.",
+                                "info": "The information was updated.",
+                            }[tag]
+                            self.assertIn(translation.gettext(body_msgid), html)
 
     def test_python_flash_sanitizer_still_blocks_technical_or_hostile_errors(self):
         for locale in TITLES:
@@ -58,7 +68,14 @@ class FlashLocaleParityTests(SimpleTestCase):
                 })
                 self.assertNotIn("ValueError:", html)
                 self.assertNotIn("<script>alert(1)</script>", html)
-                self.assertIn(DEFAULT_ERROR_MESSAGE, html)
+                expected = (
+                    DEFAULT_ERROR_MESSAGE
+                    if locale == "fa"
+                    else translation.gettext(
+                        "This action could not be completed. Please try again."
+                    )
+                )
+                self.assertIn(expected, html)
                 self.assertIn(TITLES[locale][0], html)
 
     def test_server_flash_markup_preserves_structure_and_uses_versioned_gettext(self):
