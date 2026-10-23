@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% load static %}
+{% load i18n %}
 
 {% block title %}ورود به {{ deployment_brand.display_name }}{% endblock %}
 {% block body_attrs %}data-page="auth" data-auth-flow="login"{% endblock %}
@@ -39,11 +40,11 @@
         </a>
       </div>
 
-      <section class="lm-login-visual-card" aria-label="فرم ورود">
+      <section class="lm-login-visual-card" aria-label="{% trans 'فرم ورود' %}">
         <header>
-          <h1 id="login-title" class="lm-login-title"><span>ورود به </span><span class="lm-login-title-brand">{{ deployment_brand.display_name }}</span></h1>
+          <h1 id="login-title" class="lm-login-title"><span>{% trans "ورود به " %}</span><span class="lm-login-title-brand">{{ deployment_brand.display_name }}</span></h1>
           {% if next_url %}
-            <p class="lm-login-return-copy mt-2">برای ادامه رزرو وارد حساب مشتری شو؛ بعد از ورود به همین مرحله برمی‌گردی.</p>
+            <p class="lm-login-return-copy mt-2">{% trans "برای ادامه رزرو وارد حساب مشتری شو؛ بعد از ورود به همین مرحله برمی‌گردی." %}</p>
           {% endif %}
         </header>
 
@@ -57,7 +58,7 @@
           {% endif %}
 
           <label class="lm-login-field" for="id_mobile_number">
-            <span class="lm-login-field-label">شماره موبایل</span>
+            <span class="lm-login-field-label">{% trans "شماره موبایل" %}</span>
             <span class="lm-login-control">
               <span class="lm-login-control-icon"><i class="fa-solid fa-mobile-screen-button" aria-hidden="true"></i></span>
               <input class="lm-login-input" type="text" name="mobile_number" id="id_mobile_number" value="{{ form.mobile_number.value|default_if_none:'' }}" inputmode="numeric" autocomplete="tel" placeholder="09xxxxxxxxx" dir="ltr">
@@ -66,31 +67,31 @@
           </label>
 
           <label class="lm-login-field" for="id_password">
-            <span class="lm-login-field-label">رمز عبور</span>
+            <span class="lm-login-field-label">{% trans "رمز عبور" %}</span>
             <span class="lm-login-control">
               <span class="lm-login-control-icon"><i class="fa-solid fa-key" aria-hidden="true"></i></span>
-              <input class="lm-login-input" type="password" name="password" id="id_password" autocomplete="current-password" placeholder="رمز عبور">
-              <button type="button" class="toggle-password lm-login-password-toggle" data-input="id_password" aria-label="نمایش یا پنهان‌کردن رمز عبور"><i class="fa-solid fa-eye" aria-hidden="true"></i></button>
+              <input class="lm-login-input" type="password" name="password" id="id_password" autocomplete="current-password" placeholder="{% trans 'رمز عبور' %}">
+              <button type="button" class="toggle-password lm-login-password-toggle" data-input="id_password" aria-label="{% trans 'نمایش یا پنهان‌کردن رمز عبور' %}"><i class="fa-solid fa-eye" aria-hidden="true"></i></button>
             </span>
             {% if form.password.errors %}<small class="mt-2 block text-xs font-bold text-red-600">{{ form.password.errors.0 }}</small>{% endif %}
           </label>
 
           <div class="lm-login-forgot-row">
-            <a href="{% url 'accounts:remember_password' %}{{ next_query }}" class="lm-login-forgot">رمز عبور را فراموش کرده‌ام</a>
+            <a href="{% url 'accounts:remember_password' %}{{ next_query }}" class="lm-login-forgot">{% trans "رمز عبور را فراموش کرده‌ام" %}</a>
           </div>
 
           <button type="submit" class="lm-login-submit">
-            <span>ورود</span>
+            <span>{% trans "ورود" %}</span>
             <i class="fa-solid fa-arrow-left text-xs" aria-hidden="true"></i>
           </button>
         </form>
 
         <footer class="lm-login-footer">
-          <p class="lm-login-footer-copy">حساب نداری؟</p>
+          <p class="lm-login-footer-copy">{% trans "حساب نداری؟" %}</p>
           <div class="lm-login-footer-links">
-            <a href="{% url 'accounts:customer_signup' %}{{ next_query }}" class="lm-login-footer-link">مشتری</a>
-            <a href="{% url 'accounts:stylist_signup' %}" class="lm-login-footer-link">متخصص</a>
-            <a href="{% url 'accounts:register' %}" class="lm-login-footer-link">ثبت مجموعه</a>
+            <a href="{% url 'accounts:customer_signup' %}{{ next_query }}" class="lm-login-footer-link">{% trans "مشتری" %}</a>
+            <a href="{% url 'accounts:stylist_signup' %}" class="lm-login-footer-link">{% trans "متخصص" %}</a>
+            <a href="{% url 'accounts:register' %}" class="lm-login-footer-link">{% trans "ثبت مجموعه" %}</a>
           </div>
         </footer>
       </section>

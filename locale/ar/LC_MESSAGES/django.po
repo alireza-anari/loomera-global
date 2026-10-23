@@ -151,3 +151,167 @@ msgstr "جارٍ الإلغاء…"
 msgid "Working…"
 msgstr "جارٍ التنفيذ…"
 
+#: templates/accounts/*.html apps/accounts/views.py
+msgid "شماره موبایل"
+msgstr "رقم الهاتف المحمول"
+
+#: templates/accounts/*.html apps/accounts/views.py
+msgid "رمز عبور"
+msgstr "كلمة المرور"
+
+#: templates/accounts/*.html apps/accounts/views.py
+msgid "نمایش یا پنهان‌کردن رمز عبور"
+msgstr "إظهار كلمة المرور أو إخفاؤها"
+
+#: templates/accounts/*.html apps/accounts/views.py
+msgid "نام"
+msgstr "الاسم الأول"
+
+#: templates/accounts/*.html apps/accounts/views.py
+msgid "نام خانوادگی"
+msgstr "اسم العائلة"
+
+#: templates/accounts/*.html apps/accounts/views.py
+msgid "حداقل ۸ کاراکتر"
+msgstr "8 أحرف على الأقل"
+
+#: templates/accounts/*.html apps/accounts/views.py
+msgid "تأیید رمز عبور"
+msgstr "تأكيد كلمة المرور"
+
+#: templates/accounts/*.html apps/accounts/views.py
+msgid "تکرار رمز عبور"
+msgstr "إعادة كلمة المرور"
+
+#: templates/accounts/*.html apps/accounts/views.py
+msgid "رمز عبور را تکرار کنید"
+msgstr "أعد إدخال كلمة المرور"
+
+#: templates/accounts/*.html apps/accounts/views.py
+msgid "رمز عبور را تکرار کن"
+msgstr "أعد إدخال كلمة المرور"
+
+#: templates/accounts/*.html apps/accounts/views.py
+msgid "رمز عبور را دوباره وارد کن"
+msgstr "أعد إدخال كلمة المرور"
+
+#: templates/accounts/*.html apps/accounts/views.py
+msgid "ورود"
+msgstr "تسجيل الدخول"
+
+#: templates/accounts/*.html apps/accounts/views.py
+msgid "ثبت مجموعه"
+msgstr "تسجيل منشأة"
+
+#: templates/accounts/*.html apps/accounts/views.py
+msgid "مشتری"
+msgstr "عميل"
+
+#: templates/accounts/*.html apps/accounts/views.py
+msgid "متخصص"
+msgstr "متخصص"
+
+#: templates/accounts/*.html apps/accounts/views.py
+msgid "مدیر مجموعه"
+msgstr "مدير المنشأة"
+
+#: templates/accounts/*.html apps/accounts/views.py
+msgid "حساب نداری؟"
+msgstr "ليس لديك حساب؟"
+
+#: templates/accounts/*.html apps/accounts/views.py
+msgid "قبلاً حساب داری؟"
+msgstr "هل لديك حساب بالفعل؟"
+
+#: templates/accounts/*.html apps/accounts/views.py
+msgid "رمز عبور را فراموش کرده‌ام"
+msgstr "هل نسيت كلمة المرور؟"
+
+#: templates/accounts/*.html apps/accounts/views.py
+msgid "دریافت کد تأیید"
+msgstr "الحصول على رمز التحقق"
+
+#: templates/accounts/*.html apps/accounts/views.py
+msgid "ادامه و دریافت کد تأیید"
+msgstr "المتابعة والحصول على رمز التحقق"
+
+#: templates/accounts/*.html apps/accounts/views.py
+msgid "ثبت‌نام متخصص"
+msgstr "التسجيل كمتخصص"
+
+#: templates/accounts/*.html apps/accounts/views.py
+msgid "تخصص اصلی"
+msgstr "التخصص الرئيسي"
+
+#: templates/accounts/*.html apps/accounts/views.py
+msgid "مثلاً رنگ مو، ناخن، ماساژ، پوست و زیبایی"
+msgstr "مثل صبغ الشعر أو الأظافر أو التدليك أو العناية بالبشرة"
+
+#: templates/accounts/*.html apps/accounts/views.py
+msgid "ورود به "
+msgstr "تسجيل الدخول إلى "
+
+#: templates/accounts/*.html apps/accounts/views.py
+msgid "ثبت‌نام "
+msgstr "التسجيل: "
+
+#: templates/accounts/*.html apps/accounts/views.py
+msgid "برای مجموعه ثبت‌نام می‌کنی؟"
+msgstr "هل تسجل منشأة؟"
+
+#: templates/accounts/*.html apps/accounts/views.py
+msgid "برای ادامه رزرو وارد حساب مشتری شو؛ بعد از ورود به همین مرحله برمی‌گردی."
+msgstr "سجّل الدخول كعميل لمتابعة الحجز؛ ستعود إلى هذه الخطوة بعد الدخول."
+
+#: templates/accounts/*.html apps/accounts/views.py
+msgid "اطلاعات مدیر حساب را وارد کن؛ بعد از تأیید شماره موبایل وارد مسیر تکمیل مجموعه می‌شوی."
+msgstr "أدخل بيانات المدير. بعد التحقق من الهاتف، تابع إعداد المنشأة."
+
+#: templates/accounts/*.html apps/accounts/views.py
+msgid "بعد از تأیید شماره موبایل، دقیقاً به ادامه رزرو برمی‌گردی."
+msgstr "بعد التحقق من رقم هاتفك، ستعود إلى الحجز."
+
+#: templates/accounts/*.html apps/accounts/views.py
+msgid "حساب مشتری را بساز؛ شماره موبایل در مرحله بعد با کد تأیید می‌شود."
+msgstr "أنشئ حساب عميل. سيتم التحقق من رقم الهاتف برمز في الخطوة التالية."
+
+#: templates/accounts/*.html apps/accounts/views.py
+msgid "حساب حرفه‌ای خودت را بساز؛ شماره موبایل در مرحله بعد با کد پیامکی تأیید می‌شود."
+msgstr "أنشئ حسابًا مهنيًا. سيتم التحقق من رقم الهاتف برسالة نصية في الخطوة التالية."
+
+#: templates/accounts/*.html apps/accounts/views.py
+msgid "فرم ورود"
+msgstr "نموذج تسجيل الدخول"
+
+#: templates/accounts/*.html apps/accounts/views.py
+msgid "فرم ثبت‌نام مشتری"
+msgstr "نموذج تسجيل العميل"
+
+#: templates/accounts/*.html apps/accounts/views.py
+msgid "فرم ثبت‌نام متخصص"
+msgstr "نموذج تسجيل المتخصص"
+
+#: templates/accounts/*.html apps/accounts/views.py
+msgid "فرم ثبت‌نام مدیر مجموعه"
+msgstr "نموذج تسجيل مدير المنشأة"
+
+#: templates/accounts/*.html apps/accounts/views.py
+msgid "لطفاً تمام فیلدها را به درستی پر کنید."
+msgstr "يرجى إكمال جميع الحقول بشكل صحيح."
+
+#: templates/accounts/*.html apps/accounts/views.py
+msgid "شماره موبایل یا رمز عبور اشتباه است."
+msgstr "رقم الهاتف أو كلمة المرور غير صحيحة."
+
+#: templates/accounts/*.html apps/accounts/views.py
+msgid "حساب کاربری شما فعال نمی‌باشد."
+msgstr "حسابك غير نشط."
+
+#: templates/accounts/*.html apps/accounts/views.py
+msgid "ورود با موفقیت انجام شد."
+msgstr "تم تسجيل الدخول بنجاح."
+
+#: templates/accounts/*.html apps/accounts/views.py
+msgid "برای ورود به پنل پلتفرم، صفحه مدیریت را باز کن یا از ورود امن مدیران استفاده کن."
+msgstr "للوصول إلى لوحة تحكم المنصة، افتح صفحة الإدارة أو استخدم تسجيل دخول المدير الآمن."
+
