@@ -134,7 +134,7 @@ class AuthFieldErrorAccessibilityTests(SimpleTestCase):
                 for field in fields:
                     self.assertEqual(src.count(f'id="id_{field}-error"'), 1)
                     self.assertEqual(src.count(f"form.{field}.errors.0"), 1)
-                    self.assertIn(f'aria-describedby="id_{field}-error"', src)
+                    self.assertIn('aria-describedby="id_password1-hint' if field == "password1" else f'aria-describedby="id_{field}-error"', src)
                     self.assertIn(f"form.{field}.errors", src)
                 self.assertEqual(src.count("role=\"alert\""), len(fields) + 1)
 
