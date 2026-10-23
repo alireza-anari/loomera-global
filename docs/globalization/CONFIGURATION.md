@@ -706,3 +706,14 @@ The authenticated `NotificationCenterView` handles `notifications:center` and re
 Test-only RED SHA `aa3ee405ab29a1303c0e1a0174364e1c4064f63f` failed as expected in [GitHub Actions #39901915321](https://github.com/alireza-anari/loomera-global/actions/runs/39901915321). Require final-head GREEN GitHub CI, independent patch/scope review and a matching main base before Squash Merge. No local or deployment execution is claimed.
 
 **Phase 2 incomplete. Phase 3 blocked. No deployment.**
+
+
+## Messaging Welcome Dialog — Persian Deployment Identity Only
+
+The welcome prompt is actively included by `templates/base.html` through `partials/messaging_welcome_prompt.html`, gated on `request.user.is_authenticated` and the existing session `show_messaging_connect_prompt` flag. The shared `partials/messaging_welcome_prompt_body.html` now renders its sole site-identity headline, formerly `اعلان‌های مهم لومرا را از دست نده`, with `{{ deployment_brand.display_name_fa }}` (`BRAND_DISPLAY_NAME_FA`). The default remains `لومرا`, Latin-only deployment brand overrides do not change the Persian headline, and Django template autoescaping protects special characters.
+
+**Operational boundaries:** The existing manager, stylist and customer `messaging_role` values and explanatory text, role query `audience_role`, `messaging:preferences` link, authenticated/session-gated display, CSRF-protected `accounts:dismiss_messaging_welcome` POST, dismissal JS, optional opt-in messaging connection, and the third-party provider names **Bale** and **Telegram** remain unchanged. The `loomera-` CSS styling identifiers are not user-visible site names. No backend, provider feature flags, data model or identity-handling code changes.
+
+Five database-free tests in `apps/main/test_production_settings_hygiene.py` cover single-slot source contract and active include/gating, default copy and recipient role URL, buyer-specific sequential overrides, Latin-only independence, and safe HTML escaping. RED-only SHA `0a26fdc05d4331934a2b802fa7cd6fa0ec11a45d` failed as intended in [GitHub Actions #39903139489](https://github.com/alireza-anari/loomera-global/actions/runs/39903139489). Final-head GREEN CI and independent 3-file scope review must pass before Squash Merge.
+
+**Phase 2 remains incomplete. Phase 3 is blocked. No deployment.**
