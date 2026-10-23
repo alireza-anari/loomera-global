@@ -401,12 +401,12 @@ class SpecialistSignupForm(BaseSignupForm):
 # Verify Registration Form
 class VerifyRegisterForm(forms.Form):
     active_code = forms.CharField(
-        label="کد فعالسازی ",
+        label=gettext_lazy("کد فعالسازی "),
         error_messages={"required": gettext_lazy("این فیلد نمی‌تواند خالی باشد")},
         widget=forms.TextInput(
             attrs={
                 "class": "register-input-group",
-                "placeholder": "کد دریافتی را وارد کنید ",
+                "placeholder": gettext_lazy("کد دریافتی را وارد کنید "),
             },
         ),
     )
@@ -510,12 +510,12 @@ class ChangePasswordForm(forms.Form):
 # فرم فراموشی رمز عبور
 class RememberPasswordForm(forms.Form):
     mobile_number = forms.CharField(
-        label="شماره موبایل",
+        label=gettext_lazy("شماره موبایل"),
         error_messages={"required": gettext_lazy("این فیلد نمی‌تواند خالی باشد ")},
         widget=forms.TextInput(
             attrs={
                 "class": "register-input-group",
-                "placeholder": "موبایل را وارد کنید ",
+                "placeholder": gettext_lazy("موبایل را وارد کنید "),
             },
         ),
     )

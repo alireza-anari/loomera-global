@@ -438,3 +438,104 @@ msgstr[3] "رمز التحقق غير صحيح. تبقت %(count)d محاولا�
 msgstr[4] "رمز التحقق غير صحيح. تبقت %(count)d محاولة."
 msgstr[5] "رمز التحقق غير صحيح. تبقت %(count)d محاولة."
 
+#: templates/accounts/verify.html templates/accounts/remember_password.html apps/accounts/views.py apps/accounts/forms.py
+msgid "تأیید کد"
+msgstr "تأكيد الرمز"
+
+#: templates/accounts/verify.html templates/accounts/remember_password.html apps/accounts/views.py apps/accounts/forms.py
+msgid "فرم تأیید کد"
+msgstr "نموذج التحقق"
+
+#: templates/accounts/verify.html templates/accounts/remember_password.html apps/accounts/views.py apps/accounts/forms.py
+msgid "کد تأیید را وارد کن"
+msgstr "أدخل رمز التحقق"
+
+#: templates/accounts/verify.html templates/accounts/remember_password.html apps/accounts/views.py apps/accounts/forms.py
+msgid "کد پیامک‌شده را بدون فاصله وارد کن."
+msgstr "أدخل الرمز المرسل برسالة نصية دون مسافات."
+
+#: templates/accounts/verify.html templates/accounts/remember_password.html apps/accounts/views.py apps/accounts/forms.py
+msgid "بعد از تأیید، به ادامه رزرو برمی‌گردی."
+msgstr "بعد التحقق، ستعود إلى متابعة حجزك."
+
+#: templates/accounts/verify.html templates/accounts/remember_password.html apps/accounts/views.py apps/accounts/forms.py
+msgid "بازگشت"
+msgstr "رجوع"
+
+#: templates/accounts/verify.html templates/accounts/remember_password.html apps/accounts/views.py apps/accounts/forms.py
+msgid "کد تأیید"
+msgstr "رمز التحقق"
+
+#: templates/accounts/verify.html templates/accounts/remember_password.html apps/accounts/views.py apps/accounts/forms.py
+msgid "تغییر شماره یا بازگشت به مرحله قبل"
+msgstr "تغيير الرقم أو العودة إلى الخطوة السابقة"
+
+#: templates/accounts/verify.html templates/accounts/remember_password.html apps/accounts/views.py apps/accounts/forms.py
+msgid "ادامه"
+msgstr "متابعة"
+
+#: templates/accounts/verify.html templates/accounts/remember_password.html apps/accounts/views.py apps/accounts/forms.py
+msgid "بازیابی رمز عبور"
+msgstr "استعادة كلمة المرور"
+
+#: templates/accounts/verify.html templates/accounts/remember_password.html apps/accounts/views.py apps/accounts/forms.py
+msgid "فراموشی رمز عبور"
+msgstr "نسيت كلمة المرور"
+
+#: templates/accounts/verify.html templates/accounts/remember_password.html apps/accounts/views.py apps/accounts/forms.py
+msgid "شماره موبایل یا اطلاعات لازم را وارد کن تا کد تایید برایت ارسال شود و بتوانی ادامه بدهی."
+msgstr "أدخل رقم هاتفك أو المعلومات المطلوبة لاستلام رمز التحقق والمتابعة."
+
+#: templates/accounts/verify.html templates/accounts/remember_password.html apps/accounts/views.py apps/accounts/forms.py
+msgid "ارسال کد"
+msgstr "إرسال الرمز"
+
+#: templates/accounts/verify.html templates/accounts/remember_password.html apps/accounts/views.py apps/accounts/forms.py
+msgid "بازگشت به صفحه ورود"
+msgstr "العودة إلى تسجيل الدخول"
+
+#: templates/accounts/verify.html templates/accounts/remember_password.html apps/accounts/views.py apps/accounts/forms.py
+msgid "تایید کد"
+msgstr "تأكيد الرمز"
+
+#: templates/accounts/verify.html templates/accounts/remember_password.html apps/accounts/views.py apps/accounts/forms.py
+msgid "کد تایید را وارد کنید"
+msgstr "أدخل الرمز"
+
+#: templates/accounts/verify.html templates/accounts/remember_password.html apps/accounts/views.py apps/accounts/forms.py
+msgid "کد ارسال‌شده را وارد کنید تا بتوانید رمز عبور خود را تغییر دهید."
+msgstr "أدخل الرمز المرسل لتتمكن من تغيير كلمة المرور."
+
+#: templates/accounts/verify.html templates/accounts/remember_password.html apps/accounts/views.py apps/accounts/forms.py
+msgid "سالن و کسب‌وکار"
+msgstr "الصالون والمنشأة"
+
+#: templates/accounts/verify.html templates/accounts/remember_password.html apps/accounts/views.py apps/accounts/forms.py
+msgid "تایید شماره موبایل"
+msgstr "تأكيد رقم الهاتف"
+
+#: templates/accounts/verify.html templates/accounts/remember_password.html apps/accounts/views.py apps/accounts/forms.py
+#, python-format
+msgid "کد فعال‌سازی %(role)s را وارد کنید"
+msgstr "أدخل رمز تفعيل %(role)s"
+
+#: templates/accounts/verify.html templates/accounts/remember_password.html apps/accounts/views.py apps/accounts/forms.py
+msgid "کد ارسال‌شده به شماره موبایل شما را وارد کنید. پس از تأیید، ورود شما به‌صورت خودکار انجام می‌شود."
+msgstr "أدخل الرمز المرسل إلى رقم هاتفك. سيتم تسجيل دخولك تلقائيًا بعد التحقق."
+
+#: templates/accounts/verify.html templates/accounts/remember_password.html apps/accounts/views.py apps/accounts/forms.py
+msgid "تایید و ورود"
+msgstr "التحقق وتسجيل الدخول"
+
+#: templates/accounts/verify.html templates/accounts/remember_password.html apps/accounts/views.py apps/accounts/forms.py
+msgid "کد فعالسازی "
+msgstr "رمز التفعيل "
+
+#: templates/accounts/verify.html templates/accounts/remember_password.html apps/accounts/views.py apps/accounts/forms.py
+msgid "کد دریافتی را وارد کنید "
+msgstr "أدخل الرمز المستلم "
+
+#: templates/accounts/verify.html templates/accounts/remember_password.html apps/accounts/views.py apps/accounts/forms.py
+msgid "موبایل را وارد کنید "
+msgstr "أدخل رقم الهاتف "
+

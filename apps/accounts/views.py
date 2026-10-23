@@ -672,24 +672,24 @@ def _build_verification_context(form, user_session):
         return {
             **common_context,
             "verification_mode": "password_reset",
-            "verify_page_title": "تایید کد",
-            "verify_heading": "کد تایید را وارد کنید",
-            "verify_description": "کد ارسال‌شده را وارد کنید تا بتوانید رمز عبور خود را تغییر دهید.",
-            "verify_submit_label": "ادامه",
+            "verify_page_title": gettext("تایید کد"),
+            "verify_heading": gettext("کد تایید را وارد کنید"),
+            "verify_description": gettext("کد ارسال‌شده را وارد کنید تا بتوانید رمز عبور خود را تغییر دهید."),
+            "verify_submit_label": gettext("ادامه"),
             "verify_back_url": "accounts:remember_password",
         }
 
     signup_meta = {
         "salon": {
-            "label": "سالن و کسب‌وکار",
+            "label": gettext("سالن و کسب‌وکار"),
             "back_url": "accounts:register",
         },
         "stylist": {
-            "label": "متخصص",
+            "label": gettext("متخصص"),
             "back_url": "accounts:stylist_signup",
         },
         "customer": {
-            "label": "مشتری",
+            "label": gettext("مشتری"),
             "back_url": "accounts:customer_signup",
         },
     }
@@ -699,10 +699,10 @@ def _build_verification_context(form, user_session):
         **common_context,
         "verification_mode": "signup",
         "signup_kind": signup_kind,
-        "verify_page_title": "تایید شماره موبایل",
-        "verify_heading": f"کد فعال‌سازی {meta['label']} را وارد کنید",
-        "verify_description": "کد ارسال‌شده به شماره موبایل شما را وارد کنید. پس از تأیید، ورود شما به‌صورت خودکار انجام می‌شود.",
-        "verify_submit_label": "تایید و ورود",
+        "verify_page_title": gettext("تایید شماره موبایل"),
+        "verify_heading": gettext("کد فعال‌سازی %(role)s را وارد کنید") % {"role": meta["label"]},
+        "verify_description": gettext("کد ارسال‌شده به شماره موبایل شما را وارد کنید. پس از تأیید، ورود شما به‌صورت خودکار انجام می‌شود."),
+        "verify_submit_label": gettext("تایید و ورود"),
         "verify_back_url": meta["back_url"],
     }
 
