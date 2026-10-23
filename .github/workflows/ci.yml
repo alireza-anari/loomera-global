@@ -151,6 +151,13 @@ jobs:
             apps.main.test_phase3_change_password_direction \
             --failfast
 
+      - name: Phase 3 active auth password interaction locale guards
+        run: |
+          python manage.py test \
+            apps.main.test_phase3_auth_password_interactions \
+            --failfast
+          node --test tests/js/phase3_auth_password_interactions.test.cjs
+
       - name: Phase 3 password change browser behavior checks
         run: |
           node --test tests/js/phase3_change_password.test.cjs
