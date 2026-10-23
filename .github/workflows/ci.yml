@@ -145,6 +145,12 @@ jobs:
             apps.main.test_phase3_change_password_page \
             --failfast
 
+      - name: Phase 3 password change LTR layout guards
+        run: |
+          python manage.py test \
+            apps.main.test_phase3_change_password_direction \
+            --failfast
+
       - name: Phase 3 password change browser behavior checks
         run: |
           node --test tests/js/phase3_change_password.test.cjs

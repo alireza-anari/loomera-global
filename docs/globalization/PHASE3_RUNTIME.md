@@ -607,3 +607,19 @@ change-password presentation aliases, full account/business
 internationalization, or real SMS. No production deployment. **Phase 3
 remains open.**
 
+
+## Phase 3 — Slice 3.12: Change-password LTR field affordances
+
+This isolated presentation-only patch aligns the already localized change-password
+page's three password fields with the English LTR document direction. A scoped
+stylesheet loaded in that page's head moves the lock/key/check icons to the
+inline-start side, password-visibility buttons to inline-end, adjusts the
+corresponding input padding, and reverses the two back arrows for LTR only.
+The existing fa/ar RTL utility classes remain untouched; the phone badge retains
+its explicit LTR direction. No DOM order, form action, CSRF, password show/hide
+script, strength scoring, server validation, session or recovery behavior changes.
+
+The database-free `apps.main.test_phase3_change_password_direction` suite checks
+stylesheet scope and load order, all three field hooks, visible navigation icons,
+preserved Persian-side classes and auth/security contracts. These structural tests
+are not cross-browser or visual accessibility acceptance. No deployment.
