@@ -222,3 +222,47 @@ collapsed sidebar and calendar controls must be completed at a future
 browser/deployment acceptance gate. Phase 3 and product translation remain
 open; no production deployment is performed by this task.
 
+
+## Phase 3 — Slice 3.4: Authentication Forms, Controls and Bidirectionality
+
+**Scope:** Structural bidirectional parity of four currently shipped auth form
+templates (`login.html`, `register.html`, `customer_signup.html`, and
+`stylist_signup.html`). The new
+`static/css/components/bidirectional_auth.css` is loaded **after** each
+form's existing isolated page stylesheet. Its rules are scoped exclusively to
+`html[dir="ltr"]`; default Persian and opt-in Arabic RTL do not change.
+
+On LTR desktop layouts, the login panel and all three signup panels mirror
+their right-aligned Persian placement to the left, including the artwork
+softener's gradient direction. Existing widths, mobile layouts, short-height
+scroll behavior and buyer-brand asset paths are preserved. Label, help and
+error copy aligns to inline start, and forward CTA arrows mirror only in
+LTR. Password visibility eyes, phone icons, numeric input direction and
+password-strength indicators are **not** mirrored or transformed.
+
+All four templates retain their POST/CSRF contracts, field identifiers,
+autocomplete, mobile input `dir="ltr"` and numeric keyboard, existing
+form errors, signup terms, password show/hide and client-side strength
+listeners; no view, model, session, authentication, validation or script
+changes occur. This means the presentation work does **not** internationalize
+Iranian phone number validation or introduce a new country-code policy.
+
+The dedicated no-database
+`apps.main.test_phase3_bidirectional_auth` CI step adds regression tests
+for page CSS inclusion order, LTR-only scope, desktop/mid-screen side
+mirroring, signup variants, CTA icon semantics, preserved field/JS hooks,
+brand asset paths and fa/en/ar root document direction:
+
+```bash
+python manage.py test apps.main.test_phase3_bidirectional_auth --failfast
+```
+
+**Explicit limitations:** These source/template-contract checks are not
+browser screenshots. Hero image compositions and mobile overflow need
+actual browser QA in all three languages before production rollout.
+Persian prose currently remains in authentication forms even when the
+request's root language is English or Arabic; translation markers,
+catalog expansion, form-generated validation messages and production-level
+language usability must be addressed in the separate product-localization
+workstream. **Phase 3 remains open; no deployment was performed.**
+
