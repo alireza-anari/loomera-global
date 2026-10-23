@@ -5441,7 +5441,7 @@ class RecoveryCodeVerifyDeploymentBrandTests(SimpleTestCase):
         self.assertEqual(source.count("{{ deployment_brand.display_name }}"), 2)
         self.assertNotIn('alt="Loomera"', source)
         self.assertNotIn("امنیت حساب Loomera", source)
-        self.assertIn("loomera-logo-horizontal-transparent.png", source)
+        self.assertIn("{% static deployment_brand_assets.recovery_logo_path %}", source)
         self.assertIn("تایید کد بازیابی", source)
         self.assertIn("{% csrf_token %}", source)
         self.assertIn('data-auth-form', source)
@@ -6955,7 +6955,7 @@ class DeploymentBrandCrossSurfaceChromeBatchTests(SimpleTestCase):
 
         recovery = self._source("accounts/remember_password_verify.html")
         self.assertIn(
-            "{% static 'branding/logo/loomera-logo-horizontal-transparent.png' %}",
+            "{% static deployment_brand_assets.recovery_logo_path %}",
             recovery,
         )
         self.assertIn('alt="{{ deployment_brand.display_name }}"', recovery)
