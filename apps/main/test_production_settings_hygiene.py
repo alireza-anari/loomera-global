@@ -6424,3 +6424,85 @@ class MessagingStatusDeploymentBrandCopyTests(SimpleTestCase):
         self.assertIn(f"<title>اتصال پیام‌رسان‌ها | {escaped}</title>", rendered)
         self.assertIn(f"حساب {escaped} خود را با ربات بله وصل کنید", rendered)
         self.assertNotIn("حساب Aurora & <Unsafe>", rendered)
+
+
+class NotificationCenterDeploymentBrandTitleTests(SimpleTestCase):
+    """The active notification center title follows the Latin deployment brand."""
+
+    @staticmethod
+    def _source():
+        return (
+            Path(settings.BASE_DIR) / "templates" / "notifications"
+            / "notification_center.html"
+        ).read_text(encoding="utf-8")
+
+    @staticmethod
+    def _render():
+        return render_to_string(
+            "notifications/notification_center.html",
+            {
+                "deployment_brand": get_deployment_brand_config(),
+                "deployment_brand_assets": get_deployment_brand_asset_config(),
+                "deployment_brand_colors": get_deployment_brand_color_config(),
+                "notifications": [],
+                "unread_count": 0,
+                "active_filter": "all",
+                "active_role": "",
+                "is_paginated": False,
+                "hide_navbar": True,
+                "hide_footer": True,
+            },
+        )
+
+    def test_single_identity_slot_and_notification_contracts(self):
+        from django.urls import reverse
+
+        source = self._source()
+        self.assertEqual(source.count("{{ deployment_brand.display_name }}"), 1)
+        self.assertNotIn("Loomera", source)
+        self.assertIn("{% url 'notifications:read_all' %}", source)
+        self.assertIn("{% url 'notifications:read' recipient.id %}", source)
+        self.assertEqual(source.count("{% csrf_token %}"), 2)
+        for value in ("filter=all", "filter=unread", "filter=read"):
+            self.assertIn(value, source)
+        self.assertIn("{{ active_role }}", source)
+        self.assertIn("{{ unread_count }}", source)
+        self.assertIn("{{ recipient.notification.title }}", source)
+        self.assertIn("{{ recipient.notification.body }}", source)
+        self.assertIn("{{ recipient.notification.action_url }}", source)
+        self.assertIn("{% if is_paginated %}", source)
+        self.assertIn("{% load static jalali_filters %}", source)
+        self.assertEqual(reverse("notifications:center"), "/notifications/")
+        self.assertEqual(reverse("notifications:read", args=[42]), "/notifications/api/42/read/")
+        self.assertEqual(reverse("notifications:read_all"), "/notifications/api/read-all/")
+
+    def test_default_loomera_title_and_empty_notification_state(self):
+        self.assertEqual(get_deployment_brand_config().display_name, "Loomera")
+        html = self._render()
+        self.assertIn("<title>اعلان‌ها | Loomera</title>", html)
+        self.assertIn("فعلاً اعلانی برای نمایش وجود ندارد.", html)
+        self.assertIn("خواندن همه", html)
+        self.assertIn('href="?filter=unread"', html)
+
+    def test_sequential_buyer_names_without_brand_leakage(self):
+        for latin, persian in (("Aurora", "آرورا"), ("Second Buyer", "نیلوفر")):
+            with self.subTest(latin=latin):
+                with override_settings(
+                    BRAND_DISPLAY_NAME=latin, BRAND_DISPLAY_NAME_FA=persian
+                ):
+                    html = self._render()
+                    self.assertIn(f"<title>اعلان‌ها | {latin}</title>", html)
+                    self.assertNotIn("<title>اعلان‌ها | Loomera</title>", html)
+                    self.assertIn("مرکز اعلان‌ها", html)
+                    self.assertIn("فعلاً اعلانی برای نمایش وجود ندارد.", html)
+        self.assertIn("<title>اعلان‌ها | Loomera</title>", self._render())
+
+    @override_settings(BRAND_DISPLAY_NAME_FA="آرورا")
+    def test_persian_only_override_does_not_change_latin_title(self):
+        self.assertIn("<title>اعلان‌ها | Loomera</title>", self._render())
+
+    @override_settings(BRAND_DISPLAY_NAME="Aurora & <Buyer>")
+    def test_title_autoescapes_configured_brand(self):
+        html = self._render()
+        self.assertIn("<title>اعلان‌ها | Aurora &amp; &lt;Buyer&gt;</title>", html)
+        self.assertNotIn("<title>اعلان‌ها | Aurora & <Buyer></title>", html)
