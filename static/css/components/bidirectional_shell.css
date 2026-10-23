@@ -1,0 +1,129 @@
+/* Phase 3.3 — bidirectional shared-shell compatibility.
+   Overrides only English/LTR shells. Existing Persian/Arabic RTL layout is
+   deliberately untouched, as are JS state hooks and domain behavior. */
+
+/* Customer dock DOM order is profile-to-home. Reverse the visual grid in LTR
+   so Home sits at the inline start without changing focus or route order. */
+html[dir="ltr"] .lm-shell-customer-mobile-nav__inner {
+  direction: rtl;
+}
+
+/* Sidebar classes are toggled by dashboard_layout.js. Mirror their result
+   without changing any state-machine tokens or localStorage preferences. */
+html[dir="ltr"] [data-dashboard-sidebar] {
+  right: auto;
+  left: 0;
+  border-left: 0;
+  border-right: 1px solid rgba(115, 92, 190, 0.15);
+}
+
+@media (max-width: 1023.98px) {
+  html[dir="ltr"] [data-dashboard-sidebar].translate-x-full {
+    transform: translateX(-100%);
+  }
+}
+
+@media (min-width: 1024px) {
+  html[dir="ltr"] [data-dashboard-content] {
+    padding-right: 0;
+    padding-left: 22rem;
+  }
+
+  html[dir="ltr"] [data-dashboard-content][class~="lg:pr-24"] {
+    padding-left: 6rem;
+  }
+
+  html[dir="ltr"] [data-dashboard-topbar] {
+    right: 0;
+    left: 22rem;
+    transition-property: left;
+  }
+
+  html[dir="ltr"] [data-dashboard-topbar][class~="lg:right-24"] {
+    left: 6rem;
+  }
+}
+
+/* The collapse control remains on the exposed outside edge after mirroring. */
+html[dir="ltr"] [data-sidebar-collapse] {
+  left: auto;
+  right: -1.25rem;
+}
+
+html[dir="ltr"] [data-sidebar-close] {
+  left: auto;
+  right: 1rem;
+}
+
+html[dir="ltr"] [data-sidebar-collapsed-tooltip] {
+  right: auto;
+  left: calc(100% + 0.7rem);
+}
+
+html[dir="ltr"] [data-sidebar-collapse-icon] {
+  transform: scaleX(-1);
+}
+
+/* Partner mobile dock places its raised Create affordance at the inline end.
+   Keep the existing notch, click targets and responsive dimensions in sync. */
+html[dir="ltr"] .lm-partner-mobile-nav__surface {
+  direction: rtl;
+  padding-right: 10px;
+  padding-left: 86px;
+}
+
+html[dir="ltr"] .lm-partner-mobile-nav__surface::before {
+  -webkit-mask: radial-gradient(circle 38px at 42px 0, transparent 0 37px, #000 38px);
+  mask: radial-gradient(circle 38px at 42px 0, transparent 0 37px, #000 38px);
+}
+
+html[dir="ltr"] .lm-partner-mobile-nav__surface::after {
+  left: 42px;
+}
+
+html[dir="ltr"] .lm-partner-mobile-nav__create-root {
+  right: auto;
+  left: 16px;
+}
+
+html[dir="ltr"] .lm-partner-float-menu--create {
+  right: auto;
+  left: -4px;
+}
+
+html[dir="ltr"] .lm-partner-float-menu--create::after {
+  right: auto;
+  left: 22px;
+}
+
+@media (max-width: 374px) {
+  html[dir="ltr"] .lm-partner-mobile-nav__surface {
+    padding-left: 78px;
+  }
+
+  html[dir="ltr"] .lm-partner-mobile-nav__surface::before {
+    -webkit-mask: radial-gradient(circle 36px at 39px 0, transparent 0 35px, #000 36px);
+    mask: radial-gradient(circle 36px at 39px 0, transparent 0 35px, #000 36px);
+  }
+
+  html[dir="ltr"] .lm-partner-mobile-nav__surface::after {
+    left: 39px;
+  }
+
+  html[dir="ltr"] .lm-partner-mobile-nav__create-root {
+    left: 13px;
+  }
+}
+
+/* Shared form labels and selection controls use flow-relative text alignment.
+   Phone, price, calendar and numeric inputs keep their dedicated format rules. */
+html[dir="ltr"] :is(
+  .lm-workspace-switch__option-copy,
+  .lm-workspace-switch__trigger-copy,
+  .lm-workspace-switch__intro,
+  .lm-field-label,
+  .lm-form-error,
+  .lm-field-error
+) {
+  text-align: start;
+}
