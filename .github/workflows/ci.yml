@@ -139,6 +139,16 @@ jobs:
             apps.main.test_phase3_recovery_verify_pages \
             --failfast
 
+      - name: Phase 3 password change page and feedback locale guards
+        run: |
+          python manage.py test \
+            apps.main.test_phase3_change_password_page \
+            --failfast
+
+      - name: Phase 3 password change browser behavior checks
+        run: |
+          node --test tests/js/phase3_change_password.test.cjs
+
       - name: Production settings hygiene
         run: |
           python manage.py test \

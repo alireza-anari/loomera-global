@@ -49,6 +49,13 @@ MESSAGE_IDS = MappingProxyType({
     "validation.correct": "The field value is invalid. Please correct it.",
     "validation.notice": "Please correct the highlighted fields.",
     "validation.server_form": "The form information is invalid. Please review it.",
+    "password.strength.strong": "Strong password.",
+    "password.strength.acceptable": "Acceptable password; consider making it stronger.",
+    "password.strength.guidance": "At least 8 characters; numbers, letters and symbols make it stronger.",
+    "password.show": "Show password",
+    "password.hide": "Hide password",
+    "password.mismatch": "Passwords do not match.",
+    "password.too_short": "Password must be at least 8 characters long.",
 })
 
 

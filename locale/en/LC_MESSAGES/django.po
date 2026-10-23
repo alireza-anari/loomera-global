@@ -535,3 +535,103 @@ msgstr "Enter the received code "
 msgid "موبایل را وارد کنید "
 msgstr "Enter mobile number "
 
+#: templates/accounts/change_password.html loomera/globalization/interactive_messages.py
+msgid "تغییر رمز عبور"
+msgstr "Change password"
+
+#: templates/accounts/change_password.html loomera/globalization/interactive_messages.py
+msgid "امنیت حساب"
+msgstr "Account security"
+
+#: templates/accounts/change_password.html loomera/globalization/interactive_messages.py
+msgid "رمز ورود حساب را از اینجا تغییر بده."
+msgstr "Change your account password here."
+
+#: templates/accounts/change_password.html loomera/globalization/interactive_messages.py
+msgid "بازگشت به تنظیمات"
+msgstr "Back to settings"
+
+#: templates/accounts/change_password.html loomera/globalization/interactive_messages.py
+msgid "بازگشت به ورود"
+msgstr "Back to sign in"
+
+#: templates/accounts/change_password.html loomera/globalization/interactive_messages.py
+msgid "رمز عبور جدید"
+msgstr "New password"
+
+#: templates/accounts/change_password.html loomera/globalization/interactive_messages.py
+msgid "رمز عبور فعلی"
+msgstr "Current password"
+
+#: templates/accounts/change_password.html loomera/globalization/interactive_messages.py
+msgid "تکرار رمز عبور جدید"
+msgstr "Repeat new password"
+
+#: templates/accounts/change_password.html loomera/globalization/interactive_messages.py
+msgid "رمز فعلی را وارد کن"
+msgstr "Enter current password"
+
+#: templates/accounts/change_password.html loomera/globalization/interactive_messages.py
+msgid "رمز جدید را وارد کن"
+msgstr "Enter new password"
+
+#: templates/accounts/change_password.html loomera/globalization/interactive_messages.py
+msgid "رمز جدید را دوباره وارد کن"
+msgstr "Enter new password again"
+
+#: templates/accounts/change_password.html loomera/globalization/interactive_messages.py
+msgid "نمایش رمز عبور فعلی"
+msgstr "Show current password"
+
+#: templates/accounts/change_password.html loomera/globalization/interactive_messages.py
+msgid "نمایش رمز عبور جدید"
+msgstr "Show new password"
+
+#: templates/accounts/change_password.html loomera/globalization/interactive_messages.py
+msgid "نمایش تکرار رمز عبور جدید"
+msgstr "Show repeated new password"
+
+#: templates/accounts/change_password.html loomera/globalization/interactive_messages.py
+msgid "حداقل ۸ کاراکتر؛ استفاده از عدد، حروف و نشانه‌ها رمز را قوی‌تر می‌کند."
+msgstr "At least 8 characters; numbers, letters and symbols make it stronger."
+
+#: templates/accounts/change_password.html loomera/globalization/interactive_messages.py
+msgid "رمز را با دیگران به اشتراک نگذار و برای حساب‌های دیگر از همین رمز استفاده نکن."
+msgstr "Do not share your password or reuse it for other accounts."
+
+#: templates/accounts/change_password.html loomera/globalization/interactive_messages.py
+msgid "ثبت رمز جدید"
+msgstr "Save new password"
+
+#: templates/accounts/change_password.html loomera/globalization/interactive_messages.py
+msgid "رمز فعلی را فراموش کرده‌ای؟"
+msgstr "Forgot your current password?"
+
+#: templates/accounts/change_password.html loomera/globalization/interactive_messages.py
+msgid "Strong password."
+msgstr "Strong password."
+
+#: templates/accounts/change_password.html loomera/globalization/interactive_messages.py
+msgid "Acceptable password; consider making it stronger."
+msgstr "Acceptable password; consider making it stronger."
+
+#: templates/accounts/change_password.html loomera/globalization/interactive_messages.py
+msgid "At least 8 characters; numbers, letters and symbols make it stronger."
+msgstr "At least 8 characters; numbers, letters and symbols make it stronger."
+
+#: templates/accounts/change_password.html loomera/globalization/interactive_messages.py
+msgid "Show password"
+msgstr "Show password"
+
+#: templates/accounts/change_password.html loomera/globalization/interactive_messages.py
+msgid "Hide password"
+msgstr "Hide password"
+
+#: templates/accounts/change_password.html loomera/globalization/interactive_messages.py
+msgid "Passwords do not match."
+msgstr "Passwords do not match."
+
+#: templates/accounts/change_password.html loomera/globalization/interactive_messages.py
+msgid "Password must be at least 8 characters long."
+msgstr "Password must be at least 8 characters long."
+
