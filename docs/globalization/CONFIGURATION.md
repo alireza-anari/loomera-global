@@ -717,3 +717,16 @@ The welcome prompt is actively included by `templates/base.html` through `partia
 Five database-free tests in `apps/main/test_production_settings_hygiene.py` cover single-slot source contract and active include/gating, default copy and recipient role URL, buyer-specific sequential overrides, Latin-only independence, and safe HTML escaping. RED-only SHA `0a26fdc05d4331934a2b802fa7cd6fa0ec11a45d` failed as intended in [GitHub Actions #39903139489](https://github.com/alireza-anari/loomera-global/actions/runs/39903139489). Final-head GREEN CI and independent 3-file scope review must pass before Squash Merge.
 
 **Phase 2 remains incomplete. Phase 3 is blocked. No deployment.**
+
+
+## Bale Connection Card — Connected-State Site Identity
+
+The reusable `templates/messaging/components/bale_connect_card.html` displays the site identity in its Bale-account **connected** message. Previously `حساب بله شما به لومرا متصل شده است.` was hard-coded. It now reads `حساب بله شما به {{ deployment_brand.display_name_fa }} متصل شده است.`, using the existing deployment-level Persian site identity from `BRAND_DISPLAY_NAME_FA`. Default deployments still read `لومرا`; Latin-only overrides remain independent and special characters are HTML-escaped by Django.
+
+**Preserved boundary:** `connected`, `ready` and disabled UI states, management and quick-connect URLs (`status_url`, `quick_connect_url`), disabled button handling, the third-party Bale provider/bot identity, feature-readiness and beta restriction wording, ARIA and styling remain exactly unchanged. No Python, authentication, token, connection/disconnection or backend state code is changed. Existing `loomera-` CSS names are stable identifiers and are not user-facing brand copy.
+
+**Scope caution:** This card is a reusable template partial; no live page include was confirmed by targeted repository inspection, so this change does not claim that a particular production route currently renders this card.
+
+Five database-free tests in `apps/main/test_production_settings_hygiene.py` cover the one presentation slot, three UI states, stable provider and URLs, default wording, sequential buyer isolation, independent Latin override and HTML escaping. Test-only RED SHA `873a223f841d8e2401f6cf197ca92a8000d8e1e3` failed as expected in [GitHub Actions #39904348721](https://github.com/alireza-anari/loomera-global/actions/runs/39904348721). Final-head GREEN GitHub CI and independent 3-file scope review are required for Squash Merge; no local tests, production rendering or deployment is claimed.
+
+**Phase 2 incomplete. Phase 3 blocked. No deployment.**

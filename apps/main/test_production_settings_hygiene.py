@@ -6596,3 +6596,88 @@ class MessagingWelcomePromptDeploymentBrandTests(SimpleTestCase):
         html = self._render()
         self.assertIn("اعلان‌های مهم آرورا &amp; &lt;جدید&gt; را از دست نده", html)
         self.assertNotIn("اعلان‌های مهم آرورا & <جدید>", html)
+
+
+class BaleConnectCardDeploymentBrandTests(SimpleTestCase):
+    """The reusable Bale connection card separates site branding from provider identity."""
+
+    @staticmethod
+    def _source():
+        return (
+            Path(settings.BASE_DIR) / "templates" / "messaging" / "components"
+            / "bale_connect_card.html"
+        ).read_text(encoding="utf-8")
+
+    @staticmethod
+    def _render(*, connected, ready):
+        return render_to_string(
+            "messaging/components/bale_connect_card.html",
+            {
+                "deployment_brand": get_deployment_brand_config(),
+                "connected": connected,
+                "ready": ready,
+                "status_url": "/messaging/",
+                "quick_connect_url": "/messaging/connect/bale/",
+            },
+        )
+
+    def test_single_persian_brand_slot_and_three_state_contract(self):
+        source = self._source()
+        self.assertEqual(source.count("{{ deployment_brand.display_name_fa }}"), 1)
+        self.assertNotIn("حساب بله شما به لومرا متصل شده است", source)
+        self.assertIn("{% if connected %}", source)
+        self.assertIn("{% elif ready %}", source)
+        self.assertIn("{% else %}", source)
+        self.assertIn('href="{{ status_url }}"', source)
+        self.assertIn('href="{{ quick_connect_url }}"', source)
+        self.assertIn("ربات بله فعال است", source)
+        self.assertIn("فعال‌کردن ربات بله", source)
+        self.assertIn("فعلاً غیرفعال", source)
+        self.assertIn("اکشن‌های حساس در بتا همچنان غیرفعال می‌مانند", source)
+        self.assertIn("border-loomera-borderSoft", source)
+        self.assertIn('aria-label="اتصال ربات بله"', source)
+
+    def test_default_persian_brand_and_provider_unchanged_in_connected_state(self):
+        self.assertEqual(get_deployment_brand_config().display_name_fa, "لومرا")
+        html = self._render(connected=True, ready=True)
+        self.assertIn("حساب بله شما به لومرا متصل شده است.", html)
+        self.assertIn("ربات بله فعال است", html)
+        self.assertIn('href="/messaging/"', html)
+        self.assertNotIn('href="/messaging/connect/bale/"', html)
+        self.assertIn("مدیریت اتصال", html)
+
+    def test_sequential_buyers_do_not_leak_and_keep_all_card_branches(self):
+        for latin, persian in (("Aurora", "آرورا"), ("Second Buyer", "نیلوفر")):
+            with self.subTest(persian=persian):
+                with override_settings(
+                    BRAND_DISPLAY_NAME=latin, BRAND_DISPLAY_NAME_FA=persian
+                ):
+                    connected = self._render(connected=True, ready=True)
+                    self.assertIn(f"حساب بله شما به {persian} متصل شده است.", connected)
+                    self.assertNotIn("حساب بله شما به لومرا", connected)
+                    self.assertIn("ربات بله فعال است", connected)
+                    ready = self._render(connected=False, ready=True)
+                    self.assertIn('href="/messaging/connect/bale/"', ready)
+                    self.assertIn("فعال کردن ربات بله", ready)
+                    self.assertNotIn("حساب بله شما به", ready)
+                    disabled = self._render(connected=False, ready=False)
+                    self.assertIn("فعلاً غیرفعال", disabled)
+                    self.assertIn("disabled", disabled)
+                    self.assertNotIn('href="/messaging/connect/bale/"', disabled)
+        self.assertIn("حساب بله شما به لومرا", self._render(connected=True, ready=True))
+
+    @override_settings(BRAND_DISPLAY_NAME="Aurora")
+    def test_latin_override_does_not_change_persian_connected_copy(self):
+        self.assertIn(
+            "حساب بله شما به لومرا متصل شده است.",
+            self._render(connected=True, ready=True),
+        )
+
+    @override_settings(BRAND_DISPLAY_NAME_FA="آرورا & <جدید>")
+    def test_connected_copy_escapes_html_in_persian_brand(self):
+        html = self._render(connected=True, ready=True)
+        self.assertIn(
+            "حساب بله شما به آرورا &amp; &lt;جدید&gt; متصل شده است.",
+            html,
+        )
+        self.assertNotIn("حساب بله شما به آرورا & <جدید>", html)
