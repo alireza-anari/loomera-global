@@ -38,6 +38,11 @@
          class="lm-dashboard-content-shell min-h-dvh min-w-0 transition-[padding] duration-300 ease-out lg:pr-[22rem]"
          data-dashboard-content>
       {% dashboard_navbar %}
+      {% if deployment_locale.enabled_languages|length > 1 %}
+        <div class="flex justify-end px-3 pt-2 sm:px-5 lg:px-8">
+          {% include "partials/shell/language_switcher.html" with language_switcher_variant="dashboard" %}
+        </div>
+      {% endif %}
 
       <main class="lm-dashboard-main px-3 pb-[calc(6.5rem+env(safe-area-inset-bottom,0px))] pt-24 sm:px-5 lg:px-8 lg:pb-10 lg:pt-28">
         <div class="lm-dashboard-content-container mx-auto w-full max-w-[1680px] min-w-0">

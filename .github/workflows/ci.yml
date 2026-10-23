@@ -77,6 +77,12 @@ jobs:
             apps.main.test_liara_deployment_config \
             --failfast
 
+      - name: Phase 3 language selection persistence and catalog guards
+        run: |
+          python manage.py test \
+            apps.main.test_phase3_language_switch \
+            --failfast
+
       - name: Production settings hygiene
         run: |
           python manage.py test \

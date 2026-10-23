@@ -681,6 +681,9 @@ TIME_ZONE = "Asia/Tehran"
 USE_I18N = True
 USE_TZ = True
 
+# Phase 3: application-owned gettext catalogs; product translation remains incremental.
+LOCALE_PATHS = [BASE_DIR / "locale"]
+
 # ==============================================================================
 # STATIC & MEDIA FILES
 # ==============================================================================

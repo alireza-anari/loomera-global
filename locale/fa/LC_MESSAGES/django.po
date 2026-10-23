@@ -1,0 +1,16 @@
+# Phase 3 system-owned navigation messages. Sources only; compile for runtime deployment.
+msgid ""
+msgstr ""
+"Project-Id-Version: Loomera Global Phase 3\n"
+"Language: fa\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#: templates/partials/shell/language_switcher.html
+msgid "Language"
+msgstr "زبان"
+
+#: templates/partials/shell/language_switcher.html
+msgid "Apply language"
+msgstr "تأیید زبان"

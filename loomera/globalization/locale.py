@@ -15,10 +15,11 @@ __all__ = (
     "DeploymentLocaleContext",
     "get_deployment_locale_context",
     "resolve_request_locale",
+    "LANGUAGE_SESSION_KEY",
 )
 
 # A future authenticated-user preference can be added ahead of this priority.
-_SESSION_LANGUAGE_KEY = "loomera_language"
+LANGUAGE_SESSION_KEY = "loomera_language"
 _LANGUAGE_NAME = {"en": "English", "ar": "العربية", "fa": "فارسی"}
 _RTL_LANGUAGES = frozenset(("ar", "fa"))
 _LOCALE_RE = re.compile(r"^[a-z]{2,3}(?:-[a-z0-9]{2,8})*$")
@@ -88,7 +89,7 @@ def resolve_request_locale(request) -> str:
 
     session = getattr(request, "session", None)
     if session is not None:
-        chosen = _match_enabled(session.get(_SESSION_LANGUAGE_KEY), enabled)
+        chosen = _match_enabled(session.get(LANGUAGE_SESSION_KEY), enabled)
         if chosen is not None:
             return chosen
 
