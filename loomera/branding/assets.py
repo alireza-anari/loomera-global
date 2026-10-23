@@ -19,6 +19,7 @@ class DeploymentBrandAssetConfig:
     logo_header_path: str
     logo_primary_path: str
     workspace_logo_path: str
+    recovery_logo_path: str
 
     favicon_svg_path: str
     favicon_ico_path: str
@@ -50,6 +51,7 @@ def get_deployment_brand_asset_config() -> DeploymentBrandAssetConfig:
         logo_header_path=_settings.BRAND_LOGO_HEADER_STATIC_PATH,
         logo_primary_path=_settings.BRAND_LOGO_PRIMARY_STATIC_PATH,
         workspace_logo_path=_settings.BRAND_WORKSPACE_LOGO_STATIC_PATH,
+        recovery_logo_path=_settings.BRAND_RECOVERY_LOGO_STATIC_PATH,
         favicon_svg_path=_settings.BRAND_FAVICON_SVG_STATIC_PATH,
         favicon_ico_path=_settings.BRAND_FAVICON_ICO_STATIC_PATH,
         favicon_16_path=_settings.BRAND_FAVICON_16_STATIC_PATH,

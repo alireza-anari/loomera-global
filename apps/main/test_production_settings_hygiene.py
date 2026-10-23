@@ -73,6 +73,7 @@ print(
             "BRAND_LOGO_HEADER_STATIC_PATH": base.BRAND_LOGO_HEADER_STATIC_PATH,
             "BRAND_LOGO_PRIMARY_STATIC_PATH": base.BRAND_LOGO_PRIMARY_STATIC_PATH,
             "BRAND_WORKSPACE_LOGO_STATIC_PATH": base.BRAND_WORKSPACE_LOGO_STATIC_PATH,
+            "BRAND_RECOVERY_LOGO_STATIC_PATH": base.BRAND_RECOVERY_LOGO_STATIC_PATH,
             "BRAND_FAVICON_SVG_STATIC_PATH": base.BRAND_FAVICON_SVG_STATIC_PATH,
             "BRAND_FAVICON_ICO_STATIC_PATH": base.BRAND_FAVICON_ICO_STATIC_PATH,
             "BRAND_FAVICON_16_STATIC_PATH": base.BRAND_FAVICON_16_STATIC_PATH,
@@ -326,6 +327,31 @@ class ProductionSettingsHygieneTests(SimpleTestCase):
             with self.subTest(value=invalid_value):
                 self._assert_invalid_configuration(
                     name, BRAND_WORKSPACE_LOGO_STATIC_PATH=invalid_value
+                )
+
+
+    def test_recovery_logo_setting_keeps_legacy_default_and_validates_paths(self):
+        name = "BRAND_RECOVERY_LOGO_STATIC_PATH"
+        legacy = "branding/logo/loomera-logo-horizontal-transparent.png"
+        self.assertEqual(self._loaded_values()[name], legacy)
+        self.assertEqual(
+            self._loaded_values(
+                BRAND_RECOVERY_LOGO_STATIC_PATH=" buyer/recovery/logo.svg "
+            )[name],
+            "buyer/recovery/logo.svg",
+        )
+        for invalid in (
+            "",
+            "/buyer/recovery.svg",
+            "https://cdn.example.com/recovery.svg",
+            "buyer\\recovery.svg",
+            "buyer/../recovery.svg",
+            "buyer/recovery.svg?rev=1",
+            "buyer/recovery.svg#mark",
+        ):
+            with self.subTest(value=invalid):
+                self._assert_invalid_configuration(
+                    name, BRAND_RECOVERY_LOGO_STATIC_PATH=invalid
                 )
 
     def test_quick_link_art_settings_use_exact_defaults_and_existing_validator(self):
@@ -736,6 +762,7 @@ BRAND_ASSET_SETTING_NAMES = (
     "BRAND_LOGO_HEADER_STATIC_PATH",
     "BRAND_LOGO_PRIMARY_STATIC_PATH",
     "BRAND_WORKSPACE_LOGO_STATIC_PATH",
+    "BRAND_RECOVERY_LOGO_STATIC_PATH",
     "BRAND_FAVICON_SVG_STATIC_PATH",
     "BRAND_FAVICON_ICO_STATIC_PATH",
     "BRAND_FAVICON_16_STATIC_PATH",
@@ -1929,6 +1956,7 @@ class SharedBrandAssetConfigurationTests(SimpleTestCase):
         "logo_header_path",
         "logo_primary_path",
         "workspace_logo_path",
+        "recovery_logo_path",
         "favicon_svg_path",
         "favicon_ico_path",
         "favicon_16_path",
@@ -1967,6 +1995,7 @@ class SharedBrandAssetConfigurationTests(SimpleTestCase):
         self.assertEqual(config.logo_header_path, "branding/logo/loomera-logo-header.png")
         self.assertEqual(config.logo_primary_path, "branding/logo/loomera-logo-primary.png")
         self.assertEqual(config.workspace_logo_path, "branding/logo/loomera-logo-horizontal-rtl-transparent-240.png")
+        self.assertEqual(config.recovery_logo_path, "branding/logo/loomera-logo-horizontal-transparent.png")
         self.assertEqual(config.favicon_svg_path, "branding/favicon/favicon.svg")
         self.assertEqual(config.favicon_ico_path, "branding/favicon/favicon.ico")
         self.assertEqual(config.favicon_16_path, "branding/favicon/favicon-16x16.png")
@@ -1991,7 +2020,7 @@ class SharedBrandAssetConfigurationTests(SimpleTestCase):
         self.assertEqual(config.social_image_width, 1254)
         self.assertEqual(config.social_image_height, 1254)
 
-    def test_all_twenty_five_settings_are_defined_once_with_the_expected_validators(self):
+    def test_all_twenty_six_settings_are_defined_once_with_the_expected_validators(self):
         settings_path = Path(settings.BASE_DIR) / "loomera" / "settings" / "base.py"
         tree = ast.parse(
             settings_path.read_text(encoding="utf-8"),
@@ -2031,7 +2060,7 @@ class SharedBrandAssetConfigurationTests(SimpleTestCase):
             tuple(field.name for field in fields(DeploymentBrandAssetConfig)),
             self.expected_field_names,
         )
-        self.assertEqual(len(fields(DeploymentBrandAssetConfig)), 25)
+        self.assertEqual(len(fields(DeploymentBrandAssetConfig)), 26)
         self.assertEqual(
             brand_asset_config_module.__all__,
             (
@@ -2047,7 +2076,7 @@ class SharedBrandAssetConfigurationTests(SimpleTestCase):
         self.assertIsNot(first, second)
         self.assertEqual(first, second)
 
-    def test_accessor_reads_exactly_the_twenty_five_resolved_asset_settings(self):
+    def test_accessor_reads_exactly_the_twenty_six_resolved_asset_settings(self):
         assets_path = Path(settings.BASE_DIR) / "loomera" / "branding" / "assets.py"
         source = assets_path.read_text(encoding="utf-8")
         tree = ast.parse(source, filename=str(assets_path))
@@ -2061,7 +2090,7 @@ class SharedBrandAssetConfigurationTests(SimpleTestCase):
         }
 
         self.assertEqual(setting_reads, set(BRAND_ASSET_SETTING_NAMES))
-        self.assertEqual(len(setting_reads), 25)
+        self.assertEqual(len(setting_reads), 26)
         self.assertNotIn("os.environ", source)
         self.assertNotIn("import environ", source)
         self.assertNotIn("loomera.settings.base", source)
@@ -2313,6 +2342,7 @@ class SharedBrandAssetConfigurationTests(SimpleTestCase):
             assets.app_icon_path,
             assets.logo_header_path,
             assets.logo_primary_path,
+            assets.recovery_logo_path,
             assets.favicon_svg_path,
             assets.favicon_ico_path,
             assets.favicon_16_path,
@@ -3308,7 +3338,7 @@ class QuickLinkQRGlyphBoundaryTests(SimpleTestCase):
         second = get_deployment_brand_asset_config()
         self.assertEqual(first.quick_link_qr_glyph_path, self.default_path)
         self.assertIsNot(first, second)
-        self.assertEqual(len(fields(first)), 25)
+        self.assertEqual(len(fields(first)), 26)
         with self.assertRaises(FrozenInstanceError):
             first.quick_link_qr_glyph_path = "buyer/other.png"
         generated = self._generate()
@@ -3454,7 +3484,7 @@ class AuthenticationArtworkDeploymentBoundaryTests(SimpleTestCase):
 
     def test_defaults_render_existing_artwork_and_signup_glyph(self):
         snapshot = get_deployment_brand_asset_config()
-        self.assertEqual(len(fields(snapshot)), 25)
+        self.assertEqual(len(fields(snapshot)), 26)
         self.assertEqual(snapshot.logo_glyph_path, "branding/logo/loomera-glyph-mark.png")
         for template_name, field, default in self.template_assets:
             with self.subTest(template=template_name):
@@ -3638,7 +3668,7 @@ class WorkspaceChooserDeploymentBrandTests(SimpleTestCase):
     def test_default_brand_and_exact_legacy_logo_path_remain_compatible(self):
         snapshot = get_deployment_brand_asset_config()
         self.assertEqual(snapshot.workspace_logo_path, self.default_logo_path)
-        self.assertEqual(len(fields(snapshot)), 25)
+        self.assertEqual(len(fields(snapshot)), 26)
         self.assertTrue((Path(settings.BASE_DIR) / "static" / self.default_logo_path).is_file())
         rendered = self._render()
         self.assertIn("<title>انتخاب محیط فعالیت | لومرا</title>", rendered)
@@ -5411,7 +5441,7 @@ class RecoveryCodeVerifyDeploymentBrandTests(SimpleTestCase):
         self.assertEqual(source.count("{{ deployment_brand.display_name }}"), 2)
         self.assertNotIn('alt="Loomera"', source)
         self.assertNotIn("امنیت حساب Loomera", source)
-        self.assertIn("loomera-logo-horizontal-transparent.png", source)
+        self.assertIn("{% static deployment_brand_assets.recovery_logo_path %}", source)
         self.assertIn("تایید کد بازیابی", source)
         self.assertIn("{% csrf_token %}", source)
         self.assertIn('data-auth-form', source)
@@ -6925,7 +6955,7 @@ class DeploymentBrandCrossSurfaceChromeBatchTests(SimpleTestCase):
 
         recovery = self._source("accounts/remember_password_verify.html")
         self.assertIn(
-            "{% static 'branding/logo/loomera-logo-horizontal-transparent.png' %}",
+            "{% static deployment_brand_assets.recovery_logo_path %}",
             recovery,
         )
         self.assertIn('alt="{{ deployment_brand.display_name }}"', recovery)
@@ -6934,4 +6964,122 @@ class DeploymentBrandCrossSurfaceChromeBatchTests(SimpleTestCase):
         self.assertIn("{% for field in form.visible_fields %}", recovery)
         self.assertIn("{% url 'accounts:remember_password' %}", recovery)
         self.assertIn("{% url 'accounts:login' %}", recovery)
+
+class RecoveryLogoDeploymentAssetBatchTests(SimpleTestCase):
+    """Keep legacy recovery artwork while supporting buyer-owned static assets."""
+
+    RECOVERY_TEMPLATES = (
+        "accounts/remember_password_verify.html",
+        "accounts/verify_code.html",
+        "accounts/new_password.html",
+        "accounts/reset_password.html",
+        "accounts/reset_password_done.html",
+    )
+
+    @staticmethod
+    def _source(path):
+        return (Path(settings.BASE_DIR) / "templates" / path).read_text(
+            encoding="utf-8"
+        )
+
+    @classmethod
+    def _render_logo(cls, path):
+        source = cls._source(path)
+        start = source.index("<img src=")
+        end = source.index("/>", start) + 2
+        markup = source[start:end]
+        return engines["django"].from_string(
+            "{% load static %}" + markup
+        ).render(
+            {
+                "deployment_brand": get_deployment_brand_config(),
+                "deployment_brand_assets": get_deployment_brand_asset_config(),
+            }
+        )
+
+    def test_five_templates_use_a_single_configured_logo_without_old_fixed_path(self):
+        old = "{% static 'branding/logo/loomera-logo-horizontal-transparent.png' %}"
+        for path in self.RECOVERY_TEMPLATES:
+            with self.subTest(path=path):
+                source = self._source(path)
+                self.assertEqual(source.count(
+                    "{% static deployment_brand_assets.recovery_logo_path %}"
+                ), 1)
+                self.assertEqual(source.count(
+                    'alt="{{ deployment_brand.display_name }}"'
+                ), 1)
+                self.assertNotIn(old, source)
+                self.assertNotIn('alt="Loomera"', source)
+                self.assertIn("{% block content %}", source)
+                self.assertIn("{% load static %}", source)
+
+    def test_default_logo_matches_the_exact_existing_static_file(self):
+        old = "branding/logo/loomera-logo-horizontal-transparent.png"
+        self.assertEqual(get_deployment_brand_asset_config().recovery_logo_path, old)
+        self.assertTrue((Path(settings.BASE_DIR) / "static" / old).is_file())
+        for path in self.RECOVERY_TEMPLATES:
+            with self.subTest(path=path):
+                rendered = self._render_logo(path)
+                self.assertIn(f'src="/static/{old}"', rendered)
+                self.assertIn('alt="Loomera"', rendered)
+
+    def test_two_sequential_buyer_assets_and_names_do_not_leak(self):
+        buyers = (
+            ("buyer-one/recovery/logo.svg", "Aurora"),
+            ("buyer-two/recovery/logo.png", "Second Buyer"),
+        )
+        for asset, name in buyers:
+            with override_settings(
+                BRAND_RECOVERY_LOGO_STATIC_PATH=asset,
+                BRAND_DISPLAY_NAME=name,
+            ):
+                for path in self.RECOVERY_TEMPLATES:
+                    with self.subTest(path=path, name=name):
+                        rendered = self._render_logo(path)
+                        self.assertIn(f'src="/static/{asset}"', rendered)
+                        self.assertIn(f'alt="{name}"', rendered)
+                        self.assertNotIn('alt="Loomera"', rendered)
+        self.assertIn(
+            'alt="Loomera"',
+            self._render_logo("accounts/remember_password_verify.html"),
+        )
+
+    def test_persian_name_independence_and_html_escaped_alt(self):
+        with override_settings(BRAND_DISPLAY_NAME_FA="آرورا"):
+            rendered = self._render_logo("accounts/reset_password.html")
+            self.assertIn('alt="Loomera"', rendered)
+        with override_settings(
+            BRAND_DISPLAY_NAME="Aurora & <Buyer>",
+            BRAND_RECOVERY_LOGO_STATIC_PATH="buyer/recovery.svg",
+        ):
+            for path in self.RECOVERY_TEMPLATES:
+                with self.subTest(path=path):
+                    rendered = self._render_logo(path)
+                    self.assertIn('alt="Aurora &amp; &lt;Buyer&gt;"', rendered)
+                    self.assertNotIn('alt="Aurora & <Buyer>"', rendered)
+                    self.assertIn('src="/static/buyer/recovery.svg"', rendered)
+
+    def test_existing_otp_and_password_form_markup_is_untouched(self):
+        for path in self.RECOVERY_TEMPLATES[:-1]:
+            with self.subTest(path=path):
+                source = self._source(path)
+                self.assertIn("{% csrf_token %}", source)
+                self.assertIn('method="post"', source)
+        for path in self.RECOVERY_TEMPLATES:
+            source = self._source(path)
+            self.assertIn('href="/"', source)
+            self.assertIn('class="h-14 w-auto object-contain sm:h-16"', source)
+
+    def test_active_recovery_entry_retains_shared_brand_logo_partial(self):
+        from django.urls import reverse
+
+        self.assertEqual(reverse("accounts:remember_password"), "/accounts/remember_password/")
+        source = self._source("accounts/remember_password.html")
+        self.assertIn(
+            '{% include "partials/brand/logo.html" with variant="full" size="lg" %}',
+            source,
+        )
+        self.assertNotIn(
+            "deployment_brand_assets.recovery_logo_path", source
+        )
 
