@@ -558,3 +558,52 @@ server errors, real SMS, multilingual numeric/calendar formatting, and
 cross-browser visual/accessibility acceptance. No production deployment
 or underlying account security behavior changes. **Phase 3 remains open.**
 
+
+## Phase 3 — Slice 3.11: Active Change-Password UI and Client Validation
+
+This bounded slice localizes the **active** `accounts/change_password.html`
+screen, not the legacy recovery alias templates. All selected page headings,
+labels, placeholders, CTA, recovery link and toggle accessible names use
+Django `{% trans %}` with the historical Persian source. The form's
+`requires_current_password` conditional and its return route are unchanged.
+The client-side password fields retain the same names, autocomplete, CSRF,
+validation, keyboard/focus state and three-bar score thresholds.
+
+Seven additional trusted `password.*` keys extend the existing
+`interactive_messages` gettext boundary (from 34 to 41 messages).
+They cover strength status (strong/acceptable/guidance), show/hide
+accessibility labels, mismatch and minimum-eight feedback. The browser
+i18n bridge still accepts only bounded known-prefix string values.
+In English and Arabic, the existing feedback sanitizer accepts these
+pre-approved translated messages rather than treating them as untrusted
+server text; arbitrary strings remain behind safe fallbacks. Persian
+fallbacks match the previous JavaScript literals exactly.
+
+The inline change-password script preserves the previous password-eye
+toggle behavior, focus, class changes, scoring formula, `< 8` minimum
+length and mismatch-prevents-submit logic. It replaces only visible
+message string selection via the already initialized `LoomeraI18n.text`
+bridge. All strength hint updates use `textContent`, never HTML.
+Server-side `ChangePasswordForm` validation, password hashing, session
+and OTP reset authorization, account permissions and login/logout
+behavior are **not** changed.
+
+25 reviewed new gettext IDs are added to source `django.po` and
+compiled `django.mo` for fa/en/ar (two common existing IDs are reused).
+The previous six-form Arabic `ngettext` OTP counter remains intact.
+
+The new ten-test database-free Django suite renders the real page in
+all three languages and both change/recovery modes, checks catalog
+lookups and the preservation of CSRF/field names/security thresholds,
+and rechecks OTP plural forms. A seven-test dependency-free Node VM
+suite executes the actual inline JavaScript plus the trusted browser
+i18n bridge and feedback sanitizer. It verifies weak/acceptable/strong
+scores, localized feedback and accessible toggles, client submission
+blocking, valid submissions, Persian fallback and hostile input safety.
+
+**Not yet covered:** browser screenshot/keyboard/screen-reader
+acceptance, translation of arbitrary server-side errors, legacy
+change-password presentation aliases, full account/business
+internationalization, or real SMS. No production deployment. **Phase 3
+remains open.**
+

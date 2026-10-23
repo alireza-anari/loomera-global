@@ -35,7 +35,7 @@ class LocalizedSubmitPendingTests(SimpleTestCase):
             "saving", "registering", "sending", "creating", "logging_in",
             "confirming", "activating", "deleting", "cancelling", "working",
         )
-        self.assertEqual(len(MESSAGE_IDS), 34)
+        self.assertEqual(len(MESSAGE_IDS), 41)
         for key in keys:
             self.assertIn("submit." + key, MESSAGE_IDS)
         self.assertEqual(MESSAGE_IDS["submit.working"], "Working…")
@@ -85,7 +85,7 @@ class LocalizedSubmitPendingTests(SimpleTestCase):
 
     def test_bridge_restricts_keys_and_preserves_single_mapping_instance(self):
         js = self.source("static/js/interactive_i18n.js")
-        self.assertIn("(feedback|validation|submit)", js)
+        self.assertIn("(feedback|validation|submit|password)", js)
         self.assertIn("Object.create(null)", js)
         self.assertIn("Object.freeze(messages)", js)
         self.assertIn('payload.language', js)
