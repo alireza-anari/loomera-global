@@ -139,6 +139,13 @@ jobs:
             apps.main.test_phase3_recovery_verify_pages \
             --failfast
 
+      - name: Phase 3 recovery and OTP presentation, safety and browser behavior guards
+        run: |
+          python manage.py test \
+            apps.main.test_phase3_recovery_otp_presentation \
+            --failfast
+          node --test tests/js/phase3_recovery_otp_presentation.test.cjs
+
       - name: Phase 3 password change page and feedback locale guards
         run: |
           python manage.py test \
