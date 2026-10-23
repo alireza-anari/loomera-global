@@ -165,6 +165,12 @@ jobs:
             --failfast
           node --test tests/js/phase3_auth_password_interactions.test.cjs
 
+      - name: Phase 3 active authentication field error accessibility guards
+        run: |
+          python manage.py test \
+            apps.main.test_phase3_auth_field_error_a11y \
+            --failfast
+
       - name: Phase 3 password change browser behavior checks
         run: |
           node --test tests/js/phase3_change_password.test.cjs
