@@ -151,7 +151,7 @@ It defines exactly two public symbols:
 - `DeploymentBrandAssetConfig` — a frozen immutable snapshot of the resolved deployment brand asset settings;
 - `get_deployment_brand_asset_config()` — constructs a fresh snapshot from `django.conf.settings` on every call.
 
-The deployment asset snapshot has exactly **25 frozen fields** (15 original fields, four Task 2.16 quick-link print artwork paths, the Task 2.17 QR glyph path, four Task 2.18 authentication hero paths, and one workspace-chooser logo path). The settings map exactly as follows:
+The deployment asset snapshot has exactly **26 frozen fields** (15 original fields, four Task 2.16 quick-link print artwork paths, the Task 2.17 QR glyph path, four Task 2.18 authentication hero paths, one workspace-chooser logo path, and one legacy recovery-flow logo path). The settings map exactly as follows:
 
 | Django/environment setting | Snapshot field | Loomera compatibility default |
 | --- | --- | --- |
@@ -160,6 +160,7 @@ The deployment asset snapshot has exactly **25 frozen fields** (15 original fiel
 | `BRAND_LOGO_HEADER_STATIC_PATH` | `logo_header_path` | `branding/logo/loomera-logo-header.png` |
 | `BRAND_LOGO_PRIMARY_STATIC_PATH` | `logo_primary_path` | `branding/logo/loomera-logo-primary.png` |
 | `BRAND_WORKSPACE_LOGO_STATIC_PATH` | `workspace_logo_path` | `branding/logo/loomera-logo-horizontal-rtl-transparent-240.png` |
+| `BRAND_RECOVERY_LOGO_STATIC_PATH` | `recovery_logo_path` | `branding/logo/loomera-logo-horizontal-transparent.png` |
 | `BRAND_FAVICON_SVG_STATIC_PATH` | `favicon_svg_path` | `branding/favicon/favicon.svg` |
 | `BRAND_FAVICON_ICO_STATIC_PATH` | `favicon_ico_path` | `branding/favicon/favicon.ico` |
 | `BRAND_FAVICON_16_STATIC_PATH` | `favicon_16_path` | `branding/favicon/favicon-16x16.png` |
@@ -792,4 +793,39 @@ not individual micro-PR RED/GREEN cycles.
 
 **Phase 2 remains incomplete pending its exit criteria. Phase 3 not begun.
 No deployment.**
+
+## Legacy Recovery Flow Logo — Deployment Asset Boundary
+
+The **five legacy templates** `accounts/remember_password_verify.html`,
+`accounts/verify_code.html`, `accounts/new_password.html`,
+`accounts/reset_password.html`, and `accounts/reset_password_done.html`
+formerly embedded the fixed `branding/logo/loomera-logo-horizontal-transparent.png`
+static asset. They now read `deployment_brand_assets.recovery_logo_path`
+(`BRAND_RECOVERY_LOGO_STATIC_PATH`) and use the existing
+`deployment_brand.display_name` for image alt text. The new setting shares
+the existing `_read_brand_static_path` validation. Its default is **exactly**
+the old asset path, which already exists in the repository: no default logo
+artwork or layout changes are intended. Buyers can package an alternate
+staticfiles asset and specify its relative path without editing these templates.
+
+The current active `accounts:remember_password` entry screen continues to
+use the shared `partials/brand/logo.html` partial and its original primary
+logo setting; no extra recovery logo dependency is introduced there. Only
+this entry route has been positively verified among these recovery templates
+from `apps/accounts/urls.py` and `RememberPasswordView`. The five legacy
+templates are **not** claimed to be active URLs. Future auth routing or
+activation must be separately audited; this task does not change views,
+URL routing, OTP generation/verification, tokens, sessions, form actions,
+CSRF, authentication rules, or password persistence.
+
+The six new database-free regression methods, plus one settings-import
+validator test, cover the 26-field immutable asset contract, stable legacy
+default, approved staticfiles path constraints, sequential buyers, HTML
+escaping, localization independence and form/route preservation.
+Deployment assets must be packaged with the application as for all existing
+`BRAND_*_STATIC_PATH` settings.
+
+For the evidence-based Phase 2 exit decision and the explicit remaining
+verification gaps, see `PHASE2_EXIT_AUDIT.md`. Phase 3 is not initiated
+by this documentation or asset task, and no deployment occurred.
 
