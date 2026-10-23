@@ -6781,3 +6781,157 @@ class MultiroleManagerDashboardBrandTitlesTests(SimpleTestCase):
             "ویرایش خدمت | لومرا",
         )
 
+class DeploymentBrandCrossSurfaceChromeBatchTests(SimpleTestCase):
+    """Site-owned identity in admin, services and recovery presentation."""
+
+    SOURCE_CASES = (
+        ("platform_admin/base.html", 3, 0),
+        ("platform_admin/dashboard.html", 1, 0),
+        ("platform_admin/infrastructure.html", 1, 0),
+        ("services/all_services.html", 1, 1),
+        ("accounts/remember_password_verify.html", 2, 0),
+    )
+
+    @staticmethod
+    def _source(path):
+        return (Path(settings.BASE_DIR) / "templates" / path).read_text(
+            encoding="utf-8"
+        )
+
+    @classmethod
+    def _brand_rows(cls, path, *, selected_group=None):
+        rows = [
+            row for row in cls._source(path).splitlines()
+            if "{{ deployment_brand.display_name" in row
+        ]
+        context = {
+            "deployment_brand": get_deployment_brand_config(),
+            "selected_group": selected_group,
+        }
+        return [
+            engines["django"].from_string(row).render(context) for row in rows
+        ]
+
+    def test_five_templates_have_exact_brand_slots_without_fixed_site_names(self):
+        for path, latin, persian in self.SOURCE_CASES:
+            with self.subTest(path=path):
+                source = self._source(path)
+                self.assertEqual(
+                    source.count("{{ deployment_brand.display_name }}"), latin
+                )
+                self.assertEqual(
+                    source.count("{{ deployment_brand.display_name_fa }}"), persian
+                )
+                self.assertNotIn("Loomera Admin", source)
+                self.assertNotIn("داشبورد عملیاتی Loomera", source)
+                self.assertNotIn("زیرساخت Loomera", source)
+                self.assertNotIn("خدمات لومرا", source)
+                self.assertNotIn("همه خدمات زیبایی | Loomera", source)
+                self.assertNotIn('alt="Loomera"', source)
+                self.assertNotIn("امنیت حساب Loomera", source)
+
+    def test_default_chrome_preserves_all_existing_loomera_copy(self):
+        expected = {
+            "platform_admin/base.html": ("پنل ادمین Loomera", "Loomera Admin"),
+            "platform_admin/dashboard.html": ("داشبورد عملیاتی Loomera",),
+            "platform_admin/infrastructure.html": ("زیرساخت Loomera",),
+            "services/all_services.html": ("همه خدمات زیبایی | Loomera", "خدمات لومرا"),
+            "accounts/remember_password_verify.html": ('alt="Loomera"', "امنیت حساب Loomera"),
+        }
+        self.assertEqual(get_deployment_brand_config().display_name, "Loomera")
+        self.assertEqual(get_deployment_brand_config().display_name_fa, "لومرا")
+        for path, texts in expected.items():
+            with self.subTest(path=path):
+                rendered = "\n".join(self._brand_rows(path))
+                for text in texts:
+                    self.assertIn(text, rendered)
+        self.assertEqual(
+            "\n".join(self._brand_rows("platform_admin/base.html")).count(
+                "Loomera Admin"
+            ),
+            2,
+        )
+
+    def test_sequential_buyer_overrides_are_isolated_across_all_surfaces(self):
+        for latin, persian in (("Aurora", "آرورا"), ("Second Buyer", "نیلوفر")):
+            with override_settings(
+                BRAND_DISPLAY_NAME=latin, BRAND_DISPLAY_NAME_FA=persian
+            ):
+                for path, latin_count, persian_count in self.SOURCE_CASES:
+                    with self.subTest(path=path, latin=latin):
+                        rendered = "\n".join(self._brand_rows(path))
+                        if latin_count:
+                            self.assertIn(latin, rendered)
+                        if persian_count:
+                            self.assertIn(persian, rendered)
+                        self.assertNotIn("Loomera Admin", rendered)
+                        self.assertNotIn("خدمات لومرا", rendered)
+        self.assertIn(
+            "پنل ادمین Loomera",
+            "\n".join(self._brand_rows("platform_admin/base.html")),
+        )
+
+    def test_latin_and_persian_identity_overrides_are_independent(self):
+        with override_settings(BRAND_DISPLAY_NAME="Aurora"):
+            service = "\n".join(self._brand_rows("services/all_services.html"))
+            self.assertIn("همه خدمات زیبایی | Aurora", service)
+            self.assertIn("خدمات لومرا", service)
+        with override_settings(BRAND_DISPLAY_NAME_FA="آرورا"):
+            service = "\n".join(self._brand_rows("services/all_services.html"))
+            self.assertIn("همه خدمات زیبایی | Loomera", service)
+            self.assertIn("خدمات آرورا", service)
+            self.assertIn(
+                "امنیت حساب Loomera",
+                "\n".join(self._brand_rows("accounts/remember_password_verify.html")),
+            )
+
+    @override_settings(
+        BRAND_DISPLAY_NAME="Aurora & <Unsafe>",
+        BRAND_DISPLAY_NAME_FA="آرورا & <جدید>",
+    )
+    def test_brand_html_is_escaped_in_all_five_templates(self):
+        for path, latin, persian in self.SOURCE_CASES:
+            with self.subTest(path=path):
+                rendered = "\n".join(self._brand_rows(path))
+                if latin:
+                    self.assertIn("Aurora &amp; &lt;Unsafe&gt;", rendered)
+                    self.assertNotIn("Aurora & <Unsafe>", rendered)
+                if persian:
+                    self.assertIn("آرورا &amp; &lt;جدید&gt;", rendered)
+                    self.assertNotIn("آرورا & <جدید>", rendered)
+
+    def test_service_group_seo_title_and_navigation_remain_unchanged(self):
+        source = self._source("services/all_services.html")
+        self.assertIn("{{ selected_group.effective_seo_title }}", source)
+        self.assertIn("{{ selected_group.effective_seo_description }}", source)
+        self.assertIn("{% url 'services:all_services' %}", source)
+        self.assertIn('data-services-page', source)
+        rendered = "\n".join(
+            self._brand_rows(
+                "services/all_services.html",
+                selected_group=SimpleNamespace(effective_seo_title="Group SEO"),
+            )
+        )
+        self.assertIn("Group SEO", rendered)
+        self.assertNotIn("همه خدمات زیبایی | Loomera", rendered)
+        self.assertIn("خدمات لومرا", rendered)
+
+    def test_admin_and_recovery_operational_controls_remain_unchanged(self):
+        admin = self._source("platform_admin/base.html")
+        self.assertIn("{% for item in platform_nav %}", admin)
+        self.assertIn("{{ item.url }}", admin)
+        self.assertIn("{% block platform_content %}", admin)
+        self.assertIn('href="/"', admin)
+
+        recovery = self._source("accounts/remember_password_verify.html")
+        self.assertIn(
+            "{% static 'branding/logo/loomera-logo-horizontal-transparent.png' %}",
+            recovery,
+        )
+        self.assertIn('alt="{{ deployment_brand.display_name }}"', recovery)
+        self.assertIn('<form method="post" novalidate data-auth-form', recovery)
+        self.assertIn("{% csrf_token %}", recovery)
+        self.assertIn("{% for field in form.visible_fields %}", recovery)
+        self.assertIn("{% url 'accounts:remember_password' %}", recovery)
+        self.assertIn("{% url 'accounts:login' %}", recovery)
+
