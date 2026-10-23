@@ -1,5 +1,5 @@
 {% extends "dashboard_template.html" %}
-{% block title %}{% if service %}ویرایش{% else %}افزودن{% endif %} خدمت | لومرا{% endblock %}
+{% block title %}{% if service %}ویرایش{% else %}افزودن{% endif %} خدمت | {{ deployment_brand.display_name_fa }}{% endblock %}
 {% block content %}
 <div class="mx-auto max-w-3xl space-y-5">
   <header class="rounded-[28px] border border-loomera-borderSoft bg-white p-5 shadow-lm-card sm:p-6">
