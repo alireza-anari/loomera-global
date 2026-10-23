@@ -20,7 +20,7 @@ from django.db.models import Avg, Sum, F, Q, Value, Case, When, IntegerField
 from django.http import Http404, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils import timezone
-from django.utils.translation import gettext
+from django.utils.translation import gettext, ngettext
 from django.utils.http import url_has_allowed_host_and_scheme
 from django.views import View
 from django.views.decorators.csrf import csrf_exempt
@@ -1052,6 +1052,20 @@ class RegisterUserView(View):
 
 
 # ----------------------------------------------------------------------------------------------------
+def _format_remaining_otp_attempts(remaining_attempts):
+    """Localize the display copy, never change the OTP attempt counter.
+
+    Both Persian plural forms intentionally preserve the exact historical
+    wording. English and Arabic use the locale's genuine plural rules.
+    """
+    message = ngettext(
+        "کد وارد شده اشتباه است. %(count)d تلاش دیگر باقی مانده است.",
+        "کد وارد شده اشتباه است. %(count)d تلاش دیگر باقی مانده‌اند.",
+        remaining_attempts,
+    )
+    return message % {"count": remaining_attempts}
+
+
 class VerifyRegisterView(View):
     def dispatch(self, request, *args, **kwargs):
         if request.user.is_authenticated:
@@ -1143,7 +1157,7 @@ class VerifyRegisterView(View):
 
             messages.error(
                 request,
-                f"کد وارد شده اشتباه است. {remaining_attempts} تلاش دیگر باقی مانده است.",
+                _format_remaining_otp_attempts(remaining_attempts),
                 "danger",
             )
             return render(

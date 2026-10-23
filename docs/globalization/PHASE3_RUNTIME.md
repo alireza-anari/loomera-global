@@ -462,3 +462,45 @@ acceptance. The existing `fa` policy and returned error strings are
 preserved exactly. No staging/production deployment is included;
 Phase 3 remains open.
 
+
+## Phase 3 — Slice 3.9: OTP Remaining-Attempt Pluralization
+
+The existing incorrect-OTP branch still increments
+`user_session["otp_attempts"]`, computes
+`remaining_attempts = max(otp_max_attempts - otp_attempts, 0)`,
+and locks out, clears the session and redirects at zero. None of these
+security-sensitive operations, TTLs or verification and reset flows changes.
+
+Only the human-visible **positive remaining-attempt** message is replaced
+with `_format_remaining_otp_attempts(remaining_attempts)` using Django
+`ngettext(singular_msgid, plural_msgid, remaining_attempts)` and named
+integer interpolation `%(count)d`. The helper executes after the existing
+`remaining_attempts <= 0` lockout branch; neither a zero attempt count
+nor an expired OTP ever returns this progress message.
+
+Three source and compiled catalogs ship the same new plural message ID:
+- **Persian:** both forms return exactly the prior
+  `کد وارد شده اشتباه است. N تلاش دیگر باقی مانده است.`
+  string, including spacing and ASCII integer rendering
+- **English:** one `attempt remains` versus multiple `attempts remain`
+- **Arabic:** all six GNU gettext forms (zero, one, two, 3–10, 11–99,
+  and the remaining category), respecting the existing declared
+  `Plural-Forms` header
+
+The new database-free `apps.main.test_phase3_otp_pluralization`
+regression suite executes the real compiled `.mo` gettext paths for
+fa/en/ar across multiple counts, asserts exact Persian message identity,
+and invokes the actual `VerifyRegisterView.post` handler with
+a signed-cookie test session and mocked presentation transports.
+The latter verifies that three invalid codes against a three-attempt
+budget show 2 then 1 remaining, then **do not** show a counter and
+instead clear the session and redirect on the third failed attempt.
+It also exercises already-exhausted attempts, preserving the lockout
+path and the separate generic translation. Earlier signup, recovery,
+Phase 2 brand and frontend suites continue to run.
+
+These tests do not send SMS or connect to a real account, and do not
+replace a browser/production acceptance gate. No default language,
+authentication, payment, booking, locale formatting or data schema is
+changed. Phase 3 is still open.
+

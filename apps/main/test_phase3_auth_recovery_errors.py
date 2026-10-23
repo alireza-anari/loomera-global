@@ -159,7 +159,9 @@ class AuthenticationRecoveryValidationLocaleTests(SimpleTestCase):
         end = src.index("class DismissMessagingWelcomePromptView(", start)
         body = src[start:end]
         self.assertIn("remaining_attempts = max(", body)
-        self.assertIn('f"کد وارد شده اشتباه است. {remaining_attempts} تلاش دیگر باقی مانده است."', body)
+        self.assertIn("_format_remaining_otp_attempts(remaining_attempts)", body)
+        self.assertIn('ngettext(', src)
+        self.assertIn('return message % {"count": remaining_attempts}', src)
         self.assertIn('user_session["otp_attempts"]', body)
         self.assertIn("request.session.pop(USER_SESSION_KEY, None)", body)
         self.assertIn('user_session["otp_verified"] = True', body)
