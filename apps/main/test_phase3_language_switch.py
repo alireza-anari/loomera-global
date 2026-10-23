@@ -138,6 +138,7 @@ class DeploymentLanguageSelectionTests(SimpleTestCase):
         self.assertEqual(client.session[LANGUAGE_SESSION_KEY], "ar")
 
     @override_settings(
+        LANGUAGE_COOKIE_AGE=3600,
         LANGUAGE_COOKIE_SECURE=True,
         LANGUAGE_COOKIE_SAMESITE="Strict",
         LANGUAGE_COOKIE_PATH="/",
