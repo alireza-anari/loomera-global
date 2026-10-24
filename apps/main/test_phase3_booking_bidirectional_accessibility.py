@@ -96,7 +96,8 @@ class BookingBidirectionalAccessibilityTests(SimpleTestCase):
         self.assertIn('aria-describedby="id_coupon_code_error"', coupon_html)
         self.assertIn('id="id_coupon_code"', coupon_html)
         self.assertIn('aria-invalid="true"', payment_html)
-        self.assertIn("id_payment_method_error", payment_html)
+        # Django RadioSelect does not automatically attach aria-describedby.
+        self.assertNotIn('aria-describedby="id_payment_method_error"', payment_html)
         for path in self.CHECKOUT_TEMPLATES:
             src = self.source(path)
             for name in ("coupon_code", "payment_method"):
@@ -107,6 +108,28 @@ class BookingBidirectionalAccessibilityTests(SimpleTestCase):
                     )
         self.assertEqual(form["coupon_code"].auto_id, "id_coupon_code")
         self.assertEqual(form["payment_method"].auto_id, "id_payment_method")
+
+
+    def test_payment_radiogroups_render_error_links_only_when_invalid(self):
+        for path in self.CHECKOUT_TEMPLATES:
+            src = self.source(path)
+            start = src.index('<div class="grid gap-3" role="radiogroup"')
+            end = src.index(">", start) + 1
+            fragment = engines["django"].from_string(src[start:end])
+            for payment, invalid in (("invalid", True), ("pay_in_salon", False)):
+                form = AppointmentCheckoutForm(
+                    data={"coupon_code": "SAVE10", "payment_method": payment}
+                )
+                self.assertEqual(bool(form.errors.get("payment_method")), invalid)
+                with self.subTest(path=path, payment=payment):
+                    html = fragment.render({"form": form})
+                    self.assertIn('role="radiogroup"', html)
+                    if invalid:
+                        self.assertIn('aria-invalid="true"', html)
+                        self.assertIn('aria-describedby="id_payment_method_error"', html)
+                    else:
+                        self.assertNotIn("aria-describedby=", html)
+                        self.assertNotIn('aria-invalid="true"', html)
 
     def test_preview_manual_coupon_widget_renders_invalid_and_valid_aria_states(self):
         src = self.source("templates/orders/reservation_preview.html")
