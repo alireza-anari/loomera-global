@@ -146,6 +146,15 @@ jobs:
             --failfast
           node --test tests/js/phase3_booking_dynamic_locale.test.cjs
 
+      - name: Phase 3 booking multi-day and specialist native gettext parity
+        run: |
+          node --check static/js/select_stylist.js
+          node --check static/js/select_datetime.js
+          python manage.py test \
+            apps.main.test_phase3_booking_journey_locale \
+            --failfast
+          node --test tests/js/phase3_booking_journey_locale.test.cjs
+
       - name: Phase 3 booking journey dynamic markup and locale guards
         run: |
           node --check static/js/select_stylist.js

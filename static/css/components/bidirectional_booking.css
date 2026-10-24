@@ -18,3 +18,16 @@ html[dir="ltr"] [data-booking-back-icon] {
   outline: 2px solid var(--lm-primary);
   outline-offset: 2px;
 }
+
+/* The specialist choice cards have a legacy RTL utility. Align translated
+   headings on LTR deployments without changing card DOM or focus order. */
+html[dir="ltr"] [data-booking-step="staff-selection"] .stylist-option {
+  text-align: start;
+}
+
+/* Mixed-script service/professional names choose their own text direction.
+   Numeric booking values retain their separate localized display contract. */
+[data-booking-service-name] {
+  unicode-bidi: plaintext;
+  text-align: start;
+}

@@ -1293,3 +1293,58 @@ and conditional backend responses on the booking pages are not yet
 covered, and real-browser visual, keyboard, zoom and screen-reader
 acceptance remains open. This patch is not Phase 3 sign-off and
 includes no Production deployment.
+
+## Phase 3 — Slice 3.29: Booking Journey Static and Conditional Gettext
+
+This is a **larger, cohesive booking customer-flow localization batch**:
+shared booking progress header, staff selection and availability/empty
+states, date/time selection and multi-day planning hints, review summaries
+and screen-reader labels, direction-sensitive names, plus compiled catalog
+and runtime regression coverage.
+
+Exactly **58** newly reviewed English-source gettext messages with
+historical Persian and approved Arabic renderings are recorded in
+the native `locale/{fa,en,ar}/LC_MESSAGES/django.po` files and their
+matching compiled `django.mo` artifacts **atomically**. Each language
+catalog now contains 292 entries, preserving the prior 234. Static
+templates use native `{% trans %}` output on first paint. The **17**
+new dynamic calendar-planning keys live in the immutable
+`BOOKING_JOURNEY_MESSAGE_IDS` namespace and are resolved by the
+existing request-scoped `interactive_messages` browser bridge.
+The generic 41-key message set and prior 37-key booking UI set
+remain unchanged. Total scoped browser keys are now 95.
+
+The calendar translates unavailable/suggested-day badges, same-day
+and split-day explanatory copy, action labels, 90-day availability
+hint, selected times and multi-day summaries. Source dates, slot
+quantities, JavaScript state, availability API requests, rescheduling
+authorization and the JSON submitted at checkout are unchanged.
+Translated text inserted in dynamic markup is escaped at the HTML
+sink. A guarded browser label lookup rejects empty, oversized,
+markup-like or NUL-containing values, falling back to the original
+reviewed Persian display copy; it never promotes `booking.*`
+messages into trusted server flash or payment messages.
+
+The shared progress header and specialist/date-time templates
+translate title, step labels, relevant help copy and initial
+empty states. RTL staff cards remain unchanged; English/LTR
+aligns option text to the logical start. Mixed Persian/Latin
+service and professional names have isolated direction
+(`dir="auto"`) while their stored identifiers remain intact.
+This improves structural locale behavior, **not** an actual
+browser or screen-reader accessibility sign-off.
+
+New database-free Django tests validate all 58 compiled PO/MO
+entries, 17 immutable calendar keys, all 95 scoped browser keys,
+fa original copy, template translations, mixed-direction display
+and security boundaries. Executed Node tests exercise the real
+browser bridge and booking label helper in fa/en/ar, validate
+markup rejection and original fallback. The existing full Phase
+1–3 CI suite also remains mandatory.
+
+Remaining legacy checkout/preview explanatory paragraphs and
+some user-provided or backend-generated copy still require
+separate locale/security review. The Phase 3 acceptance matrix
+continues to mark real-browser visuals, hands-on keyboard tests,
+screen-reader use, responsive zoom and deployment approval as
+unperformed. No production deployment is included.

@@ -942,3 +942,235 @@ msgstr "فقط زمان‌های واقعی و آزاد نمایش داده می
 #: loomera/globalization/booking_interactive_messages.py
 msgid "No appointment time has been selected yet."
 msgstr "هنوز زمانی انتخاب نشده است."
+
+#: loomera/globalization/booking_journey_messages.py
+msgid "We try to keep this service on the same day. If not possible, you can choose another day."
+msgstr "ابتدا تلاش می‌کنیم این خدمت هم در همان روز قبلی قرار بگیرد. اگر ممکن نبود، می‌توانی برای این خدمت روز دیگری انتخاب کنی."
+
+#: loomera/globalization/booking_journey_messages.py
+msgid "Choose a suitable date and time for this service."
+msgstr "تاریخ و ساعت مناسب را برای این خدمت انتخاب کن."
+
+#: loomera/globalization/booking_journey_messages.py
+msgid "Another day for this service"
+msgstr "روز دیگری برای این خدمت"
+
+#: loomera/globalization/booking_journey_messages.py
+msgid "Suggested"
+msgstr "پیشنهادی"
+
+#: loomera/globalization/booking_journey_messages.py
+msgid "Available and unavailable dates for this service over the next 90 days"
+msgstr "روزهای آزاد و غیرفعال این خدمت در ۹۰ روز آینده"
+
+#: loomera/globalization/booking_journey_messages.py
+msgid "Default is still"
+msgstr "پیش‌فرض همچنان"
+
+#: loomera/globalization/booking_journey_messages.py
+msgid "but you may choose another day."
+msgstr "است، اما می‌توانید روز دیگری هم انتخاب کنید."
+
+#: loomera/globalization/booking_journey_messages.py
+msgid "The default date for this service is"
+msgstr "پیش‌فرض این خدمت همان روز"
+
+#: loomera/globalization/booking_journey_messages.py
+msgid "No appointment time"
+msgstr "بدون وقت"
+
+#: loomera/globalization/booking_journey_messages.py
+msgid "Before the previous service"
+msgstr "قبل از خدمت قبلی"
+
+#: loomera/globalization/booking_journey_messages.py
+msgid "No available space"
+msgstr "بدون جای خالی"
+
+#: loomera/globalization/booking_journey_messages.py
+msgid "Choose another day, or move this service to another day if it cannot follow the previous service."
+msgstr "روز دیگری را انتخاب کن یا اگر این خدمت بعد از خدمت قبلی جا نمی‌شود، آن را در روز دیگری قرار بده."
+
+#: loomera/globalization/booking_journey_messages.py
+msgid "I will choose another day for this service"
+msgstr "برای این خدمت روز دیگری انتخاب می‌کنم"
+
+#: loomera/globalization/booking_journey_messages.py
+msgid "Time selection step"
+msgstr "مرحله زمان"
+
+#: loomera/globalization/booking_journey_messages.py
+msgid "Time not selected"
+msgstr "زمان انتخاب نشده"
+
+#: loomera/globalization/booking_journey_messages.py
+msgid "Selected services"
+msgstr "خدمات انتخاب‌شده"
+
+#: loomera/globalization/booking_journey_messages.py
+msgid "If the same day is unavailable, choose another day for the next services."
+msgstr "اگر همان روز ممکن نبود، می‌توانی برای خدمات بعدی روز دیگری انتخاب کنی."
+
+#: loomera/globalization/booking_journey_messages.py
+msgid "Book an appointment"
+msgstr "رزرو نوبت"
+
+#: loomera/globalization/booking_journey_messages.py
+msgid "Choose a professional"
+msgstr "انتخاب متخصص"
+
+#: loomera/globalization/booking_journey_messages.py
+msgid "Choose a service"
+msgstr "انتخاب خدمت"
+
+#: loomera/globalization/booking_journey_messages.py
+msgid "Choose a time"
+msgstr "انتخاب زمان"
+
+#: loomera/globalization/booking_journey_messages.py
+msgid "Confirm"
+msgstr "تأیید"
+
+#: loomera/globalization/booking_journey_messages.py
+msgid "Booking steps"
+msgstr "مراحل رزرو"
+
+#: loomera/globalization/booking_journey_messages.py
+msgid "Booking journey"
+msgstr "مسیر رزرو"
+
+#: loomera/globalization/booking_journey_messages.py
+msgid "Back"
+msgstr "بازگشت"
+
+#: loomera/globalization/booking_journey_messages.py
+msgid "Back to services"
+msgstr "بازگشت به خدمات"
+
+#: loomera/globalization/booking_journey_messages.py
+msgid "Edit services"
+msgstr "ویرایش خدمات"
+
+#: loomera/globalization/booking_journey_messages.py
+msgid "Choose your preferred professional for each service."
+msgstr "برای هر خدمت، متخصص دلخواهت را انتخاب کن."
+
+#: loomera/globalization/booking_journey_messages.py
+msgid "Only professionals with real availability in the coming days are shown."
+msgstr "فقط متخصص‌هایی نمایش داده می‌شوند که برای خدمات انتخاب‌شده در روزهای آینده زمان واقعی دارند."
+
+#: loomera/globalization/booking_journey_messages.py
+msgid "First available professional"
+msgstr "اولین متخصص آزاد"
+
+#: loomera/globalization/booking_journey_messages.py
+msgid "The first available professional will be selected for this service."
+msgstr "اولین متخصص آزاد برای این خدمت انتخاب می‌شود."
+
+#: loomera/globalization/booking_journey_messages.py
+msgid "No professional currently available"
+msgstr "بدون متخصص آزاد"
+
+#: loomera/globalization/booking_journey_messages.py
+msgid "No available appointments were found for this service yet."
+msgstr "فعلاً زمان آزادی برای این خدمت پیدا نشد"
+
+#: loomera/globalization/booking_journey_messages.py
+msgid "Edit your selected services or check this service again later."
+msgstr "می‌توانی خدمات انتخابی را ویرایش کنی یا بعداً دوباره زمان‌های این خدمت را بررسی کنی."
+
+#: loomera/globalization/booking_journey_messages.py
+msgid "No services selected"
+msgstr "هیچ خدمتی انتخاب نشده است"
+
+#: loomera/globalization/booking_journey_messages.py
+msgid "Start by selecting a service on the salon page."
+msgstr "برای انتخاب متخصص، ابتدا از صفحه مجموعه یک خدمت انتخاب کن."
+
+#: loomera/globalization/booking_journey_messages.py
+msgid "Booking summary"
+msgstr "خلاصه رزرو"
+
+#: loomera/globalization/booking_journey_messages.py
+msgid "Professional not selected"
+msgstr "متخصص انتخاب نشده"
+
+#: loomera/globalization/booking_journey_messages.py
+msgid "Selected professionals"
+msgstr "متخصص‌های انتخاب‌شده"
+
+#: loomera/globalization/booking_journey_messages.py
+msgid "Remaining"
+msgstr "باقی‌مانده"
+
+#: loomera/globalization/booking_journey_messages.py
+msgid "Total price"
+msgstr "جمع قیمت"
+
+#: loomera/globalization/booking_journey_messages.py
+msgid "In the next step, you will choose a time for each service."
+msgstr "در مرحله بعد، زمان مناسب برای هر خدمت را انتخاب می‌کنی."
+
+#: loomera/globalization/booking_journey_messages.py
+msgid "Choose a professional for every service"
+msgstr "برای هر خدمت، یک متخصص انتخاب کن"
+
+#: loomera/globalization/booking_journey_messages.py
+msgid "Price will be confirmed later"
+msgstr "قیمت بعداً مشخص می‌شود"
+
+#: loomera/globalization/booking_journey_messages.py
+msgid "options"
+msgstr "گزینه"
+
+#: loomera/globalization/booking_journey_messages.py
+msgid "Step"
+msgstr "مرحله"
+
+#: loomera/globalization/booking_journey_messages.py
+msgid "of four"
+msgstr "از ۴"
+
+#: loomera/globalization/booking_journey_messages.py
+msgid "Active service"
+msgstr "خدمت فعال"
+
+#: loomera/globalization/booking_journey_messages.py
+msgid "Preparing available times..."
+msgstr "در حال آماده‌سازی زمان‌های در دسترس..."
+
+#: loomera/globalization/booking_journey_messages.py
+msgid "Choose your appointment time"
+msgstr "زمان نوبتت را انتخاب کن"
+
+#: loomera/globalization/booking_journey_messages.py
+msgid "After choosing times for all services, you will review the booking."
+msgstr "بعد از انتخاب ساعت برای همه خدمات، به پیش‌نمایش رزرو می‌روی."
+
+#: loomera/globalization/booking_journey_messages.py
+msgid "Selected times"
+msgstr "زمان‌های انتخاب‌شده"
+
+#: loomera/globalization/booking_journey_messages.py
+msgid "Choose a date and time"
+msgstr "انتخاب تاریخ و ساعت"
+
+#: loomera/globalization/booking_journey_messages.py
+msgid "Choose a suitable date and time for each service."
+msgstr "برای هر خدمت، تاریخ و ساعت مناسب را انتخاب کن."
+
+#: loomera/globalization/booking_journey_messages.py
+msgid "Back to professional selection"
+msgstr "بازگشت به انتخاب متخصص"
+
+#: loomera/globalization/booking_journey_messages.py
+msgid "Booking time selection"
+msgstr "انتخاب زمان رزرو"
+
+#: loomera/globalization/booking_journey_messages.py
+msgid "Manage appointment"
+msgstr "مدیریت نوبت"
+
+#: loomera/globalization/booking_journey_messages.py
+msgid "Schedule booking"
+msgstr "رزرو نوبت"

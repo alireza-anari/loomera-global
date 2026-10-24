@@ -11,6 +11,7 @@ from django.utils import translation
 
 from loomera.globalization.locale import get_deployment_locale_context
 from loomera.globalization.booking_interactive_messages import BOOKING_UI_MESSAGE_IDS
+from loomera.globalization.booking_journey_messages import BOOKING_JOURNEY_MESSAGE_IDS
 
 
 # Stable keys are consumed by static JS. The msgids are English source phrases
@@ -71,6 +72,6 @@ def interactive_messages(request):
     with translation.override(language):
         messages = {
             key: translation.gettext(msgid)
-            for key, msgid in (*MESSAGE_IDS.items(), *BOOKING_UI_MESSAGE_IDS.items())
+            for key, msgid in (*MESSAGE_IDS.items(), *BOOKING_UI_MESSAGE_IDS.items(), *BOOKING_JOURNEY_MESSAGE_IDS.items())
         }
     return {"interactive_messages": {"language": language, "messages": messages}}

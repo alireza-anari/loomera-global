@@ -99,3 +99,19 @@ some calendar hints, and certain conditional messages still need
 dedicated localization and real browser verification. **No manual
 acceptance evidence was obtained in this slice**; all matrix release
 blockers remain in place.
+
+## Phase 3.29 booking full-flow localization follow-up
+
+The shared booking header, staff availability/empty states and
+interactive calendar planning gained 58 reviewed compiled gettext
+messages (17 new immutable dynamic UI keys). New Django/Node
+gates cover all three locale catalogs, first-paint templates,
+calendar label fallback and server-flash trust isolation. LTR
+specialist cards and mixed-script names are isolated at the
+presentation boundary.
+
+**None of the manual release blockers are closed.** No real
+browser screenshots, NVDA/VoiceOver results, zoom outcomes or
+tester sign-offs were collected. The release matrix remains
+`BLOCKED_MANUAL_ACCEPTANCE`, and Production deployment still
+requires separate authorization.

@@ -7,6 +7,7 @@ from django.test import RequestFactory, SimpleTestCase, override_settings
 from django.utils import translation
 
 from loomera.globalization.booking_interactive_messages import BOOKING_UI_MESSAGE_IDS
+from loomera.globalization.booking_journey_messages import BOOKING_JOURNEY_MESSAGE_IDS
 from loomera.globalization.interactive_messages import MESSAGE_IDS, interactive_messages
 
 
@@ -73,7 +74,7 @@ class LocalizedSubmitPendingTests(SimpleTestCase):
             data = interactive_messages(request)["interactive_messages"]
             self.assertEqual(data["language"], language)
             self.assertEqual(data["messages"]["submit.saving"], EXPECTED[language][0])
-            self.assertEqual(set(data["messages"]), set(MESSAGE_IDS) | set(BOOKING_UI_MESSAGE_IDS))
+            self.assertEqual(set(data["messages"]), set(MESSAGE_IDS) | set(BOOKING_UI_MESSAGE_IDS) | set(BOOKING_JOURNEY_MESSAGE_IDS))
         with override_settings(
             LOOMERA_DEFAULT_LANGUAGE="fa",
             LOOMERA_ENABLED_LANGUAGES=["fa"],
