@@ -1348,3 +1348,41 @@ separate locale/security review. The Phase 3 acceptance matrix
 continues to mark real-browser visuals, hands-on keyboard tests,
 screen-reader use, responsive zoom and deployment approval as
 unperformed. No production deployment is included.
+
+## Phase 3 — Slice 3.30: Native Preview and Checkout Gettext
+
+The reservation preview and checkout pages previously kept most visible
+headings, coupon controls, payment explanations and financial labels in
+Persian even when the deployment locale was English or Arabic. This
+cohesive batch migrates 58 reviewed strings into the native compiled
+fa/en/ar Django gettext catalogs, increasing each catalog from 292 to
+350 entries. Both templates now use native `trans`/ `blocktrans`
+on first paint, including the page title/subtitle, multi-day details,
+service summary, coupon feedback, payment method copy, amount labels
+and mobile/desktop finalization controls.
+
+The checkout form's payment-method and coupon field labels/placeholders,
+online/wallet/pay-at-salon choice labels, and beta/first-visit validation
+messages now use lazy gettext. The choice values (`online`, `wallet`,
+`pay_in_salon`), checkout POST action names, coupon normalization,
+payment eligibility rules, idempotent submit guard and all price/discount
+calculations remain unchanged. Service-discount confirmation uses
+Django `blocktrans` interpolation for the amount rather than composing
+translated fragments around a financial value. Coupon tokens remain
+isolated with the existing LTR `bdi`; currency unit uses the reviewed
+existing `toman` catalog key.
+
+Five new database-free Django tests audit all 58 exact source entries in
+all three compiled catalogs, validate 350-entry PO/MO parity, verify
+translated dynamic amount interpolation, exercise localized lazy form
+labels and validation messages, and protect the existing checkout action
+contract. The CI workflow now runs this dedicated suite alongside the
+existing bidirectional and checkout-flash regression suites.
+
+Backend-generated cancellation-policy copy, dynamic salon/coupon titles
+and payment gateway results remain contextual data and are not rewritten
+by generic template translation. This patch is **not** manual Phase 3
+acceptance or deployment approval: the exit matrix remains
+`BLOCKED_MANUAL_ACCEPTANCE`, with real-browser visuals, keyboard,
+screen-reader, responsive zoom and deployment/rollback approval still
+open.
