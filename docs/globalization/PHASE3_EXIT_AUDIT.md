@@ -115,3 +115,30 @@ browser screenshots, NVDA/VoiceOver results, zoom outcomes or
 tester sign-offs were collected. The release matrix remains
 `BLOCKED_MANUAL_ACCEPTANCE`, and Production deployment still
 requires separate authorization.
+
+## Phase 3.30 preview and checkout localization follow-up
+
+The customer-facing reservation preview and checkout now use native
+Django gettext for their static content in fa/en/ar, including multi-day
+booking explanations, appointment detail labels, coupon affordances,
+discount/campaign-cap copy, payment-method descriptions, and the
+financial summary. All 58 new source strings are compiled together in
+the three native PO/MO catalogs; catalog size is now 350 entries per
+language. Payment choice labels, coupon field label/placeholder and
+two checkout validation messages use lazy gettext, so they follow the
+active deployment locale.
+
+The amount in the service-discount confirmation is passed through
+Django `blocktrans` interpolation, while coupon tokens remain inside
+the existing LTR `bdi` boundary. Amount values, currency identity,
+coupon processing, permitted payment method values, payment conditions,
+submit guard, and financial calculations are unchanged. New DB-free
+tests verify compiled catalog parity, exact three-locale translations,
+interpolation, form choice/validation labels and the checkout POST
+contract.
+
+This is automated locale coverage, **not** a real-browser visual or
+screen-reader sign-off. Backend-generated booking/cancellation policy
+text, dynamic salon-provided titles and live payment gateway outcomes
+remain contextual data and are not translated generically in this slice.
+All manual acceptance and deployment blockers remain open.
