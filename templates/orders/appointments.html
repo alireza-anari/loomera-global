@@ -8,16 +8,16 @@
 
 {% block content %}
 <section class="min-h-dvh bg-loomera-bg pb-32 text-loomera-textPrimary lg:pb-16" data-bookings-page>
-  <header class="sticky top-0 z-40 border-b border-loomera-borderSoft bg-white/90 px-4 py-3 shadow-lm-soft backdrop-blur-xl lg:hidden" aria-label="نوبت‌های من">
+  <header class="sticky top-0 z-40 border-b border-loomera-borderSoft bg-white/90 px-4 py-3 shadow-lm-soft backdrop-blur-xl lg:hidden" aria-label="{% trans 'My appointments' %}">
     <div class="mx-auto flex max-w-7xl items-center justify-between gap-3">
-      <a href="{% url 'accounts:customer_panel' %}" class="inline-flex h-10 w-10 items-center justify-center rounded-full border border-loomera-borderSoft bg-white text-loomera-textPrimary shadow-sm transition hover:bg-loomera-primarySoft" aria-label="بازگشت به حساب من">
+      <a href="{% url 'accounts:customer_panel' %}" class="inline-flex h-10 w-10 items-center justify-center rounded-full border border-loomera-borderSoft bg-white text-loomera-textPrimary shadow-sm transition hover:bg-loomera-primarySoft" aria-label="{% trans 'Back to my account' %}">
         <i data-booking-back-icon class="fa-solid fa-arrow-right" aria-hidden="true"></i>
       </a>
       <div class="min-w-0 text-center">
         <p class="text-[11px] font-black text-loomera-primary">{% trans 'Customer account' %}</p>
         <h1 class="truncate text-base font-black text-loomera-textPrimary">{% trans 'My appointments' %}</h1>
       </div>
-      <a href="{% url 'search:search_page' %}" class="inline-flex h-10 w-10 items-center justify-center rounded-full bg-loomera-primary text-white shadow-lm-soft" aria-label="رزرو نوبت جدید">
+      <a href="{% url 'search:search_page' %}" class="inline-flex h-10 w-10 items-center justify-center rounded-full bg-loomera-primary text-white shadow-lm-soft" aria-label="{% trans 'Book a new appointment' %}">
         <i class="fa-solid fa-plus" aria-hidden="true"></i>
       </a>
     </div>
@@ -62,7 +62,7 @@
           </div>
 
           {% if upcoming_appointments %}
-            <div class="grid gap-4 md:grid-cols-2 xl:grid-cols-3" role="list" aria-label="نوبت‌های آینده">
+            <div class="grid gap-4 md:grid-cols-2 xl:grid-cols-3" role="list" aria-label="{% trans 'Upcoming appointments' %}">
               {% for appointment in upcoming_appointments %}
                 {% include "components/appointment_upcoming_card.html" with appointment=appointment %}
               {% endfor %}
@@ -82,7 +82,7 @@
           </div>
 
           {% if past_appointments %}
-            <div class="space-y-3" role="list" aria-label="نوبت‌های گذشته">
+            <div class="space-y-3" role="list" aria-label="{% trans 'Past appointments' %}">
               {% for appointment in past_appointments %}
                 {% include "components/appointment_past_item.html" with appointment=appointment %}
               {% endfor %}
