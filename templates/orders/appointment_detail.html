@@ -345,7 +345,7 @@
                 </div>
                 <div class="mt-3 flex flex-wrap gap-2">
                   {% if appointment.salon.phone_number %}
-                    <a href="tel:<bdi dir="ltr" data-payment-machine-id>{{ appointment.salon.phone_number }}</bdi>" class="inline-flex items-center gap-2 rounded-full border border-loomera-borderSoft bg-white px-3 py-2 text-[11px] font-black text-loomera-textSecondary">
+                    <a href="tel:{{ appointment.salon.phone_number }}" class="inline-flex items-center gap-2 rounded-full border border-loomera-borderSoft bg-white px-3 py-2 text-[11px] font-black text-loomera-textSecondary">
                       <i class="fa-solid fa-phone" aria-hidden="true"></i>تماس
                     </a>
                   {% endif %}
@@ -687,7 +687,7 @@
               {% if appointment.salon.address %}<p class="mt-1 leading-7">{{ appointment.salon.address }}</p>{% endif %}
             </div>
             {% if appointment.salon.phone_number %}
-              <a href="tel:<bdi dir="ltr" data-payment-machine-id>{{ appointment.salon.phone_number }}</bdi>" class="inline-flex items-center gap-2 font-black text-loomera-primary">
+              <a href="tel:{{ appointment.salon.phone_number }}" class="inline-flex items-center gap-2 font-black text-loomera-primary">
                 <i class="fa-solid fa-phone text-loomera-textMuted" aria-hidden="true"></i>
                 <bdi dir="ltr" data-payment-machine-id>{{ appointment.salon.phone_number }}</bdi>
               </a>
