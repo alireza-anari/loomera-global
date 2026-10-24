@@ -942,3 +942,235 @@ msgstr "Only currently available times are shown."
 #: loomera/globalization/booking_interactive_messages.py
 msgid "No appointment time has been selected yet."
 msgstr "No appointment time has been selected yet."
+
+#: loomera/globalization/booking_journey_messages.py
+msgid "We try to keep this service on the same day. If not possible, you can choose another day."
+msgstr "We try to keep this service on the same day. If not possible, you can choose another day."
+
+#: loomera/globalization/booking_journey_messages.py
+msgid "Choose a suitable date and time for this service."
+msgstr "Choose a suitable date and time for this service."
+
+#: loomera/globalization/booking_journey_messages.py
+msgid "Another day for this service"
+msgstr "Another day for this service"
+
+#: loomera/globalization/booking_journey_messages.py
+msgid "Suggested"
+msgstr "Suggested"
+
+#: loomera/globalization/booking_journey_messages.py
+msgid "Available and unavailable dates for this service over the next 90 days"
+msgstr "Available and unavailable dates for this service over the next 90 days"
+
+#: loomera/globalization/booking_journey_messages.py
+msgid "Default is still"
+msgstr "Default is still"
+
+#: loomera/globalization/booking_journey_messages.py
+msgid "but you may choose another day."
+msgstr "but you may choose another day."
+
+#: loomera/globalization/booking_journey_messages.py
+msgid "The default date for this service is"
+msgstr "The default date for this service is"
+
+#: loomera/globalization/booking_journey_messages.py
+msgid "No appointment time"
+msgstr "No appointment time"
+
+#: loomera/globalization/booking_journey_messages.py
+msgid "Before the previous service"
+msgstr "Before the previous service"
+
+#: loomera/globalization/booking_journey_messages.py
+msgid "No available space"
+msgstr "No available space"
+
+#: loomera/globalization/booking_journey_messages.py
+msgid "Choose another day, or move this service to another day if it cannot follow the previous service."
+msgstr "Choose another day, or move this service to another day if it cannot follow the previous service."
+
+#: loomera/globalization/booking_journey_messages.py
+msgid "I will choose another day for this service"
+msgstr "I will choose another day for this service"
+
+#: loomera/globalization/booking_journey_messages.py
+msgid "Time selection step"
+msgstr "Time selection step"
+
+#: loomera/globalization/booking_journey_messages.py
+msgid "Time not selected"
+msgstr "Time not selected"
+
+#: loomera/globalization/booking_journey_messages.py
+msgid "Selected services"
+msgstr "Selected services"
+
+#: loomera/globalization/booking_journey_messages.py
+msgid "If the same day is unavailable, choose another day for the next services."
+msgstr "If the same day is unavailable, choose another day for the next services."
+
+#: loomera/globalization/booking_journey_messages.py
+msgid "Book an appointment"
+msgstr "Book an appointment"
+
+#: loomera/globalization/booking_journey_messages.py
+msgid "Choose a professional"
+msgstr "Choose a professional"
+
+#: loomera/globalization/booking_journey_messages.py
+msgid "Choose a service"
+msgstr "Choose a service"
+
+#: loomera/globalization/booking_journey_messages.py
+msgid "Choose a time"
+msgstr "Choose a time"
+
+#: loomera/globalization/booking_journey_messages.py
+msgid "Confirm"
+msgstr "Confirm"
+
+#: loomera/globalization/booking_journey_messages.py
+msgid "Booking steps"
+msgstr "Booking steps"
+
+#: loomera/globalization/booking_journey_messages.py
+msgid "Booking journey"
+msgstr "Booking journey"
+
+#: loomera/globalization/booking_journey_messages.py
+msgid "Back"
+msgstr "Back"
+
+#: loomera/globalization/booking_journey_messages.py
+msgid "Back to services"
+msgstr "Back to services"
+
+#: loomera/globalization/booking_journey_messages.py
+msgid "Edit services"
+msgstr "Edit services"
+
+#: loomera/globalization/booking_journey_messages.py
+msgid "Choose your preferred professional for each service."
+msgstr "Choose your preferred professional for each service."
+
+#: loomera/globalization/booking_journey_messages.py
+msgid "Only professionals with real availability in the coming days are shown."
+msgstr "Only professionals with real availability in the coming days are shown."
+
+#: loomera/globalization/booking_journey_messages.py
+msgid "First available professional"
+msgstr "First available professional"
+
+#: loomera/globalization/booking_journey_messages.py
+msgid "The first available professional will be selected for this service."
+msgstr "The first available professional will be selected for this service."
+
+#: loomera/globalization/booking_journey_messages.py
+msgid "No professional currently available"
+msgstr "No professional currently available"
+
+#: loomera/globalization/booking_journey_messages.py
+msgid "No available appointments were found for this service yet."
+msgstr "No available appointments were found for this service yet."
+
+#: loomera/globalization/booking_journey_messages.py
+msgid "Edit your selected services or check this service again later."
+msgstr "Edit your selected services or check this service again later."
+
+#: loomera/globalization/booking_journey_messages.py
+msgid "No services selected"
+msgstr "No services selected"
+
+#: loomera/globalization/booking_journey_messages.py
+msgid "Start by selecting a service on the salon page."
+msgstr "Start by selecting a service on the salon page."
+
+#: loomera/globalization/booking_journey_messages.py
+msgid "Booking summary"
+msgstr "Booking summary"
+
+#: loomera/globalization/booking_journey_messages.py
+msgid "Professional not selected"
+msgstr "Professional not selected"
+
+#: loomera/globalization/booking_journey_messages.py
+msgid "Selected professionals"
+msgstr "Selected professionals"
+
+#: loomera/globalization/booking_journey_messages.py
+msgid "Remaining"
+msgstr "Remaining"
+
+#: loomera/globalization/booking_journey_messages.py
+msgid "Total price"
+msgstr "Total price"
+
+#: loomera/globalization/booking_journey_messages.py
+msgid "In the next step, you will choose a time for each service."
+msgstr "In the next step, you will choose a time for each service."
+
+#: loomera/globalization/booking_journey_messages.py
+msgid "Choose a professional for every service"
+msgstr "Choose a professional for every service"
+
+#: loomera/globalization/booking_journey_messages.py
+msgid "Price will be confirmed later"
+msgstr "Price will be confirmed later"
+
+#: loomera/globalization/booking_journey_messages.py
+msgid "options"
+msgstr "options"
+
+#: loomera/globalization/booking_journey_messages.py
+msgid "Step"
+msgstr "Step"
+
+#: loomera/globalization/booking_journey_messages.py
+msgid "of four"
+msgstr "of four"
+
+#: loomera/globalization/booking_journey_messages.py
+msgid "Active service"
+msgstr "Active service"
+
+#: loomera/globalization/booking_journey_messages.py
+msgid "Preparing available times..."
+msgstr "Preparing available times..."
+
+#: loomera/globalization/booking_journey_messages.py
+msgid "Choose your appointment time"
+msgstr "Choose your appointment time"
+
+#: loomera/globalization/booking_journey_messages.py
+msgid "After choosing times for all services, you will review the booking."
+msgstr "After choosing times for all services, you will review the booking."
+
+#: loomera/globalization/booking_journey_messages.py
+msgid "Selected times"
+msgstr "Selected times"
+
+#: loomera/globalization/booking_journey_messages.py
+msgid "Choose a date and time"
+msgstr "Choose a date and time"
+
+#: loomera/globalization/booking_journey_messages.py
+msgid "Choose a suitable date and time for each service."
+msgstr "Choose a suitable date and time for each service."
+
+#: loomera/globalization/booking_journey_messages.py
+msgid "Back to professional selection"
+msgstr "Back to professional selection"
+
+#: loomera/globalization/booking_journey_messages.py
+msgid "Booking time selection"
+msgstr "Booking time selection"
+
+#: loomera/globalization/booking_journey_messages.py
+msgid "Manage appointment"
+msgstr "Manage appointment"
+
+#: loomera/globalization/booking_journey_messages.py
+msgid "Schedule booking"
+msgstr "Schedule booking"
