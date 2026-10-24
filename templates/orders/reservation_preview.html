@@ -148,6 +148,7 @@
               {% if form.payment_method.field.choices|length == 1 %}
                 {% for value, label in form.payment_method.field.choices %}
                   <label data-payment-option
+                         {% if form.payment_method.errors %}aria-invalid="true" aria-describedby="{{ form.payment_method.auto_id }}_error"{% endif %}
                          data-selected="0"
                          class="flex cursor-pointer items-start gap-3 rounded-[1.4rem] border border-loomera-primary/20 bg-loomera-primarySoft/45 p-4 data-[selected=1]:border-loomera-primary data-[selected=1]:bg-loomera-primarySoft/55 data-[selected=1]:ring-2 data-[selected=1]:ring-loomera-primary/15">
                     <input type="radio" name="{{ form.payment_method.html_name }}" value="{{ value }}" checked class="sr-only">
@@ -161,7 +162,7 @@
               {% else %}
                 <fieldset>
                   <legend class="sr-only">روش پرداخت</legend>
-                  <div class="grid gap-3" role="radiogroup" aria-label="روش پرداخت">
+                  <div class="grid gap-3" role="radiogroup" aria-label="روش پرداخت" {% if form.payment_method.errors %}aria-invalid="true" aria-describedby="{{ form.payment_method.auto_id }}_error"{% endif %}>
                     {% for radio in form.payment_method %}
                       <label data-payment-option
                              data-selected="0"
