@@ -859,3 +859,51 @@ rejection, unreviewed booking/payment fallback, live source-msgid
 contract and historical Persian behavior. The dedicated CI step runs
 them alongside all previous Phase 1–3 tests. Browser visual and
 assistive-technology acceptance are still pending.
+
+## Phase 3 — Slice 3.19: Reviewed Booking and Service Flash Locales
+
+The booking UI still contains many literal Persian notifications emitted by
+active `apps/orders/views.py` flows. These strings are **not** yet available
+as compiled translations in the deployed fa/en/ar gettext catalogs. This
+slice adds a deliberately bounded transitional presentation-only catalog:
+14 exact reviewed phrases in immutable `BOOKING_FLASH_MESSAGES`, with
+approved English and Arabic renderings. Ten error notices cover
+invalid/incomplete service and stylist selections, unavailable salon
+links, incomplete bookings, a newly taken time slot, and unsupported
+rebooking. Three success notices cover booking completion, restored
+rebooking state and submitted customer reviews. One info notice covers
+unavailable previous professionals when rebooking.
+
+The existing `clean_ui_message` template filter first checks its previously
+audited gettext key/OTP-message list. Only if no match is found does it
+consult the new static booking phrase table; matching is exact across the
+Persian source and both approved translations and is **tone-scoped**.
+A request in English/Arabic then displays only the corresponding approved
+static translation. Any concatenation, user identity, phone number, coupon,
+price, payment/gateway state, unreviewed booking notification, or arbitrary
+HTML remains rejected and receives the existing generic translated
+fallback for that tone. Persian requests bypass this new table and continue
+through the unchanged historical sanitizer. No dynamic translation or
+external service is introduced.
+
+Unlike the prior account/OTP slices, these 14 reviewed renderings are
+currently stored in a small independent Python-only static table instead
+of updating `.po` sources without regenerated `.mo` binaries. The table is
+intended as a temporary, explicitly audited bridge until gettext catalogs
+are regenerated and reviewed together. No runtime language switch or
+global gettext behavior is changed.
+
+A dedicated no-database ten-test Django suite exercises real flash HTML
+for all 14 phrases from three allowed source-language forms into both
+alternate languages; strict tone isolation, danger/error equivalence,
+unapproved booking/payment/PII/XSS fallback, typo and concatenation
+rejection, locale switching, exact Persian compatibility, source-code
+presence and existing business defaults. The previous account/OTP
+suite's unapproved-booking examples were updated to remain genuinely
+unapproved. GitHub CI runs both suites and the entire earlier Phase 1–3
+regression set.
+
+Booking/order/payment, appointment authorization, OTP, price consent,
+payment-gateway and SMS logic, migrations, fa/Jalali/timezone defaults,
+and production deployment are unchanged. Browser screenshot, keyboard
+and screen-reader acceptance are still pending; Phase 3 remains open.
