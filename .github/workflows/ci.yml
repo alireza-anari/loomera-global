@@ -149,6 +149,15 @@ jobs:
             apps.main.test_phase3_rebooking_locale_flow \
             --failfast
 
+      - name: Phase 3 booking journey dynamic markup and locale guards
+        run: |
+          node --check static/js/select_stylist.js
+          node --check static/js/select_datetime.js
+          python manage.py test \
+            apps.main.test_phase3_booking_journey_security_a11y \
+            apps.main.test_phase3_booking_bidirectional_accessibility \
+            --failfast
+
       - name: Phase 3 booking bidirectional and field error accessibility guards
         run: |
           python manage.py test \
