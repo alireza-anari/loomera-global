@@ -110,7 +110,7 @@
                 {% if form.coupon_code.value %}<button type="submit" name="form_action" value="clear_coupon" data-checkout-coupon-action="clear" class="inline-flex h-12 items-center justify-center rounded-full px-5 text-sm font-black text-rose-700 transition hover:bg-rose-50">حذف کد</button>{% endif %}
               </div>
               {% if form.coupon_code.errors %}
-                <p id="{{ form.coupon_code.id_for_label }}_error" role="alert" class="mt-2 text-xs font-bold text-rose-700">{{ form.coupon_code.errors|join:'، ' }}</p>
+                <p id="{{ form.coupon_code.auto_id }}_error" role="alert" class="mt-2 text-xs font-bold text-rose-700">{{ form.coupon_code.errors|join:'، ' }}</p>
               {% else %}
 
               {% endif %}
@@ -147,7 +147,7 @@
                   </label>
                 {% endfor %}
               </div>
-              {% if form.payment_method.errors %}<p id="{{ form.payment_method.id_for_label }}_error" role="alert" class="mt-2 text-xs font-bold text-rose-700">{{ form.payment_method.errors|join:'، ' }}</p>{% endif %}
+              {% if form.payment_method.errors %}<p id="{{ form.payment_method.auto_id }}_error" role="alert" class="mt-2 text-xs font-bold text-rose-700">{{ form.payment_method.errors|join:'، ' }}</p>{% endif %}
             </fieldset>
           </section>
 
