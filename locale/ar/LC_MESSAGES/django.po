@@ -798,3 +798,151 @@ msgstr "خُصم مبلغ الحجز من محفظتك، وتم تسجيل مو�
 #: loomera/globalization/checkout_flash_messages.py
 msgid "نوبت شما قطعی شد و در برنامه کاری متخصص قرار گرفت. پرداخت این سفارش در مجموعه انجام می‌شود."
 msgstr "تم تأكيد موعدك وإضافته إلى جدول عمل المتخصص. سيُدفع ثمن هذا الطلب في الصالون."
+
+#: loomera/globalization/booking_interactive_messages.py
+msgid "Professional"
+msgstr "المختص"
+
+#: loomera/globalization/booking_interactive_messages.py
+msgid "Any available professional"
+msgstr "أي مختص متاح"
+
+#: loomera/globalization/booking_interactive_messages.py
+msgid "Service"
+msgstr "الخدمة"
+
+#: loomera/globalization/booking_interactive_messages.py
+msgid "Awaiting time"
+msgstr "بانتظار اختيار الوقت"
+
+#: loomera/globalization/booking_interactive_messages.py
+msgid "Selected"
+msgstr "تم الاختيار"
+
+#: loomera/globalization/booking_interactive_messages.py
+msgid "minutes"
+msgstr "دقيقة"
+
+#: loomera/globalization/booking_interactive_messages.py
+msgid "toman"
+msgstr "تومان"
+
+#: loomera/globalization/booking_interactive_messages.py
+msgid "Professional selected"
+msgstr "تم اختيار المختص"
+
+#: loomera/globalization/booking_interactive_messages.py
+msgid "Continue to time selection"
+msgstr "متابعة اختيار الوقت"
+
+#: loomera/globalization/booking_interactive_messages.py
+msgid "services remaining"
+msgstr "خدمات متبقية"
+
+#: loomera/globalization/booking_interactive_messages.py
+msgid "professionals selected"
+msgstr "مختصون تم اختيارهم"
+
+#: loomera/globalization/booking_interactive_messages.py
+msgid "services still need a professional"
+msgstr "خدمات لم يُحدَّد لها مختص"
+
+#: loomera/globalization/booking_interactive_messages.py
+msgid "Multi-service booking"
+msgstr "حجز خدمات متعددة"
+
+#: loomera/globalization/booking_interactive_messages.py
+msgid "Same day"
+msgstr "اليوم نفسه"
+
+#: loomera/globalization/booking_interactive_messages.py
+msgid "Another day"
+msgstr "يوم آخر"
+
+#: loomera/globalization/booking_interactive_messages.py
+msgid "Service step"
+msgstr "الخدمة"
+
+#: loomera/globalization/booking_interactive_messages.py
+msgid "of"
+msgstr "من"
+
+#: loomera/globalization/booking_interactive_messages.py
+msgid "Available appointment times"
+msgstr "الأوقات المتاحة للحجز"
+
+#: loomera/globalization/booking_interactive_messages.py
+msgid "No times available for this day"
+msgstr "لا توجد أوقات متاحة لهذا اليوم"
+
+#: loomera/globalization/booking_interactive_messages.py
+msgid "Choose a day to view available times"
+msgstr "اختر يومًا لعرض الأوقات المتاحة"
+
+#: loomera/globalization/booking_interactive_messages.py
+msgid "Choose a date and time to continue"
+msgstr "اختر التاريخ والوقت للمتابعة"
+
+#: loomera/globalization/booking_interactive_messages.py
+msgid "Continue to booking preview"
+msgstr "متابعة معاينة الحجز"
+
+#: loomera/globalization/booking_interactive_messages.py
+msgid "Save the new appointment time"
+msgstr "حفظ موعد الحجز الجديد"
+
+#: loomera/globalization/booking_interactive_messages.py
+msgid "Confirm this service and continue"
+msgstr "تأكيد هذه الخدمة والمتابعة"
+
+#: loomera/globalization/booking_interactive_messages.py
+msgid "Morning"
+msgstr "الصباح"
+
+#: loomera/globalization/booking_interactive_messages.py
+msgid "Midday"
+msgstr "الظهيرة"
+
+#: loomera/globalization/booking_interactive_messages.py
+msgid "Evening"
+msgstr "المساء"
+
+#: loomera/globalization/booking_interactive_messages.py
+msgid "Night"
+msgstr "الليل"
+
+#: loomera/globalization/booking_interactive_messages.py
+msgid "times"
+msgstr "أوقات"
+
+#: loomera/globalization/booking_interactive_messages.py
+msgid "No appointment time selected"
+msgstr "لم يتم اختيار وقت الموعد"
+
+#: loomera/globalization/booking_interactive_messages.py
+msgid "Services and professionals"
+msgstr "الخدمات والمختصون"
+
+#: loomera/globalization/booking_interactive_messages.py
+msgid "Now choose the appointment time"
+msgstr "اختر وقت الموعد الآن"
+
+#: loomera/globalization/booking_interactive_messages.py
+msgid "Select a date and time to continue"
+msgstr "اختر تاريخًا ووقتًا للمتابعة"
+
+#: loomera/globalization/booking_interactive_messages.py
+msgid "Open Jalali calendar"
+msgstr "فتح التقويم الجلالي"
+
+#: loomera/globalization/booking_interactive_messages.py
+msgid "Available dates"
+msgstr "التواريخ المتاحة"
+
+#: loomera/globalization/booking_interactive_messages.py
+msgid "Only currently available times are shown."
+msgstr "تُعرض الأوقات المتاحة فعليًا فقط."
+
+#: loomera/globalization/booking_interactive_messages.py
+msgid "No appointment time has been selected yet."
+msgstr "لم يتم اختيار وقت للموعد بعد."

@@ -10,6 +10,8 @@ from django.template import Context, Template
 from django.test import RequestFactory, SimpleTestCase, override_settings
 from django.utils import translation
 
+from loomera.globalization.booking_interactive_messages import BOOKING_UI_MESSAGE_IDS
+
 from loomera.globalization.interactive_messages import (
     MESSAGE_IDS,
     interactive_messages,
@@ -68,7 +70,7 @@ class InteractiveMessagesContractTests(SimpleTestCase):
             with self.subTest(language=lang):
                 result = self._response_for(lang)
                 self.assertEqual(result["language"], lang)
-                self.assertEqual(set(result["messages"]), set(MESSAGE_IDS))
+                self.assertEqual(set(result["messages"]), set(MESSAGE_IDS) | set(BOOKING_UI_MESSAGE_IDS))
                 self.assertEqual(result["messages"]["validation.required"],
                                  {"en": "This field is required.",
                                   "fa": "تکمیل این فیلد الزامی است.",

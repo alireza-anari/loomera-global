@@ -156,7 +156,7 @@ class ChangePasswordLocalizedPageTests(SimpleTestCase):
         self.assertNotIn("strengthHint.innerHTML", template)
         self.assertIn("passwordPageText(", template)
         browser = self.source("static/js/interactive_i18n.js")
-        self.assertIn("(feedback|validation|submit|password)", browser)
+        self.assertIn("(feedback|validation|submit|password|booking)", browser)
         self.assertIn("Object.freeze(messages)", browser)
         self.assertIn("approved.has(value.trim())", browser)
         feedback = self.source("static/js/feedback.js")

@@ -104,6 +104,7 @@ test("time selection maintains native button state, escapes stylist and restores
   let updates = 0;
   const runtime = vm.createContext({
     state,
+    window: {},  // Missing optional gettext bridge uses the original Persian fallback.
     document: {getElementById(id) {assert.equal(id, "times"); return fake;}},
     groupSlotsByPeriod(values) {return [{key:"morning", icon:"fa-sun", label:"صبح", slots:values}];},
     toPersianDigits(value) {return String(value);},
