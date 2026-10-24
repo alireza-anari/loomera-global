@@ -21,7 +21,7 @@
         <p class="mt-1 text-xs leading-6 text-slate-500">{{ appointment.service.service_name|default:missing_service_name }}</p>
       </div>
       <span class="lm-badge {% if appointment.order.is_paid %}lm-badge--success{% elif appointment.order.selected_payment_method == 'pay_in_salon' %}lm-badge--warning{% else %}lm-badge--neutral{% endif %}">
-        {% if appointment.order.is_paid %}پرداخت شده{% elif appointment.order.selected_payment_method == 'pay_in_salon' %}پرداخت در مجموعه{% else %}در انتظار{% endif %}
+        {% if appointment.order.is_paid %}{% trans 'Paid' %}{% elif appointment.order.selected_payment_method == 'pay_in_salon' %}{% trans 'Pay at salon' %}{% else %}در انتظار{% endif %}
       </span>
     </div>
 
