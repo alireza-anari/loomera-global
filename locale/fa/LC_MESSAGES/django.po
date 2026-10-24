@@ -1406,3 +1406,399 @@ msgstr "روی"
 #: templates/orders/reservation_preview.html templates/orders/checkout.html apps/orders/forms.py
 msgid "%(amount)s toman discount has been applied to this booking."
 msgstr "به مبلغ %(amount)s تومان تخفیف روی این رزرو اعمال شده است."
+
+#: templates/payments/appointment_result.html apps/payments/views.py apps/orders/booking_utils.py
+msgid "Additional payment"
+msgstr "پرداخت تکمیلی"
+
+#: templates/payments/appointment_result.html apps/payments/views.py apps/orders/booking_utils.py
+msgid "Additional booking payment recorded"
+msgstr "پرداخت تکمیلی رزرو ثبت شد"
+
+#: templates/payments/appointment_result.html apps/payments/views.py apps/orders/booking_utils.py
+msgid "The online payment for this appointment is complete and the order's financial status is aligned with salon settlement."
+msgstr "پرداخت آنلاین این نوبت نهایی شد و وضعیت مالی سفارش با تسویه مجموعه هماهنگ شده است."
+
+#: templates/payments/appointment_result.html apps/payments/views.py apps/orders/booking_utils.py
+msgid "Booking confirmed"
+msgstr "رزرو نهایی شد"
+
+#: templates/payments/appointment_result.html apps/payments/views.py apps/orders/booking_utils.py
+msgid "Your booking is confirmed"
+msgstr "رزروت ثبت شد"
+
+#: templates/payments/appointment_result.html apps/payments/views.py apps/orders/booking_utils.py
+msgid "Appointment details are available on this page and under My appointments."
+msgstr "جزئیات نوبت در همین صفحه و در بخش «نوبت‌های من» در دسترس است."
+
+#: templates/payments/appointment_result.html apps/payments/views.py apps/orders/booking_utils.py
+msgid "Under review"
+msgstr "در حال بررسی"
+
+#: templates/payments/appointment_result.html apps/payments/views.py apps/orders/booking_utils.py
+msgid "Payment deadline passed"
+msgstr "مهلت پرداخت تمام شد"
+
+#: templates/payments/appointment_result.html apps/payments/views.py apps/orders/booking_utils.py
+msgid "Payment cancelled"
+msgstr "پرداخت لغو شد"
+
+#: templates/payments/appointment_result.html apps/payments/views.py apps/orders/booking_utils.py
+msgid "You cancelled the payment"
+msgstr "پرداخت توسط شما لغو شد"
+
+#: templates/payments/appointment_result.html apps/payments/views.py apps/orders/booking_utils.py
+msgid "Online payment was not completed. If you still want to book this appointment, you can try again from the booking page."
+msgstr "پرداخت آنلاین کامل نشد. اگر هنوز می‌خواهی این نوبت را ثبت کنی، می‌توانی از صفحه رزرو دوباره اقدام کنی."
+
+#: templates/payments/appointment_result.html apps/payments/views.py apps/orders/booking_utils.py
+msgid "Follow-up required"
+msgstr "نیاز به پیگیری"
+
+#: templates/payments/appointment_result.html apps/payments/views.py apps/orders/booking_utils.py
+msgid "Additional online payment could not be confirmed"
+msgstr "پرداخت آنلاین تکمیلی تأیید نشد"
+
+#: templates/payments/appointment_result.html apps/payments/views.py apps/orders/booking_utils.py
+msgid "Your appointment remains active and the payment method remains set to pay at the salon."
+msgstr "نوبت شما فعال باقی مانده و روش پرداخت روی «پرداخت در مجموعه» حفظ شده است."
+
+#: templates/payments/appointment_result.html apps/payments/views.py apps/orders/booking_utils.py
+msgid "Payment failed"
+msgstr "پرداخت ناموفق"
+
+#: templates/payments/appointment_result.html apps/payments/views.py apps/orders/booking_utils.py
+msgid "The payment gateway did not confirm the payment. If no amount was deducted from your account, you can try booking again."
+msgstr "پرداخت توسط درگاه تأیید نشد. اگر مبلغی از حساب شما کسر نشده باشد، می‌توانید دوباره برای رزرو اقدام کنید."
+
+#: templates/payments/appointment_result.html apps/payments/views.py apps/orders/booking_utils.py
+msgid "Payment is being reviewed"
+msgstr "در حال بررسی پرداخت"
+
+#: templates/payments/appointment_result.html apps/payments/views.py apps/orders/booking_utils.py
+msgid "Do not pay again"
+msgstr "دوباره پرداخت نکنید"
+
+#: templates/payments/appointment_result.html apps/payments/views.py apps/orders/booking_utils.py
+msgid "Track appointment"
+msgstr "پیگیری نوبت"
+
+#: templates/payments/appointment_result.html apps/payments/views.py apps/orders/booking_utils.py
+msgid "Contact support"
+msgstr "ارتباط با پشتیبانی"
+
+#: templates/payments/appointment_result.html apps/payments/views.py apps/orders/booking_utils.py
+msgid "Multi-day scheduling"
+msgstr "برنامه‌ریزی چندروزه"
+
+#: templates/payments/appointment_result.html apps/payments/views.py apps/orders/booking_utils.py
+msgid "This booking was scheduled across multiple days."
+msgstr "این رزرو روی چند روز برنامه‌ریزی شد"
+
+#: templates/payments/appointment_result.html apps/payments/views.py apps/orders/booking_utils.py
+msgid "To keep the services in order, your booking has been scheduled across multiple days."
+msgstr "برای حفظ توالی خدمات، رزرو شما روی چند روز برنامه‌ریزی شده است."
+
+#: templates/payments/appointment_result.html apps/payments/views.py apps/orders/booking_utils.py
+msgid "Time range:"
+msgstr "بازه زمانی:"
+
+#: templates/payments/appointment_result.html apps/payments/views.py apps/orders/booking_utils.py
+msgid "Appointment details"
+msgstr "جزئیات نوبت"
+
+#: templates/payments/appointment_result.html apps/payments/views.py apps/orders/booking_utils.py
+msgid "Order summary"
+msgstr "خلاصه سفارش"
+
+#: templates/payments/appointment_result.html apps/payments/views.py apps/orders/booking_utils.py
+msgid "Order number"
+msgstr "شماره سفارش"
+
+#: templates/payments/appointment_result.html apps/payments/views.py apps/orders/booking_utils.py
+msgid "Payment provider"
+msgstr "ارائه‌دهنده پرداخت"
+
+#: templates/payments/appointment_result.html apps/payments/views.py apps/orders/booking_utils.py
+msgid "Payment status"
+msgstr "وضعیت پرداخت"
+
+#: templates/payments/appointment_result.html apps/payments/views.py apps/orders/booking_utils.py
+msgid "Booking status"
+msgstr "وضعیت رزرو"
+
+#: templates/payments/appointment_result.html apps/payments/views.py apps/orders/booking_utils.py
+msgid "Tax"
+msgstr "مالیات"
+
+#: templates/payments/appointment_result.html apps/payments/views.py apps/orders/booking_utils.py
+msgid "Payment amount"
+msgstr "مبلغ پرداخت"
+
+#: templates/payments/appointment_result.html apps/payments/views.py apps/orders/booking_utils.py
+msgid "Final payment ID"
+msgstr "شناسه نهایی پرداخت"
+
+#: templates/payments/appointment_result.html apps/payments/views.py apps/orders/booking_utils.py
+msgid "Gateway reference"
+msgstr "رهگیری درگاه"
+
+#: templates/payments/appointment_result.html apps/payments/views.py apps/orders/booking_utils.py
+msgid "Salon settlement status"
+msgstr "وضعیت تسویه مجموعه"
+
+#: templates/payments/appointment_result.html apps/payments/views.py apps/orders/booking_utils.py
+msgid "The amount of %(amount)s toman was refunded to your wallet under this booking's cancellation policy."
+msgstr "مبلغ %(amount)s تومان طبق شرایط لغو این رزرو به کیف پول شما برگشت داده شد."
+
+#: templates/payments/appointment_result.html apps/payments/views.py apps/orders/booking_utils.py
+msgid "Refund recorded at: %(time)s."
+msgstr "زمان ثبت بازگشت وجه: %(time)s."
+
+#: templates/payments/appointment_result.html apps/payments/views.py apps/orders/booking_utils.py
+msgid "The payment status is not final yet. To avoid a duplicate payment, track this transaction."
+msgstr "وضعیت پرداخت هنوز نهایی نیست. برای جلوگیری از پرداخت تکراری، همین تراکنش را پیگیری کن."
+
+#: templates/payments/appointment_result.html apps/payments/views.py apps/orders/booking_utils.py
+msgid "The payment deadline for this booking has passed and the selected time has been released. Choose a new available time to book again."
+msgstr "مهلت پرداخت این رزرو تمام شده و زمان انتخاب‌شده آزاد شده است. برای رزرو دوباره، یک زمان آزاد جدید انتخاب کن."
+
+#: templates/payments/appointment_result.html apps/payments/views.py apps/orders/booking_utils.py
+msgid "You cancelled the payment. If an amount was deducted from your account, support can help you check its status."
+msgstr "پرداخت توسط شما لغو شد. اگر مبلغی از حساب شما کسر شده باشد، وضعیت آن از طریق پشتیبانی قابل پیگیری است."
+
+#: templates/payments/appointment_result.html apps/payments/views.py apps/orders/booking_utils.py
+msgid "The payment was not confirmed. If an amount was deducted from your account, support can help you check its status."
+msgstr "پرداخت تأیید نشد. اگر مبلغی از حساب شما کسر شده باشد، وضعیت آن از طریق پشتیبانی قابل پیگیری است."
+
+#: templates/payments/appointment_result.html apps/payments/views.py apps/orders/booking_utils.py
+msgid "Services"
+msgstr "خدمات"
+
+#: templates/payments/appointment_result.html apps/payments/views.py apps/orders/booking_utils.py
+msgid "Services for this appointment"
+msgstr "خدمات این نوبت"
+
+#: templates/payments/appointment_result.html apps/payments/views.py apps/orders/booking_utils.py
+msgid "Next actions"
+msgstr "اقدام‌های بعدی"
+
+#: templates/payments/appointment_result.html apps/payments/views.py apps/orders/booking_utils.py
+msgid "Next step"
+msgstr "اقدام بعدی"
+
+#: templates/payments/appointment_result.html apps/payments/views.py apps/orders/booking_utils.py
+msgid "Your appointment is ready to manage"
+msgstr "نوبتت آماده پیگیری است"
+
+#: templates/payments/appointment_result.html apps/payments/views.py apps/orders/booking_utils.py
+msgid "Payment is being reviewed."
+msgstr "پرداخت در حال بررسی است"
+
+#: templates/payments/appointment_result.html apps/payments/views.py apps/orders/booking_utils.py
+msgid "The payment deadline has passed."
+msgstr "مهلت پرداخت تمام شده است"
+
+#: templates/payments/appointment_result.html apps/payments/views.py apps/orders/booking_utils.py
+msgid "The payment was cancelled."
+msgstr "پرداخت لغو شد"
+
+#: templates/payments/appointment_result.html apps/payments/views.py apps/orders/booking_utils.py
+msgid "The payment failed."
+msgstr "پرداخت ناموفق بود"
+
+#: templates/payments/appointment_result.html apps/payments/views.py apps/orders/booking_utils.py
+msgid "To avoid duplicate payment, track this transaction and do not pay again until its status is final."
+msgstr "برای جلوگیری از پرداخت تکراری، همین تراکنش را پیگیری کن و تا تعیین وضعیت نهایی دوباره پرداخت نکن."
+
+#: templates/payments/appointment_result.html apps/payments/views.py apps/orders/booking_utils.py
+msgid "This booking is no longer held. Choose a new available time to book again."
+msgstr "این رزرو دیگر نگه‌داشته نمی‌شود. برای رزرو دوباره، یک زمان آزاد جدید انتخاب کن."
+
+#: templates/payments/appointment_result.html apps/payments/views.py apps/orders/booking_utils.py
+msgid "Payment was not completed. You can return to the salon page to book again."
+msgstr "پرداخت کامل نشد. می‌توانی برای رزرو دوباره به صفحه مجموعه برگردی."
+
+#: templates/payments/appointment_result.html apps/payments/views.py apps/orders/booking_utils.py
+msgid "Payment was not confirmed. If an amount was deducted, contact support."
+msgstr "پرداخت تأیید نشد. اگر مبلغی کسر شده، از پشتیبانی پیگیری کن."
+
+#: templates/payments/appointment_result.html apps/payments/views.py apps/orders/booking_utils.py
+msgid "From here, you can view appointment details, your wallet, or your account."
+msgstr "از اینجا می‌توانی جزئیات نوبت، کیف پول یا حساب کاربری را ببینی."
+
+#: templates/payments/appointment_result.html apps/payments/views.py apps/orders/booking_utils.py
+msgid "View appointments"
+msgstr "مشاهده نوبت‌ها"
+
+#: templates/payments/appointment_result.html apps/payments/views.py apps/orders/booking_utils.py
+msgid "Book a new time"
+msgstr "رزرو زمان جدید"
+
+#: templates/payments/appointment_result.html apps/payments/views.py apps/orders/booking_utils.py
+msgid "Try booking again"
+msgstr "تلاش دوباره برای رزرو"
+
+#: templates/payments/appointment_result.html apps/payments/views.py apps/orders/booking_utils.py
+msgid "Continue appointment settlement"
+msgstr "ادامه تسویه نوبت"
+
+#: templates/payments/appointment_result.html apps/payments/views.py apps/orders/booking_utils.py
+msgid "Follow up with support"
+msgstr "پیگیری با پشتیبانی"
+
+#: templates/payments/appointment_result.html apps/payments/views.py apps/orders/booking_utils.py
+msgid "Wallet"
+msgstr "کیف پول"
+
+#: templates/payments/appointment_result.html apps/payments/views.py apps/orders/booking_utils.py
+msgid "Account"
+msgstr "حساب کاربری"
+
+#: templates/payments/appointment_result.html apps/payments/views.py apps/orders/booking_utils.py
+msgid "Payment started"
+msgstr "شروع شده"
+
+#: templates/payments/appointment_result.html apps/payments/views.py apps/orders/booking_utils.py
+msgid "Payment pending"
+msgstr "در انتظار پرداخت"
+
+#: templates/payments/appointment_result.html apps/payments/views.py apps/orders/booking_utils.py
+msgid "Payment successful"
+msgstr "موفق"
+
+#: templates/payments/appointment_result.html apps/payments/views.py apps/orders/booking_utils.py
+msgid "Booking pending"
+msgstr "در انتظار تأیید"
+
+#: templates/payments/appointment_result.html apps/payments/views.py apps/orders/booking_utils.py
+msgid "Booking paid"
+msgstr "پرداخت شده"
+
+#: templates/payments/appointment_result.html apps/payments/views.py apps/orders/booking_utils.py
+msgid "Booking completed"
+msgstr "انجام شده"
+
+#: templates/payments/appointment_result.html apps/payments/views.py apps/orders/booking_utils.py
+msgid "Booking cancelled"
+msgstr "لغو شده"
+
+#: templates/payments/appointment_result.html apps/payments/views.py apps/orders/booking_utils.py
+msgid "No-show"
+msgstr "عدم حضور"
+
+#: templates/payments/appointment_result.html apps/payments/views.py apps/orders/booking_utils.py
+msgid "Disputed"
+msgstr "دارای اختلاف"
+
+#: templates/payments/appointment_result.html apps/payments/views.py apps/orders/booking_utils.py
+msgid "Zarinpal"
+msgstr "زرین‌پال"
+
+#: templates/payments/appointment_result.html apps/payments/views.py apps/orders/booking_utils.py
+msgid "Zibal"
+msgstr "زیبال"
+
+#: templates/payments/appointment_result.html apps/payments/views.py apps/orders/booking_utils.py
+msgid "Manual"
+msgstr "دستی"
+
+#: templates/payments/appointment_result.html apps/payments/views.py apps/orders/booking_utils.py
+msgid "Simulator"
+msgstr "شبیه‌ساز"
+
+#: templates/payments/appointment_result.html apps/payments/views.py apps/orders/booking_utils.py
+msgid "Awaiting payment"
+msgstr "در انتظار پرداخت"
+
+#: templates/payments/appointment_result.html apps/payments/views.py apps/orders/booking_utils.py
+msgid "Ready for settlement"
+msgstr "آماده تسویه"
+
+#: templates/payments/appointment_result.html apps/payments/views.py apps/orders/booking_utils.py
+msgid "On hold for review"
+msgstr "نیازمند بررسی"
+
+#: templates/payments/appointment_result.html apps/payments/views.py apps/orders/booking_utils.py
+msgid "Settled"
+msgstr "تسویه‌شده"
+
+#: templates/payments/appointment_result.html apps/payments/views.py apps/orders/booking_utils.py
+msgid "Cancelled"
+msgstr "لغوشده"
+
+#: templates/payments/appointment_result.html apps/payments/views.py apps/orders/booking_utils.py
+msgid "Unknown"
+msgstr "نامشخص"
+
+#: templates/payments/appointment_result.html apps/payments/views.py apps/orders/booking_utils.py
+msgid "Payment needs review"
+msgstr "پرداخت نیاز به بررسی دارد"
+
+#: templates/payments/appointment_result.html apps/payments/views.py apps/orders/booking_utils.py
+msgid "The returned gateway details did not fully match the order. The transaction is being reviewed for financial security."
+msgstr "اطلاعات برگشتی درگاه با اطلاعات سفارش کاملاً منطبق نبود. برای امنیت مالی، وضعیت تراکنش در حال بررسی است."
+
+#: templates/payments/appointment_result.html apps/payments/views.py apps/orders/booking_utils.py
+msgid "Payment result is not final yet"
+msgstr "نتیجه پرداخت هنوز قطعی نیست"
+
+#: templates/payments/appointment_result.html apps/payments/views.py apps/orders/booking_utils.py
+msgid "The transaction has not been finalized yet. The bank or gateway may have processed it, but Loomera has not received a final result."
+msgstr "وضعیت این تراکنش هنوز نهایی نشده است. ممکن است تراکنش توسط بانک یا درگاه پردازش شده باشد، اما نتیجه قطعی هنوز برای لومرا مشخص نیست."
+
+#: templates/payments/appointment_result.html apps/payments/views.py apps/orders/booking_utils.py
+msgid "The gateway connection did not complete final verification. The bank may have processed the transaction, but Loomera has not received a final result."
+msgstr "ارتباط با درگاه برای تأیید نهایی کامل نشد. ممکن است تراکنش توسط بانک پردازش شده باشد، اما نتیجه قطعی هنوز به لومرا نرسیده است."
+
+#: templates/payments/appointment_result.html apps/payments/views.py apps/orders/booking_utils.py
+msgid "Recorded message:"
+msgstr "پیام ثبت‌شده:"
+
+#: templates/payments/appointment_result.html apps/payments/views.py apps/orders/booking_utils.py
+msgid "Please do not pay again until the status of this transaction is confirmed."
+msgstr "لطفاً دوباره پرداخت نکنید تا وضعیت همین تراکنش مشخص شود."
+
+#: templates/payments/appointment_result.html apps/payments/views.py apps/orders/booking_utils.py
+msgid "If an amount was deducted from your account, the result will be known after the gateway or automated transaction review."
+msgstr "اگر مبلغ از حساب شما کسر شده باشد، نتیجه پس از بررسی درگاه یا بررسی خودکار تراکنش مشخص می‌شود."
+
+#: templates/payments/appointment_result.html apps/payments/views.py apps/orders/booking_utils.py
+msgid "The payment deadline has passed"
+msgstr "مهلت پرداخت به پایان رسید"
+
+#: templates/payments/appointment_result.html apps/payments/views.py apps/orders/booking_utils.py
+msgid "Online payment was not completed within the allowed time, so the booking was released and the selected time is available again."
+msgstr "چون پرداخت آنلاین در زمان مجاز کامل نشد، رزرو از حالت انتظار خارج شد و زمان انتخاب‌شده دوباره آزاد شده است."
+
+#: templates/payments/appointment_result.html apps/payments/views.py apps/orders/booking_utils.py
+msgid "Choose a new available time to book this service."
+msgstr "برای رزرو این خدمت، لطفاً یک زمان آزاد جدید انتخاب کنید."
+
+#: templates/payments/appointment_result.html apps/payments/views.py apps/orders/booking_utils.py
+msgid "If an amount was deducted from your account, you can follow up with support or the automated transaction review."
+msgstr "اگر مبلغی از حساب شما کسر شده باشد، وضعیت آن از طریق پشتیبانی یا بررسی خودکار تراکنش قابل پیگیری است."
+
+#: templates/payments/appointment_result.html apps/payments/views.py apps/orders/booking_utils.py
+msgid "Cancellation policy for this salon"
+msgstr "سیاست لغو این سالن"
+
+#: templates/payments/appointment_result.html apps/payments/views.py apps/orders/booking_utils.py
+msgid "Cancellation policy"
+msgstr "سیاست لغو"
+
+#: templates/payments/appointment_result.html apps/payments/views.py apps/orders/booking_utils.py
+msgid "Online cancellation is available up to %(hours)s hours before the appointment. If paid digitally (online or wallet), %(percent)s percent of the amount is returned to your wallet."
+msgstr "لغو آنلاین تا %(hours)s ساعت قبل از نوبت امکان‌پذیر است و در صورت پرداخت دیجیتال (آنلاین یا کیف پول)، %(percent)s٪ مبلغ به کیف پول شما برمی‌گردد."
+
+#: templates/payments/appointment_result.html apps/payments/views.py apps/orders/booking_utils.py
+msgid "Online cancellation is currently available. If you cancel this booking, %(percent)s percent of the digital payment is returned to your wallet."
+msgstr "در حال حاضر امکان لغو آنلاین برای شما فعال است. در صورت لغو این رزرو، %(percent)s٪ مبلغ پرداخت دیجیتال به کیف پول شما برمی‌گردد."
+
+#: templates/payments/appointment_result.html apps/payments/views.py apps/orders/booking_utils.py
+msgid "Online cancellation is not currently available for this appointment. Please coordinate with the salon if needed."
+msgstr "برای این نوبت در حال حاضر امکان لغو آنلاین وجود ندارد و در صورت نیاز باید با سالن هماهنگ شود."
+
+#: templates/payments/appointment_result.html apps/payments/views.py apps/orders/booking_utils.py
+msgid "Online cancellation is not available for completed or past appointments."
+msgstr "برای نوبت‌های انجام‌شده یا گذشته، امکان لغو آنلاین در دسترس نیست."
