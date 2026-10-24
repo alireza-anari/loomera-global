@@ -159,3 +159,14 @@ status strings and some appointment-detail/cancellation language
 still require explicit review. There are no real-browser screenshots,
 keyboard, responsive-zoom or screen-reader acceptance records and
 no deployment approval. Phase 3 remains NOT EXITED.
+
+## Phase 3.31 — Payment-result and appointment identifier review
+
+Payment-result order numbers, reference IDs, transaction tracking,
+provider/status labels and split-day date/time strings now use
+directional isolation. Appointment details retain untouched tel
+links while isolating displayed phone and order numbers. Automated
+Django tests protect financial and status branches and reference
+serialization. This is **structural** bidi evidence only: real
+browser, keyboard, screen reader, zoom, and release approval
+remain pending, with no manual test evidence added.
