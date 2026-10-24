@@ -95,7 +95,7 @@ class CheckoutFlashLocaleTests(SimpleTestCase):
         for m in flat:
             self.assertTrue(m)
             self.assertLessEqual(len(m), 300)
-            for forbidden in ("{", "}", "<", ">", "\\n", "09123456789"):
+            for forbidden in ("{", "}", "<", ">", "\n", "09123456789"):
                 self.assertNotIn(forbidden, m)
         with self.assertRaises(TypeError):
             CHECKOUT_FLASH_MSGIDS["error"] = ("override",)
@@ -247,10 +247,10 @@ class CheckoutFlashLocaleTests(SimpleTestCase):
         first = CHECKOUT_FLASH_MSGIDS["error"][0]
         literal = 'msgid "' + first + '"'
         block = po[po.index(literal):]
-        block = block[:block.index("\\n\\n")]
+        block = block[:block.index("\n\n")]
         for changed in (
             po.replace(literal, 'msgid "Missing source"', 1),
-            po + "\\n" + block + "\\n",
+            po + "\n" + block + "\n",
             po.replace(block.split("msgstr ")[-1], '""', 1),
         ):
             with self.assertRaises(ValueError):
