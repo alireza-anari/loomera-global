@@ -22,7 +22,7 @@ BOOKING_UI_MESSAGE_IDS = MappingProxyType({
     "booking.multi_service_booking": "Multi-service booking",
     "booking.same_day": "Same day",
     "booking.another_day": "Another day",
-    "booking.step": "Service",
+    "booking.step": "Service step",
     "booking.of": "of",
     "booking.available_times": "Available appointment times",
     "booking.no_times": "No times available for this day",
