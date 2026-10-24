@@ -11,6 +11,22 @@ register = template.Library()
 # server flash messages into non-Persian UI. No user data, provider errors,
 # formatting arguments or domain-specific message text is translated here.
 _TRUSTED_ERROR_KEYS = ("validation.notice", "validation.server_form")
+_TRUSTED_DOMAIN_FLASH_MSGIDS = {
+    # Only literal account/OTP messages from the live views which already have
+    # reviewed fa/en/ar compiled gettext entries. No interpolated OTPs, mobile
+    # numbers, user names or provider errors are allowed on this boundary.
+    "error": (
+        "شماره موبایل یا رمز عبور اشتباه است.",
+        "کد تایید منقضی شده است. لطفاً دوباره درخواست کد بدهید.",
+        "جلسه بازیابی یا ثبت‌نام منقضی شده است.",
+        "تعداد تلاش‌های مجاز تمام شده است. لطفاً دوباره درخواست کد بدهید.",
+        "کد تایید بیش از حد اشتباه وارد شد. لطفاً دوباره درخواست کد بدهید.",
+        "کاربر مرتبط با این کد پیدا نشد.",
+        "اطلاعات وارد شده اشتباه است.",
+    ),
+    "info": ("ابتدا شماره موبایل و کد دریافتی را ثبت کنید.",),
+}
+
 _CATALOG_LANGUAGES = ("fa", "en", "ar")
 
 
@@ -36,9 +52,13 @@ def _approved_flash_body(value, tone, language):
     keys = ("feedback.default." + tone,)
     if tone in {"error", "warning"}:
         keys += _TRUSTED_ERROR_KEYS
+    # Domain messages are gated by tone; never accept success copy as an error
+    # or OTP/session errors as success/info. Generic catalog keys stay separate.
+    candidates = tuple(MESSAGE_IDS[key] for key in keys) + (
+        _TRUSTED_DOMAIN_FLASH_MSGIDS.get(tone, ())
+    )
     if raw and len(raw) <= 300:
-        for key in keys:
-            msgid = MESSAGE_IDS[key]
+        for msgid in candidates:
             if raw == msgid:
                 allowed_msgid = msgid
                 break
