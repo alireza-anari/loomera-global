@@ -16,7 +16,7 @@ Expected context:
         class="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-loomera-borderSoft bg-white text-loomera-textPrimary shadow-lm-soft transition hover:bg-loomera-primarySoft focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-loomera-focusRing/35"
         aria-label="{{ back_label|default:'بازگشت به مرحله قبل' }}"
       >
-        <i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
+        <i data-booking-back-icon class="fa-solid fa-arrow-right" aria-hidden="true"></i>
       </a>
     {% else %}
       <button
@@ -25,7 +25,7 @@ Expected context:
         class="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-loomera-borderSoft bg-white text-loomera-textPrimary shadow-lm-soft transition hover:bg-loomera-primarySoft focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-loomera-focusRing/35"
         aria-label="{{ back_label|default:'بازگشت به مرحله قبل' }}"
       >
-        <i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
+        <i data-booking-back-icon class="fa-solid fa-arrow-right" aria-hidden="true"></i>
       </button>
     {% endif %}
 
@@ -59,7 +59,7 @@ Expected context:
           class="inline-flex items-center justify-center gap-2 rounded-full border border-loomera-borderSoft bg-white px-5 py-3 text-sm font-black text-loomera-textSecondary shadow-lm-soft transition hover:border-loomera-primary/40 hover:bg-loomera-primarySoft hover:text-loomera-primary focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-loomera-focusRing/35"
           aria-label="{{ back_label|default:'بازگشت به مرحله قبل' }}"
         >
-          <i class="fa-solid fa-arrow-right text-xs" aria-hidden="true"></i>
+          <i data-booking-back-icon class="fa-solid fa-arrow-right text-xs" aria-hidden="true"></i>
           {{ back_label|default:'بازگشت' }}
         </a>
       {% endif %}
