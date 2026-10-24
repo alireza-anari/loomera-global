@@ -142,3 +142,20 @@ screen-reader sign-off. Backend-generated booking/cancellation policy
 text, dynamic salon-provided titles and live payment gateway outcomes
 remain contextual data and are not translated generically in this slice.
 All manual acceptance and deployment blockers remain open.
+
+## Phase 3.31 post-checkout localization follow-up
+
+The payment result, appointment index, card/empty-state and selected
+detail labels now use reviewed native gettext (76 new and 7 reused
+source messages). The two distinct financial states — collected
+online funds and a confirmed appointment still requiring payment
+at the salon — retain their original server-side guards; no gateway
+status is inferred from translated copy. A database-free CI suite
+checks all six compiled fa/en/ar PO/MO files, primary financial
+branches, LTR payment references and accessible states.
+
+**Remaining blockers:** backend-computed localized financial
+status strings and some appointment-detail/cancellation language
+still require explicit review. There are no real-browser screenshots,
+keyboard, responsive-zoom or screen-reader acceptance records and
+no deployment approval. Phase 3 remains NOT EXITED.
