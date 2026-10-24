@@ -302,6 +302,121 @@
       "en": "My account",
       "fa": "حساب کاربری",
       "ar": "حسابي"
+    },
+    {
+      "en": "Paid",
+      "fa": "پرداخت شده",
+      "ar": "مدفوع"
+    },
+    {
+      "en": "Pay at salon",
+      "fa": "پرداخت در مجموعه",
+      "ar": "الدفع في الصالون"
+    },
+    {
+      "en": "Service not recorded",
+      "fa": "خدمت ثبت نشده",
+      "ar": "لم تُسجّل الخدمة"
+    },
+    {
+      "en": "Appointment hour",
+      "fa": "ساعت",
+      "ar": "وقت الموعد"
+    },
+    {
+      "en": "View appointment details",
+      "fa": "مشاهده جزئیات نوبت",
+      "ar": "عرض تفاصيل الموعد"
+    },
+    {
+      "en": "Salon directions",
+      "fa": "مسیر مجموعه",
+      "ar": "الاتجاهات إلى الصالون"
+    },
+    {
+      "en": "Book again",
+      "fa": "رزرو دوباره",
+      "ar": "الحجز مرة أخرى"
+    },
+    {
+      "en": "No appointments have been registered",
+      "fa": "هیچ نوبتی ثبت نشده است",
+      "ar": "لم تُسجّل أي مواعيد"
+    },
+    {
+      "en": "You have no appointments yet",
+      "fa": "هنوز نوبتی برای شما ثبت نشده است",
+      "ar": "ليس لديك مواعيد بعد"
+    },
+    {
+      "en": "After choosing a salon, service and suitable time, your upcoming appointments will appear here.",
+      "fa": "بعد از انتخاب مجموعه، خدمت و زمان مناسب، نوبت‌های آینده‌تان اینجا نمایش داده می‌شوند.",
+      "ar": "بعد اختيار الصالون والخدمة والوقت المناسب، ستظهر مواعيدك القادمة هنا."
+    },
+    {
+      "en": "Search salons",
+      "fa": "جستجوی مجموعه‌ها",
+      "ar": "البحث عن صالونات"
+    },
+    {
+      "en": "Current status",
+      "fa": "وضعیت فعلی",
+      "ar": "الحالة الحالية"
+    },
+    {
+      "en": "Appointment time",
+      "fa": "زمان نوبت",
+      "ar": "وقت الموعد"
+    },
+    {
+      "en": "Total amount",
+      "fa": "مبلغ",
+      "ar": "المبلغ"
+    },
+    {
+      "en": "Duration",
+      "fa": "مدت",
+      "ar": "المدة"
+    },
+    {
+      "en": "Services",
+      "fa": "خدمات",
+      "ar": "الخدمات"
+    },
+    {
+      "en": "Payment",
+      "fa": "پرداخت",
+      "ar": "الدفع"
+    },
+    {
+      "en": "Cancelled",
+      "fa": "لغو شده",
+      "ar": "ملغى"
+    },
+    {
+      "en": "Awaiting professional confirmation",
+      "fa": "در انتظار تایید متخصص",
+      "ar": "بانتظار تأكيد المختص"
+    },
+    {
+      "en": "Confirmed by professional",
+      "fa": "تایید شده توسط متخصص",
+      "ar": "أكده المختص"
+    },
+    {
+      "en": "Customer arrived at salon",
+      "fa": "مشتری به مجموعه رسید",
+      "ar": "وصل العميل إلى الصالون"
+    },
+    {
+      "en": "Service in progress",
+      "fa": "در حال انجام خدمت",
+      "ar": "الخدمة قيد التنفيذ"
+    },
+    {
+      "en": "Salon payment outstanding",
+      "fa": "تسویه در مجموعه مانده است",
+      "ar": "الدفع في الصالون لم يُسوَّ بعد"
     }
   ]
 }
