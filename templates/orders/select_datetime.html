@@ -131,9 +131,9 @@
 
 <div id="hiddenData"
      data-salon-id="{{ salon_id }}"
-     data-selections='{{ stylist_selections_json|safe }}'
      data-booking-mode="{{ booking_mode|default:'booking' }}"
      class="hidden"></div>
+{{ stylist_selections_json|json_script:"booking-stylist-selections" }}
 
 {% if form_action %}
 <form id="dateTimeSelectionForm" method="POST" action="{{ form_action }}" class="hidden">

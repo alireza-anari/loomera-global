@@ -48,7 +48,9 @@
     }
 
     function formatAmount(value) {
-        return Number(value || 0).toLocaleString('fa-IR');
+        const language = (document.documentElement.lang || 'fa').toLowerCase().split('-')[0];
+        const locale = language === 'en' ? 'en-US' : language === 'ar' ? 'ar-EG' : 'fa-IR';
+        return Number(value || 0).toLocaleString(locale);
     }
 
     function init() {
@@ -136,7 +138,6 @@
             btn.classList.remove('is-selected', 'border-loomera-primary', 'bg-loomera-primarySoft');
             btn.classList.add('border-gray-200');
             btn.setAttribute('aria-pressed', 'false');
-            btn.setAttribute('aria-selected', 'false');
 
             const indicator = btn.querySelector('.selection-indicator');
             if (indicator) {
@@ -148,7 +149,6 @@
         selectedButton.classList.remove('border-gray-200');
         selectedButton.classList.add('is-selected', 'border-loomera-primary', 'bg-loomera-primarySoft');
         selectedButton.setAttribute('aria-pressed', 'true');
-        selectedButton.setAttribute('aria-selected', 'true');
 
         const indicator = selectedButton.querySelector('.selection-indicator');
         if (indicator) {

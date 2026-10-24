@@ -1153,3 +1153,53 @@ These automated **structural/render checks are not a substitute**
 for acceptance in real browsers using screen readers and keyboard
 navigation, nor for visual review at varied viewport sizes. Those
 Phase 3 exit gates remain open; no production deployment is included.
+
+## Phase 3 — Slice 3.26: Booking Specialist and Date/Time Journey Hardening
+
+This cohesive slice reviews the **actual interactive specialist → date/time →
+preview/checkout** journey, rather than another small static translation table.
+
+The booking date-time page previously inserted the serialized
+`stylist_selections_json` using a Django `|safe` HTML attribute. A
+specialist/service name with a quote or HTML token could disrupt that
+transport. It now uses Django's `json_script` serializer and parses
+the resulting typed JSON string before mapping the existing selections.
+Names and selection data are preserved byte-for-byte as user content;
+validation still rejects a non-list payload. Crucially, the existing
+reservation POST structure, session storage keys, backend availability
+and conflict revalidation, and payment/checkout safeguards are untouched.
+
+The date-time JS builds portions of the UI dynamically via `innerHTML`.
+User-provided service/stylist labels and rendered time labels are now
+escaped at that **display boundary**, leaving stored request/service
+fields intact. A selected time slot re-render retains keyboard focus
+on its replacement button, and visually isolates clock ranges using
+LTR spans without altering times or the Jalali calendar. The existing
+`aria-pressed` time-slot contract is retained.
+
+Stylist-choice buttons previously mixed `role=listitem` and
+`aria-selected` with native toggle-button `aria-pressed`. These
+are now ordinary named buttons within labeled `role=group` regions,
+using the single supported pressed state. No selected stylist,
+availability option, POST value, price or enabled/disabled logic changes.
+
+Both booking browser scripts now format displayed digits/amounts
+according to the active document's fa/en/ar language, defaulting to
+the historic Persian appearance when no language is supplied.
+Numeric amounts, service lengths, ISO dates, Jalali↔Gregorian
+conversion, validation and payment calculations are unchanged.
+Some existing customer-flow copy remains Persian and still needs
+full localized UI acceptance; this slice does not claim to finish
+all translation work.
+
+A new DB-free test suite checks real Django-safe JSON serialization
+with apostrophes/angle brackets and mixed Persian/Latin names,
+escaped dynamic markup sites, focus restoration, accessibility
+semantics, per-language digit configuration, preserved POST and
+stale-availability contract, and fa/Jalali/Tehran defaults.
+CI syntax-checks both JavaScript files and executes these checks
+together with the earlier checkout accessibility regression suite.
+
+This does **not** constitute a real browser, screen-reader, zoom or
+visual RTL/LTR acceptance test. Those Phase 3 exit requirements
+remain open. There is no production deployment or backend mutation.
