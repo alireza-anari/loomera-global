@@ -130,7 +130,7 @@
 
             <fieldset class="mt-5">
               <legend class="mb-3 text-sm font-black text-loomera-textPrimary">روش پرداخت</legend>
-              <div class="grid gap-3" role="radiogroup" aria-label="روش پرداخت">
+              <div class="grid gap-3" role="radiogroup" aria-label="روش پرداخت" {% if form.payment_method.errors %}aria-invalid="true" aria-describedby="{{ form.payment_method.auto_id }}_error"{% endif %}>
                 {% for radio in form.payment_method %}
                   <label class="flex cursor-pointer items-start gap-3 rounded-[1.4rem] border border-loomera-borderSoft bg-white p-4 shadow-sm transition hover:border-loomera-primary/30 hover:bg-loomera-primarySoft/35 [&_input]:mt-1 [&_input]:h-4 [&_input]:w-4 [&_input]:accent-loomera-primary">
                     <span class="shrink-0">{{ radio.tag }}</span>
