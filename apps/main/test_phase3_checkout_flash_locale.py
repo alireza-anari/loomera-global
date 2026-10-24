@@ -1,4 +1,4 @@
-"""Phase 3.22–3.23: compiled checkout/settlement/reschedule flash locale boundary.
+"""Phase 3.22–3.24: compiled checkout/settlement/reschedule flash locale boundary.
 
 Exercises the actual Django message partial and all shipped PO/MO catalogs.
 Never executes a financial mutation, payment gateway, appointment write or SMS.
@@ -80,16 +80,16 @@ class CheckoutFlashLocaleTests(SimpleTestCase):
             ),
         )
 
-    def test_reviewed_tone_scope_is_immutable_and_contains_twenty_four_messages(self):
+    def test_reviewed_tone_scope_is_immutable_and_contains_twenty_six_messages(self):
         self.assertIsInstance(CHECKOUT_FLASH_MSGIDS, MappingProxyType)
         self.assertEqual(set(CHECKOUT_FLASH_MSGIDS), set(LEVELS))
         self.assertEqual(
             {tone: len(messages) for tone, messages in CHECKOUT_FLASH_MSGIDS.items()},
-            {"error": 14, "info": 5, "warning": 3, "success": 2},
+            {"error": 14, "info": 5, "warning": 3, "success": 4},
         )
         flat = [m for phrases in CHECKOUT_FLASH_MSGIDS.values() for m in phrases]
-        self.assertEqual(len(flat), 24)
-        self.assertEqual(len(set(flat)), 24)
+        self.assertEqual(len(flat), 26)
+        self.assertEqual(len(set(flat)), 26)
         self.assertFalse(set(flat) & {
             msgid for messages in BOOKING_FLASH_MSGIDS.values() for msgid in messages
         })
@@ -101,18 +101,18 @@ class CheckoutFlashLocaleTests(SimpleTestCase):
         with self.assertRaises(TypeError):
             CHECKOUT_FLASH_MSGIDS["error"] = ("override",)
 
-    def test_po_and_compiled_mo_have_all_twenty_four_exact_entries_per_language(self):
+    def test_po_and_compiled_mo_have_all_twenty_six_exact_entries_per_language(self):
         for language in ("fa", "en", "ar"):
             with self.subTest(lang=language):
                 po = (self.locale_dir(language) / "django.po").read_text(encoding="utf-8")
                 compiled = (self.locale_dir(language) / "django.mo").read_bytes()
                 self.assertEqual(struct.unpack_from("<I", compiled, 0)[0], 0x950412de)
-                self.assertEqual(struct.unpack_from("<I", compiled, 8)[0], 195)
+                self.assertEqual(struct.unpack_from("<I", compiled, 8)[0], 197)
                 approved = inspect_checkout_gettext_catalog(language, po)
-                self.assertEqual(len(approved), 24)
+                self.assertEqual(len(approved), 26)
                 self.assertEqual(po.count(
                     "#: loomera/globalization/checkout_flash_messages.py"
-                ), 24)
+                ), 26)
                 self.assertEqual(len(inspect_booking_gettext_catalog(language, po)), 14)
                 with translation.override(language):
                     for msgid, expected in approved.items():
@@ -242,6 +242,89 @@ class CheckoutFlashLocaleTests(SimpleTestCase):
         for translation_value in CRITICAL_COPY.values():
             self.assertNotIn(translation_value[0], runtime)
             self.assertNotIn(translation_value[1], runtime)
+
+
+    def test_wallet_payment_and_pay_at_salon_success_copy_is_pinned(self):
+        completed = (
+            "مبلغ رزرو از کیف پول شما کسر شد و نوبت با موفقیت ثبت شد.",
+            "The booking amount was deducted from your wallet, and your appointment was booked successfully.",
+            "خُصم مبلغ الحجز من محفظتك، وتم تسجيل موعدك بنجاح.",
+        )
+        deferred = (
+            "نوبت شما قطعی شد و در برنامه کاری متخصص قرار گرفت. پرداخت این سفارش در مجموعه انجام می‌شود.",
+            "Your appointment is confirmed and added to the professional's schedule. Payment for this order will be made at the salon.",
+            "تم تأكيد موعدك وإضافته إلى جدول عمل المتخصص. سيُدفع ثمن هذا الطلب في الصالون.",
+        )
+        self.assertEqual(CHECKOUT_FLASH_MSGIDS["success"][-2:], (
+            completed[0], deferred[0],
+        ))
+        for row in (completed, deferred):
+            for lang, expected in zip(("fa", "en", "ar"), row):
+                with self.subTest(lang=lang, source=row[0][:25]):
+                    with translation.override(lang):
+                        self.assertEqual(translation.gettext(row[0]), expected)
+                        self.assertIn(escape(expected), self.render(constants.SUCCESS, row[0]))
+                        self.assertIn('role="status"', self.render(constants.SUCCESS, row[0]))
+
+    def test_success_source_is_issued_only_after_its_distinct_financial_state(self):
+        views = (Path(settings.BASE_DIR) / "apps/orders/views.py").read_text(
+            encoding="utf-8"
+        )
+        wallet_start = views.index(
+            "if payment_method == AppointmentCheckoutForm.PAYMENT_METHOD_WALLET:"
+        )
+        salon_start = views.index(
+            "if payment_method == AppointmentCheckoutForm.PAYMENT_METHOD_SALON:",
+            wallet_start,
+        )
+        gateway_start = views.index(
+            "from apps.payments.gateways import initiate_payment",
+            salon_start,
+        )
+        wallet = views[wallet_start:salon_start]
+        salon = views[salon_start:gateway_start]
+        self.assertIn("wallet.withdraw(", wallet)
+        self.assertIn("payment.mark_success(", wallet)
+        self.assertIn('order.status = "paid"', wallet)
+        self.assertIn("order.is_paid = True", wallet)
+        self.assertIn(CHECKOUT_FLASH_MSGIDS["success"][-2], wallet)
+        self.assertIn('"payments:appointment_result"', wallet)
+        self.assertIn('order.status = "pending"', salon)
+        self.assertNotIn("order.is_paid = True", salon)
+        self.assertNotIn("payment.mark_success(", salon)
+        self.assertIn(CHECKOUT_FLASH_MSGIDS["success"][-1], salon)
+        self.assertIn('reverse("orders:appointments")', salon)
+
+    def test_financial_success_copy_never_authorizes_raw_sensitive_data(self):
+        wallet, salon = CHECKOUT_FLASH_MSGIDS["success"][-2:]
+        for lang in ("en", "ar"):
+            with translation.override(lang):
+                success_fallback = translation.gettext(
+                    MESSAGE_IDS["feedback.default.success"]
+                )
+                for original in (wallet, salon):
+                    for contaminated in (
+                        original + " wallet=09123456789",
+                        original + " payment=secret",
+                        original + " amount=750000",
+                    ):
+                        with self.subTest(lang=lang, phrase=original[:25]):
+                            self.assertEqual(
+                                clean_ui_message(contaminated, "success"),
+                                success_fallback,
+                            )
+                            rendered = self.render(constants.SUCCESS, contaminated)
+                            self.assertIn(escape(success_fallback), rendered)
+                            for private in ("09123456789", "secret", "750000"):
+                                self.assertNotIn(private, rendered)
+                    for wrong_tone in ("error", "warning", "info"):
+                        with self.subTest(lang=lang, wrong_tone=wrong_tone):
+                            expected = translation.gettext(
+                                MESSAGE_IDS["feedback.default." + wrong_tone]
+                            )
+                            self.assertEqual(
+                                clean_ui_message(original, wrong_tone), expected
+                            )
 
     def test_read_only_auditor_rejects_missing_duplicate_and_corrupt_catalogs(self):
         po = (self.locale_dir("en") / "django.po").read_text(encoding="utf-8")

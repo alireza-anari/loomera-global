@@ -786,3 +786,11 @@ msgstr "شروع پرداخت آنلاین ناموفق بود. لطفاً دو�
 #: loomera/globalization/checkout_flash_messages.py
 msgid "شروع پرداخت ناموفق بود."
 msgstr "شروع پرداخت ناموفق بود."
+
+#: loomera/globalization/checkout_flash_messages.py
+msgid "مبلغ رزرو از کیف پول شما کسر شد و نوبت با موفقیت ثبت شد."
+msgstr "مبلغ رزرو از کیف پول شما کسر شد و نوبت با موفقیت ثبت شد."
+
+#: loomera/globalization/checkout_flash_messages.py
+msgid "نوبت شما قطعی شد و در برنامه کاری متخصص قرار گرفت. پرداخت این سفارش در مجموعه انجام می‌شود."
+msgstr "نوبت شما قطعی شد و در برنامه کاری متخصص قرار گرفت. پرداخت این سفارش در مجموعه انجام می‌شود."
