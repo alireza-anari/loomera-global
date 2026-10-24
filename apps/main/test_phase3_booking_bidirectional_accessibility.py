@@ -99,10 +99,12 @@ class BookingBidirectionalAccessibilityTests(SimpleTestCase):
         self.assertIn("id_payment_method_error", payment_html)
         for path in self.CHECKOUT_TEMPLATES:
             src = self.source(path)
-            for fid in ("id_coupon_code_error", "id_payment_method_error"):
-                with self.subTest(path=path, fid=fid):
-                    self.assertIn("auto_id }}_error", src)
-                    self.assertIn(fid, fid)  # stable expected BoundField ids
+            for name in ("coupon_code", "payment_method"):
+                with self.subTest(path=path, name=name):
+                    self.assertIn(
+                        'id="{{ form.' + name + '.auto_id }}_error"',
+                        src,
+                    )
         self.assertEqual(form["coupon_code"].auto_id, "id_coupon_code")
         self.assertEqual(form["payment_method"].auto_id, "id_payment_method")
 
