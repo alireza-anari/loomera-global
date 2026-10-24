@@ -141,6 +141,14 @@ jobs:
             apps.main.test_phase3_booking_gettext_migration \
             --failfast
 
+      - name: Phase 3 atomic compiled booking gettext parity
+        run: |
+          python manage.py test \
+            apps.main.test_phase3_booking_gettext_migration \
+            apps.main.test_phase3_booking_flash_locale \
+            apps.main.test_phase3_rebooking_locale_flow \
+            --failfast
+
       - name: Phase 3 localized submission progress guards
         run: |
           python manage.py test \
