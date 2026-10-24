@@ -1203,3 +1203,42 @@ together with the earlier checkout accessibility regression suite.
 This does **not** constitute a real browser, screen-reader, zoom or
 visual RTL/LTR acceptance test. Those Phase 3 exit requirements
 remain open. There is no production deployment or backend mutation.
+
+## Phase 3 — Slice 3.27: Integrated Exit Evidence and CI Efficiency
+
+The preceding slices added localization, bidi, finance-safe flash copy and
+booking DOM protections. This slice consolidates the outstanding exit review
+into a **documented acceptance matrix**, instead of claiming CI is a
+substitute for browser or screen-reader tests.
+
+The booking date/time dynamic HTML is now escaped at a single well-defined
+DOM output boundary: switcher subtitles contain raw user-facing time strings
+until rendering, while picked summaries remain raw until their HTML sink.
+This prevents double escaping and keeps hostile specialist names/time
+strings from being interpreted as HTML. Time-slot choice containers use an
+accessible `role="group"` for their native pressed buttons rather than
+advertising a list without list-items. Underlying bookings, ISO dates,
+Jalali conversions, form POST bodies and financial operations remain
+unchanged.
+
+A new no-dependency Node runner executes real production JavaScript
+helpers with a small DOM stub: malicious names/time strings, single-pass
+HTML escaping, pressed-state and keyboard focus after a slot re-render,
+and fa/en/ar digit/amount parity are checked for actual behavior.
+Django's new exit-evidence audit verifies eight required end-to-end
+flows, all three directions and viewports, explicit release blockers,
+and preserved historical defaults. An acceptance matrix and release
+procedure are maintained in
+`docs/globalization/PHASE3_EXIT_MATRIX.json` and
+`docs/globalization/PHASE3_EXIT_AUDIT.md`.
+
+Three **duplicate** CI invocations of existing Django test suites are
+removed; all four affected test modules still run exactly once via
+the existing booking/compiled-catalog gates. The consolidated gate
+includes the Node runner and the new exit evidence tests. Other
+CI test coverage and release checks remain in place.
+
+**Open blockers:** real-browser screenshots, responsive/zoom,
+hands-on keyboard tests, NVDA/VoiceOver, additional legacy dynamic
+customer text localization and production approval. No manual results
+or deployed success are implied; Phase 3 remains unclosed.

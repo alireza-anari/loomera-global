@@ -128,19 +128,6 @@ jobs:
             apps.main.test_phase3_account_otp_flash_locale \
             --failfast
 
-      - name: Phase 3 reviewed booking and service flash locale safety
-        run: |
-          python manage.py test \
-            apps.main.test_phase3_booking_flash_locale \
-            --failfast
-
-      - name: Phase 3 rebooking journey and gettext migration readiness
-        run: |
-          python manage.py test \
-            apps.main.test_phase3_rebooking_locale_flow \
-            apps.main.test_phase3_booking_gettext_migration \
-            --failfast
-
       - name: Phase 3 atomic compiled booking gettext parity
         run: |
           python manage.py test \
@@ -153,15 +140,11 @@ jobs:
         run: |
           node --check static/js/select_stylist.js
           node --check static/js/select_datetime.js
+          node --test tests/js/phase3_booking_journey_runtime.test.cjs
           python manage.py test \
             apps.main.test_phase3_booking_journey_security_a11y \
             apps.main.test_phase3_booking_bidirectional_accessibility \
-            --failfast
-
-      - name: Phase 3 booking bidirectional and field error accessibility guards
-        run: |
-          python manage.py test \
-            apps.main.test_phase3_booking_bidirectional_accessibility \
+            apps.main.test_phase3_exit_evidence \
             --failfast
 
       - name: Phase 3 checkout settlement and reschedule gettext safety

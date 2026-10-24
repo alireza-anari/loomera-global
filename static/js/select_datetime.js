@@ -458,7 +458,7 @@
         : picked
           ? 'border-emerald-200 bg-emerald-50 text-emerald-700'
           : 'border-loomera-borderSoft bg-white text-loomera-textSecondary';
-      const subtitle = picked ? `${formatGregorianToJalali(picked.date)} • ${escapeBookingHtml(picked.time)}` : formatDuration(selection.serviceDuration);
+      const subtitle = picked ? `${formatGregorianToJalali(picked.date)} • ${picked.time}` : formatDuration(selection.serviceDuration);
       return `
         <button type="button"
                 class="min-w-[148px] rounded-2xl border px-3 py-3 text-right transition hover:border-loomera-primary/40 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-loomera-focusRing/30 ${statusClass} ${isClickable ? '' : 'cursor-not-allowed opacity-50'}"
@@ -466,7 +466,7 @@
                 ${isClickable ? '' : 'disabled'}
                 aria-current="${isCurrent ? 'step' : 'false'}">
           <span class="block truncate text-xs font-black">${escapeBookingHtml(selection.serviceName || 'خدمت')}</span>
-          <span class="mt-1 block truncate text-[11px] opacity-80">${subtitle || 'در انتظار زمان'}</span>
+          <span class="mt-1 block truncate text-[11px] opacity-80">${escapeBookingHtml(subtitle || 'در انتظار زمان')}</span>
         </button>
       `;
     }).join('');
@@ -753,7 +753,7 @@
           <h4 id="period-${group.key}" class="text-sm font-black text-loomera-textPrimary">${group.label}</h4>
           <span class="text-xs text-loomera-textMuted">${toPersianDigits(group.slots.length)} زمان</span>
         </div>
-        <div class="grid grid-cols-2 gap-3 sm:grid-cols-3" role="list">
+        <div class="grid grid-cols-2 gap-3 sm:grid-cols-3" role="group" aria-label="ساعت‌های آزاد">
           ${group.slots.map((slot) => {
             const isSelected = slot.time === selectedTime;
             const showStylist = selection.requestedStylistId === 'any';
@@ -897,7 +897,7 @@
       ? 'فرقی ندارد'
       : (selection.requestedStylistName || selection.stylistName || 'متخصص');
     const pickedLabel = picked
-      ? `${formatGregorianToJalali(picked.date)}، ${escapeBookingHtml(picked.time)}${picked.end_time ? ` تا ${picked.end_time}` : ''}`
+      ? `${formatGregorianToJalali(picked.date)}، ${picked.time}${picked.end_time ? ` تا ${picked.end_time}` : ''}`
       : 'زمان انتخاب نشده';
     return { parts, specialist, pickedLabel, picked };
   }
