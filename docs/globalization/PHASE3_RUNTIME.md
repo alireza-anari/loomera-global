@@ -952,3 +952,49 @@ Phase 1–3 checks. No migrations, production deployment, changing
 payment gateways, SMS, appointment prices or Iranian default locale,
 currency/timezone/calendar, browser screenshot acceptance or
 screen-reader validation are claimed. Phase 3 remains open.
+
+## Phase 3 — Slice 3.21: Atomic Compiled Booking Gettext Migration
+
+The 14 previously reviewed static booking/service flash messages have now
+been migrated from their temporary runtime translation table to native
+Django gettext. An **atomic Git tree commit** updated all six relevant
+catalog files together: `locale/{fa,en,ar}/LC_MESSAGES/django.po` and their
+matching `django.mo` compiled binary catalogs. Each language catalog now
+contains the 14 reviewed, exact original-Persian msgids and its reviewed
+translations, preserving all previous entries and the existing Arabic
+pluralized OTP translations. The Persian msgstr values exactly match the
+historical Persian text.
+
+`loomera/globalization/booking_flash_messages.py` now contains only an
+immutable **tone-to-source-msgid allowlist** (10 error, 3 success, 1 info).
+It no longer carries English/Arabic runtime translations or the former
+`trusted_booking_flash` lookup. The shared server flash display filter
+reuses its existing strict exact-match gettext policy: it accepts one of
+these approved msgids or one of their exact compiled fa/en/ar translations
+**only for the matching flash tone**, then resolves the active target
+locale using `translation.gettext`. The already-present account/OTP
+allowlist and generic validation messages are unaffected. Near matches,
+unreviewed booking/payment/checkout messages, user/customer details,
+telephone numbers, exception text and markup are still rejected for
+en/ar and mapped to an existing generic safe fallback. For fa, the
+original Python user-message sanitizer remains authoritative.
+
+The previous draft-only migration helper has been replaced by a
+**read-only PO audit** function that verifies the complete set of
+approved identifiers, correct locale headers, uniqueness, non-empty
+safe translations and unchanged fa text. The Django migration suite
+asserts that all 14 compiled `translation.gettext` values in each of
+the three languages exactly match their checked-in PO entries; test-only
+fixtures independently verify the previously reviewed en/ar wording.
+All earlier runtime flash, OTP, pluralization and rebooking tests now
+run against the native compiled catalogs instead of the transitional
+table. This migration removes the temporary **runtime translation
+table**, not the essential exact allowlist safety boundary.
+
+The dedicated CI step validates PO/MO parity, booking flash rendering
+and rebooking security alongside all previous Phase 1–3 checks. No
+business/booking/payment, checkout consent, SMS/OTP, session authorization,
+database schema, Iranian mobile/Jalali/timezone/currency defaults,
+deployment or source-repository writes are introduced. Real browser
+visual and assistive-technology acceptance remains outstanding. Phase 3
+is still open.
