@@ -20,7 +20,11 @@
     if (typeof value === "string" && value.length <= 300) messages[key] = value;
   }
   Object.freeze(messages);
-  const approved = new Set(Object.values(messages));
+  // Booking labels are UI display copy, not acceptable server flash bodies.
+  // Keep the existing reviewed feedback/validation trust boundary unchanged.
+  const approved = new Set(Object.entries(messages)
+    .filter(([key]) => !key.startsWith("booking."))
+    .map(([, value]) => value));
 
   const text = (key, fallback = "") => (
     Object.prototype.hasOwnProperty.call(messages, key) ? messages[key] : fallback
