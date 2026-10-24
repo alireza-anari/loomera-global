@@ -1,0 +1,20 @@
+/* Phase 3.25 — booking journey navigation and mixed-script data.
+   Only mirror explicitly marked "back" glyphs in LTR deployments.
+   Do not reverse keyboard/tab order or touch fa/ar icon direction. */
+html[dir="ltr"] [data-booking-back-icon] {
+  transform: scaleX(-1);
+}
+
+/* Coupon tokens are machine-readable Latin strings, even in RTL labels.
+   Isolate only token text, never currency or the entire payment row. */
+[data-booking-coupon-token] {
+  direction: ltr;
+  unicode-bidi: isolate;
+}
+
+/* Preserve an obvious keyboard focus target for the legacy single-option
+   payment card after its radio is nested in its accessible label. */
+[data-checkout-payment-methods] [data-payment-option]:focus-within {
+  outline: 2px solid var(--lm-primary);
+  outline-offset: 2px;
+}
