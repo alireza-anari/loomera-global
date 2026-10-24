@@ -1410,3 +1410,307 @@ msgstr "على"
 #: templates/orders/reservation_preview.html templates/orders/checkout.html apps/orders/forms.py
 msgid "%(amount)s toman discount has been applied to this booking."
 msgstr "تم تطبيق خصم بقيمة %(amount)s تومان على هذا الحجز."
+
+#: docs/globalization/PHASE3_31_MESSAGE_REVIEW.json
+msgid "My appointments"
+msgstr "مواعيدي"
+
+#: docs/globalization/PHASE3_31_MESSAGE_REVIEW.json
+msgid "Customer account"
+msgstr "حساب العميل"
+
+#: docs/globalization/PHASE3_31_MESSAGE_REVIEW.json
+msgid "Back to my account"
+msgstr "العودة إلى حسابي"
+
+#: docs/globalization/PHASE3_31_MESSAGE_REVIEW.json
+msgid "Book a new appointment"
+msgstr "حجز موعد جديد"
+
+#: docs/globalization/PHASE3_31_MESSAGE_REVIEW.json
+msgid "See upcoming bookings, visit history and payment status together, and quickly access each appointment."
+msgstr "اطّلع على حجوزاتك القادمة وسجل الزيارات وحالة المدفوعات في مكان واحد، وادخل سريعًا إلى تفاصيل كل موعد."
+
+#: docs/globalization/PHASE3_31_MESSAGE_REVIEW.json
+msgid "Next appointment"
+msgstr "الموعد القادم"
+
+#: docs/globalization/PHASE3_31_MESSAGE_REVIEW.json
+msgid "History"
+msgstr "السجل"
+
+#: docs/globalization/PHASE3_31_MESSAGE_REVIEW.json
+msgid "Upcoming schedule"
+msgstr "الجدول القادم"
+
+#: docs/globalization/PHASE3_31_MESSAGE_REVIEW.json
+msgid "Upcoming appointments"
+msgstr "المواعيد القادمة"
+
+#: docs/globalization/PHASE3_31_MESSAGE_REVIEW.json
+msgid "appointments"
+msgstr "مواعيد"
+
+#: docs/globalization/PHASE3_31_MESSAGE_REVIEW.json
+msgid "Past appointments"
+msgstr "المواعيد السابقة"
+
+#: docs/globalization/PHASE3_31_MESSAGE_REVIEW.json
+msgid "items"
+msgstr "عناصر"
+
+#: docs/globalization/PHASE3_31_MESSAGE_REVIEW.json
+msgid "No previous appointments have been recorded for you yet."
+msgstr "لم تُسجّل لك أي مواعيد سابقة بعد."
+
+#: docs/globalization/PHASE3_31_MESSAGE_REVIEW.json
+msgid "Booking status"
+msgstr "حالة الحجز"
+
+#: docs/globalization/PHASE3_31_MESSAGE_REVIEW.json
+msgid "Supplementary payment"
+msgstr "دفعة تكميلية"
+
+#: docs/globalization/PHASE3_31_MESSAGE_REVIEW.json
+msgid "Supplementary booking payment completed"
+msgstr "اكتمل الدفع التكميلي للحجز"
+
+#: docs/globalization/PHASE3_31_MESSAGE_REVIEW.json
+msgid "The online payment for this appointment is finalized and the order financial status has been reconciled with the salon settlement."
+msgstr "اكتمل الدفع الإلكتروني لهذا الموعد، وتمت مطابقة الحالة المالية للطلب مع تسوية الصالون."
+
+#: docs/globalization/PHASE3_31_MESSAGE_REVIEW.json
+msgid "Booking confirmed"
+msgstr "تم تأكيد الحجز"
+
+#: docs/globalization/PHASE3_31_MESSAGE_REVIEW.json
+msgid "Your appointment is booked"
+msgstr "تم حجز موعدك"
+
+#: docs/globalization/PHASE3_31_MESSAGE_REVIEW.json
+msgid "Appointment details are available here and under My appointments."
+msgstr "تتوفر تفاصيل الموعد هنا وفي قسم «مواعيدي»."
+
+#: docs/globalization/PHASE3_31_MESSAGE_REVIEW.json
+msgid "Under review"
+msgstr "قيد المراجعة"
+
+#: docs/globalization/PHASE3_31_MESSAGE_REVIEW.json
+msgid "Payment window expired"
+msgstr "انتهت مهلة الدفع"
+
+#: docs/globalization/PHASE3_31_MESSAGE_REVIEW.json
+msgid "Payment cancelled"
+msgstr "أُلغي الدفع"
+
+#: docs/globalization/PHASE3_31_MESSAGE_REVIEW.json
+msgid "You cancelled the payment"
+msgstr "لقد ألغيت الدفع"
+
+#: docs/globalization/PHASE3_31_MESSAGE_REVIEW.json
+msgid "The online payment was not completed. If you still want to book this appointment, you can try again from the booking page."
+msgstr "لم تكتمل عملية الدفع الإلكتروني. إذا كنت ما زلت ترغب في حجز هذا الموعد، يمكنك المحاولة مجددًا من صفحة الحجز."
+
+#: docs/globalization/PHASE3_31_MESSAGE_REVIEW.json
+msgid "Follow-up required"
+msgstr "تتطلب المتابعة"
+
+#: docs/globalization/PHASE3_31_MESSAGE_REVIEW.json
+msgid "Supplementary online payment not confirmed"
+msgstr "لم يُؤكَّد الدفع الإلكتروني التكميلي"
+
+#: docs/globalization/PHASE3_31_MESSAGE_REVIEW.json
+msgid "Your appointment remains active and the pay-at-salon method has been preserved."
+msgstr "لا يزال موعدك نشطًا، وقد احتُفظ بخيار الدفع في الصالون."
+
+#: docs/globalization/PHASE3_31_MESSAGE_REVIEW.json
+msgid "Payment unsuccessful"
+msgstr "الدفع غير ناجح"
+
+#: docs/globalization/PHASE3_31_MESSAGE_REVIEW.json
+msgid "Payment failed"
+msgstr "فشلت عملية الدفع"
+
+#: docs/globalization/PHASE3_31_MESSAGE_REVIEW.json
+msgid "The gateway did not confirm your payment. If no amount was deducted from your account, you may try to book again."
+msgstr "لم تؤكد بوابة الدفع العملية. إذا لم يُخصم أي مبلغ من حسابك، يمكنك محاولة الحجز مجددًا."
+
+#: docs/globalization/PHASE3_31_MESSAGE_REVIEW.json
+msgid "Payment under review"
+msgstr "الدفع قيد المراجعة"
+
+#: docs/globalization/PHASE3_31_MESSAGE_REVIEW.json
+msgid "Do not pay again"
+msgstr "لا تدفع مرة أخرى"
+
+#: docs/globalization/PHASE3_31_MESSAGE_REVIEW.json
+msgid "Follow up on appointment"
+msgstr "متابعة الموعد"
+
+#: docs/globalization/PHASE3_31_MESSAGE_REVIEW.json
+msgid "Contact support"
+msgstr "التواصل مع الدعم"
+
+#: docs/globalization/PHASE3_31_MESSAGE_REVIEW.json
+msgid "Multi-day planning"
+msgstr "الجدولة على عدة أيام"
+
+#: docs/globalization/PHASE3_31_MESSAGE_REVIEW.json
+msgid "This booking spans multiple days"
+msgstr "هذا الحجز موزع على عدة أيام"
+
+#: docs/globalization/PHASE3_31_MESSAGE_REVIEW.json
+msgid "To keep services in sequence, your booking has been scheduled across multiple days."
+msgstr "للحفاظ على ترتيب الخدمات، جرى جدولة حجزك على عدة أيام."
+
+#: docs/globalization/PHASE3_31_MESSAGE_REVIEW.json
+msgid "Appointment details"
+msgstr "تفاصيل الموعد"
+
+#: docs/globalization/PHASE3_31_MESSAGE_REVIEW.json
+msgid "Order summary"
+msgstr "ملخص الطلب"
+
+#: docs/globalization/PHASE3_31_MESSAGE_REVIEW.json
+msgid "Order number"
+msgstr "رقم الطلب"
+
+#: docs/globalization/PHASE3_31_MESSAGE_REVIEW.json
+msgid "Payment provider"
+msgstr "مزود الدفع"
+
+#: docs/globalization/PHASE3_31_MESSAGE_REVIEW.json
+msgid "Payment status"
+msgstr "حالة الدفع"
+
+#: docs/globalization/PHASE3_31_MESSAGE_REVIEW.json
+msgid "Subtotal of services"
+msgstr "إجمالي الخدمات"
+
+#: docs/globalization/PHASE3_31_MESSAGE_REVIEW.json
+msgid "Total discount"
+msgstr "إجمالي الخصم"
+
+#: docs/globalization/PHASE3_31_MESSAGE_REVIEW.json
+msgid "Tax"
+msgstr "الضريبة"
+
+#: docs/globalization/PHASE3_31_MESSAGE_REVIEW.json
+msgid "Payment amount"
+msgstr "مبلغ الدفع"
+
+#: docs/globalization/PHASE3_31_MESSAGE_REVIEW.json
+msgid "Final payment reference"
+msgstr "المرجع النهائي للدفع"
+
+#: docs/globalization/PHASE3_31_MESSAGE_REVIEW.json
+msgid "Gateway tracking reference"
+msgstr "رقم تتبع بوابة الدفع"
+
+#: docs/globalization/PHASE3_31_MESSAGE_REVIEW.json
+msgid "Salon settlement status"
+msgstr "حالة تسوية الصالون"
+
+#: docs/globalization/PHASE3_31_MESSAGE_REVIEW.json
+msgid "Services for this appointment"
+msgstr "خدمات هذا الموعد"
+
+#: docs/globalization/PHASE3_31_MESSAGE_REVIEW.json
+msgid "Next steps"
+msgstr "الخطوات التالية"
+
+#: docs/globalization/PHASE3_31_MESSAGE_REVIEW.json
+msgid "New appointment time"
+msgstr "حجز وقت جديد"
+
+#: docs/globalization/PHASE3_31_MESSAGE_REVIEW.json
+msgid "Try booking again"
+msgstr "إعادة محاولة الحجز"
+
+#: docs/globalization/PHASE3_31_MESSAGE_REVIEW.json
+msgid "Continue appointment settlement"
+msgstr "متابعة تسوية الموعد"
+
+#: docs/globalization/PHASE3_31_MESSAGE_REVIEW.json
+msgid "My account"
+msgstr "حسابي"
+
+#: docs/globalization/PHASE3_31_MESSAGE_REVIEW.json
+msgid "Paid"
+msgstr "مدفوع"
+
+#: docs/globalization/PHASE3_31_MESSAGE_REVIEW.json
+msgid "Pay at salon"
+msgstr "الدفع في الصالون"
+
+#: docs/globalization/PHASE3_31_MESSAGE_REVIEW.json
+msgid "Service not recorded"
+msgstr "لم تُسجّل الخدمة"
+
+#: docs/globalization/PHASE3_31_MESSAGE_REVIEW.json
+msgid "Appointment hour"
+msgstr "وقت الموعد"
+
+#: docs/globalization/PHASE3_31_MESSAGE_REVIEW.json
+msgid "View appointment details"
+msgstr "عرض تفاصيل الموعد"
+
+#: docs/globalization/PHASE3_31_MESSAGE_REVIEW.json
+msgid "Salon directions"
+msgstr "الاتجاهات إلى الصالون"
+
+#: docs/globalization/PHASE3_31_MESSAGE_REVIEW.json
+msgid "Book again"
+msgstr "الحجز مرة أخرى"
+
+#: docs/globalization/PHASE3_31_MESSAGE_REVIEW.json
+msgid "No appointments have been registered"
+msgstr "لم تُسجّل أي مواعيد"
+
+#: docs/globalization/PHASE3_31_MESSAGE_REVIEW.json
+msgid "You have no appointments yet"
+msgstr "ليس لديك مواعيد بعد"
+
+#: docs/globalization/PHASE3_31_MESSAGE_REVIEW.json
+msgid "After choosing a salon, service and suitable time, your upcoming appointments will appear here."
+msgstr "بعد اختيار الصالون والخدمة والوقت المناسب، ستظهر مواعيدك القادمة هنا."
+
+#: docs/globalization/PHASE3_31_MESSAGE_REVIEW.json
+msgid "Search salons"
+msgstr "البحث عن صالونات"
+
+#: docs/globalization/PHASE3_31_MESSAGE_REVIEW.json
+msgid "Current status"
+msgstr "الحالة الحالية"
+
+#: docs/globalization/PHASE3_31_MESSAGE_REVIEW.json
+msgid "Total amount"
+msgstr "المبلغ"
+
+#: docs/globalization/PHASE3_31_MESSAGE_REVIEW.json
+msgid "Services"
+msgstr "الخدمات"
+
+#: docs/globalization/PHASE3_31_MESSAGE_REVIEW.json
+msgid "Cancelled"
+msgstr "ملغى"
+
+#: docs/globalization/PHASE3_31_MESSAGE_REVIEW.json
+msgid "Awaiting professional confirmation"
+msgstr "بانتظار تأكيد المختص"
+
+#: docs/globalization/PHASE3_31_MESSAGE_REVIEW.json
+msgid "Confirmed by professional"
+msgstr "أكده المختص"
+
+#: docs/globalization/PHASE3_31_MESSAGE_REVIEW.json
+msgid "Customer arrived at salon"
+msgstr "وصل العميل إلى الصالون"
+
+#: docs/globalization/PHASE3_31_MESSAGE_REVIEW.json
+msgid "Service in progress"
+msgstr "الخدمة قيد التنفيذ"
+
+#: docs/globalization/PHASE3_31_MESSAGE_REVIEW.json
+msgid "Salon payment outstanding"
+msgstr "الدفع في الصالون لم يُسوَّ بعد"

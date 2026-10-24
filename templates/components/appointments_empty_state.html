@@ -1,12 +1,14 @@
+{% load i18n %}
 <div class="lm-empty-state-card lm-card lm-card--spacious text-center" role="status">
-  {% include "partials/brand/empty_state_illustration.html" with state="no-bookings" alt_text="هیچ نوبتی ثبت نشده است" class_name="lm-empty-illustration" %}
+  {% trans 'No appointments have been registered' as no_bookings_alt %}
+  {% include "partials/brand/empty_state_illustration.html" with state="no-bookings" alt_text=no_bookings_alt class_name="lm-empty-illustration" %}
 
-  <h3 class="mt-5 text-base font-black text-slate-950">هنوز نوبتی برای شما ثبت نشده است</h3>
+  <h3 class="mt-5 text-base font-black text-slate-950">{% trans 'You have no appointments yet' %}</h3>
   <p class="mx-auto mt-2 max-w-xs text-sm leading-7 text-slate-500">
-    بعد از انتخاب مجموعه، خدمت و زمان مناسب، نوبت‌های آینده‌تان اینجا نمایش داده می‌شوند.
+    {% trans 'After choosing a salon, service and suitable time, your upcoming appointments will appear here.' %}
   </p>
 
   <a href="{% url 'search:search_page' %}" class="lm-btn lm-btn-primary mt-5 justify-center">
-    جستجوی مجموعه‌ها
+    {% trans 'Search salons' %}
   </a>
 </div>

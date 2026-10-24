@@ -1,0 +1,422 @@
+{
+  "schema_version": 1,
+  "phase": "3.31",
+  "purpose": "Reviewed static post-checkout and appointments interface messages, not runtime financial data",
+  "message_rows": [
+    {
+      "en": "My appointments",
+      "fa": "نوبت‌های من",
+      "ar": "مواعيدي"
+    },
+    {
+      "en": "Customer account",
+      "fa": "حساب مشتری",
+      "ar": "حساب العميل"
+    },
+    {
+      "en": "Back to my account",
+      "fa": "بازگشت به حساب من",
+      "ar": "العودة إلى حسابي"
+    },
+    {
+      "en": "Book a new appointment",
+      "fa": "رزرو نوبت جدید",
+      "ar": "حجز موعد جديد"
+    },
+    {
+      "en": "See upcoming bookings, visit history and payment status together, and quickly access each appointment.",
+      "fa": "رزروهای آینده، سوابق مراجعه و وضعیت پرداخت‌ها را یک‌جا ببین و سریع به جزئیات هر نوبت دسترسی داشته باش.",
+      "ar": "اطّلع على حجوزاتك القادمة وسجل الزيارات وحالة المدفوعات في مكان واحد، وادخل سريعًا إلى تفاصيل كل موعد."
+    },
+    {
+      "en": "Next appointment",
+      "fa": "نوبت آینده",
+      "ar": "الموعد القادم"
+    },
+    {
+      "en": "History",
+      "fa": "سوابق",
+      "ar": "السجل"
+    },
+    {
+      "en": "Upcoming schedule",
+      "fa": "برنامه پیش‌رو",
+      "ar": "الجدول القادم"
+    },
+    {
+      "en": "Upcoming appointments",
+      "fa": "نوبت‌های آینده",
+      "ar": "المواعيد القادمة"
+    },
+    {
+      "en": "appointments",
+      "fa": "نوبت",
+      "ar": "مواعيد"
+    },
+    {
+      "en": "Past appointments",
+      "fa": "نوبت‌های گذشته",
+      "ar": "المواعيد السابقة"
+    },
+    {
+      "en": "items",
+      "fa": "مورد",
+      "ar": "عناصر"
+    },
+    {
+      "en": "No previous appointments have been recorded for you yet.",
+      "fa": "هنوز نوبت قبلی برای شما ثبت نشده است.",
+      "ar": "لم تُسجّل لك أي مواعيد سابقة بعد."
+    },
+    {
+      "en": "Booking status",
+      "fa": "وضعیت رزرو",
+      "ar": "حالة الحجز"
+    },
+    {
+      "en": "Supplementary payment",
+      "fa": "پرداخت تکمیلی",
+      "ar": "دفعة تكميلية"
+    },
+    {
+      "en": "Supplementary booking payment completed",
+      "fa": "پرداخت تکمیلی رزرو ثبت شد",
+      "ar": "اكتمل الدفع التكميلي للحجز"
+    },
+    {
+      "en": "The online payment for this appointment is finalized and the order financial status has been reconciled with the salon settlement.",
+      "fa": "پرداخت آنلاین این نوبت نهایی شد و وضعیت مالی سفارش با تسویه مجموعه هماهنگ شده است.",
+      "ar": "اكتمل الدفع الإلكتروني لهذا الموعد، وتمت مطابقة الحالة المالية للطلب مع تسوية الصالون."
+    },
+    {
+      "en": "Booking confirmed",
+      "fa": "رزرو نهایی شد",
+      "ar": "تم تأكيد الحجز"
+    },
+    {
+      "en": "Your appointment is booked",
+      "fa": "رزروت ثبت شد",
+      "ar": "تم حجز موعدك"
+    },
+    {
+      "en": "Appointment details are available here and under My appointments.",
+      "fa": "جزئیات نوبت در همین صفحه و در بخش «نوبت‌های من» در دسترس است.",
+      "ar": "تتوفر تفاصيل الموعد هنا وفي قسم «مواعيدي»."
+    },
+    {
+      "en": "Under review",
+      "fa": "در حال بررسی",
+      "ar": "قيد المراجعة"
+    },
+    {
+      "en": "Payment window expired",
+      "fa": "مهلت پرداخت تمام شد",
+      "ar": "انتهت مهلة الدفع"
+    },
+    {
+      "en": "Payment cancelled",
+      "fa": "پرداخت لغو شد",
+      "ar": "أُلغي الدفع"
+    },
+    {
+      "en": "You cancelled the payment",
+      "fa": "پرداخت توسط شما لغو شد",
+      "ar": "لقد ألغيت الدفع"
+    },
+    {
+      "en": "The online payment was not completed. If you still want to book this appointment, you can try again from the booking page.",
+      "fa": "پرداخت آنلاین کامل نشد. اگر هنوز می‌خواهی این نوبت را ثبت کنی، می‌توانی از صفحه رزرو دوباره اقدام کنی.",
+      "ar": "لم تكتمل عملية الدفع الإلكتروني. إذا كنت ما زلت ترغب في حجز هذا الموعد، يمكنك المحاولة مجددًا من صفحة الحجز."
+    },
+    {
+      "en": "Follow-up required",
+      "fa": "نیاز به پیگیری",
+      "ar": "تتطلب المتابعة"
+    },
+    {
+      "en": "Supplementary online payment not confirmed",
+      "fa": "پرداخت آنلاین تکمیلی تأیید نشد",
+      "ar": "لم يُؤكَّد الدفع الإلكتروني التكميلي"
+    },
+    {
+      "en": "Your appointment remains active and the pay-at-salon method has been preserved.",
+      "fa": "نوبت شما فعال باقی مانده و پرداخت روی حالت «پرداخت در مجموعه» حفظ شده است.",
+      "ar": "لا يزال موعدك نشطًا، وقد احتُفظ بخيار الدفع في الصالون."
+    },
+    {
+      "en": "Payment unsuccessful",
+      "fa": "پرداخت ناموفق",
+      "ar": "الدفع غير ناجح"
+    },
+    {
+      "en": "Payment failed",
+      "fa": "پرداخت ناموفق بود",
+      "ar": "فشلت عملية الدفع"
+    },
+    {
+      "en": "The gateway did not confirm your payment. If no amount was deducted from your account, you may try to book again.",
+      "fa": "پرداخت توسط درگاه تأیید نشد. اگر مبلغی از حساب شما کسر نشده باشد، می‌توانید دوباره برای رزرو اقدام کنید.",
+      "ar": "لم تؤكد بوابة الدفع العملية. إذا لم يُخصم أي مبلغ من حسابك، يمكنك محاولة الحجز مجددًا."
+    },
+    {
+      "en": "Payment under review",
+      "fa": "در حال بررسی پرداخت",
+      "ar": "الدفع قيد المراجعة"
+    },
+    {
+      "en": "Do not pay again",
+      "fa": "دوباره پرداخت نکنید",
+      "ar": "لا تدفع مرة أخرى"
+    },
+    {
+      "en": "Follow up on appointment",
+      "fa": "پیگیری نوبت",
+      "ar": "متابعة الموعد"
+    },
+    {
+      "en": "Contact support",
+      "fa": "ارتباط با پشتیبانی",
+      "ar": "التواصل مع الدعم"
+    },
+    {
+      "en": "Multi-day planning",
+      "fa": "برنامه‌ریزی چندروزه",
+      "ar": "الجدولة على عدة أيام"
+    },
+    {
+      "en": "This booking spans multiple days",
+      "fa": "این رزرو روی چند روز برنامه‌ریزی شد",
+      "ar": "هذا الحجز موزع على عدة أيام"
+    },
+    {
+      "en": "To keep services in sequence, your booking has been scheduled across multiple days.",
+      "fa": "برای حفظ توالی خدمات، رزرو شما روی چند روز برنامه‌ریزی شده است.",
+      "ar": "للحفاظ على ترتيب الخدمات، جرى جدولة حجزك على عدة أيام."
+    },
+    {
+      "en": "Appointment details",
+      "fa": "جزئیات نوبت",
+      "ar": "تفاصيل الموعد"
+    },
+    {
+      "en": "Order summary",
+      "fa": "خلاصه سفارش",
+      "ar": "ملخص الطلب"
+    },
+    {
+      "en": "Order number",
+      "fa": "شماره سفارش",
+      "ar": "رقم الطلب"
+    },
+    {
+      "en": "Salon",
+      "fa": "مجموعه",
+      "ar": "الصالون"
+    },
+    {
+      "en": "Payment method",
+      "fa": "روش پرداخت",
+      "ar": "طريقة الدفع"
+    },
+    {
+      "en": "Payment provider",
+      "fa": "ارائه‌دهنده پرداخت",
+      "ar": "مزود الدفع"
+    },
+    {
+      "en": "Payment status",
+      "fa": "وضعیت پرداخت",
+      "ar": "حالة الدفع"
+    },
+    {
+      "en": "Subtotal of services",
+      "fa": "جمع خدمات",
+      "ar": "إجمالي الخدمات"
+    },
+    {
+      "en": "Service discount",
+      "fa": "تخفیف خدمات",
+      "ar": "خصم الخدمات"
+    },
+    {
+      "en": "Coupon discount",
+      "fa": "تخفیف کد",
+      "ar": "خصم رمز التخفيض"
+    },
+    {
+      "en": "Total discount",
+      "fa": "جمع تخفیف",
+      "ar": "إجمالي الخصم"
+    },
+    {
+      "en": "Tax",
+      "fa": "مالیات",
+      "ar": "الضريبة"
+    },
+    {
+      "en": "Payment amount",
+      "fa": "مبلغ پرداخت",
+      "ar": "مبلغ الدفع"
+    },
+    {
+      "en": "Final payment reference",
+      "fa": "شناسه نهایی پرداخت",
+      "ar": "المرجع النهائي للدفع"
+    },
+    {
+      "en": "Gateway tracking reference",
+      "fa": "رهگیری درگاه",
+      "ar": "رقم تتبع بوابة الدفع"
+    },
+    {
+      "en": "Salon settlement status",
+      "fa": "وضعیت تسویه مجموعه",
+      "ar": "حالة تسوية الصالون"
+    },
+    {
+      "en": "Services for this appointment",
+      "fa": "خدمات این نوبت",
+      "ar": "خدمات هذا الموعد"
+    },
+    {
+      "en": "Next steps",
+      "fa": "اقدام‌های بعدی",
+      "ar": "الخطوات التالية"
+    },
+    {
+      "en": "New appointment time",
+      "fa": "رزرو زمان جدید",
+      "ar": "حجز وقت جديد"
+    },
+    {
+      "en": "Try booking again",
+      "fa": "تلاش دوباره برای رزرو",
+      "ar": "إعادة محاولة الحجز"
+    },
+    {
+      "en": "Continue appointment settlement",
+      "fa": "ادامه تسویه نوبت",
+      "ar": "متابعة تسوية الموعد"
+    },
+    {
+      "en": "My account",
+      "fa": "حساب کاربری",
+      "ar": "حسابي"
+    },
+    {
+      "en": "Paid",
+      "fa": "پرداخت شده",
+      "ar": "مدفوع"
+    },
+    {
+      "en": "Pay at salon",
+      "fa": "پرداخت در مجموعه",
+      "ar": "الدفع في الصالون"
+    },
+    {
+      "en": "Service not recorded",
+      "fa": "خدمت ثبت نشده",
+      "ar": "لم تُسجّل الخدمة"
+    },
+    {
+      "en": "Appointment hour",
+      "fa": "ساعت",
+      "ar": "وقت الموعد"
+    },
+    {
+      "en": "View appointment details",
+      "fa": "مشاهده جزئیات نوبت",
+      "ar": "عرض تفاصيل الموعد"
+    },
+    {
+      "en": "Salon directions",
+      "fa": "مسیر مجموعه",
+      "ar": "الاتجاهات إلى الصالون"
+    },
+    {
+      "en": "Book again",
+      "fa": "رزرو دوباره",
+      "ar": "الحجز مرة أخرى"
+    },
+    {
+      "en": "No appointments have been registered",
+      "fa": "هیچ نوبتی ثبت نشده است",
+      "ar": "لم تُسجّل أي مواعيد"
+    },
+    {
+      "en": "You have no appointments yet",
+      "fa": "هنوز نوبتی برای شما ثبت نشده است",
+      "ar": "ليس لديك مواعيد بعد"
+    },
+    {
+      "en": "After choosing a salon, service and suitable time, your upcoming appointments will appear here.",
+      "fa": "بعد از انتخاب مجموعه، خدمت و زمان مناسب، نوبت‌های آینده‌تان اینجا نمایش داده می‌شوند.",
+      "ar": "بعد اختيار الصالون والخدمة والوقت المناسب، ستظهر مواعيدك القادمة هنا."
+    },
+    {
+      "en": "Search salons",
+      "fa": "جستجوی مجموعه‌ها",
+      "ar": "البحث عن صالونات"
+    },
+    {
+      "en": "Current status",
+      "fa": "وضعیت فعلی",
+      "ar": "الحالة الحالية"
+    },
+    {
+      "en": "Appointment time",
+      "fa": "زمان نوبت",
+      "ar": "وقت الموعد"
+    },
+    {
+      "en": "Total amount",
+      "fa": "مبلغ",
+      "ar": "المبلغ"
+    },
+    {
+      "en": "Duration",
+      "fa": "مدت",
+      "ar": "المدة"
+    },
+    {
+      "en": "Services",
+      "fa": "خدمات",
+      "ar": "الخدمات"
+    },
+    {
+      "en": "Payment",
+      "fa": "پرداخت",
+      "ar": "الدفع"
+    },
+    {
+      "en": "Cancelled",
+      "fa": "لغو شده",
+      "ar": "ملغى"
+    },
+    {
+      "en": "Awaiting professional confirmation",
+      "fa": "در انتظار تایید متخصص",
+      "ar": "بانتظار تأكيد المختص"
+    },
+    {
+      "en": "Confirmed by professional",
+      "fa": "تایید شده توسط متخصص",
+      "ar": "أكده المختص"
+    },
+    {
+      "en": "Customer arrived at salon",
+      "fa": "مشتری به مجموعه رسید",
+      "ar": "وصل العميل إلى الصالون"
+    },
+    {
+      "en": "Service in progress",
+      "fa": "در حال انجام خدمت",
+      "ar": "الخدمة قيد التنفيذ"
+    },
+    {
+      "en": "Salon payment outstanding",
+      "fa": "تسویه در مجموعه مانده است",
+      "ar": "الدفع في الصالون لم يُسوَّ بعد"
+    }
+  ]
+}

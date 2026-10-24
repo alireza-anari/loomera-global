@@ -1387,6 +1387,51 @@ acceptance or deployment approval: the exit matrix remains
 screen-reader, responsive zoom and deployment/rollback approval still
 open.
 
+## Phase 3 — Slice 3.31: Post-Checkout, Payment Outcomes and Appointments
+
+After Phase 3.30 localized booking preview/checkout, this larger slice
+covers the **next customer journey**: payment result, the upcoming/past
+appointments index and its cards/empty states, and key appointment-detail
+status labels. The financial outcome branches remain semantically
+distinct: a confirmed supplementary salon payment is not conflated
+with an active but *unpaid* pay-at-salon appointment, gateway failure
+or pending manual reconciliation.
+
+An explicitly reviewed fa/en/ar source ledger lives in
+`docs/globalization/PHASE3_31_MESSAGE_REVIEW.json` (83 static phrases).
+Seven existing native msgids are reused without modifying their
+previous translations. The other **76 newly reviewed msgids** are
+compiled atomically into all three Django `.po/.mo` catalog pairs:
+**350 → 426 catalog entries per language**. No private customer,
+coupon, payment reference, account balance or gateway error value is
+used as a gettext source string.
+
+The rendered pages use Django's native `trans` tags for first paint,
+rather than introducing another browser translation map. Main payment
+outcome headings, warnings, status descriptions, payment and booking
+labels, follow-up actions, empty-state text, upcoming/past headings,
+and selected appointment progress labels now use native gettext.
+Customer order references and gateway tracking codes have local
+`bdi dir="ltr"` boundaries; the existing coupon-token LTR boundary
+and monetary calculations remain unchanged. Booking cards distinguish
+`Paid` from `Pay at salon` based on the original server state.
+
+Seven database-free Django guards check the reviewed ledger, compiled
+PO/MO integrity, active fa/en/ar translations, distinct financial
+outcome templates, native first paint, accessible labels/announcements,
+safe reference numbers, original server settlement contracts and
+the unchanged Phase 3 manual release gates. Existing checkout and
+booking locale tests now expect 426 total compiled entries but retain
+their original allowlists, flash safety checks and business assertions.
+
+**Not translated generically:** server-computed gateway/pending text,
+customer- or salon-provided names, per-booking cancellation conditions,
+and some legacy appointment-detail dynamic statuses. These require
+separate, context-specific review; generic string replacement would
+risk misleading a customer about the payment state. Real browser,
+RTL/LTR visual review, keyboard, NVDA/VoiceOver and 400% zoom
+acceptance remain **unperformed**. There is no Production deployment.
+
 ## Phase 3 — Slice 3.31: Financial Result / Appointment Bidi Integrity
 
 This cross-screen patch addresses the **payment confirmation and
