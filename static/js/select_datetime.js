@@ -50,6 +50,11 @@
     })[character]);
   }
 
+  function bookingText(key, fallback) {
+    const value = window.LoomeraI18n?.text?.('booking.' + key, fallback);
+    return typeof value === 'string' && value.length <= 300 ? value : fallback;
+  }
+
   function bookingDigitMap() {
     const locale = (document.documentElement.lang || 'fa').toLowerCase().split('-')[0];
     if (locale === 'en') return '0123456789';
@@ -75,9 +80,9 @@
       serviceDuration: Number(selection.serviceDuration || 30),
       serviceBuffer: Number(selection.serviceBuffer || 0),
       requestedStylistId: String(selection.requestedStylistId || selection.stylistId || 'any'),
-      requestedStylistName: selection.requestedStylistName || selection.stylistName || 'فرقی ندارد',
+      requestedStylistName: selection.requestedStylistName || selection.stylistName || bookingText('any_professional', 'فرقی ندارد'),
       stylistId: String(selection.stylistId || selection.requestedStylistId || 'any'),
-      stylistName: selection.stylistName || selection.requestedStylistName || 'فرقی ندارد',
+      stylistName: selection.stylistName || selection.requestedStylistName || bookingText('any_professional', 'فرقی ندارد'),
     }));
 
     if (!state.selections.length) throw new Error('no selections available');
@@ -220,7 +225,7 @@
 
   function getCurrentDisplayStylist(selection) {
     if (!selection) return 'متخصص';
-    if (selection.requestedStylistId === 'any') return 'فرقی ندارد';
+    if (selection.requestedStylistId === 'any') return bookingText('any_professional', 'فرقی ندارد');
     return selection.stylistName || selection.requestedStylistName || 'متخصص';
   }
 
@@ -434,11 +439,11 @@
     if (serviceMeta && selection) {
       const parts = [getCurrentDisplayStylist(selection), formatDuration(selection.serviceDuration)].filter(Boolean);
       const price = getSelectionPrice(selection);
-      if (price > 0) parts.push(`${formatAmount(price)} تومان`);
+      if (price > 0) parts.push(`${formatAmount(price)} ${bookingText('toman','تومان')}`);
       serviceMeta.textContent = parts.join(' • ');
     }
     if (bookingStepLabel) {
-      bookingStepLabel.textContent = `خدمت ${toPersianDigits(state.currentIndex + 1)} از ${toPersianDigits(state.selections.length)}`;
+      bookingStepLabel.textContent = `${bookingText('step','خدمت')} ${toPersianDigits(state.currentIndex + 1)} ${bookingText('of','از')} ${toPersianDigits(state.selections.length)}`;
     }
   }
 
@@ -466,7 +471,7 @@
                 ${isClickable ? '' : 'disabled'}
                 aria-current="${isCurrent ? 'step' : 'false'}">
           <span class="block truncate text-xs font-black">${escapeBookingHtml(selection.serviceName || 'خدمت')}</span>
-          <span class="mt-1 block truncate text-[11px] opacity-80">${escapeBookingHtml(subtitle || 'در انتظار زمان')}</span>
+          <span class="mt-1 block truncate text-[11px] opacity-80">${escapeBookingHtml(subtitle || bookingText('awaiting_time','در انتظار زمان'))}</span>
         </button>
       `;
     }).join('');
@@ -497,7 +502,7 @@
 
     const dayModeBlock = state.currentIndex > 0 ? `
       <div class="mt-4 rounded-2xl border border-loomera-borderSoft bg-loomera-bgSubtle p-3">
-        <p class="text-xs font-black text-loomera-textPrimary">رزرو چندخدمتی</p>
+        <p class="text-xs font-black text-loomera-textPrimary">${escapeBookingHtml(bookingText('multi_service_booking','رزرو چندخدمتی'))}</p>
         <p class="mt-1 text-xs leading-6 text-loomera-textSecondary">ابتدا تلاش می‌کنیم این خدمت هم در همان روز قبلی قرار بگیرد. اگر ممکن نبود، می‌توانی برای این خدمت روز دیگری انتخاب کنی.</p>
         <div class="mt-3 flex flex-wrap gap-2">
           <button type="button" data-day-mode="same" class="day-mode-btn inline-flex items-center rounded-full border px-4 py-2 text-xs font-black transition ${!splitEnabled ? 'border-loomera-primary bg-loomera-primary text-white shadow-lm-soft' : 'border-loomera-borderSoft bg-white text-loomera-textSecondary hover:border-loomera-primary/40 hover:bg-loomera-primarySoft hover:text-loomera-primary'}">همان روز • ${sameDayLabel || 'پیشنهادی'}</button>
@@ -520,10 +525,10 @@
           <div class="min-w-0 flex-1">
             <div class="flex items-center justify-between gap-3">
               <div class="min-w-0">
-                <p class="mb-1 text-xs font-black text-loomera-textMuted">خدمت ${toPersianDigits(state.currentIndex + 1)} از ${toPersianDigits(state.selections.length)}</p>
+                <p class="mb-1 text-xs font-black text-loomera-textMuted">${escapeBookingHtml(bookingText('step','خدمت'))} ${toPersianDigits(state.currentIndex + 1)} ${escapeBookingHtml(bookingText('of','از'))} ${toPersianDigits(state.selections.length)}</p>
                 <h2 id="currentBookingStepTitle" class="truncate text-lg font-black text-loomera-textPrimary">${escapeBookingHtml(selection.serviceName || 'خدمت')}</h2>
               </div>
-              <span class="rounded-full bg-loomera-bgSubtle px-3 py-1 text-xs font-black text-loomera-textSecondary">${formatDuration(selection.serviceDuration) || 'مدت نامشخص'}</span>
+              <span class="rounded-full bg-loomera-bgSubtle px-3 py-1 text-xs font-black text-loomera-textSecondary">${formatDuration(selection.serviceDuration) || bookingText('awaiting_time', 'در انتظار زمان')}</span>
             </div>
             <p class="mt-2 text-sm text-loomera-textSecondary">${escapeBookingHtml(getCurrentDisplayStylist(selection))}</p>
             ${dayModeBlock}
@@ -539,20 +544,20 @@
             <p id="calendarHint" class="mt-1 text-xs text-loomera-textMuted"></p>
           </div>
           <div class="relative">
-            <button id="openCalendar" type="button" onclick="window.openSalonCalendarPicker && window.openSalonCalendarPicker()" aria-label="باز کردن تقویم شمسی" class="flex h-11 w-11 items-center justify-center rounded-full border border-loomera-borderSoft bg-white transition hover:border-loomera-primary/40 hover:bg-loomera-primarySoft focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-loomera-focusRing/30">
+            <button id="openCalendar" type="button" onclick="window.openSalonCalendarPicker && window.openSalonCalendarPicker()" aria-label="${escapeBookingHtml(bookingText('open_jalali_calendar','باز کردن تقویم شمسی'))}" class="flex h-11 w-11 items-center justify-center rounded-full border border-loomera-borderSoft bg-white transition hover:border-loomera-primary/40 hover:bg-loomera-primarySoft focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-loomera-focusRing/30">
               <i class="fa-regular fa-calendar pointer-events-none text-loomera-textSecondary" aria-hidden="true"></i>
             </button>
             <input id="bookingDatePicker" type="text" data-jdp data-jdp-only-date="true" tabindex="-1" aria-hidden="true" class="pointer-events-none absolute inset-0 opacity-0" autocomplete="off" />
           </div>
         </div>
-        <div id="calendar" class="-mx-4 flex gap-3 overflow-x-auto px-4 pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden" role="list" aria-label="تاریخ‌های قابل انتخاب"></div>
+        <div id="calendar" class="-mx-4 flex gap-3 overflow-x-auto px-4 pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden" role="list" aria-label="${escapeBookingHtml(bookingText('selectable_dates','تاریخ‌های قابل انتخاب'))}"></div>
       </section>
 
       <section id="timesSection" class="hidden rounded-[28px] border border-loomera-borderSoft bg-loomera-surface p-4 shadow-lm-card lg:p-5" aria-labelledby="timeSlotsTitle">
         <div class="mb-4 flex items-center justify-between gap-3">
           <div>
-            <h3 id="timeSlotsTitle" class="flex items-center gap-2 text-base font-black text-loomera-textPrimary"><i class="fa-regular fa-clock text-loomera-primary" aria-hidden="true"></i>ساعت‌های قابل رزرو</h3>
-            <p class="mt-1 text-xs text-loomera-textMuted">فقط زمان‌های واقعی و آزاد نمایش داده می‌شوند.</p>
+            <h3 id="timeSlotsTitle" class="flex items-center gap-2 text-base font-black text-loomera-textPrimary"><i class="fa-regular fa-clock text-loomera-primary" aria-hidden="true"></i>${escapeBookingHtml(bookingText('available_times','ساعت‌های قابل رزرو'))}</h3>
+            <p class="mt-1 text-xs text-loomera-textMuted">${escapeBookingHtml(bookingText('slots_currently_available','فقط زمان‌های واقعی و آزاد نمایش داده می‌شوند.'))}</p>
           </div>
           <span id="selectedDateLabel" class="rounded-full bg-loomera-bgSubtle px-3 py-1 text-xs font-black text-loomera-textSecondary"></span>
         </div>
@@ -561,7 +566,7 @@
 
       <section id="emptyState" class="rounded-[28px] border border-dashed border-loomera-border bg-white px-5 py-10 text-center text-loomera-textMuted shadow-lm-soft" role="status">
         <div class="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-loomera-bgSubtle text-loomera-textMuted"><i class="fa-regular fa-calendar-check text-2xl" aria-hidden="true"></i></div>
-        <p class="text-base font-black text-loomera-textPrimary">یک روز را برای دیدن زمان‌های در دسترس انتخاب کن</p>
+        <p class="text-base font-black text-loomera-textPrimary">${escapeBookingHtml(bookingText('choose_day','یک روز را برای دیدن زمان‌های در دسترس انتخاب کن'))}</p>
         <p class="mt-2 text-sm leading-7 text-loomera-textSecondary">اگر همان روز ممکن نبود، می‌توانی برای خدمات بعدی روز دیگری انتخاب کنی.</p>
       </section>
     `;
@@ -720,7 +725,7 @@
       timesEl.innerHTML = `
         <div class="rounded-2xl border border-amber-200 bg-amber-50 px-4 py-6 text-center text-amber-900" role="status">
           <div class="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-white text-amber-500"><i class="fa-regular fa-calendar-xmark text-xl" aria-hidden="true"></i></div>
-          <p class="text-sm font-black">برای این روز زمانی موجود نیست</p>
+          <p class="text-sm font-black">${escapeBookingHtml(bookingText('no_times','برای این روز زمانی موجود نیست'))}</p>
           <p class="mt-2 text-xs leading-6 text-amber-800">روز دیگری را انتخاب کن یا اگر این خدمت بعد از خدمت قبلی جا نمی‌شود، آن را در روز دیگری قرار بده.</p>
           ${canOfferSplit ? '<button type="button" id="enableSplitDayBtn" class="mt-4 inline-flex items-center justify-center rounded-full border border-amber-200 bg-white px-4 py-2 text-xs font-black text-amber-800 shadow-sm transition hover:bg-amber-100">برای این خدمت روز دیگری انتخاب می‌کنم</button>' : ''}
         </div>
@@ -750,8 +755,8 @@
       <section aria-labelledby="period-${group.key}">
         <div class="mb-3 mt-5 flex items-center gap-2 first:mt-0">
           <span class="flex h-8 w-8 items-center justify-center rounded-full bg-loomera-primarySoft text-loomera-primary"><i class="fa-solid ${group.icon}" aria-hidden="true"></i></span>
-          <h4 id="period-${group.key}" class="text-sm font-black text-loomera-textPrimary">${group.label}</h4>
-          <span class="text-xs text-loomera-textMuted">${toPersianDigits(group.slots.length)} زمان</span>
+          <h4 id="period-${group.key}" class="text-sm font-black text-loomera-textPrimary">${escapeBookingHtml(group.label)}</h4>
+          <span class="text-xs text-loomera-textMuted">${toPersianDigits(group.slots.length)} ${escapeBookingHtml(bookingText('times','زمان'))}</span>
         </div>
         <div class="grid grid-cols-2 gap-3 sm:grid-cols-3" role="group" aria-label="ساعت‌های آزاد">
           ${group.slots.map((slot) => {
@@ -766,10 +771,10 @@
                       data-time-slot
                       data-time="${escapeBookingHtml(slot.time)}"
                       aria-pressed="${isSelected ? 'true' : 'false'}"
-                      aria-label="ساعت ${escapeBookingHtml(slot.time)} تا ${escapeBookingHtml(slot.end_time)}${showStylist ? `، ${escapeBookingHtml(slot.stylistName)}` : ''}">
+                      aria-label="${escapeBookingHtml(bookingText('available_times','ساعت‌های قابل رزرو'))} ${escapeBookingHtml(slot.time)} تا ${escapeBookingHtml(slot.end_time)}${showStylist ? `، ${escapeBookingHtml(slot.stylistName)}` : ''}">
                 <span class="block text-base font-black" dir="ltr">${escapeBookingHtml(slot.time)}</span>
                 <span class="mt-1 block text-[11px] opacity-75">تا <bdi dir="ltr">${escapeBookingHtml(slot.end_time)}</bdi></span>
-                ${isSelected ? '<span class="mt-1 block text-[10px] font-black"><i class="fa-solid fa-check ml-1" aria-hidden="true"></i>انتخاب‌شده</span>' : ''}
+                ${isSelected ? `<span class="mt-1 block text-[10px] font-black"><i class="fa-solid fa-check ml-1" aria-hidden="true"></i>${escapeBookingHtml(bookingText('selected','انتخاب‌شده'))}</span>` : ''}
                 ${showStylist ? `<span class="mt-2 block truncate text-[11px] opacity-75">${escapeBookingHtml(slot.stylistName)}</span>` : ''}
               </button>
             `;
@@ -798,8 +803,8 @@
     const mobileSummary = document.getElementById('mobileStickySummary');
     const ready = Boolean(state.currentDate && state.currentTime);
     const isLast = state.currentIndex === state.selections.length - 1;
-    const finalLabel = state.bookingMode === 'reschedule' ? 'ثبت زمان جدید' : 'ادامه و پیش‌نمایش رزرو';
-    const text = ready ? (isLast ? finalLabel : 'ثبت این خدمت و ادامه') : 'ابتدا تاریخ و زمان را انتخاب کنید';
+    const finalLabel = state.bookingMode === 'reschedule' ? bookingText('save_new_time','ثبت زمان جدید') : bookingText('continue_preview','ادامه و پیش‌نمایش رزرو');
+    const text = ready ? (isLast ? finalLabel : bookingText('confirm_next','ثبت این خدمت و ادامه')) : bookingText('choose_date_time','ابتدا تاریخ و زمان را انتخاب کنید');
 
     [mobileButton, desktopButton].forEach((button) => {
       if (!button) return;
@@ -809,7 +814,7 @@
 
     if (mobileSummary) {
       if (!ready) {
-        mobileSummary.textContent = state.currentDate ? 'حالا ساعت نوبت را انتخاب کن' : 'برای ادامه، تاریخ و ساعت را انتخاب کن';
+        mobileSummary.textContent = state.currentDate ? bookingText('now_choose_hour','حالا ساعت نوبت را انتخاب کن') : bookingText('please_choose_datetime','برای ادامه، تاریخ و ساعت را انتخاب کن');
       } else {
         mobileSummary.textContent = `${formatGregorianToJalali(state.currentDate)} • ${state.currentTime}`;
       }
@@ -825,7 +830,7 @@
     const totalParts = [];
     if (totals.count > 0) totalParts.push(`${toPersianDigits(totals.count)} خدمت`);
     if (totals.duration > 0) totalParts.push(formatDuration(totals.duration));
-    if (totals.price > 0) totalParts.push(`${formatAmount(totals.price)} تومان`);
+    if (totals.price > 0) totalParts.push(`${formatAmount(totals.price)} ${bookingText('toman','تومان')}`);
 
     const rows = state.selections.map((selection, index) => {
       const summary = buildSelectionSummaryLine(selection, index);
@@ -873,7 +878,7 @@
         if (!summary.picked) return `<p class="rounded-xl border border-dashed border-loomera-borderSoft bg-white px-3 py-2 text-xs text-loomera-textMuted">${escapeBookingHtml(selection.serviceName || 'خدمت')}: زمان انتخاب نشده</p>`;
         return `<p class="rounded-xl border border-emerald-100 bg-emerald-50 px-3 py-2 text-xs font-black text-emerald-700">${escapeBookingHtml(selection.serviceName || 'خدمت')}: ${escapeBookingHtml(summary.pickedLabel)}</p>`;
       }).join('');
-      desktopPicked.innerHTML = pickedRows || 'هنوز زمانی انتخاب نشده است.';
+      desktopPicked.innerHTML = pickedRows || bookingText('no_picked_yet','هنوز زمانی انتخاب نشده است.');
     }
   }
   function buildSelectionSummaryLine(selection, index) {
@@ -892,13 +897,13 @@
     if (selection.serviceName) parts.push(selection.serviceName);
     if (formatDuration(selection.serviceDuration)) parts.push(formatDuration(selection.serviceDuration));
     const price = getSelectionPrice(selection);
-    if (price > 0) parts.push(`${formatAmount(price)} تومان`);
+    if (price > 0) parts.push(`${formatAmount(price)} ${bookingText('toman','تومان')}`);
     const specialist = selection.requestedStylistId === 'any'
-      ? 'فرقی ندارد'
+      ? bookingText('any_professional', 'فرقی ندارد')
       : (selection.requestedStylistName || selection.stylistName || 'متخصص');
     const pickedLabel = picked
       ? `${formatGregorianToJalali(picked.date)}، ${picked.time}${picked.end_time ? ` تا ${picked.end_time}` : ''}`
-      : 'زمان انتخاب نشده';
+      : bookingText('no_time_selected','زمان انتخاب نشده');
     return { parts, specialist, pickedLabel, picked };
   }
 
@@ -931,15 +936,15 @@
   function formatDuration(minutes) {
     const value = Number(minutes || 0);
     if (!Number.isFinite(value) || value <= 0) return '';
-    return `${toPersianDigits(value)} دقیقه`;
+    return `${toPersianDigits(value)} ${bookingText('minutes','دقیقه')}`;
   }
 
   function getPeriodMeta(time) {
     const minutes = toMinutes(time);
-    if (minutes < 12 * 60) return { key: 'morning', label: 'صبح', icon: 'fa-sun' };
-    if (minutes < 16 * 60) return { key: 'noon', label: 'ظهر', icon: 'fa-cloud-sun' };
-    if (minutes < 20 * 60) return { key: 'evening', label: 'عصر', icon: 'fa-cloud-moon' };
-    return { key: 'night', label: 'شب', icon: 'fa-moon' };
+    if (minutes < 12 * 60) return { key: 'morning', label: bookingText('morning','صبح'), icon: 'fa-sun' };
+    if (minutes < 16 * 60) return { key: 'noon', label: bookingText('noon','ظهر'), icon: 'fa-cloud-sun' };
+    if (minutes < 20 * 60) return { key: 'evening', label: bookingText('evening','عصر'), icon: 'fa-cloud-moon' };
+    return { key: 'night', label: bookingText('night','شب'), icon: 'fa-moon' };
   }
 
   function groupSlotsByPeriod(slots) {
