@@ -70,7 +70,7 @@ def inspect_checkout_gettext_catalog(language: str, po_content: str) -> dict[str
         raise ValueError("Unsupported checkout catalog language")
     if not isinstance(po_content, str):
         raise TypeError("Catalog must be UTF-8 text")
-    if ('"Language: ' + language + r'\\n"') not in po_content:
+    if ('"Language: ' + language + r'\n"') not in po_content:
         raise ValueError("Checkout catalog language header mismatch")
 
     result = {}
@@ -79,19 +79,19 @@ def inspect_checkout_gettext_catalog(language: str, po_content: str) -> dict[str
             raise ValueError("Unreviewed checkout flash tone")
         for source in messages:
             if (not source or len(source) > 300 or
-                    any(char in source for char in "\\x00\\r\\n{}<>")):
+                    any(char in source for char in "\x00\r\n{}<>")):
                 raise ValueError("Invalid checkout message identifier")
             literal = json.dumps(source, ensure_ascii=False)
             hits = re.findall(
                 r'(?m)^msgid ' + re.escape(literal) +
-                r'\\nmsgstr ("(?:[^"\\\\]|\\\\.)*")$',
+                r'\nmsgstr ("(?:[^"\\]|\\.)*")$',
                 po_content,
             )
             if len(hits) != 1:
                 raise ValueError("Missing or duplicated checkout msgid")
             translated = json.loads(hits[0])
             if (not translated or len(translated) > 300 or
-                    any(char in translated for char in "\\x00\\r\\n{}<>")):
+                    any(char in translated for char in "\x00\r\n{}<>")):
                 raise ValueError("Unsafe checkout translation")
             if language == "fa" and translated != source:
                 raise ValueError("Default Persian checkout copy changed")
