@@ -115,7 +115,7 @@ class BookingBidirectionalAccessibilityTests(SimpleTestCase):
             src = self.source(path)
             start = src.index('<div class="grid gap-3" role="radiogroup"')
             end = src.index(">", start) + 1
-            fragment = engines["django"].from_string(src[start:end])
+            fragment = engines["django"].from_string("{% load i18n %}" + src[start:end])
             for payment, invalid in (("invalid", True), ("pay_in_salon", False)):
                 form = AppointmentCheckoutForm(
                     data={"coupon_code": "SAVE10", "payment_method": payment}
@@ -135,7 +135,7 @@ class BookingBidirectionalAccessibilityTests(SimpleTestCase):
         src = self.source("templates/orders/reservation_preview.html")
         start = src.rfind("<input", 0, src.index("data-checkout-coupon-input"))
         end = src.index(">", src.index("data-checkout-coupon-input")) + 1
-        fragment = engines["django"].from_string(src[start:end])
+        fragment = engines["django"].from_string("{% load i18n %}" + src[start:end])
         for coupon, valid in (("INVALID" * 20, False), ("SAVE10", True)):
             form = AppointmentCheckoutForm(data={
                 "coupon_code": coupon, "payment_method": "pay_in_salon",
@@ -190,7 +190,10 @@ class BookingBidirectionalAccessibilityTests(SimpleTestCase):
             with self.subTest(path=path):
                 self.assertIn('<bdi dir="ltr" data-booking-coupon-token>', src)
                 self.assertIn("</bdi>", src)
-                self.assertIn("تومان", src)
+                if path in self.CHECKOUT_TEMPLATES:
+                    self.assertIn("{% trans 'toman' %}", src)
+                else:
+                    self.assertIn("تومان", src)
                 self.assertNotIn('dir="rtl" data-booking-coupon-token', src)
 
     def test_booking_direction_guards_are_separate_from_locale_and_payment_logic(self):

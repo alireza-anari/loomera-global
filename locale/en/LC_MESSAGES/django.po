@@ -1174,3 +1174,235 @@ msgstr "Manage appointment"
 #: loomera/globalization/booking_journey_messages.py
 msgid "Schedule booking"
 msgstr "Schedule booking"
+
+#: templates/orders/reservation_preview.html templates/orders/checkout.html apps/orders/forms.py
+msgid "Booking confirmation"
+msgstr "Booking confirmation"
+
+#: templates/orders/reservation_preview.html templates/orders/checkout.html apps/orders/forms.py
+msgid "Review the service, professional, time, and price before confirming."
+msgstr "Review the service, professional, time, and price before confirming."
+
+#: templates/orders/reservation_preview.html templates/orders/checkout.html apps/orders/forms.py
+msgid "Back to time selection"
+msgstr "Back to time selection"
+
+#: templates/orders/reservation_preview.html templates/orders/checkout.html apps/orders/forms.py
+msgid "Step 4 of 4"
+msgstr "Step 4 of 4"
+
+#: templates/orders/reservation_preview.html templates/orders/checkout.html apps/orders/forms.py
+msgid "Review booking details"
+msgstr "Review booking details"
+
+#: templates/orders/reservation_preview.html templates/orders/checkout.html apps/orders/forms.py
+msgid "Overall booking time"
+msgstr "Overall booking time"
+
+#: templates/orders/reservation_preview.html templates/orders/checkout.html apps/orders/forms.py
+msgid "Multi-day booking"
+msgstr "Multi-day booking"
+
+#: templates/orders/reservation_preview.html templates/orders/checkout.html apps/orders/forms.py
+msgid "This booking is scheduled across multiple days."
+msgstr "This booking is scheduled across multiple days."
+
+#: templates/orders/reservation_preview.html templates/orders/checkout.html apps/orders/forms.py
+msgid "To keep the services in order, part of this booking is scheduled for later days. Details for each day are shown before final confirmation."
+msgstr "To keep the services in order, part of this booking is scheduled for later days. Details for each day are shown before final confirmation."
+
+#: templates/orders/reservation_preview.html templates/orders/checkout.html apps/orders/forms.py
+msgid "services"
+msgstr "services"
+
+#: templates/orders/reservation_preview.html templates/orders/checkout.html apps/orders/forms.py
+msgid "Services, professionals and times"
+msgstr "Services, professionals and times"
+
+#: templates/orders/reservation_preview.html templates/orders/checkout.html apps/orders/forms.py
+msgid "Appointment date"
+msgstr "Appointment date"
+
+#: templates/orders/reservation_preview.html templates/orders/checkout.html apps/orders/forms.py
+msgid "Appointment time"
+msgstr "Appointment time"
+
+#: templates/orders/reservation_preview.html templates/orders/checkout.html apps/orders/forms.py
+msgid "Duration"
+msgstr "Duration"
+
+#: templates/orders/reservation_preview.html templates/orders/checkout.html apps/orders/forms.py
+msgid "Auto-selected"
+msgstr "Auto-selected"
+
+#: templates/orders/reservation_preview.html templates/orders/checkout.html apps/orders/forms.py
+msgid "Service discount"
+msgstr "Service discount"
+
+#: templates/orders/reservation_preview.html templates/orders/checkout.html apps/orders/forms.py
+msgid "Payment"
+msgstr "Payment"
+
+#: templates/orders/reservation_preview.html templates/orders/checkout.html apps/orders/forms.py
+msgid "Discounts and payment method"
+msgstr "Discounts and payment method"
+
+#: templates/orders/reservation_preview.html templates/orders/checkout.html apps/orders/forms.py
+msgid "First visit · digital payment"
+msgstr "First visit · digital payment"
+
+#: templates/orders/reservation_preview.html templates/orders/checkout.html apps/orders/forms.py
+msgid "Have a discount code?"
+msgstr "Have a discount code?"
+
+#: templates/orders/reservation_preview.html templates/orders/checkout.html apps/orders/forms.py
+msgid "Discount code"
+msgstr "Discount code"
+
+#: templates/orders/reservation_preview.html templates/orders/checkout.html apps/orders/forms.py
+msgid "Enter your discount code"
+msgstr "Enter your discount code"
+
+#: templates/orders/reservation_preview.html templates/orders/checkout.html apps/orders/forms.py
+msgid "Apply discount"
+msgstr "Apply discount"
+
+#: templates/orders/reservation_preview.html templates/orders/checkout.html apps/orders/forms.py
+msgid "Remove code"
+msgstr "Remove code"
+
+#: templates/orders/reservation_preview.html templates/orders/checkout.html apps/orders/forms.py
+msgid "Coupon code"
+msgstr "Coupon code"
+
+#: templates/orders/reservation_preview.html templates/orders/checkout.html apps/orders/forms.py
+msgid "was applied successfully."
+msgstr "was applied successfully."
+
+#: templates/orders/reservation_preview.html templates/orders/checkout.html apps/orders/forms.py
+msgid "Discount cap for this code:"
+msgstr "Discount cap for this code:"
+
+#: templates/orders/reservation_preview.html templates/orders/checkout.html apps/orders/forms.py
+msgid "Discount amount:"
+msgstr "Discount amount:"
+
+#: templates/orders/reservation_preview.html templates/orders/checkout.html apps/orders/forms.py
+msgid "Campaign cap:"
+msgstr "Campaign cap:"
+
+#: templates/orders/reservation_preview.html templates/orders/checkout.html apps/orders/forms.py
+msgid "Payment method"
+msgstr "Payment method"
+
+#: templates/orders/reservation_preview.html templates/orders/checkout.html apps/orders/forms.py
+msgid "The appointment is booked now; pay at the salon when you arrive."
+msgstr "The appointment is booked now; pay at the salon when you arrive."
+
+#: templates/orders/reservation_preview.html templates/orders/checkout.html apps/orders/forms.py
+msgid "Payment is completed through the online gateway."
+msgstr "Payment is completed through the online gateway."
+
+#: templates/orders/reservation_preview.html templates/orders/checkout.html apps/orders/forms.py
+msgid "Wallet balance:"
+msgstr "Wallet balance:"
+
+#: templates/orders/reservation_preview.html templates/orders/checkout.html apps/orders/forms.py
+msgid "Payment is made when you arrive at the salon."
+msgstr "Payment is made when you arrive at the salon."
+
+#: templates/orders/reservation_preview.html templates/orders/checkout.html apps/orders/forms.py
+msgid "The booking is registered now; payment will be made when you arrive at the salon."
+msgstr "The booking is registered now; payment will be made when you arrive at the salon."
+
+#: templates/orders/reservation_preview.html templates/orders/checkout.html apps/orders/forms.py
+msgid "Online payment is completed through the gateway; the booking is finalized after payment is confirmed."
+msgstr "Online payment is completed through the gateway; the booking is finalized after payment is confirmed."
+
+#: templates/orders/reservation_preview.html templates/orders/checkout.html apps/orders/forms.py
+msgid "Price summary"
+msgstr "Price summary"
+
+#: templates/orders/reservation_preview.html templates/orders/checkout.html apps/orders/forms.py
+msgid "Service subtotal"
+msgstr "Service subtotal"
+
+#: templates/orders/reservation_preview.html templates/orders/checkout.html apps/orders/forms.py
+msgid "Coupon discount"
+msgstr "Coupon discount"
+
+#: templates/orders/reservation_preview.html templates/orders/checkout.html apps/orders/forms.py
+msgid "Total discounts"
+msgstr "Total discounts"
+
+#: templates/orders/reservation_preview.html templates/orders/checkout.html apps/orders/forms.py
+msgid "Amount due"
+msgstr "Amount due"
+
+#: templates/orders/reservation_preview.html templates/orders/checkout.html apps/orders/forms.py
+msgid "Final amount"
+msgstr "Final amount"
+
+#: templates/orders/reservation_preview.html templates/orders/checkout.html apps/orders/forms.py
+msgid "Finalize booking"
+msgstr "Finalize booking"
+
+#: templates/orders/reservation_preview.html templates/orders/checkout.html apps/orders/forms.py
+msgid "Submitting booking"
+msgstr "Submitting booking"
+
+#: templates/orders/reservation_preview.html templates/orders/checkout.html apps/orders/forms.py
+msgid "Payment summary"
+msgstr "Payment summary"
+
+#: templates/orders/reservation_preview.html templates/orders/checkout.html apps/orders/forms.py
+msgid "Salon"
+msgstr "Salon"
+
+#: templates/orders/reservation_preview.html templates/orders/checkout.html apps/orders/forms.py
+msgid "Number of services"
+msgstr "Number of services"
+
+#: templates/orders/reservation_preview.html templates/orders/checkout.html apps/orders/forms.py
+msgid "Review the services, professionals, and times before finalizing your booking."
+msgstr "Review the services, professionals, and times before finalizing your booking."
+
+#: templates/orders/reservation_preview.html templates/orders/checkout.html apps/orders/forms.py
+msgid "Back to booking preview"
+msgstr "Back to booking preview"
+
+#: templates/orders/reservation_preview.html templates/orders/checkout.html apps/orders/forms.py
+msgid "Payment and confirmation"
+msgstr "Payment and confirmation"
+
+#: templates/orders/reservation_preview.html templates/orders/checkout.html apps/orders/forms.py
+msgid "Review your booking details"
+msgstr "Review your booking details"
+
+#: templates/orders/reservation_preview.html templates/orders/checkout.html apps/orders/forms.py
+msgid "Online payment"
+msgstr "Online payment"
+
+#: templates/orders/reservation_preview.html templates/orders/checkout.html apps/orders/forms.py
+msgid "Pay with wallet"
+msgstr "Pay with wallet"
+
+#: templates/orders/reservation_preview.html templates/orders/checkout.html apps/orders/forms.py
+msgid "Pay at the salon"
+msgstr "Pay at the salon"
+
+#: templates/orders/reservation_preview.html templates/orders/checkout.html apps/orders/forms.py
+msgid "In the beta, only pay-at-the-salon is available."
+msgstr "In the beta, only pay-at-the-salon is available."
+
+#: templates/orders/reservation_preview.html templates/orders/checkout.html apps/orders/forms.py
+msgid "For a first visit to this salon, only digital payment (online or wallet) is allowed."
+msgstr "For a first visit to this salon, only digital payment (online or wallet) is allowed."
+
+#: templates/orders/reservation_preview.html templates/orders/checkout.html apps/orders/forms.py
+msgid "on"
+msgstr "on"
+
+#: templates/orders/reservation_preview.html templates/orders/checkout.html apps/orders/forms.py
+msgid "%(amount)s toman discount has been applied to this booking."
+msgstr "%(amount)s toman discount has been applied to this booking."

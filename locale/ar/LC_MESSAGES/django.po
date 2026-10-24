@@ -1178,3 +1178,235 @@ msgstr "إدارة الموعد"
 #: loomera/globalization/booking_journey_messages.py
 msgid "Schedule booking"
 msgstr "حجز موعد"
+
+#: templates/orders/reservation_preview.html templates/orders/checkout.html apps/orders/forms.py
+msgid "Booking confirmation"
+msgstr "تأكيد الحجز"
+
+#: templates/orders/reservation_preview.html templates/orders/checkout.html apps/orders/forms.py
+msgid "Review the service, professional, time, and price before confirming."
+msgstr "راجع الخدمة والمختص والوقت والسعر قبل التأكيد."
+
+#: templates/orders/reservation_preview.html templates/orders/checkout.html apps/orders/forms.py
+msgid "Back to time selection"
+msgstr "العودة إلى اختيار الوقت"
+
+#: templates/orders/reservation_preview.html templates/orders/checkout.html apps/orders/forms.py
+msgid "Step 4 of 4"
+msgstr "الخطوة ٤ من ٤"
+
+#: templates/orders/reservation_preview.html templates/orders/checkout.html apps/orders/forms.py
+msgid "Review booking details"
+msgstr "مراجعة تفاصيل الحجز"
+
+#: templates/orders/reservation_preview.html templates/orders/checkout.html apps/orders/forms.py
+msgid "Overall booking time"
+msgstr "الوقت الإجمالي للحجز"
+
+#: templates/orders/reservation_preview.html templates/orders/checkout.html apps/orders/forms.py
+msgid "Multi-day booking"
+msgstr "حجز على عدة أيام"
+
+#: templates/orders/reservation_preview.html templates/orders/checkout.html apps/orders/forms.py
+msgid "This booking is scheduled across multiple days."
+msgstr "تمت جدولة هذا الحجز على عدة أيام."
+
+#: templates/orders/reservation_preview.html templates/orders/checkout.html apps/orders/forms.py
+msgid "To keep the services in order, part of this booking is scheduled for later days. Details for each day are shown before final confirmation."
+msgstr "للحفاظ على ترتيب الخدمات، تمت جدولة جزء من هذا الحجز في أيام لاحقة. تُعرض تفاصيل كل يوم قبل التأكيد النهائي."
+
+#: templates/orders/reservation_preview.html templates/orders/checkout.html apps/orders/forms.py
+msgid "services"
+msgstr "خدمات"
+
+#: templates/orders/reservation_preview.html templates/orders/checkout.html apps/orders/forms.py
+msgid "Services, professionals and times"
+msgstr "الخدمات والمختصون والأوقات"
+
+#: templates/orders/reservation_preview.html templates/orders/checkout.html apps/orders/forms.py
+msgid "Appointment date"
+msgstr "تاريخ الموعد"
+
+#: templates/orders/reservation_preview.html templates/orders/checkout.html apps/orders/forms.py
+msgid "Appointment time"
+msgstr "وقت الموعد"
+
+#: templates/orders/reservation_preview.html templates/orders/checkout.html apps/orders/forms.py
+msgid "Duration"
+msgstr "المدة"
+
+#: templates/orders/reservation_preview.html templates/orders/checkout.html apps/orders/forms.py
+msgid "Auto-selected"
+msgstr "تم الاختيار تلقائيًا"
+
+#: templates/orders/reservation_preview.html templates/orders/checkout.html apps/orders/forms.py
+msgid "Service discount"
+msgstr "خصم الخدمات"
+
+#: templates/orders/reservation_preview.html templates/orders/checkout.html apps/orders/forms.py
+msgid "Payment"
+msgstr "الدفع"
+
+#: templates/orders/reservation_preview.html templates/orders/checkout.html apps/orders/forms.py
+msgid "Discounts and payment method"
+msgstr "الخصومات وطريقة الدفع"
+
+#: templates/orders/reservation_preview.html templates/orders/checkout.html apps/orders/forms.py
+msgid "First visit · digital payment"
+msgstr "الزيارة الأولى · الدفع الرقمي"
+
+#: templates/orders/reservation_preview.html templates/orders/checkout.html apps/orders/forms.py
+msgid "Have a discount code?"
+msgstr "هل لديك رمز خصم؟"
+
+#: templates/orders/reservation_preview.html templates/orders/checkout.html apps/orders/forms.py
+msgid "Discount code"
+msgstr "رمز الخصم"
+
+#: templates/orders/reservation_preview.html templates/orders/checkout.html apps/orders/forms.py
+msgid "Enter your discount code"
+msgstr "أدخل رمز الخصم"
+
+#: templates/orders/reservation_preview.html templates/orders/checkout.html apps/orders/forms.py
+msgid "Apply discount"
+msgstr "تطبيق الخصم"
+
+#: templates/orders/reservation_preview.html templates/orders/checkout.html apps/orders/forms.py
+msgid "Remove code"
+msgstr "إزالة الرمز"
+
+#: templates/orders/reservation_preview.html templates/orders/checkout.html apps/orders/forms.py
+msgid "Coupon code"
+msgstr "رمز القسيمة"
+
+#: templates/orders/reservation_preview.html templates/orders/checkout.html apps/orders/forms.py
+msgid "was applied successfully."
+msgstr "تم تطبيقه بنجاح."
+
+#: templates/orders/reservation_preview.html templates/orders/checkout.html apps/orders/forms.py
+msgid "Discount cap for this code:"
+msgstr "الحد الأقصى لهذا الرمز:"
+
+#: templates/orders/reservation_preview.html templates/orders/checkout.html apps/orders/forms.py
+msgid "Discount amount:"
+msgstr "مبلغ الخصم:"
+
+#: templates/orders/reservation_preview.html templates/orders/checkout.html apps/orders/forms.py
+msgid "Campaign cap:"
+msgstr "الحد الأقصى للحملة:"
+
+#: templates/orders/reservation_preview.html templates/orders/checkout.html apps/orders/forms.py
+msgid "Payment method"
+msgstr "طريقة الدفع"
+
+#: templates/orders/reservation_preview.html templates/orders/checkout.html apps/orders/forms.py
+msgid "The appointment is booked now; pay at the salon when you arrive."
+msgstr "تم حجز الموعد الآن، ويُدفع المبلغ عند الوصول إلى الصالون."
+
+#: templates/orders/reservation_preview.html templates/orders/checkout.html apps/orders/forms.py
+msgid "Payment is completed through the online gateway."
+msgstr "يتم الدفع عبر بوابة الدفع الإلكتروني."
+
+#: templates/orders/reservation_preview.html templates/orders/checkout.html apps/orders/forms.py
+msgid "Wallet balance:"
+msgstr "رصيد المحفظة:"
+
+#: templates/orders/reservation_preview.html templates/orders/checkout.html apps/orders/forms.py
+msgid "Payment is made when you arrive at the salon."
+msgstr "يتم الدفع عند الوصول إلى الصالون."
+
+#: templates/orders/reservation_preview.html templates/orders/checkout.html apps/orders/forms.py
+msgid "The booking is registered now; payment will be made when you arrive at the salon."
+msgstr "يتم تسجيل الحجز الآن، ويُدفع المبلغ عند الوصول إلى الصالون."
+
+#: templates/orders/reservation_preview.html templates/orders/checkout.html apps/orders/forms.py
+msgid "Online payment is completed through the gateway; the booking is finalized after payment is confirmed."
+msgstr "يكتمل الدفع الإلكتروني عبر البوابة، ويُؤكَّد الحجز بعد تأكيد الدفع."
+
+#: templates/orders/reservation_preview.html templates/orders/checkout.html apps/orders/forms.py
+msgid "Price summary"
+msgstr "ملخص الأسعار"
+
+#: templates/orders/reservation_preview.html templates/orders/checkout.html apps/orders/forms.py
+msgid "Service subtotal"
+msgstr "إجمالي الخدمات"
+
+#: templates/orders/reservation_preview.html templates/orders/checkout.html apps/orders/forms.py
+msgid "Coupon discount"
+msgstr "خصم القسيمة"
+
+#: templates/orders/reservation_preview.html templates/orders/checkout.html apps/orders/forms.py
+msgid "Total discounts"
+msgstr "إجمالي الخصومات"
+
+#: templates/orders/reservation_preview.html templates/orders/checkout.html apps/orders/forms.py
+msgid "Amount due"
+msgstr "المبلغ المستحق"
+
+#: templates/orders/reservation_preview.html templates/orders/checkout.html apps/orders/forms.py
+msgid "Final amount"
+msgstr "المبلغ النهائي"
+
+#: templates/orders/reservation_preview.html templates/orders/checkout.html apps/orders/forms.py
+msgid "Finalize booking"
+msgstr "تأكيد الحجز النهائي"
+
+#: templates/orders/reservation_preview.html templates/orders/checkout.html apps/orders/forms.py
+msgid "Submitting booking"
+msgstr "جارٍ تأكيد الحجز"
+
+#: templates/orders/reservation_preview.html templates/orders/checkout.html apps/orders/forms.py
+msgid "Payment summary"
+msgstr "ملخص الدفع"
+
+#: templates/orders/reservation_preview.html templates/orders/checkout.html apps/orders/forms.py
+msgid "Salon"
+msgstr "الصالون"
+
+#: templates/orders/reservation_preview.html templates/orders/checkout.html apps/orders/forms.py
+msgid "Number of services"
+msgstr "عدد الخدمات"
+
+#: templates/orders/reservation_preview.html templates/orders/checkout.html apps/orders/forms.py
+msgid "Review the services, professionals, and times before finalizing your booking."
+msgstr "راجع الخدمات والمختصين والأوقات قبل إتمام الحجز."
+
+#: templates/orders/reservation_preview.html templates/orders/checkout.html apps/orders/forms.py
+msgid "Back to booking preview"
+msgstr "العودة إلى معاينة الحجز"
+
+#: templates/orders/reservation_preview.html templates/orders/checkout.html apps/orders/forms.py
+msgid "Payment and confirmation"
+msgstr "الدفع والتأكيد"
+
+#: templates/orders/reservation_preview.html templates/orders/checkout.html apps/orders/forms.py
+msgid "Review your booking details"
+msgstr "راجع تفاصيل حجزك"
+
+#: templates/orders/reservation_preview.html templates/orders/checkout.html apps/orders/forms.py
+msgid "Online payment"
+msgstr "الدفع الإلكتروني"
+
+#: templates/orders/reservation_preview.html templates/orders/checkout.html apps/orders/forms.py
+msgid "Pay with wallet"
+msgstr "الدفع بالمحفظة"
+
+#: templates/orders/reservation_preview.html templates/orders/checkout.html apps/orders/forms.py
+msgid "Pay at the salon"
+msgstr "الدفع في الصالون"
+
+#: templates/orders/reservation_preview.html templates/orders/checkout.html apps/orders/forms.py
+msgid "In the beta, only pay-at-the-salon is available."
+msgstr "في الإصدار التجريبي، الدفع في الصالون فقط متاح."
+
+#: templates/orders/reservation_preview.html templates/orders/checkout.html apps/orders/forms.py
+msgid "For a first visit to this salon, only digital payment (online or wallet) is allowed."
+msgstr "في الزيارة الأولى لهذا الصالون، يُسمح بالدفع الرقمي فقط (عبر الإنترنت أو المحفظة)."
+
+#: templates/orders/reservation_preview.html templates/orders/checkout.html apps/orders/forms.py
+msgid "on"
+msgstr "على"
+
+#: templates/orders/reservation_preview.html templates/orders/checkout.html apps/orders/forms.py
+msgid "%(amount)s toman discount has been applied to this booking."
+msgstr "تم تطبيق خصم بقيمة %(amount)s تومان على هذا الحجز."
