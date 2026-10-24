@@ -18,19 +18,19 @@ const escaper = datetime.slice(escapeStart, escapeEnd);
 
 const data = {
   fa: {
-    "booking.available_90_days": "روزهای آزاد و غیرفعال این خدمت در ۹۰ روز آینده",
+    "booking.available_ninety_days": "روزهای آزاد و غیرفعال این خدمت در ۹۰ روز آینده",
     "booking.choose_other_day_action": "برای این خدمت روز دیگری انتخاب می‌کنم",
     "booking.default_same_day": "پیش‌فرض این خدمت همان روز",
     "booking.suggested": "پیشنهادی",
   },
   en: {
-    "booking.available_90_days": "Available and unavailable dates for this service over the next 90 days",
+    "booking.available_ninety_days": "Available and unavailable dates for this service over the next 90 days",
     "booking.choose_other_day_action": "I will choose another day for this service",
     "booking.default_same_day": "The default date for this service is",
     "booking.suggested": "Suggested",
   },
   ar: {
-    "booking.available_90_days": "التواريخ المتاحة وغير المتاحة لهذه الخدمة خلال الأيام التسعين القادمة",
+    "booking.available_ninety_days": "التواريخ المتاحة وغير المتاحة لهذه الخدمة خلال الأيام التسعين القادمة",
     "booking.choose_other_day_action": "سأختار يومًا آخر لهذه الخدمة",
     "booking.default_same_day": "التاريخ الافتراضي لهذه الخدمة هو",
     "booking.suggested": "مقترح",
@@ -93,9 +93,9 @@ test("calendar copy interpolated in HTML remains escaped once and preserves orig
       "booking.choose_other_day_action": unsafe,
     });
     const raw = getText(api, "choose_other_day_action", "fallback");
-    assert.equal(raw, unsafe);
+    assert.equal(raw, "fallback", "markup-bearing browser text is rejected");
     assert.ok(!html(raw).includes("<img"));
-    assert.ok(html(raw).includes("&lt;img"));
+    assert.ok(html(unsafe).includes("&lt;img"));
   }
 });
 
