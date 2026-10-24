@@ -128,6 +128,12 @@ jobs:
             apps.main.test_phase3_account_otp_flash_locale \
             --failfast
 
+      - name: Phase 3 reviewed booking and service flash locale safety
+        run: |
+          python manage.py test \
+            apps.main.test_phase3_booking_flash_locale \
+            --failfast
+
       - name: Phase 3 localized submission progress guards
         run: |
           python manage.py test \
