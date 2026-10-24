@@ -489,7 +489,7 @@
       ? `
         <div class="mt-3 flex flex-wrap items-center gap-2 text-xs text-emerald-700">
           <span class="inline-flex items-center gap-1 rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1"><i class="fa-regular fa-calendar" aria-hidden="true"></i>${formatGregorianToJalali(existing.date)}</span>
-          <span class="inline-flex items-center gap-1 rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1"><i class="fa-regular fa-clock" aria-hidden="true"></i>${escapeBookingHtml(existing.time)} تا ${escapeBookingHtml(existing.end_time)}</span>
+          <span class="inline-flex items-center gap-1 rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1"><i class="fa-regular fa-clock" aria-hidden="true"></i><bdi dir="ltr">${escapeBookingHtml(existing.time)}</bdi> تا <bdi dir="ltr">${escapeBookingHtml(existing.end_time)}</bdi></span>
           <span class="inline-flex items-center gap-1 rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1"><i class="fa-solid fa-user" aria-hidden="true"></i>${escapeBookingHtml(existing.stylistName || getCurrentDisplayStylist(selection))}</span>
         </div>
       `
@@ -767,8 +767,8 @@
                       data-time="${escapeBookingHtml(slot.time)}"
                       aria-pressed="${isSelected ? 'true' : 'false'}"
                       aria-label="ساعت ${escapeBookingHtml(slot.time)} تا ${escapeBookingHtml(slot.end_time)}${showStylist ? `، ${escapeBookingHtml(slot.stylistName)}` : ''}">
-                <span class="block text-base font-black">${escapeBookingHtml(slot.time)}</span>
-                <span class="mt-1 block text-[11px] opacity-75">تا ${escapeBookingHtml(slot.end_time)}</span>
+                <span class="block text-base font-black" dir="ltr">${escapeBookingHtml(slot.time)}</span>
+                <span class="mt-1 block text-[11px] opacity-75">تا <bdi dir="ltr">${escapeBookingHtml(slot.end_time)}</bdi></span>
                 ${isSelected ? '<span class="mt-1 block text-[10px] font-black"><i class="fa-solid fa-check ml-1" aria-hidden="true"></i>انتخاب‌شده</span>' : ''}
                 ${showStylist ? `<span class="mt-2 block truncate text-[11px] opacity-75">${escapeBookingHtml(slot.stylistName)}</span>` : ''}
               </button>
