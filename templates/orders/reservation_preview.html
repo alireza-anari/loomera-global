@@ -119,7 +119,7 @@
                     autocomplete="off"
                     dir="ltr"
                     aria-invalid="{% if form.coupon_code.errors %}true{% else %}false{% endif %}"
-                    {% if form.coupon_code.errors %}aria-describedby="{{ form.coupon_code.id_for_label }}_error"{% endif %}
+                    {% if form.coupon_code.errors %}aria-describedby="{{ form.coupon_code.auto_id }}_error"{% endif %}
                     data-checkout-coupon-input
                     class="h-12 w-full rounded-full border border-loomera-borderSoft bg-white px-4 text-sm font-bold text-loomera-textPrimary outline-none transition placeholder:text-loomera-textMuted/70 focus:border-loomera-primary focus:ring-4 focus:ring-loomera-primary/15"
                   >
@@ -129,7 +129,7 @@
                   {% endif %}
                 </div>
                 {% if form.coupon_code.errors %}
-                  <p id="{{ form.coupon_code.id_for_label }}_error" role="alert" class="mt-2 text-xs font-bold text-rose-700">{{ form.coupon_code.errors|join:'، ' }}</p>
+                  <p id="{{ form.coupon_code.auto_id }}_error" role="alert" class="mt-2 text-xs font-bold text-rose-700">{{ form.coupon_code.errors|join:'، ' }}</p>
                 {% elif checkout.coupon %}
                   <p class="mt-2 text-xs font-black text-emerald-700">کد <bdi dir="ltr" data-booking-coupon-token>{{ checkout.coupon.coupon_code }}</bdi> با موفقیت اعمال شد.</p>
                 {% endif %}
@@ -182,7 +182,7 @@
                   </div>
                 </fieldset>
               {% endif %}
-              {% if form.payment_method.errors %}<p id="{{ form.payment_method.id_for_label }}_error" role="alert" class="mt-2 text-xs font-bold text-rose-700">{{ form.payment_method.errors|join:'، ' }}</p>{% endif %}
+              {% if form.payment_method.errors %}<p id="{{ form.payment_method.auto_id }}_error" role="alert" class="mt-2 text-xs font-bold text-rose-700">{{ form.payment_method.errors|join:'، ' }}</p>{% endif %}
             </div>
           </section>
 
