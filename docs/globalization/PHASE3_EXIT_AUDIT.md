@@ -86,3 +86,16 @@ phrases remain incomplete and need explicit review before Phase 3
 can be declared finished.
 
 **Result: ready for structured manual acceptance, not Phase 3 exit.**
+
+## Phase 3.28 localization follow-up (no manual gate closure)
+
+Thirty-seven static dynamic-booking UI messages now come from reviewed
+native Django gettext fa/en/ar catalogs and are exposed only as
+display copy. Node and Django tests assert catalog parity,
+request-scoped delivery and unchanged server flash trust boundaries.
+A subset of the initial static controls uses native `trans` to avoid
+brief Persian-only states in en/ar sessions. Explanatory paragraphs,
+some calendar hints, and certain conditional messages still need
+dedicated localization and real browser verification. **No manual
+acceptance evidence was obtained in this slice**; all matrix release
+blockers remain in place.

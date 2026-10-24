@@ -6,6 +6,7 @@ from django.conf import settings
 from django.test import RequestFactory, SimpleTestCase, override_settings
 from django.utils import translation
 
+from loomera.globalization.booking_interactive_messages import BOOKING_UI_MESSAGE_IDS
 from loomera.globalization.interactive_messages import MESSAGE_IDS, interactive_messages
 
 
@@ -72,7 +73,7 @@ class LocalizedSubmitPendingTests(SimpleTestCase):
             data = interactive_messages(request)["interactive_messages"]
             self.assertEqual(data["language"], language)
             self.assertEqual(data["messages"]["submit.saving"], EXPECTED[language][0])
-            self.assertEqual(set(data["messages"]), set(MESSAGE_IDS))
+            self.assertEqual(set(data["messages"]), set(MESSAGE_IDS) | set(BOOKING_UI_MESSAGE_IDS))
         with override_settings(
             LOOMERA_DEFAULT_LANGUAGE="fa",
             LOOMERA_ENABLED_LANGUAGES=["fa"],
@@ -85,7 +86,7 @@ class LocalizedSubmitPendingTests(SimpleTestCase):
 
     def test_bridge_restricts_keys_and_preserves_single_mapping_instance(self):
         js = self.source("static/js/interactive_i18n.js")
-        self.assertIn("(feedback|validation|submit|password)", js)
+        self.assertIn("(feedback|validation|submit|password|booking)", js)
         self.assertIn("Object.create(null)", js)
         self.assertIn("Object.freeze(messages)", js)
         self.assertIn('payload.language', js)
