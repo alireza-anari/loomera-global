@@ -86,7 +86,7 @@ class Phase3ExitEvidenceTests(SimpleTestCase):
 
     def test_revised_datetime_markup_escapes_one_time_only(self):
         source = self.read("static/js/select_datetime.js")
-        self.assertIn("escapeBookingHtml(subtitle || 'در انتظار زمان')", source)
+        self.assertIn("escapeBookingHtml(subtitle || bookingText('awaiting_time','در انتظار زمان'))", source)
         self.assertIn(
             "const subtitle = picked ? `${formatGregorianToJalali(picked.date)} • ${picked.time}`",
             source,
