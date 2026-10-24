@@ -1,0 +1,200 @@
+{
+  "schema_version": 1,
+  "phase": "3",
+  "project": "loomera-global",
+  "release_gate": "BLOCKED_MANUAL_ACCEPTANCE",
+  "production_deployment": "NOT_PERFORMED",
+  "source_repository": "READ_ONLY",
+  "notes": "Automated CI verifies code contracts, not real browser visuals, usability, screen readers, or production readiness.",
+  "required_locales": [
+    {
+      "language": "fa",
+      "direction": "rtl"
+    },
+    {
+      "language": "en",
+      "direction": "ltr"
+    },
+    {
+      "language": "ar",
+      "direction": "rtl"
+    }
+  ],
+  "manual_viewports": [
+    "360x800",
+    "768x1024",
+    "1440x900"
+  ],
+  "manual_scenarios": [
+    {
+      "area": "Shell and language persistence",
+      "pages": [
+        "shared base shell",
+        "header",
+        "navigation"
+      ],
+      "automated": [
+        "apps/main/test_phase3_locale_shell.py",
+        "apps/main/test_phase3_language_switch.py"
+      ],
+      "checks": [
+        "language switch and persistence",
+        "correct dir and back-navigation icon orientation",
+        "320–400% zoom and no horizontal overflow"
+      ]
+    },
+    {
+      "area": "Authentication and account recovery",
+      "pages": [
+        "sign in",
+        "sign up",
+        "OTP verify",
+        "password reset/change"
+      ],
+      "automated": [
+        "apps/main/test_phase3_auth_field_error_a11y.py",
+        "apps/main/test_phase3_recovery_otp_presentation.py"
+      ],
+      "checks": [
+        "mobile number remains readable LTR in fa/ar",
+        "focus order and labels",
+        "OTP errors, retry timers and screen reader announcement",
+        "no sensitive feedback leaked"
+      ]
+    },
+    {
+      "area": "Specialist and service selection",
+      "pages": [
+        "select_stylists.html"
+      ],
+      "automated": [
+        "apps/main/test_phase3_booking_journey_security_a11y.py"
+      ],
+      "checks": [
+        "Tab and Space/Enter activate grouped specialist buttons",
+        "selected pressed state announced",
+        "mixed Persian/Latin names do not distort layout",
+        "disabled choices cannot be selected"
+      ]
+    },
+    {
+      "area": "Date/time and rescheduling",
+      "pages": [
+        "select_datetime.html"
+      ],
+      "automated": [
+        "apps/main/test_phase3_booking_journey_security_a11y.py",
+        "tests/js/phase3_booking_journey_runtime.test.cjs"
+      ],
+      "checks": [
+        "Jalali calendar remains correct and selected date remains visible",
+        "keyboard focus returns to selected time",
+        "stale slot conflict recovers without a second booking",
+        "screen reader date/time announcements and button state"
+      ]
+    },
+    {
+      "area": "Preview, coupon and checkout",
+      "pages": [
+        "reservation_preview.html",
+        "checkout.html"
+      ],
+      "automated": [
+        "apps/main/test_phase3_booking_bidirectional_accessibility.py",
+        "apps/main/test_phase3_checkout_flash_locale.py"
+      ],
+      "checks": [
+        "coupon mixed-direction code and currency alignment",
+        "error association and radio labels in screen reader",
+        "invalid coupon and changed-price confirmation",
+        "confirm button prevents double submission"
+      ]
+    },
+    {
+      "area": "Payment result and financial status",
+      "pages": [
+        "appointment_result.html"
+      ],
+      "automated": [
+        "apps/main/test_phase3_checkout_flash_locale.py",
+        "apps/main/test_phase3_booking_flash_locale.py"
+      ],
+      "checks": [
+        "paid wallet and unpaid pay-at-salon clearly distinct",
+        "refund/failed/pending banners announced accessibly",
+        "amounts, dates, and phone/details do not leak or reorder",
+        "payment result call-to-action accessible"
+      ]
+    },
+    {
+      "area": "Appointments and rebooking",
+      "pages": [
+        "appointments.html",
+        "appointment_detail.html"
+      ],
+      "automated": [
+        "apps/main/test_phase3_rebooking_locale_flow.py",
+        "apps/main/test_phase3_booking_flash_locale.py"
+      ],
+      "checks": [
+        "back and return icons correct for ltr/rtl",
+        "rebooking preserves consent and session guards",
+        "dates and times readable on narrow devices",
+        "all actions keyboard operable"
+      ]
+    },
+    {
+      "area": "Server and client feedback",
+      "pages": [
+        "message partial",
+        "interactive feedback"
+      ],
+      "automated": [
+        "apps/main/test_phase3_server_flash_safe_locale.py",
+        "tests/js/phase3_interactive_i18n.test.cjs"
+      ],
+      "checks": [
+        "native fa/en/ar error/success/warning copy",
+        "alerts and status announcements",
+        "unapproved PII and technical details excluded"
+      ]
+    }
+  ],
+  "evidence_required": {
+    "per_scenario": [
+      "tester",
+      "date",
+      "locale",
+      "viewport",
+      "browser_version",
+      "screen_reader_if_applicable",
+      "keyboard_steps",
+      "screenshot_or_recording_reference",
+      "pass_fail",
+      "issue_reference"
+    ],
+    "browser_targets": [
+      "Chromium",
+      "Firefox",
+      "WebKit/Safari"
+    ],
+    "screen_reader_targets": [
+      "NVDA + Firefox or Chromium",
+      "VoiceOver + Safari"
+    ],
+    "signoff_requires": [
+      "all required locale and viewport checks recorded",
+      "no unresolved blocker or major issue",
+      "accessibility screen-reader review recorded",
+      "production rollback and deployment approval explicitly documented"
+    ]
+  },
+  "manual_evidence": [],
+  "open_gates": [
+    "real_browser_visual",
+    "real_keyboard_acceptance",
+    "screen_reader_acceptance",
+    "responsive_zoom",
+    "release_deployment_approval"
+  ]
+}
