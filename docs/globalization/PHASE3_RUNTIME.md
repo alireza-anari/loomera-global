@@ -1132,15 +1132,18 @@ that reads `option.querySelector('input[type="radio"]')`. Focus
 indication is scoped to that payment option. Multi-choice
 RadioSelect behavior is not modified.
 
-Both checkout and reservation-preview error summaries now use the
-matching Django BoundField `auto_id + "_error"` IDs. Django's
-rendered widgets automatically refer to the field error ID, while
-the preview's hand-built coupon input now explicitly sets
-`aria-invalid`, conditional `aria-describedby` and `dir="ltr"`.
-The associated inline errors have `role="alert"`. Coupon/payment
-validation behavior and server decisions are unchanged.
+Both checkout and reservation-preview error summaries now use
+Django BoundField `auto_id + "_error"` IDs. Native Django coupon
+widgets refer to their error ID; the hand-built preview coupon input
+sets explicit `aria-invalid`, conditional `aria-describedby` and
+`dir="ltr"`. Django's RadioSelect does **not** attach an error
+description by default, so the payment `radiogroup` now conditionally
+sets `aria-invalid` and `aria-describedby` when validation fails,
+including the labeled single-choice payment card. Associated inline
+errors have `role="alert"`. Coupon/payment validation and server
+decisions are unchanged.
 
-A nine-test DB-free Django suite validates the actual bound-widget
+A ten-test DB-free Django suite validates the actual bound-widget
 error references, template-rendered preview input states, source
 markup for the labeled single payment radio, JavaScript hook parity,
 scoped CSS and default fa/Jalali/timezone invariants. CI runs the
