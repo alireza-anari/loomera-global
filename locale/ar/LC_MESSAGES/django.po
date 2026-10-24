@@ -694,3 +694,79 @@ msgstr "تم إرسال تقييمك ومراجعتك وسيظهران بعد ا
 #: loomera/globalization/booking_flash_messages.py
 msgid "برای برخی خدمات، متخصص قبلی در دسترس نبود و می‌توانید زمان جدید را با متخصص آزاد انتخاب کنید."
 msgstr "المتخصص السابق غير متاح لبعض الخدمات. يمكنك اختيار موعد جديد مع متخصص متاح."
+
+#: loomera/globalization/checkout_flash_messages.py
+msgid "این رزرو لغو شده و دیگر قابل تسویه نیست."
+msgstr "أُلغي هذا الحجز ولم تعد تسويته ممكنة."
+
+#: loomera/globalization/checkout_flash_messages.py
+msgid "پرداخت در مجموعه فقط بعد از پایان خدمت فعال می‌شود."
+msgstr "لا يتاح الدفع في الصالون إلا بعد اكتمال الخدمة."
+
+#: loomera/globalization/checkout_flash_messages.py
+msgid "تسویه در مجموعه فقط برای رزروهای پرداخت در مجموعه فعال است."
+msgstr "تتوفر التسوية في الصالون فقط للحجوزات المحددة للدفع في الصالون."
+
+#: loomera/globalization/checkout_flash_messages.py
+msgid "پرداخت آنلاین تکمیلی فقط برای مجموعه‌های احراز هویت‌شده فعال است. تسویه حضوری توسط مجموعه ثبت می‌شود."
+msgstr "الدفع الإلكتروني الإضافي متاح فقط للصالونات الموثقة. ويسجل الصالون التسوية الحضورية."
+
+#: loomera/globalization/checkout_flash_messages.py
+msgid "مبلغ قابل پرداخت برای این رزرو معتبر نیست."
+msgstr "المبلغ المستحق لهذا الحجز غير صالح."
+
+#: loomera/globalization/checkout_flash_messages.py
+msgid "اطلاعات تسویه این مجموعه هنوز کامل نشده و پرداخت آنلاین در حالت عملیاتی فعلاً مجاز نیست."
+msgstr "بيانات التسوية لهذا الصالون غير مكتملة، لذا لا يتوفر الدفع الإلكتروني الفعلي حاليًا."
+
+#: loomera/globalization/checkout_flash_messages.py
+msgid "کانتکست تغییر زمان منقضی شده است. دوباره تلاش کنید."
+msgstr "انتهت صلاحية جلسة تغيير الموعد. يُرجى المحاولة مرة أخرى."
+
+#: loomera/globalization/checkout_flash_messages.py
+msgid "آیتمی برای تغییر زمان یافت نشد."
+msgstr "لم يتم العثور على عنصر موعد لتغيير وقته."
+
+#: loomera/globalization/checkout_flash_messages.py
+msgid "خطا در تغییر زمان. دوباره تلاش کنید."
+msgstr "تعذّر تغيير وقت الموعد. يُرجى المحاولة مرة أخرى."
+
+#: loomera/globalization/checkout_flash_messages.py
+msgid "ثبت دریافت وجه توسط مجموعه انجام می‌شود و نیازی به تأیید شما نیست."
+msgstr "يسجل الصالون استلام المبلغ؛ ولا تحتاج إلى تأكيده."
+
+#: loomera/globalization/checkout_flash_messages.py
+msgid "این رزرو قبلاً از نظر مالی نهایی شده است."
+msgstr "تمت تسوية هذا الحجز ماليًا بالفعل."
+
+#: loomera/globalization/checkout_flash_messages.py
+msgid "یک پرداخت آنلاین تکمیلی برای این رزرو در حال پردازش است."
+msgstr "تجري معالجة دفعة إلكترونية إضافية لهذا الحجز."
+
+#: loomera/globalization/checkout_flash_messages.py
+msgid "این رزرو قبلاً در حال ثبت بود و به همان نتیجه هدایت شدید."
+msgstr "كان هذا الحجز قيد الإرسال بالفعل، وتم توجيهك إلى النتيجة نفسها."
+
+#: loomera/globalization/checkout_flash_messages.py
+msgid "کد تخفیف از این رزرو حذف شد."
+msgstr "تمت إزالة رمز الخصم من هذا الحجز."
+
+#: loomera/globalization/checkout_flash_messages.py
+msgid "زمان انتخاب‌شده دیگر آزاد نیست. لطفاً زمان جدیدی انتخاب کنید."
+msgstr "الوقت المحدد لم يعد متاحًا. يُرجى اختيار وقت آخر."
+
+#: loomera/globalization/checkout_flash_messages.py
+msgid "قیمت یا جزئیات مالی این رزرو از زمان مشاهده پیش‌نمایش تغییر کرده است. لطفاً مبلغ جدید را بررسی و دوباره تأیید کنید."
+msgstr "تغيّر السعر أو التفاصيل المالية منذ المعاينة. يُرجى مراجعة المبلغ الجديد وتأكيده مجددًا."
+
+#: loomera/globalization/checkout_flash_messages.py
+msgid "کد تخفیف نامعتبر بود و بدون تخفیف، رزرو ادامه پیدا کرد."
+msgstr "رمز الخصم غير صالح، لذا استمر الحجز دون خصم."
+
+#: loomera/globalization/checkout_flash_messages.py
+msgid "کد تخفیف روی مبلغ نهایی اعمال شد."
+msgstr "تم تطبيق الخصم على المبلغ النهائي."
+
+#: loomera/globalization/checkout_flash_messages.py
+msgid "زمان نوبت با موفقیت تغییر کرد."
+msgstr "تم تغيير وقت الموعد بنجاح."

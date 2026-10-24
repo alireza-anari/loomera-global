@@ -690,3 +690,79 @@ msgstr "Your review and rating were submitted and will appear after moderation."
 #: loomera/globalization/booking_flash_messages.py
 msgid "برای برخی خدمات، متخصص قبلی در دسترس نبود و می‌توانید زمان جدید را با متخصص آزاد انتخاب کنید."
 msgstr "The previous professional is unavailable for some services. You can choose a new time with an available professional."
+
+#: loomera/globalization/checkout_flash_messages.py
+msgid "این رزرو لغو شده و دیگر قابل تسویه نیست."
+msgstr "This booking was cancelled and can no longer be settled."
+
+#: loomera/globalization/checkout_flash_messages.py
+msgid "پرداخت در مجموعه فقط بعد از پایان خدمت فعال می‌شود."
+msgstr "Paying at the salon becomes available only after the service is completed."
+
+#: loomera/globalization/checkout_flash_messages.py
+msgid "تسویه در مجموعه فقط برای رزروهای پرداخت در مجموعه فعال است."
+msgstr "On-site settlement is available only for bookings marked for payment at the salon."
+
+#: loomera/globalization/checkout_flash_messages.py
+msgid "پرداخت آنلاین تکمیلی فقط برای مجموعه‌های احراز هویت‌شده فعال است. تسویه حضوری توسط مجموعه ثبت می‌شود."
+msgstr "Additional online payment is available only for verified salons. The salon records on-site settlement."
+
+#: loomera/globalization/checkout_flash_messages.py
+msgid "مبلغ قابل پرداخت برای این رزرو معتبر نیست."
+msgstr "The payable amount for this booking is invalid."
+
+#: loomera/globalization/checkout_flash_messages.py
+msgid "اطلاعات تسویه این مجموعه هنوز کامل نشده و پرداخت آنلاین در حالت عملیاتی فعلاً مجاز نیست."
+msgstr "This salon's settlement details are incomplete, so live online payment is not yet available."
+
+#: loomera/globalization/checkout_flash_messages.py
+msgid "کانتکست تغییر زمان منقضی شده است. دوباره تلاش کنید."
+msgstr "The rescheduling session has expired. Please try again."
+
+#: loomera/globalization/checkout_flash_messages.py
+msgid "آیتمی برای تغییر زمان یافت نشد."
+msgstr "No appointment item was found to reschedule."
+
+#: loomera/globalization/checkout_flash_messages.py
+msgid "خطا در تغییر زمان. دوباره تلاش کنید."
+msgstr "The appointment time could not be changed. Please try again."
+
+#: loomera/globalization/checkout_flash_messages.py
+msgid "ثبت دریافت وجه توسط مجموعه انجام می‌شود و نیازی به تأیید شما نیست."
+msgstr "The salon records receipt of payment; you do not need to confirm it."
+
+#: loomera/globalization/checkout_flash_messages.py
+msgid "این رزرو قبلاً از نظر مالی نهایی شده است."
+msgstr "This booking has already been financially settled."
+
+#: loomera/globalization/checkout_flash_messages.py
+msgid "یک پرداخت آنلاین تکمیلی برای این رزرو در حال پردازش است."
+msgstr "An additional online payment for this booking is being processed."
+
+#: loomera/globalization/checkout_flash_messages.py
+msgid "این رزرو قبلاً در حال ثبت بود و به همان نتیجه هدایت شدید."
+msgstr "This booking was already being submitted, and you were redirected to the same result."
+
+#: loomera/globalization/checkout_flash_messages.py
+msgid "کد تخفیف از این رزرو حذف شد."
+msgstr "The discount code was removed from this booking."
+
+#: loomera/globalization/checkout_flash_messages.py
+msgid "زمان انتخاب‌شده دیگر آزاد نیست. لطفاً زمان جدیدی انتخاب کنید."
+msgstr "The selected time is no longer available. Please choose another time."
+
+#: loomera/globalization/checkout_flash_messages.py
+msgid "قیمت یا جزئیات مالی این رزرو از زمان مشاهده پیش‌نمایش تغییر کرده است. لطفاً مبلغ جدید را بررسی و دوباره تأیید کنید."
+msgstr "The price or financial details changed since the preview. Review the new amount and confirm again."
+
+#: loomera/globalization/checkout_flash_messages.py
+msgid "کد تخفیف نامعتبر بود و بدون تخفیف، رزرو ادامه پیدا کرد."
+msgstr "The discount code was invalid, so the booking continued without a discount."
+
+#: loomera/globalization/checkout_flash_messages.py
+msgid "کد تخفیف روی مبلغ نهایی اعمال شد."
+msgstr "The discount was applied to the final amount."
+
+#: loomera/globalization/checkout_flash_messages.py
+msgid "زمان نوبت با موفقیت تغییر کرد."
+msgstr "The appointment time was changed successfully."
