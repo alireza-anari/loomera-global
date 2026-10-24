@@ -10,7 +10,7 @@ BOOKING_JOURNEY_MESSAGE_IDS = MappingProxyType({
     "booking.choose_service_date_time": "Choose a suitable date and time for this service.",
     "booking.another_day_for_service": "Another day for this service",
     "booking.suggested": "Suggested",
-    "booking.available_90_days": "Available and unavailable dates for this service over the next 90 days",
+    "booking.available_ninety_days": "Available and unavailable dates for this service over the next 90 days",
     "booking.default_still": "Default is still",
     "booking.default_still_suffix": "but you may choose another day.",
     "booking.default_same_day": "The default date for this service is",
