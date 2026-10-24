@@ -786,3 +786,11 @@ msgstr "Could not start online payment. Please try again."
 #: loomera/globalization/checkout_flash_messages.py
 msgid "شروع پرداخت ناموفق بود."
 msgstr "Could not start payment."
+
+#: loomera/globalization/checkout_flash_messages.py
+msgid "مبلغ رزرو از کیف پول شما کسر شد و نوبت با موفقیت ثبت شد."
+msgstr "The booking amount was deducted from your wallet, and your appointment was booked successfully."
+
+#: loomera/globalization/checkout_flash_messages.py
+msgid "نوبت شما قطعی شد و در برنامه کاری متخصص قرار گرفت. پرداخت این سفارش در مجموعه انجام می‌شود."
+msgstr "Your appointment is confirmed and added to the professional's schedule. Payment for this order will be made at the salon."
