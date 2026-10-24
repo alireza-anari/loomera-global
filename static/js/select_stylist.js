@@ -53,6 +53,11 @@
         return Number(value || 0).toLocaleString(locale);
     }
 
+    function bookingText(key, fallback) {
+        const value = window.LoomeraI18n?.text?.('booking.' + key, fallback);
+        return typeof value === 'string' && value.length <= 300 ? value : fallback;
+    }
+
     function init() {
         try {
             loadPageData();
@@ -164,7 +169,7 @@
         const escapedServiceId = window.CSS && CSS.escape ? CSS.escape(serviceId) : String(serviceId).replace(/[^a-zA-Z0-9_-]/g, '\\$&');
         const target = document.querySelector(`[data-summary-service-status="${escapedServiceId}"]`);
         if (target) {
-            target.textContent = stylistName ? stylistName : 'متخصص انتخاب شد';
+            target.textContent = stylistName ? stylistName : bookingText('professional_selected', 'متخصص انتخاب شد');
             target.classList.remove('text-slate-500');
             target.classList.add('text-loomera-primaryText', 'font-bold');
         }
@@ -209,22 +214,22 @@
         [btn, desktopBtn].forEach((button) => {
             if (!button) return;
             button.disabled = !allSelected;
-            button.textContent = allSelected ? 'ادامه انتخاب زمان' : `${formatAmount(remaining)} خدمت باقی مانده`;
+            button.textContent = allSelected ? bookingText('continue_time', 'ادامه انتخاب زمان') : `${formatAmount(remaining)} ${bookingText('services_remaining', 'خدمت باقی مانده')}`;
         });
 
         updateText('selectedStaffCount', formatAmount(selectedCount));
         updateText('staffRemainingCount', formatAmount(remaining));
-        updateText('staffDesktopTotal', totalPrice > 0 ? `${formatAmount(totalPrice)} تومان` : '—');
+        updateText('staffDesktopTotal', totalPrice > 0 ? `${formatAmount(totalPrice)} ${bookingText('toman', 'تومان')}` : '—');
 
         const mobileSummary = document.getElementById('staffMobileSummary');
         if (mobileSummary) {
             if (allSelected) {
-                const parts = [`${formatAmount(selectedCount)} متخصص انتخاب شد`];
-                if (totalPrice > 0) parts.push(`${formatAmount(totalPrice)} تومان`);
-                if (totalDuration > 0) parts.push(`${formatAmount(totalDuration)} دقیقه`);
+                const parts = [`${formatAmount(selectedCount)} ${bookingText('professionals_selected', 'متخصص انتخاب شد')}`];
+                if (totalPrice > 0) parts.push(`${formatAmount(totalPrice)} ${bookingText('toman', 'تومان')}`);
+                if (totalDuration > 0) parts.push(`${formatAmount(totalDuration)} ${bookingText('minutes', 'دقیقه')}`);
                 mobileSummary.textContent = parts.join(' • ');
             } else {
-                mobileSummary.textContent = `${formatAmount(remaining)} خدمت هنوز متخصص ندارد`;
+                mobileSummary.textContent = `${formatAmount(remaining)} ${bookingText('services_without_professional', 'خدمت هنوز متخصص ندارد')}`;
             }
         }
     }
