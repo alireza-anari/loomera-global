@@ -132,15 +132,15 @@
 
           <div class="grid grid-cols-3 gap-2 rounded-[1.75rem] border border-white/15 bg-white/12 p-2 text-center text-white shadow-lm-card backdrop-blur-xl lg:min-w-[360px]">
             <div class="rounded-2xl bg-white/12 px-3 py-3">
-              <span class="block text-[11px] font-bold text-white/70">خدمات</span>
+              <span class="block text-[11px] font-bold text-white/70">{% trans 'Services' %}</span>
               <strong class="mt-1 block text-lg font-black">{{ service_count }}</strong>
             </div>
             <div class="rounded-2xl bg-white/12 px-3 py-3">
-              <span class="block text-[11px] font-bold text-white/70">مدت</span>
+              <span class="block text-[11px] font-bold text-white/70">{% trans 'Duration' %}</span>
               <strong class="mt-1 block text-lg font-black">{{ total_duration }}</strong>
             </div>
             <div class="rounded-2xl bg-white/12 px-3 py-3">
-              <span class="block text-[11px] font-bold text-white/70">مبلغ</span>
+              <span class="block text-[11px] font-bold text-white/70">{% trans 'Total amount' %}</span>
               <strong class="mt-1 block text-sm font-black lg:text-base">{{ total_price|floatformat:0|intcomma }}</strong>
             </div>
           </div>
@@ -161,7 +161,7 @@
             <i class="fa-regular fa-calendar-check" aria-hidden="true"></i>
           </span>
           <div class="min-w-0">
-          <p class="text-[11px] font-black text-loomera-primary">زمان نوبت</p>
+          <p class="text-[11px] font-black text-loomera-primary">{% trans 'Appointment time' %}</p>
           <h2 class="mt-1 text-lg font-black leading-8 text-loomera-textPrimary">{{ visit_date_label }}</h2>
           <p class="mt-0.5 text-sm font-black text-loomera-textSecondary">{{ visit_time_label }}</p>
           </div>
@@ -189,7 +189,7 @@
                 <i class="fa-solid fa-location-crosshairs" aria-hidden="true"></i>
               </span>
               <div class="min-w-0 flex-1">
-                <p class="text-[11px] font-black text-loomera-primary">وضعیت فعلی</p>
+                <p class="text-[11px] font-black text-loomera-primary">{% trans 'Current status' %}</p>
                 <h2 id="mobile-next-step-title" class="mt-1 text-base font-black leading-7 text-loomera-textPrimary">
                   {{ customer_progress.current_step.label|default:customer_progress.current_stage_label }}
                 </h2>
@@ -250,7 +250,7 @@
                   <p class="mt-0.5 text-[11px] text-loomera-textMuted">خدمت و متخصص انتخاب‌شده</p>
                 </div>
               </div>
-              <span class="shrink-0 rounded-full bg-loomera-primarySoft px-2.5 py-1 text-[11px] font-black text-loomera-primary">{{ service_count }} خدمت</span>
+              <span class="shrink-0 rounded-full bg-loomera-primarySoft px-2.5 py-1 text-[11px] font-black text-loomera-primary">{{ service_count }} {% trans 'Service' %}</span>
             </div>
             <div class="divide-y divide-loomera-borderSoft border-t border-loomera-borderSoft">
               {% for item in order_items %}
@@ -292,7 +292,7 @@
             <div class="space-y-4 border-t border-loomera-borderSoft px-4 py-4">
               <section aria-labelledby="mobile-finance-title">
                 <div class="flex items-center justify-between gap-3">
-                  <h3 id="mobile-finance-title" class="text-xs font-black text-loomera-textPrimary">پرداخت</h3>
+                  <h3 id="mobile-finance-title" class="text-xs font-black text-loomera-textPrimary">{% trans 'Payment' %}</h3>
                   <span class="text-[11px] font-bold text-loomera-textMuted">{{ appointment.order.get_selected_payment_method_display }}</span>
                 </div>
                 <div class="mt-2 space-y-1.5">
@@ -367,28 +367,28 @@
         </div>
 
         <!-- STATUS STRIP -->
-        <section class="hidden rounded-[2rem] border border-loomera-borderSoft bg-white p-4 shadow-lm-card lg:block" aria-label="وضعیت نوبت">
+        <section class="hidden rounded-[2rem] border border-loomera-borderSoft bg-white p-4 shadow-lm-card lg:block" aria-label="{% trans 'Booking status' %}">
           <div class="flex flex-wrap items-center gap-2">
             {% with stage=customer_progress.current_stage %}
               {% if stage == "awaiting_stylist_confirmation" %}
                 <span class="inline-flex items-center gap-2 rounded-full bg-amber-50 px-4 py-2 text-xs font-black text-amber-700 ring-1 ring-amber-100">
                   <span class="h-2 w-2 rounded-full bg-amber-500 shadow-[0_0_0_4px_rgba(245,158,11,.14)]"></span>
-                  در انتظار تایید متخصص
+                  {% trans 'Awaiting professional confirmation' %}
                 </span>
               {% elif stage == "stylist_confirmed" %}
                 <span class="inline-flex items-center gap-2 rounded-full bg-indigo-50 px-4 py-2 text-xs font-black text-indigo-700 ring-1 ring-indigo-100">
                   <i class="fa-solid fa-check" aria-hidden="true"></i>
-                  تایید شده توسط متخصص
+                  {% trans 'Confirmed by professional' %}
                 </span>
               {% elif stage == "arrived" %}
                 <span class="inline-flex items-center gap-2 rounded-full bg-cyan-50 px-4 py-2 text-xs font-black text-cyan-700 ring-1 ring-cyan-100">
                   <i class="fa-solid fa-location-dot" aria-hidden="true"></i>
-                  مشتری به مجموعه رسید
+                  {% trans 'Customer arrived at salon' %}
                 </span>
               {% elif stage == "in_service" %}
                 <span class="inline-flex items-center gap-2 rounded-full bg-violet-50 px-4 py-2 text-xs font-black text-violet-700 ring-1 ring-violet-100">
                   <i class="fa-solid fa-scissors" aria-hidden="true"></i>
-                  در حال انجام خدمت
+                  {% trans 'Service in progress' %}
                 </span>
               {% elif stage == "completed" or stage == "paid" or stage == "review_pending" or stage == "reviewed" %}
                 <span class="inline-flex items-center gap-2 rounded-full bg-emerald-50 px-4 py-2 text-xs font-black text-emerald-700 ring-1 ring-emerald-100">
@@ -398,12 +398,12 @@
               {% elif stage == "pay_in_salon_pending" %}
                 <span class="inline-flex items-center gap-2 rounded-full bg-orange-50 px-4 py-2 text-xs font-black text-orange-700 ring-1 ring-orange-100">
                   <i class="fa-solid fa-wallet" aria-hidden="true"></i>
-                  تسویه در مجموعه مانده است
+                  {% trans 'Salon payment outstanding' %}
                 </span>
               {% elif stage == "cancelled" %}
                 <span class="inline-flex items-center gap-2 rounded-full bg-rose-50 px-4 py-2 text-xs font-black text-rose-700 ring-1 ring-rose-100">
                   <i class="fa-solid fa-ban" aria-hidden="true"></i>
-                  لغو شده
+                  {% trans 'Cancelled' %}
                 </span>
               {% else %}
                 <span class="inline-flex items-center rounded-full bg-loomera-bgSubtle px-4 py-2 text-xs font-black text-loomera-textSecondary ring-1 ring-loomera-borderSoft">
@@ -458,7 +458,7 @@
               <p class="text-xs font-black uppercase tracking-[0.18em] text-loomera-primary">خلاصه نوبت</p>
               <h2 id="booking-detail-summary-title" class="mt-1 text-xl font-black text-loomera-textPrimary lg:text-2xl">خدمات، متخصص‌ها و زمان</h2>
             </div>
-            <span class="inline-flex rounded-full bg-loomera-primarySoft px-4 py-2 text-xs font-black text-loomera-primary">{{ service_count }} خدمت</span>
+            <span class="inline-flex rounded-full bg-loomera-primarySoft px-4 py-2 text-xs font-black text-loomera-primary">{{ service_count }} {% trans 'Service' %}</span>
           </div>
 
           <div class="mt-5 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
@@ -604,7 +604,7 @@
               <p class="text-xs font-black uppercase tracking-[0.18em] text-loomera-primary">جزئیات خدمات</p>
               <h2 id="booking-services-title" class="mt-1 text-xl font-black text-loomera-textPrimary lg:text-2xl">{% trans 'Services for this appointment' %}</h2>
             </div>
-            <span class="rounded-full bg-loomera-primarySoft px-4 py-2 text-xs font-black text-loomera-primary">{{ service_count }} خدمت</span>
+            <span class="rounded-full bg-loomera-primarySoft px-4 py-2 text-xs font-black text-loomera-primary">{{ service_count }} {% trans 'Service' %}</span>
           </div>
           <div class="space-y-3" role="list">
             {% for item in order_items %}
@@ -635,7 +635,7 @@
         <section class="hidden rounded-[2rem] border border-loomera-borderSoft bg-white p-4 shadow-lm-card lg:block lg:p-6" aria-labelledby="booking-finance-title">
           <div class="mb-5 flex flex-wrap items-center justify-between gap-3">
             <div>
-              <p class="text-xs font-black uppercase tracking-[0.18em] text-loomera-primary">پرداخت</p>
+              <p class="text-xs font-black uppercase tracking-[0.18em] text-loomera-primary">{% trans 'Payment' %}</p>
               <h2 id="booking-finance-title" class="mt-1 text-xl font-black text-loomera-textPrimary lg:text-2xl">خلاصه مالی</h2>
             </div>
             <span class="rounded-full bg-loomera-bgSubtle px-4 py-2 text-xs font-black text-loomera-textSecondary">{{ appointment.order.get_selected_payment_method_display }}</span>
