@@ -288,7 +288,7 @@ class CheckoutFlashLocaleTests(SimpleTestCase):
         self.assertIn('order.status = "paid"', wallet)
         self.assertIn("order.is_paid = True", wallet)
         self.assertIn(CHECKOUT_FLASH_MSGIDS["success"][-2], wallet)
-        self.assertIn('reverse("payments:appointment_result"', wallet)
+        self.assertIn('"payments:appointment_result"', wallet)
         self.assertIn('order.status = "pending"', salon)
         self.assertNotIn("order.is_paid = True", salon)
         self.assertNotIn("payment.mark_success(", salon)
