@@ -79,7 +79,7 @@ class BookingJourneySecurityAndA11yTests(SimpleTestCase):
         self.assertIn("function escapeBookingHtml(value)", js)
         self.assertIn("return String(value ?? '').replace(", js)
         for expr in (
-            "selection.serviceName || 'خدمت'",
+            "selection.serviceName || bookingText('service', 'خدمت')",
             "getCurrentDisplayStylist(selection)",
             "existing.stylistName || getCurrentDisplayStylist(selection)",
             "slot.stylistName",
