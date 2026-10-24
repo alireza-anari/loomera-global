@@ -766,3 +766,27 @@ msgstr "The discount was applied to the final amount."
 #: loomera/globalization/checkout_flash_messages.py
 msgid "زمان نوبت با موفقیت تغییر کرد."
 msgstr "The appointment time was changed successfully."
+
+#: loomera/globalization/checkout_flash_messages.py
+msgid "اطلاعات انتخاب زمان دریافت نشد."
+msgstr "No time-selection data was received."
+
+#: loomera/globalization/checkout_flash_messages.py
+msgid "فرمت اطلاعات انتخاب زمان نامعتبر است."
+msgstr "The time-selection data format is invalid."
+
+#: loomera/globalization/checkout_flash_messages.py
+msgid "این عملیات فقط برای به‌روزرسانی پیش‌نمایش است و رزرو ثبت نشد."
+msgstr "This action only updates the preview; no booking was created."
+
+#: loomera/globalization/checkout_flash_messages.py
+msgid "شروع پرداخت آنلاین ناموفق بود. لطفاً دوباره تلاش کنید."
+msgstr "Could not start online payment. Please try again."
+
+#: loomera/globalization/checkout_flash_messages.py
+msgid "شروع پرداخت ناموفق بود."
+msgstr "Could not start payment."
+
+#: loomera/globalization/checkout_flash_messages.py
+msgid "نوبت شما قطعی شد و در برنامه کاری متخصص قرار گرفت. پرداخت این سفارش در مجموعه انجام می‌شود."
+msgstr "Your appointment is confirmed and has been added to the professional's schedule. Payment for this order will be made at the salon."
