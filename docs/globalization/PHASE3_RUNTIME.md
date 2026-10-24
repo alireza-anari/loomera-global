@@ -1431,3 +1431,27 @@ separate, context-specific review; generic string replacement would
 risk misleading a customer about the payment state. Real browser,
 RTL/LTR visual review, keyboard, NVDA/VoiceOver and 400% zoom
 acceptance remain **unperformed**. There is no Production deployment.
+
+## Phase 3 — Slice 3.31: Financial Result / Appointment Bidi Integrity
+
+This cross-screen patch addresses the **payment confirmation and
+appointment details** journey after Phase 3.30 checkout localization.
+Machine-generated order numbers, provider settlement references and
+gateway tracking IDs now use local `<bdi dir="ltr">` isolation on
+the confirmation page. User-facing salon names, payment status/method
+labels, providers and split-day date/time strings use
+`<bdi dir="auto">`. The customer appointment detail page similarly
+isolates the displayed order number, phone number and service time
+range; importantly, the raw `tel:` URL value is preserved.
+
+Isolation modifies neither the displayed machine value nor the
+Django autoescaped source, and does not change payment status
+decisions, totals, wallet accounting, gateway callbacks, coupon
+codes, refund logic, access control or reservation persistence.
+
+Seven database-free Django tests pin that contract, live-region
+and financial branch invariants, historic fa/Tehran/Jalali defaults,
+and the continued absence of manual browser/screen-reader
+acceptance. CI runs the suite alongside prior booking bidi
+regressions. Visual browser and NVDA/VoiceOver tests are still
+required; **not Phase 3 sign-off or Production deployment**.
