@@ -907,3 +907,48 @@ Booking/order/payment, appointment authorization, OTP, price consent,
 payment-gateway and SMS logic, migrations, fa/Jalali/timezone defaults,
 and production deployment are unchanged. Browser screenshot, keyboard
 and screen-reader acceptance are still pending; Phase 3 remains open.
+
+## Phase 3 — Slice 3.20: Rebooking Journey Parity and Gettext Migration Readiness
+
+This slice strengthens the customer rebooking journey using an
+executable, no-database test suite. The real authenticated GET view is
+exercised with fake order retrieval and stylist-selection resolution
+only. Tests verify that unauthenticated visitors cannot fetch bookings;
+owner-scoped order lookup remains pinned to the active user; an
+incomplete salon or invalid/empty prior selections return to the
+customer's appointment history without modifying booking-session data.
+A valid rebooking resets only stale date/service/reschedule choices,
+preserves unrelated session values, restores the selected salon and
+professional, and continues to the date/time selection page. If the
+previous professional has become unavailable, the existing `any`
+selection still triggers the alternate info notice, while an intact
+professional selection triggers the success notice. The tests
+cross-check fa/en/ar display of both phrases and their strict tone and
+untrusted-user-data fallback contracts. No backend booking, order,
+payment, account or permission logic has been edited.
+
+The Phase 3.19 booking translation table is still a transitional
+**display-only** asset. A new pure, deterministic and fail-closed helper,
+`preview_booking_gettext_appendix(language, existing_po)`, produces
+reviewable `.po` draft entries for all 14 exact, tone-scoped booking
+phrases in fa/en/ar. It checks language headers, rejects any duplicate
+source msgid, rejects unsupported languages and unsafe/interpolated
+strings, and does not write to disk or mutate Django locale state.
+A separate database-free test suite verifies each generated msgid and
+translation, duplicate refusal, deterministic previews, existing
+`.po` and `.mo` artifacts, and preservation of the current runtime.
+
+**The gettext migration is prepared but not activated in this slice.**
+Its release gate remains an atomic update to each of the three `.po`
+sources **and the three matching compiled `.mo` binaries**, together
+with tests proving the compiled `translation.gettext()` values and the
+same fail-closed flash boundary. Publishing `.po` changes alone, or
+removing the existing static table first, would cause a mixed runtime
+and is therefore expressly prohibited. The pure preview helper is
+not used by live request processing.
+
+GitHub Actions executes both new suites alongside all existing
+Phase 1–3 checks. No migrations, production deployment, changing
+payment gateways, SMS, appointment prices or Iranian default locale,
+currency/timezone/calendar, browser screenshot acceptance or
+screen-reader validation are claimed. Phase 3 remains open.
