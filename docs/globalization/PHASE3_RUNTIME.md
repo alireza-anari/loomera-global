@@ -820,3 +820,42 @@ No account/payment/booking/OTP/authorization logic, redirects,
 data schema, browser i18n bridge, client feedback sanitizer, or
 production deployment is changed. Cross-browser and screen-reader
 acceptance are not claimed. Phase 3 remains open.
+
+## Phase 3 — Slice 3.18: Trusted Account and OTP Flash Body Coverage
+
+The strict fa/en/ar server flash policy from slice 3.17 now includes
+**eight literal, already-translated account/OTP notices** from the active
+`apps/accounts/views.py` code path. Seven approved error/danger
+messages cover incorrect mobile/password, missing or expired recovery
+session/code, exhausted or exceeded verification attempts, unknown
+verification account, and invalid verification form information. The
+single approved info notice instructs users to first enter the phone
+number and received code. These are existing gettext msgids with
+verified compiled fa/en/ar catalog translations; no new translation
+catalog entries, currency assumptions or raw business records.
+
+The allowlist is **tone-scoped**: error-only messages are never promoted
+to warnings, success or information, and the one info-only message
+cannot appear as an authorized error. Each non-Persian flash body
+must match a complete catalog msgid or an exact compiled translation
+from a supported source language, and is translated into the current
+render language. All dynamic/compound text, OTP test codes, customer
+numbers, payment details, booking descriptions, provider exceptions,
+and unreviewed domain notices still resolve to a generic translated
+feedback message appropriate for their tone. English and Arabic
+therefore gain useful verified guidance without a general translation
+channel for sensitive messages.
+
+The historical Persian server flash sanitizer is untouched. The
+existing 41-key browser dictionary, browser feedback, form validation,
+authentication/OTP state, lockouts, routes, booking/payment behavior,
+Iranian mobile rules and Jalali/timezone defaults are untouched.
+No source repository writes and no production deployment are included.
+
+`apps.main.test_phase3_account_otp_flash_locale` adds eight database-free
+Django tests covering complete three-source-language and two-target
+rendering, compiled gettext reuse, tone isolation, strict dynamic/PII
+rejection, unreviewed booking/payment fallback, live source-msgid
+contract and historical Persian behavior. The dedicated CI step runs
+them alongside all previous Phase 1–3 tests. Browser visual and
+assistive-technology acceptance are still pending.
