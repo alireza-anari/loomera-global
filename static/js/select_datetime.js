@@ -610,7 +610,7 @@
 
     monthTitle.textContent = `${today.getMonthName()} ${toPersianDigits(today.jy)}`;
     if (!sameDayAnchor || state.currentIndex === 0) {
-      calendarHint.textContent = bookingText('available_90_days','روزهای آزاد و غیرفعال این خدمت در ۹۰ روز آینده');
+      calendarHint.textContent = bookingText('available_ninety_days','روزهای آزاد و غیرفعال این خدمت در ۹۰ روز آینده');
     } else if (splitEnabled) {
       calendarHint.textContent = `${bookingText('default_still','پیش‌فرض همچنان')} ${formatGregorianToJalali(sameDayAnchor)} ${bookingText('default_still_suffix','است، اما می‌توانید روز دیگری هم انتخاب کنید.')}`;
     } else {
