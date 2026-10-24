@@ -1630,3 +1630,83 @@ msgstr "Continue appointment settlement"
 #: docs/globalization/PHASE3_31_MESSAGE_REVIEW.json
 msgid "My account"
 msgstr "My account"
+
+#: docs/globalization/PHASE3_31_MESSAGE_REVIEW.json
+msgid "Paid"
+msgstr "Paid"
+
+#: docs/globalization/PHASE3_31_MESSAGE_REVIEW.json
+msgid "Pay at salon"
+msgstr "Pay at salon"
+
+#: docs/globalization/PHASE3_31_MESSAGE_REVIEW.json
+msgid "Service not recorded"
+msgstr "Service not recorded"
+
+#: docs/globalization/PHASE3_31_MESSAGE_REVIEW.json
+msgid "Appointment hour"
+msgstr "Appointment hour"
+
+#: docs/globalization/PHASE3_31_MESSAGE_REVIEW.json
+msgid "View appointment details"
+msgstr "View appointment details"
+
+#: docs/globalization/PHASE3_31_MESSAGE_REVIEW.json
+msgid "Salon directions"
+msgstr "Salon directions"
+
+#: docs/globalization/PHASE3_31_MESSAGE_REVIEW.json
+msgid "Book again"
+msgstr "Book again"
+
+#: docs/globalization/PHASE3_31_MESSAGE_REVIEW.json
+msgid "No appointments have been registered"
+msgstr "No appointments have been registered"
+
+#: docs/globalization/PHASE3_31_MESSAGE_REVIEW.json
+msgid "You have no appointments yet"
+msgstr "You have no appointments yet"
+
+#: docs/globalization/PHASE3_31_MESSAGE_REVIEW.json
+msgid "After choosing a salon, service and suitable time, your upcoming appointments will appear here."
+msgstr "After choosing a salon, service and suitable time, your upcoming appointments will appear here."
+
+#: docs/globalization/PHASE3_31_MESSAGE_REVIEW.json
+msgid "Search salons"
+msgstr "Search salons"
+
+#: docs/globalization/PHASE3_31_MESSAGE_REVIEW.json
+msgid "Current status"
+msgstr "Current status"
+
+#: docs/globalization/PHASE3_31_MESSAGE_REVIEW.json
+msgid "Total amount"
+msgstr "Total amount"
+
+#: docs/globalization/PHASE3_31_MESSAGE_REVIEW.json
+msgid "Services"
+msgstr "Services"
+
+#: docs/globalization/PHASE3_31_MESSAGE_REVIEW.json
+msgid "Cancelled"
+msgstr "Cancelled"
+
+#: docs/globalization/PHASE3_31_MESSAGE_REVIEW.json
+msgid "Awaiting professional confirmation"
+msgstr "Awaiting professional confirmation"
+
+#: docs/globalization/PHASE3_31_MESSAGE_REVIEW.json
+msgid "Confirmed by professional"
+msgstr "Confirmed by professional"
+
+#: docs/globalization/PHASE3_31_MESSAGE_REVIEW.json
+msgid "Customer arrived at salon"
+msgstr "Customer arrived at salon"
+
+#: docs/globalization/PHASE3_31_MESSAGE_REVIEW.json
+msgid "Service in progress"
+msgstr "Service in progress"
+
+#: docs/globalization/PHASE3_31_MESSAGE_REVIEW.json
+msgid "Salon payment outstanding"
+msgstr "Salon payment outstanding"

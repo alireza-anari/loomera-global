@@ -1634,3 +1634,83 @@ msgstr "متابعة تسوية الموعد"
 #: docs/globalization/PHASE3_31_MESSAGE_REVIEW.json
 msgid "My account"
 msgstr "حسابي"
+
+#: docs/globalization/PHASE3_31_MESSAGE_REVIEW.json
+msgid "Paid"
+msgstr "مدفوع"
+
+#: docs/globalization/PHASE3_31_MESSAGE_REVIEW.json
+msgid "Pay at salon"
+msgstr "الدفع في الصالون"
+
+#: docs/globalization/PHASE3_31_MESSAGE_REVIEW.json
+msgid "Service not recorded"
+msgstr "لم تُسجّل الخدمة"
+
+#: docs/globalization/PHASE3_31_MESSAGE_REVIEW.json
+msgid "Appointment hour"
+msgstr "وقت الموعد"
+
+#: docs/globalization/PHASE3_31_MESSAGE_REVIEW.json
+msgid "View appointment details"
+msgstr "عرض تفاصيل الموعد"
+
+#: docs/globalization/PHASE3_31_MESSAGE_REVIEW.json
+msgid "Salon directions"
+msgstr "الاتجاهات إلى الصالون"
+
+#: docs/globalization/PHASE3_31_MESSAGE_REVIEW.json
+msgid "Book again"
+msgstr "الحجز مرة أخرى"
+
+#: docs/globalization/PHASE3_31_MESSAGE_REVIEW.json
+msgid "No appointments have been registered"
+msgstr "لم تُسجّل أي مواعيد"
+
+#: docs/globalization/PHASE3_31_MESSAGE_REVIEW.json
+msgid "You have no appointments yet"
+msgstr "ليس لديك مواعيد بعد"
+
+#: docs/globalization/PHASE3_31_MESSAGE_REVIEW.json
+msgid "After choosing a salon, service and suitable time, your upcoming appointments will appear here."
+msgstr "بعد اختيار الصالون والخدمة والوقت المناسب، ستظهر مواعيدك القادمة هنا."
+
+#: docs/globalization/PHASE3_31_MESSAGE_REVIEW.json
+msgid "Search salons"
+msgstr "البحث عن صالونات"
+
+#: docs/globalization/PHASE3_31_MESSAGE_REVIEW.json
+msgid "Current status"
+msgstr "الحالة الحالية"
+
+#: docs/globalization/PHASE3_31_MESSAGE_REVIEW.json
+msgid "Total amount"
+msgstr "المبلغ"
+
+#: docs/globalization/PHASE3_31_MESSAGE_REVIEW.json
+msgid "Services"
+msgstr "الخدمات"
+
+#: docs/globalization/PHASE3_31_MESSAGE_REVIEW.json
+msgid "Cancelled"
+msgstr "ملغى"
+
+#: docs/globalization/PHASE3_31_MESSAGE_REVIEW.json
+msgid "Awaiting professional confirmation"
+msgstr "بانتظار تأكيد المختص"
+
+#: docs/globalization/PHASE3_31_MESSAGE_REVIEW.json
+msgid "Confirmed by professional"
+msgstr "أكده المختص"
+
+#: docs/globalization/PHASE3_31_MESSAGE_REVIEW.json
+msgid "Customer arrived at salon"
+msgstr "وصل العميل إلى الصالون"
+
+#: docs/globalization/PHASE3_31_MESSAGE_REVIEW.json
+msgid "Service in progress"
+msgstr "الخدمة قيد التنفيذ"
+
+#: docs/globalization/PHASE3_31_MESSAGE_REVIEW.json
+msgid "Salon payment outstanding"
+msgstr "الدفع في الصالون لم يُسوَّ بعد"
