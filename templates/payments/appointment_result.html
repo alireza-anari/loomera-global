@@ -301,7 +301,7 @@
                      aria-labelledby="confirmation-services-title">
               <div class="flex items-center justify-between gap-3">
                 <div>
-                  <p class="text-xs font-black uppercase tracking-[0.24em] text-loomera-primary">خدمات</p>
+                  <p class="text-xs font-black uppercase tracking-[0.24em] text-loomera-primary">{% trans 'Services' %}</p>
                   <h2 id="confirmation-services-title"
                       class="mt-2 text-xl font-black text-loomera-textPrimary">{% trans 'Services for this appointment' %}</h2>
                 </div>
@@ -317,7 +317,7 @@
                         <h3 class="text-base font-black text-loomera-textPrimary">{{ item.service.service_name|default:'خدمت' }}</h3>
                         <dl class="mt-3 grid gap-2 text-sm sm:grid-cols-3">
                           <div class="rounded-2xl bg-loomera-bgSubtle px-3 py-2">
-                            <dt class="text-xs font-bold text-loomera-textMuted">متخصص</dt>
+                            <dt class="text-xs font-bold text-loomera-textMuted">{% trans 'Professional' %}</dt>
                             <dd class="mt-1 font-bold text-loomera-textPrimary">
                               {% if item.stylist %}
                                 {{ item.stylist.user.get_fullName }}
@@ -354,7 +354,7 @@
             </section>
           {% endif %}
         </main>
-        <aside class="scroll-mt-24 lg:sticky lg:top-24" aria-label="اقدام‌های بعدی"
+        <aside class="scroll-mt-24 lg:sticky lg:top-24" aria-label="{% trans 'Next steps' %}"
                data-payment-result-actions>
           <div class="rounded-[2rem] border border-loomera-borderSoft bg-loomera-surface p-5 shadow-lm-elevated">
             <p class="text-xs font-black uppercase tracking-[0.24em] text-loomera-primary">اقدام بعدی</p>
