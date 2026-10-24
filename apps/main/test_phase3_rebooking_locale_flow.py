@@ -21,7 +21,7 @@ from django.utils import translation
 
 from apps.main.templatetags.ui_message_extras import clean_ui_message
 from apps.orders.views import RebookPastOrderView
-from loomera.globalization.booking_flash_messages import BOOKING_FLASH_MESSAGES
+from loomera.globalization.booking_flash_messages import BOOKING_FLASH_MSGIDS
 from loomera.globalization.interactive_messages import MESSAGE_IDS
 
 
@@ -157,14 +157,11 @@ class RebookingLocaleFlowTests(SimpleTestCase):
             "error": "برای این رزرو امکان رزرو مجدد وجود ندارد.",
         }
         for tag, persian in expected.items():
-            row = next(r for r in BOOKING_FLASH_MESSAGES if r[1] == persian)
-            self.assertEqual(row[0], tag)
+            self.assertIn(persian, BOOKING_FLASH_MSGIDS[tag])
             for language in ("en", "ar", "fa"):
                 with translation.override(language):
                     with self.subTest(tag=tag, language=language):
-                        target = persian if language == "fa" else (
-                            row[2] if language == "en" else row[3]
-                        )
+                        target = translation.gettext(persian)
                         self.assertEqual(clean_ui_message(persian, tag), target)
                         for hostile in (persian + " user=private", persian + " 09123456789"):
                             if language != "fa":
@@ -174,13 +171,14 @@ class RebookingLocaleFlowTests(SimpleTestCase):
                                 )
 
     def test_success_and_fallback_info_messages_remain_tone_separated(self):
-        success, info = [
-            next(r[1] for r in BOOKING_FLASH_MESSAGES if r[0] == tone and phrase in r[1])
-            for tone, phrase in (
-                ("success", "اطلاعات رزرو قبلی"),
-                ("info", "برای برخی خدمات"),
-            )
-        ]
+        success = next(
+            phrase for phrase in BOOKING_FLASH_MSGIDS["success"]
+            if "اطلاعات رزرو قبلی" in phrase
+        )
+        info = next(
+            phrase for phrase in BOOKING_FLASH_MSGIDS["info"]
+            if "برای برخی خدمات" in phrase
+        )
         for language in ("en", "ar"):
             with translation.override(language):
                 self.assertEqual(clean_ui_message(success, "info"), translation.gettext(
