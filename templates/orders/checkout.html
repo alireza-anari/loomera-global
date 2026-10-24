@@ -110,12 +110,12 @@
                 {% if form.coupon_code.value %}<button type="submit" name="form_action" value="clear_coupon" data-checkout-coupon-action="clear" class="inline-flex h-12 items-center justify-center rounded-full px-5 text-sm font-black text-rose-700 transition hover:bg-rose-50">حذف کد</button>{% endif %}
               </div>
               {% if form.coupon_code.errors %}
-                <p class="mt-2 text-xs font-bold text-rose-700">{{ form.coupon_code.errors|join:'، ' }}</p>
+                <p id="{{ form.coupon_code.id_for_label }}_error" role="alert" class="mt-2 text-xs font-bold text-rose-700">{{ form.coupon_code.errors|join:'، ' }}</p>
               {% else %}
 
               {% endif %}
               {% if checkout.coupon %}
-                <p class="mt-2 text-xs font-black text-emerald-700">کد {{ checkout.coupon.coupon_code }} با موفقیت روی مبلغ این رزرو اعمال شد.</p>
+                <p class="mt-2 text-xs font-black text-emerald-700">کد <bdi dir="ltr" data-booking-coupon-token>{{ checkout.coupon.coupon_code }}</bdi> با موفقیت روی مبلغ این رزرو اعمال شد.</p>
                 {% if checkout.discount_cap_amount %}<p class="mt-1 text-xs text-loomera-textMuted">سقف این کد: {{ checkout.discount_cap_amount|floatformat:0 }} تومان</p>{% endif %}
               {% endif %}
             </div>
@@ -147,7 +147,7 @@
                   </label>
                 {% endfor %}
               </div>
-              {% if form.payment_method.errors %}<p class="mt-2 text-xs font-bold text-rose-700">{{ form.payment_method.errors|join:'، ' }}</p>{% endif %}
+              {% if form.payment_method.errors %}<p id="{{ form.payment_method.id_for_label }}_error" role="alert" class="mt-2 text-xs font-bold text-rose-700">{{ form.payment_method.errors|join:'، ' }}</p>{% endif %}
             </fieldset>
           </section>
 
@@ -156,7 +156,7 @@
             <dl class="mt-5 space-y-3 text-sm">
               <div class="flex items-center justify-between gap-4 rounded-2xl bg-loomera-bgSubtle px-4 py-3"><dt class="font-bold text-loomera-textMuted">جمع خدمات</dt><dd class="font-black text-loomera-textPrimary">{{ checkout.subtotal|floatformat:0 }} تومان</dd></div>
               {% if checkout.basket_discount_amount %}<div class="flex items-center justify-between gap-4 rounded-2xl bg-emerald-50 px-4 py-3"><dt class="font-bold text-emerald-700">تخفیف خدمات{% if checkout.basket_discount_title %} • {{ checkout.basket_discount_title }}{% endif %}</dt><dd class="font-black text-emerald-700">{{ checkout.basket_discount_amount|floatformat:0 }} تومان</dd></div>{% endif %}
-              {% if checkout.coupon_discount_amount %}<div class="flex items-center justify-between gap-4 rounded-2xl bg-emerald-50 px-4 py-3"><dt class="font-bold text-emerald-700">تخفیف کد{% if checkout.coupon_code %} • {{ checkout.coupon_code }}{% endif %}</dt><dd class="font-black text-emerald-700">{{ checkout.coupon_discount_amount|floatformat:0 }} تومان</dd></div>{% endif %}
+              {% if checkout.coupon_discount_amount %}<div class="flex items-center justify-between gap-4 rounded-2xl bg-emerald-50 px-4 py-3"><dt class="font-bold text-emerald-700">تخفیف کد{% if checkout.coupon_code %} • <bdi dir="ltr" data-booking-coupon-token>{{ checkout.coupon_code }}</bdi>{% endif %}</dt><dd class="font-black text-emerald-700">{{ checkout.coupon_discount_amount|floatformat:0 }} تومان</dd></div>{% endif %}
               <div class="flex items-center justify-between gap-4 rounded-2xl bg-emerald-50 px-4 py-3"><dt class="font-bold text-emerald-700">جمع کل تخفیف</dt><dd class="font-black text-emerald-700">{{ checkout.discount_amount|floatformat:0 }} تومان</dd></div>
               <div class="flex items-center justify-between gap-4 rounded-[1.4rem] bg-loomera-primary px-4 py-4 text-white shadow-lm-soft"><dt class="text-sm font-black">مبلغ قابل پرداخت</dt><dd class="text-lg font-black">{{ checkout.total_amount|floatformat:0 }} تومان</dd></div>
             </dl>
