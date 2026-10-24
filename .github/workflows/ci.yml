@@ -144,6 +144,7 @@ jobs:
           python manage.py test \
             apps.main.test_phase3_booking_journey_security_a11y \
             apps.main.test_phase3_booking_bidirectional_accessibility \
+            apps.main.test_phase3_exit_evidence \
             --failfast
 
       - name: Phase 3 checkout settlement and reschedule gettext safety
