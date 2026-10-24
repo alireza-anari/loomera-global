@@ -41,13 +41,35 @@
     }
   }
 
+  function escapeBookingHtml(value) {
+    // Only markup output is escaped: never mutate persisted booking JSON or
+    // the API's numeric/date/time protocol fields.
+    return String(value ?? '').replace(/[&<>"']/g, (character) => ({
+      '&': '&amp;', '<': '&lt;', '>': '&gt;',
+      '"': '&quot;', "'": '&#39;',
+    })[character]);
+  }
+
+  function bookingDigitMap() {
+    const locale = (document.documentElement.lang || 'fa').toLowerCase().split('-')[0];
+    if (locale === 'en') return '0123456789';
+    if (locale === 'ar') return '٠١٢٣٤٥٦٧٨٩';
+    return '۰۱۲۳۴۵۶۷۸۹';
+  }
+
   function loadDataFromPage() {
     const source = document.getElementById('hiddenData');
     if (!source) throw new Error('hidden data not found');
 
     state.salonId = source.dataset.salonId;
     state.bookingMode = source.dataset.bookingMode || 'booking';
-    state.selections = JSON.parse(source.dataset.selections || '[]').map((selection) => ({
+    // The template uses Django json_script so apostrophes, markup and Unicode
+    // in server-provided specialist/service names cannot break an HTML attribute.
+    const jsonNode = document.getElementById('booking-stylist-selections');
+    if (!jsonNode) throw new Error('booking selections payload missing');
+    const rawSelections = JSON.parse(JSON.parse(jsonNode.textContent || '""'));
+    if (!Array.isArray(rawSelections)) throw new Error('invalid booking selections');
+    state.selections = rawSelections.map((selection) => ({
       ...selection,
       serviceId: String(selection.serviceId),
       serviceDuration: Number(selection.serviceDuration || 30),
@@ -436,14 +458,14 @@
         : picked
           ? 'border-emerald-200 bg-emerald-50 text-emerald-700'
           : 'border-loomera-borderSoft bg-white text-loomera-textSecondary';
-      const subtitle = picked ? `${formatGregorianToJalali(picked.date)} • ${picked.time}` : formatDuration(selection.serviceDuration);
+      const subtitle = picked ? `${formatGregorianToJalali(picked.date)} • ${escapeBookingHtml(picked.time)}` : formatDuration(selection.serviceDuration);
       return `
         <button type="button"
                 class="min-w-[148px] rounded-2xl border px-3 py-3 text-right transition hover:border-loomera-primary/40 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-loomera-focusRing/30 ${statusClass} ${isClickable ? '' : 'cursor-not-allowed opacity-50'}"
                 data-step-index="${index}"
                 ${isClickable ? '' : 'disabled'}
                 aria-current="${isCurrent ? 'step' : 'false'}">
-          <span class="block truncate text-xs font-black">${selection.serviceName || 'خدمت'}</span>
+          <span class="block truncate text-xs font-black">${escapeBookingHtml(selection.serviceName || 'خدمت')}</span>
           <span class="mt-1 block truncate text-[11px] opacity-80">${subtitle || 'در انتظار زمان'}</span>
         </button>
       `;
@@ -467,8 +489,8 @@
       ? `
         <div class="mt-3 flex flex-wrap items-center gap-2 text-xs text-emerald-700">
           <span class="inline-flex items-center gap-1 rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1"><i class="fa-regular fa-calendar" aria-hidden="true"></i>${formatGregorianToJalali(existing.date)}</span>
-          <span class="inline-flex items-center gap-1 rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1"><i class="fa-regular fa-clock" aria-hidden="true"></i>${existing.time} تا ${existing.end_time}</span>
-          <span class="inline-flex items-center gap-1 rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1"><i class="fa-solid fa-user" aria-hidden="true"></i>${existing.stylistName || getCurrentDisplayStylist(selection)}</span>
+          <span class="inline-flex items-center gap-1 rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1"><i class="fa-regular fa-clock" aria-hidden="true"></i>${escapeBookingHtml(existing.time)} تا ${escapeBookingHtml(existing.end_time)}</span>
+          <span class="inline-flex items-center gap-1 rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1"><i class="fa-solid fa-user" aria-hidden="true"></i>${escapeBookingHtml(existing.stylistName || getCurrentDisplayStylist(selection))}</span>
         </div>
       `
       : '';
@@ -499,11 +521,11 @@
             <div class="flex items-center justify-between gap-3">
               <div class="min-w-0">
                 <p class="mb-1 text-xs font-black text-loomera-textMuted">خدمت ${toPersianDigits(state.currentIndex + 1)} از ${toPersianDigits(state.selections.length)}</p>
-                <h2 id="currentBookingStepTitle" class="truncate text-lg font-black text-loomera-textPrimary">${selection.serviceName || 'خدمت'}</h2>
+                <h2 id="currentBookingStepTitle" class="truncate text-lg font-black text-loomera-textPrimary">${escapeBookingHtml(selection.serviceName || 'خدمت')}</h2>
               </div>
               <span class="rounded-full bg-loomera-bgSubtle px-3 py-1 text-xs font-black text-loomera-textSecondary">${formatDuration(selection.serviceDuration) || 'مدت نامشخص'}</span>
             </div>
-            <p class="mt-2 text-sm text-loomera-textSecondary">${getCurrentDisplayStylist(selection)}</p>
+            <p class="mt-2 text-sm text-loomera-textSecondary">${escapeBookingHtml(getCurrentDisplayStylist(selection))}</p>
             ${dayModeBlock}
             ${selectedSummary}
           </div>
@@ -742,13 +764,13 @@
               <button type="button"
                       class="rounded-2xl border px-3 py-3 text-center transition focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-loomera-focusRing/30 ${buttonClass}"
                       data-time-slot
-                      data-time="${slot.time}"
+                      data-time="${escapeBookingHtml(slot.time)}"
                       aria-pressed="${isSelected ? 'true' : 'false'}"
-                      aria-label="ساعت ${slot.time} تا ${slot.end_time}${showStylist ? `، ${slot.stylistName}` : ''}">
-                <span class="block text-base font-black">${slot.time}</span>
-                <span class="mt-1 block text-[11px] opacity-75">تا ${slot.end_time}</span>
+                      aria-label="ساعت ${escapeBookingHtml(slot.time)} تا ${escapeBookingHtml(slot.end_time)}${showStylist ? `، ${escapeBookingHtml(slot.stylistName)}` : ''}">
+                <span class="block text-base font-black">${escapeBookingHtml(slot.time)}</span>
+                <span class="mt-1 block text-[11px] opacity-75">تا ${escapeBookingHtml(slot.end_time)}</span>
                 ${isSelected ? '<span class="mt-1 block text-[10px] font-black"><i class="fa-solid fa-check ml-1" aria-hidden="true"></i>انتخاب‌شده</span>' : ''}
-                ${showStylist ? `<span class="mt-2 block truncate text-[11px] opacity-75">${slot.stylistName}</span>` : ''}
+                ${showStylist ? `<span class="mt-2 block truncate text-[11px] opacity-75">${escapeBookingHtml(slot.stylistName)}</span>` : ''}
               </button>
             `;
           }).join('')}
@@ -810,10 +832,10 @@
       return `
         <li class="flex items-center justify-between gap-3 rounded-2xl border px-3 py-3 ${rowClass}" role="listitem">
           <div class="min-w-0 flex-1">
-            <p class="truncate text-sm font-black text-loomera-textPrimary">${summary.parts[0] || 'خدمت'}</p>
-            <p class="mt-1 truncate text-xs text-loomera-textSecondary">${summary.specialist}</p>
+            <p class="truncate text-sm font-black text-loomera-textPrimary">${escapeBookingHtml(summary.parts[0] || 'خدمت')}</p>
+            <p class="mt-1 truncate text-xs text-loomera-textSecondary">${escapeBookingHtml(summary.specialist)}</p>
           </div>
-          <span class="rounded-full border px-3 py-1 text-[11px] font-black ${pickedClass}">${summary.pickedLabel}</span>
+          <span class="rounded-full border px-3 py-1 text-[11px] font-black ${pickedClass}">${escapeBookingHtml(summary.pickedLabel)}</span>
         </li>
       `;
     }).join('');
@@ -843,8 +865,8 @@
     if (desktopPicked) {
       const pickedRows = state.selections.map((selection, index) => {
         const summary = buildSelectionSummaryLine(selection, index);
-        if (!summary.picked) return `<p class="rounded-xl border border-dashed border-loomera-borderSoft bg-white px-3 py-2 text-xs text-loomera-textMuted">${selection.serviceName || 'خدمت'}: زمان انتخاب نشده</p>`;
-        return `<p class="rounded-xl border border-emerald-100 bg-emerald-50 px-3 py-2 text-xs font-black text-emerald-700">${selection.serviceName || 'خدمت'}: ${summary.pickedLabel}</p>`;
+        if (!summary.picked) return `<p class="rounded-xl border border-dashed border-loomera-borderSoft bg-white px-3 py-2 text-xs text-loomera-textMuted">${escapeBookingHtml(selection.serviceName || 'خدمت')}: زمان انتخاب نشده</p>`;
+        return `<p class="rounded-xl border border-emerald-100 bg-emerald-50 px-3 py-2 text-xs font-black text-emerald-700">${escapeBookingHtml(selection.serviceName || 'خدمت')}: ${escapeBookingHtml(summary.pickedLabel)}</p>`;
       }).join('');
       desktopPicked.innerHTML = pickedRows || 'هنوز زمانی انتخاب نشده است.';
     }
@@ -870,7 +892,7 @@
       ? 'فرقی ندارد'
       : (selection.requestedStylistName || selection.stylistName || 'متخصص');
     const pickedLabel = picked
-      ? `${formatGregorianToJalali(picked.date)}، ${picked.time}${picked.end_time ? ` تا ${picked.end_time}` : ''}`
+      ? `${formatGregorianToJalali(picked.date)}، ${escapeBookingHtml(picked.time)}${picked.end_time ? ` تا ${picked.end_time}` : ''}`
       : 'زمان انتخاب نشده';
     return { parts, specialist, pickedLabel, picked };
   }
@@ -1079,8 +1101,8 @@
   }
 
   function toPersianDigits(value) {
-    const map = ['۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹'];
-    return String(value).replace(/\d/g, (d) => map[Number(d)]);
+    const digits = bookingDigitMap();
+    return String(value).replace(/\d/g, (digit) => digits[Number(digit)]);
   }
 
   function normalizeDigits(value) {
