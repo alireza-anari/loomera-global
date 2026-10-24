@@ -115,7 +115,7 @@
               {% endif %}
             </header>
 
-            <div class="mt-4 grid gap-3" role="list" aria-label="متخصص‌های قابل انتخاب برای {{ card.service.service_name }}">
+            <div class="mt-4 grid gap-3" role="group" aria-label="متخصص‌های قابل انتخاب برای {{ card.service.service_name }}">
               <button
                 type="button"
                 data-service-id="{{ card.service.pk }}"
@@ -128,9 +128,7 @@
                 data-next-time="{% if card.any_option.first_slot %}{{ card.any_option.first_slot.time|time:'H:i' }}{% endif %}"
                 data-next-end-time="{% if card.any_option.first_slot %}{{ card.any_option.first_slot.end_time|time:'H:i' }}{% endif %}"
                 class="stylist-option group flex w-full items-center gap-3 rounded-3xl border border-gray-200 bg-white p-3 text-right shadow-sm transition hover:border-loomera-primary/40 hover:bg-loomera-primarySoft/40 disabled:cursor-not-allowed disabled:opacity-55"
-                role="listitem"
                 aria-pressed="false"
-                aria-selected="false"
                 aria-label="انتخاب اولین متخصص آزاد برای {{ card.service.service_name }}"
                 {% if not card.any_option.enabled %}disabled aria-disabled="true"{% endif %}
               >
@@ -164,9 +162,7 @@
                   data-next-time="{% if item.first_slot %}{{ item.first_slot.time|time:'H:i' }}{% endif %}"
                   data-next-end-time="{% if item.first_slot %}{{ item.first_slot.end_time|time:'H:i' }}{% endif %}"
                   class="stylist-option group flex w-full items-center gap-3 rounded-3xl border border-gray-200 bg-white p-3 text-right shadow-sm transition hover:border-loomera-primary/40 hover:bg-loomera-primarySoft/40"
-                  role="listitem"
                   aria-pressed="false"
-                  aria-selected="false"
                   aria-label="انتخاب {{ item.stylist.user.get_fullName|default:item.stylist.user.name }} برای {{ card.service.service_name }}"
                 >
                   <span class="flex h-14 w-14 shrink-0 items-center justify-center overflow-hidden rounded-2xl bg-loomera-bgSubtle text-base font-black text-loomera-primary ring-1 ring-loomera-borderSoft" aria-hidden="true">
