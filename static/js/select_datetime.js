@@ -52,7 +52,7 @@
 
   function bookingText(key, fallback) {
     const value = window.LoomeraI18n?.text?.('booking.' + key, fallback);
-    return typeof value === 'string' && value.length > 0 && value.length <= 300 && !/[<>{}\\x00]/.test(value) ? value : fallback;
+    return typeof value === 'string' && value.length > 0 && value.length <= 300 && !/[<>{}]/.test(value) && !value.includes(String.fromCharCode(0)) ? value : fallback;
   }
 
   function bookingDigitMap() {
