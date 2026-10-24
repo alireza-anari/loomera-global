@@ -142,3 +142,14 @@ screen-reader sign-off. Backend-generated booking/cancellation policy
 text, dynamic salon-provided titles and live payment gateway outcomes
 remain contextual data and are not translated generically in this slice.
 All manual acceptance and deployment blockers remain open.
+
+## Phase 3.31 — Payment-result and appointment identifier review
+
+Payment-result order numbers, reference IDs, transaction tracking,
+provider/status labels and split-day date/time strings now use
+directional isolation. Appointment details retain untouched tel
+links while isolating displayed phone and order numbers. Automated
+Django tests protect financial and status branches and reference
+serialization. This is **structural** bidi evidence only: real
+browser, keyboard, screen reader, zoom, and release approval
+remain pending, with no manual test evidence added.

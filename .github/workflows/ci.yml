@@ -244,6 +244,12 @@ jobs:
         run: |
           node --test tests/js/phase3_change_password.test.cjs
 
+      - name: Phase 3 payment result and appointment bidirectional integrity
+        run: |
+          python manage.py test \
+            apps.main.test_phase3_payment_result_bidirectional \
+            --failfast
+
       - name: Production settings hygiene
         run: |
           python manage.py test \

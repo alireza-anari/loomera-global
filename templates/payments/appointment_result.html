@@ -86,7 +86,7 @@
               {% elif is_expired_checkout %}
                 مهلت پرداخت تمام شد
               {% else %}
-                {{ order_status_label }}
+                <bdi dir="auto" data-payment-human-label>{{ order_status_label }}</bdi>
               {% endif %}
             </span>
           </div>
@@ -135,10 +135,10 @@
             {% for day in grouped_days %}
               <article class="rounded-[1.5rem] border border-white/70 bg-white/80 p-4 shadow-lm-soft">
                 <div class="flex items-center justify-between gap-3">
-                  <span class="font-black text-loomera-textPrimary">{{ day.date }}</span>
+                  <span class="font-black text-loomera-textPrimary"><bdi dir="auto" data-payment-human-label>{{ day.date }}</bdi></span>
                   <span class="rounded-full bg-loomera-surface px-3 py-1 text-xs font-black text-loomera-primary">{{ day.service_count }} خدمت</span>
                 </div>
-                <p class="mt-2 text-xs leading-6 text-loomera-textMuted">بازه زمانی: {{ day.time_label }}</p>
+                <p class="mt-2 text-xs leading-6 text-loomera-textMuted">بازه زمانی: <bdi dir="auto" data-payment-human-label>{{ day.time_label }}</bdi></p>
               </article>
             {% endfor %}
           </div>
@@ -161,7 +161,7 @@
                 {% elif is_expired_checkout %}
                   مهلت پرداخت تمام شد
                 {% else %}
-                  {{ order_status_label }}
+                  <bdi dir="auto" data-payment-human-label>{{ order_status_label }}</bdi>
                 {% endif %}
               </span>
             </div>
@@ -170,37 +170,37 @@
               <div class="flex items-center justify-between gap-4 py-3 text-sm">
                 <dt class="text-loomera-textMuted">شماره سفارش</dt>
                 <dd class="text-left font-black text-loomera-textPrimary">
-                  {{ order.order_number|default:'—' }}
+                  <bdi dir="ltr" data-payment-machine-id>{{ order.order_number|default:'—' }}</bdi>
                 </dd>
               </div>
               <div class="flex items-center justify-between gap-4 py-3 text-sm">
                 <dt class="text-loomera-textMuted">مجموعه</dt>
                 <dd class="text-left font-black text-loomera-textPrimary">
-                  {{ order.salon.salon_name|default:'—' }}
+                  <bdi dir="auto" data-payment-human-label>{{ order.salon.salon_name|default:'—' }}</bdi>
                 </dd>
               </div>
               <div class="flex items-center justify-between gap-4 py-3 text-sm">
                 <dt class="text-loomera-textMuted">روش پرداخت</dt>
                 <dd class="text-left font-bold text-loomera-textPrimary">
-                  {{ order.get_selected_payment_method_display|default:'—' }}
+                  <bdi dir="auto" data-payment-human-label>{{ order.get_selected_payment_method_display|default:'—' }}</bdi>
                 </dd>
               </div>
               <div class="flex items-center justify-between gap-4 py-3 text-sm">
                 <dt class="text-loomera-textMuted">ارائه‌دهنده پرداخت</dt>
                 <dd class="text-left font-bold text-loomera-textPrimary">
-                  {{ payment.get_provider_display|default:'—' }}
+                  <bdi dir="auto" data-payment-human-label>{{ payment.get_provider_display|default:'—' }}</bdi>
                 </dd>
               </div>
               <div class="flex items-center justify-between gap-4 py-3 text-sm">
                 <dt class="text-loomera-textMuted">وضعیت پرداخت</dt>
                 <dd class="text-left font-bold text-loomera-textPrimary">
-                  {{ payment_status_label }}
+                  <bdi dir="auto" data-payment-human-label>{{ payment_status_label }}</bdi>
                 </dd>
               </div>
               <div class="flex items-center justify-between gap-4 py-3 text-sm">
                 <dt class="text-loomera-textMuted">وضعیت رزرو</dt>
                 <dd class="text-left font-bold text-loomera-textPrimary">
-                  {{ order_status_label }}
+                  <bdi dir="auto" data-payment-human-label>{{ order_status_label }}</bdi>
                 </dd>
               </div>
               <div class="flex items-center justify-between gap-4 py-3 text-sm">
@@ -252,7 +252,7 @@
                 <div class="flex items-center justify-between gap-4 py-3 text-sm">
                   <dt class="text-loomera-textMuted">شناسه نهایی پرداخت</dt>
                   <dd class="break-all text-left font-mono text-xs font-bold text-loomera-textPrimary">
-                    {{ payment.ref_id }}
+                    <bdi dir="ltr" data-payment-machine-id>{{ payment.ref_id }}</bdi>
                   </dd>
                 </div>
               {% endif %}
@@ -260,7 +260,7 @@
                 <div class="flex items-center justify-between gap-4 py-3 text-sm">
                   <dt class="text-loomera-textMuted">رهگیری درگاه</dt>
                   <dd class="break-all text-left font-mono text-xs font-bold text-loomera-textPrimary">
-                    {{ payment.gateway_track_id }}
+                    <bdi dir="ltr" data-payment-machine-id>{{ payment.gateway_track_id }}</bdi>
                   </dd>
                 </div>
               {% endif %}
