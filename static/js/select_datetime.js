@@ -470,7 +470,7 @@
                 data-step-index="${index}"
                 ${isClickable ? '' : 'disabled'}
                 aria-current="${isCurrent ? 'step' : 'false'}">
-          <span class="block truncate text-xs font-black">${escapeBookingHtml(selection.serviceName || bookingText('service', 'خدمت'))}</span>
+          <span dir="auto" data-booking-service-name class="block truncate text-xs font-black">${escapeBookingHtml(selection.serviceName || bookingText('service', 'خدمت'))}</span>
           <span class="mt-1 block truncate text-[11px] opacity-80">${escapeBookingHtml(subtitle || bookingText('awaiting_time','در انتظار زمان'))}</span>
         </button>
       `;
@@ -526,7 +526,7 @@
             <div class="flex items-center justify-between gap-3">
               <div class="min-w-0">
                 <p class="mb-1 text-xs font-black text-loomera-textMuted">${escapeBookingHtml(bookingText('step','خدمت'))} ${toPersianDigits(state.currentIndex + 1)} ${escapeBookingHtml(bookingText('of','از'))} ${toPersianDigits(state.selections.length)}</p>
-                <h2 id="currentBookingStepTitle" class="truncate text-lg font-black text-loomera-textPrimary">${escapeBookingHtml(selection.serviceName || bookingText('service', 'خدمت'))}</h2>
+                <h2 id="currentBookingStepTitle" dir="auto" data-booking-service-name class="truncate text-lg font-black text-loomera-textPrimary">${escapeBookingHtml(selection.serviceName || bookingText('service', 'خدمت'))}</h2>
               </div>
               <span class="rounded-full bg-loomera-bgSubtle px-3 py-1 text-xs font-black text-loomera-textSecondary">${formatDuration(selection.serviceDuration) || bookingText('awaiting_time', 'در انتظار زمان')}</span>
             </div>
@@ -842,7 +842,7 @@
       return `
         <li class="flex items-center justify-between gap-3 rounded-2xl border px-3 py-3 ${rowClass}" role="listitem">
           <div class="min-w-0 flex-1">
-            <p class="truncate text-sm font-black text-loomera-textPrimary">${escapeBookingHtml(summary.parts[0] || 'خدمت')}</p>
+            <p dir="auto" data-booking-service-name class="truncate text-sm font-black text-loomera-textPrimary">${escapeBookingHtml(summary.parts[0] || 'خدمت')}</p>
             <p class="mt-1 truncate text-xs text-loomera-textSecondary">${escapeBookingHtml(summary.specialist)}</p>
           </div>
           <span class="rounded-full border px-3 py-1 text-[11px] font-black ${pickedClass}">${escapeBookingHtml(summary.pickedLabel)}</span>
