@@ -1,50 +1,57 @@
-"""Generate reviewable gettext catalog appendices for the Phase 3 booking table.
+"""Read-only validation of the compiled Phase 3 booking gettext migration.
 
-This is a *draft-only* preparation utility: it never edits catalogs or .mo
-artifacts. Promoting these translations requires atomically updating three
-.po files and their compiled .mo peers, then moving the runtime away from
-the transitional table after complete CI parity checks.
+Unlike the pre-migration preview builder, this audit inspects actual checked-in
+PO entries and rejects duplicates, blanks, missing entries and locale drift.
+The compiled .mo runtime is verified separately by Django regression tests.
 """
 from __future__ import annotations
 
 import json
 import re
 
-from loomera.globalization.booking_flash_messages import BOOKING_FLASH_MESSAGES
+from loomera.globalization.booking_flash_messages import BOOKING_FLASH_MSGIDS
 
 LANGUAGES = ("fa", "en", "ar")
-_BOOKING_CATALOG_MARKER = "#: loomera/globalization/booking_flash_messages.py"
 
 
-def preview_booking_gettext_appendix(language: str, existing_po: str) -> str:
-    """Return a deterministic PO appendix without modifying source or runtime.
+def inspect_booking_gettext_catalog(language: str, po_content: str) -> dict[str, str]:
+    """Inspect exactly the 14 approved msgids in a single native PO catalog.
 
-    Fail closed on unsupported languages, incomplete PO headers, conflicting
-    identifiers and unsafe/interpolated source messages.
+    This is a pure auditing function: no writes, compilation, request state,
+    string interpolation or fallback to unreviewed server data.
     """
     if language not in LANGUAGES:
         raise ValueError("Unsupported booking catalog language")
-    if not isinstance(existing_po, str):
-        raise TypeError("Existing catalog must be UTF-8 text")
-    if ('"Language: ' + language + r'\n"') not in existing_po:
+    if not isinstance(po_content, str):
+        raise TypeError("Catalog must be UTF-8 text")
+    if ('"Language: ' + language + r'\n"') not in po_content:
         raise ValueError("Catalog language header mismatch")
 
-    entries = []
-    seen = set()
-    for tone, source, english, arabic in BOOKING_FLASH_MESSAGES:
-        if tone not in {"error", "success", "info"} or source in seen:
-            raise ValueError("Duplicate or invalid booking message contract")
-        seen.add(source)
-        translation = {"fa": source, "en": english, "ar": arabic}[language]
-        for value in (source, translation):
-            if not value or any(ch in value for ch in ("\x00", "\n", "\r", "{", "}", "<", ">")):
-                raise ValueError("Booking gettext entries must be static safe literals")
-        msgid = json.dumps(source, ensure_ascii=False)
-        if re.search(r'(?m)^msgid ' + re.escape(msgid) + r'$', existing_po):
-            raise ValueError("Booking message already exists in catalog")
-        entries.append(
-            _BOOKING_CATALOG_MARKER + "\n"
-            + 'msgid ' + msgid + "\n"
-            + 'msgstr ' + json.dumps(translation, ensure_ascii=False) + "\n"
-        )
-    return "\n" + "\n".join(entries)
+    audit = {}
+    for tone, sources in BOOKING_FLASH_MSGIDS.items():
+        if tone not in {"error", "success", "info"}:
+            raise ValueError("Unreviewed booking flash tone")
+        for msgid in sources:
+            if not msgid or any(ch in msgid for ch in "\x00\r\n{}<>"):
+                raise ValueError("Unsafe booking msgid")
+            literal = json.dumps(msgid, ensure_ascii=False)
+            hits = re.findall(
+                r"(?m)^msgid " + re.escape(literal) +
+                r'\nmsgstr ("(?:[^"\\]|\\.)*")$',
+                po_content,
+            )
+            if len(hits) != 1:
+                raise ValueError("Missing or duplicate booking msgid")
+            translated = json.loads(hits[0])
+            if not translated or any(ch in translated for ch in "\x00\r\n{}<>"):
+                raise ValueError("Invalid or unreviewed booking translation")
+            if len(translated) > 300:
+                raise ValueError("Unexpectedly long booking translation")
+            if language == "fa" and translated != msgid:
+                raise ValueError("Historical Persian booking copy changed")
+            if language != "fa" and translated == msgid:
+                raise ValueError("Untranslated booking entry")
+            audit[msgid] = translated
+    if len(audit) != 14:
+        raise ValueError("Invalid booking catalog size")
+    return audit
