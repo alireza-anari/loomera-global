@@ -134,6 +134,13 @@ jobs:
             apps.main.test_phase3_booking_flash_locale \
             --failfast
 
+      - name: Phase 3 rebooking journey and gettext migration readiness
+        run: |
+          python manage.py test \
+            apps.main.test_phase3_rebooking_locale_flow \
+            apps.main.test_phase3_booking_gettext_migration \
+            --failfast
+
       - name: Phase 3 localized submission progress guards
         run: |
           python manage.py test \
