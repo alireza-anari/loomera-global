@@ -89,7 +89,7 @@ class CheckoutFlashLocaleTests(SimpleTestCase):
         )
         flat = [m for phrases in CHECKOUT_FLASH_MSGIDS.values() for m in phrases]
         self.assertEqual(len(flat), 24)
-        self.assertEqual(len(set(flat)), 19)
+        self.assertEqual(len(set(flat)), 24)
         self.assertFalse(set(flat) & {
             msgid for messages in BOOKING_FLASH_MSGIDS.values() for msgid in messages
         })
