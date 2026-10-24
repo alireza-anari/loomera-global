@@ -7,6 +7,7 @@ from typing import Iterable
 from django.core.exceptions import ValidationError
 from django.db.models import Exists, OuterRef, Q
 from django.utils import timezone
+from django.utils.translation import gettext as _
 
 from apps.accounts.models import Stylist
 from apps.salons.models import Salon, SalonMembership, SalonMembershipStatus
@@ -771,21 +772,36 @@ def build_cancellation_policy(
     policy_note = (getattr(salon, "cancellation_policy_note", "") or "").strip()
 
     if text:
-        title = "سیاست لغو این سالن"
+        title = _("Cancellation policy for this salon")
         description = text.strip()
     elif policy_note:
-        title = "سیاست لغو این سالن"
+        title = _("Cancellation policy for this salon")
         description = policy_note
     else:
-        title = "سیاست لغو"
-        description = f"لغو آنلاین تا {cancellation_hours} ساعت قبل از نوبت امکان‌پذیر است و در صورت پرداخت دیجیتال (آنلاین یا کیف پول)، {refund_percent}٪ مبلغ به کیف پول شما برمی‌گردد."
+        title = _("Cancellation policy")
+        description = _(
+            "Online cancellation is available up to %(hours)s hours before the appointment. "
+            "If paid digitally (online or wallet), %(percent)s percent of the amount is "
+            "returned to your wallet."
+        ) % {
+            "hours": cancellation_hours,
+            "percent": refund_percent,
+        }
 
     if can_cancel:
-        hint = f"در حال حاضر امکان لغو آنلاین برای شما فعال است. در صورت لغو این رزرو، {refund_percent}٪ مبلغ پرداخت دیجیتال به کیف پول شما برمی‌گردد."
+        hint = _(
+            "Online cancellation is currently available. If you cancel this booking, "
+            "%(percent)s percent of the digital payment is returned to your wallet."
+        ) % {"percent": refund_percent}
     elif is_upcoming:
-        hint = "برای این نوبت در حال حاضر امکان لغو آنلاین وجود ندارد و در صورت نیاز باید با سالن هماهنگ شود."
+        hint = _(
+            "Online cancellation is not currently available for this appointment. "
+            "Please coordinate with the salon if needed."
+        )
     else:
-        hint = "برای نوبت‌های انجام‌شده یا گذشته، امکان لغو آنلاین در دسترس نیست."
+        hint = _(
+            "Online cancellation is not available for completed or past appointments."
+        )
 
     return {
         "title": title,
