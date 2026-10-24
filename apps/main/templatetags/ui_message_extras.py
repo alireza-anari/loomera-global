@@ -4,7 +4,7 @@ from django.utils import translation
 
 from apps.main.ui_feedback import user_error_message, user_ui_message
 from loomera.globalization.interactive_messages import MESSAGE_IDS
-from loomera.globalization.booking_flash_messages import trusted_booking_flash
+from loomera.globalization.booking_flash_messages import BOOKING_FLASH_MSGIDS
 
 register = template.Library()
 
@@ -55,8 +55,10 @@ def _approved_flash_body(value, tone, language):
         keys += _TRUSTED_ERROR_KEYS
     # Domain messages are gated by tone; never accept success copy as an error
     # or OTP/session errors as success/info. Generic catalog keys stay separate.
-    candidates = tuple(MESSAGE_IDS[key] for key in keys) + (
-        _TRUSTED_DOMAIN_FLASH_MSGIDS.get(tone, ())
+    candidates = (
+        tuple(MESSAGE_IDS[key] for key in keys)
+        + _TRUSTED_DOMAIN_FLASH_MSGIDS.get(tone, ())
+        + BOOKING_FLASH_MSGIDS.get(tone, ())
     )
     if raw and len(raw) <= 300:
         for msgid in candidates:
@@ -70,13 +72,6 @@ def _approved_flash_body(value, tone, language):
                         break
             if allowed_msgid is not None:
                 break
-
-    # Booking/service copy has no compiled gettext entries yet. Its separately
-    # reviewed, immutable, tone-scoped contract accepts exact literals only.
-    if allowed_msgid is None and raw and len(raw) <= 300:
-        approved_booking = trusted_booking_flash(raw, tone, language)
-        if approved_booking is not None:
-            return approved_booking
 
     with translation.override(language):
         return translation.gettext(
