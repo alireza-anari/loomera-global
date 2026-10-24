@@ -224,9 +224,9 @@
   }
 
   function getCurrentDisplayStylist(selection) {
-    if (!selection) return 'متخصص';
+    if (!selection) return bookingText('specialist', 'متخصص');
     if (selection.requestedStylistId === 'any') return bookingText('any_professional', 'فرقی ندارد');
-    return selection.stylistName || selection.requestedStylistName || 'متخصص';
+    return selection.stylistName || selection.requestedStylistName || bookingText('specialist', 'متخصص');
   }
 
   async function getCandidateStylists(selection) {
@@ -234,7 +234,7 @@
     if (selection.requestedStylistId !== 'any') {
       return [{
         id: String(selection.stylistId),
-        name: selection.stylistName || selection.requestedStylistName || 'متخصص',
+        name: selection.stylistName || selection.requestedStylistName || bookingText('specialist', 'متخصص'),
         profile_image: selection.stylistProfileImage || null,
       }];
     }
@@ -435,7 +435,7 @@
     const serviceMeta = document.getElementById('serviceMeta');
     const bookingStepLabel = document.getElementById('bookingStepLabel');
     const selection = getCurrentSelection();
-    if (serviceName && selection) serviceName.textContent = selection.serviceName || 'خدمت';
+    if (serviceName && selection) serviceName.textContent = selection.serviceName || bookingText('service', 'خدمت');
     if (serviceMeta && selection) {
       const parts = [getCurrentDisplayStylist(selection), formatDuration(selection.serviceDuration)].filter(Boolean);
       const price = getSelectionPrice(selection);
@@ -470,7 +470,7 @@
                 data-step-index="${index}"
                 ${isClickable ? '' : 'disabled'}
                 aria-current="${isCurrent ? 'step' : 'false'}">
-          <span class="block truncate text-xs font-black">${escapeBookingHtml(selection.serviceName || 'خدمت')}</span>
+          <span class="block truncate text-xs font-black">${escapeBookingHtml(selection.serviceName || bookingText('service', 'خدمت'))}</span>
           <span class="mt-1 block truncate text-[11px] opacity-80">${escapeBookingHtml(subtitle || bookingText('awaiting_time','در انتظار زمان'))}</span>
         </button>
       `;
@@ -503,14 +503,14 @@
     const dayModeBlock = state.currentIndex > 0 ? `
       <div class="mt-4 rounded-2xl border border-loomera-borderSoft bg-loomera-bgSubtle p-3">
         <p class="text-xs font-black text-loomera-textPrimary">${escapeBookingHtml(bookingText('multi_service_booking','رزرو چندخدمتی'))}</p>
-        <p class="mt-1 text-xs leading-6 text-loomera-textSecondary">ابتدا تلاش می‌کنیم این خدمت هم در همان روز قبلی قرار بگیرد. اگر ممکن نبود، می‌توانی برای این خدمت روز دیگری انتخاب کنی.</p>
+        <p class="mt-1 text-xs leading-6 text-loomera-textSecondary">${escapeBookingHtml(bookingText('calendar_guidance','ابتدا تلاش می‌کنیم این خدمت هم در همان روز قبلی قرار بگیرد. اگر ممکن نبود، می‌توانی برای این خدمت روز دیگری انتخاب کنی.'))}</p>
         <div class="mt-3 flex flex-wrap gap-2">
-          <button type="button" data-day-mode="same" class="day-mode-btn inline-flex items-center rounded-full border px-4 py-2 text-xs font-black transition ${!splitEnabled ? 'border-loomera-primary bg-loomera-primary text-white shadow-lm-soft' : 'border-loomera-borderSoft bg-white text-loomera-textSecondary hover:border-loomera-primary/40 hover:bg-loomera-primarySoft hover:text-loomera-primary'}">همان روز • ${sameDayLabel || 'پیشنهادی'}</button>
-          <button type="button" data-day-mode="split" class="day-mode-btn inline-flex items-center rounded-full border px-4 py-2 text-xs font-black transition ${splitEnabled ? 'border-loomera-primary bg-loomera-primary text-white shadow-lm-soft' : 'border-loomera-borderSoft bg-white text-loomera-textSecondary hover:border-loomera-primary/40 hover:bg-loomera-primarySoft hover:text-loomera-primary'}">روز دیگری برای این خدمت</button>
+          <button type="button" data-day-mode="same" class="day-mode-btn inline-flex items-center rounded-full border px-4 py-2 text-xs font-black transition ${!splitEnabled ? 'border-loomera-primary bg-loomera-primary text-white shadow-lm-soft' : 'border-loomera-borderSoft bg-white text-loomera-textSecondary hover:border-loomera-primary/40 hover:bg-loomera-primarySoft hover:text-loomera-primary'}">${escapeBookingHtml(bookingText('same_day','همان روز'))} • ${escapeBookingHtml(sameDayLabel || bookingText('suggested','پیشنهادی'))}</button>
+          <button type="button" data-day-mode="split" class="day-mode-btn inline-flex items-center rounded-full border px-4 py-2 text-xs font-black transition ${splitEnabled ? 'border-loomera-primary bg-loomera-primary text-white shadow-lm-soft' : 'border-loomera-borderSoft bg-white text-loomera-textSecondary hover:border-loomera-primary/40 hover:bg-loomera-primarySoft hover:text-loomera-primary'}">${escapeBookingHtml(bookingText('another_day_for_service','روز دیگری برای این خدمت'))}</button>
         </div>
       </div>
     ` : `
-      <p class="mt-3 text-xs leading-6 text-loomera-textSecondary">تاریخ و ساعت مناسب را برای این خدمت انتخاب کن.</p>
+      <p class="mt-3 text-xs leading-6 text-loomera-textSecondary">${escapeBookingHtml(bookingText('choose_service_date_time','تاریخ و ساعت مناسب را برای این خدمت انتخاب کن.'))}</p>
     `;
 
     const content = document.getElementById('content');
@@ -526,7 +526,7 @@
             <div class="flex items-center justify-between gap-3">
               <div class="min-w-0">
                 <p class="mb-1 text-xs font-black text-loomera-textMuted">${escapeBookingHtml(bookingText('step','خدمت'))} ${toPersianDigits(state.currentIndex + 1)} ${escapeBookingHtml(bookingText('of','از'))} ${toPersianDigits(state.selections.length)}</p>
-                <h2 id="currentBookingStepTitle" class="truncate text-lg font-black text-loomera-textPrimary">${escapeBookingHtml(selection.serviceName || 'خدمت')}</h2>
+                <h2 id="currentBookingStepTitle" class="truncate text-lg font-black text-loomera-textPrimary">${escapeBookingHtml(selection.serviceName || bookingText('service', 'خدمت'))}</h2>
               </div>
               <span class="rounded-full bg-loomera-bgSubtle px-3 py-1 text-xs font-black text-loomera-textSecondary">${formatDuration(selection.serviceDuration) || bookingText('awaiting_time', 'در انتظار زمان')}</span>
             </div>
@@ -610,11 +610,11 @@
 
     monthTitle.textContent = `${today.getMonthName()} ${toPersianDigits(today.jy)}`;
     if (!sameDayAnchor || state.currentIndex === 0) {
-      calendarHint.textContent = 'روزهای آزاد و غیرفعال این خدمت در ۹۰ روز آینده';
+      calendarHint.textContent = bookingText('available_90_days','روزهای آزاد و غیرفعال این خدمت در ۹۰ روز آینده');
     } else if (splitEnabled) {
-      calendarHint.textContent = `پیش‌فرض همچنان ${formatGregorianToJalali(sameDayAnchor)} است، اما می‌توانید روز دیگری هم انتخاب کنید.`;
+      calendarHint.textContent = `${bookingText('default_still','پیش‌فرض همچنان')} ${formatGregorianToJalali(sameDayAnchor)} ${bookingText('default_still_suffix','است، اما می‌توانید روز دیگری هم انتخاب کنید.')}`;
     } else {
-      calendarHint.textContent = `پیش‌فرض این خدمت همان روز ${formatGregorianToJalali(sameDayAnchor)} است.`;
+      calendarHint.textContent = `${bookingText('default_same_day','پیش‌فرض این خدمت همان روز')} ${formatGregorianToJalali(sameDayAnchor)}${(document.documentElement.lang || 'fa').toLowerCase().startsWith('fa') ? ' است.' : '.'}`;
     }
 
     const cards = await Promise.all(dates.map(async (jalaliDay) => {
@@ -628,12 +628,12 @@
       const slots = disabledBySequence ? [] : await getAvailabilityForDate(selection, dateStr, state.currentIndex);
       const hasAvailability = slots.length > 0;
       const disabled = disabledBySequence || (!hasAvailability && !splitEnabled && sameDayAnchor === dateStr && state.currentIndex > 0);
-      let footerLabel = 'بدون وقت';
-      if (hasAvailability) footerLabel = `${toPersianDigits(slots.length)} زمان`;
-      else if (hardSameDayLock) footerLabel = 'همان روز';
-      else if (beforeAnchor) footerLabel = 'قبل از خدمت قبلی';
-      else if (sameDayAnchor === dateStr && !splitEnabled) footerLabel = 'بدون جای خالی';
-      else if (sameDayAnchor === dateStr && splitEnabled) footerLabel = hasAvailability ? footerLabel : 'پیشنهادی';
+      let footerLabel = bookingText('no_slot','بدون وقت');
+      if (hasAvailability) footerLabel = `${toPersianDigits(slots.length)} ${bookingText('times','زمان')}`;
+      else if (hardSameDayLock) footerLabel = bookingText('same_day','همان روز');
+      else if (beforeAnchor) footerLabel = bookingText('before_previous','قبل از خدمت قبلی');
+      else if (sameDayAnchor === dateStr && !splitEnabled) footerLabel = bookingText('no_room','بدون جای خالی');
+      else if (sameDayAnchor === dateStr && splitEnabled) footerLabel = hasAvailability ? footerLabel : bookingText('suggested','پیشنهادی');
 
       const buttonClass = [
         'flex h-full w-full min-w-[88px] flex-col items-center rounded-3xl border px-3 py-3 text-center transition focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-loomera-focusRing/30',
@@ -654,11 +654,11 @@
                   data-date="${dateStr}"
                   ${disabled ? 'disabled aria-disabled="true"' : ''}
                   aria-pressed="${isCurrent ? 'true' : 'false'}"
-                  aria-label="${jalaliDay.getShortDayName()} ${toPersianDigits(jalaliDay.jd)}، ${footerLabel}">
+                  aria-label="${escapeBookingHtml(jalaliDay.getShortDayName())} ${toPersianDigits(jalaliDay.jd)}، ${escapeBookingHtml(footerLabel)}">
             <span class="block text-[11px] font-black opacity-80">${jalaliDay.getShortDayName()}</span>
             <span class="mt-1 block text-2xl font-black leading-none">${toPersianDigits(jalaliDay.jd)}</span>
             <span class="mt-1 block text-[10px] opacity-75">${toPersianDigits(jalaliDay.jm)}/${toPersianDigits(jalaliDay.jy)}</span>
-            <span class="mt-2 block text-[10px] font-black ${footerClass}">${isCurrent ? 'انتخاب‌شده · ' : ''}${footerLabel}</span>
+            <span class="mt-2 block text-[10px] font-black ${footerClass}">${isCurrent ? `${escapeBookingHtml(bookingText('selected','انتخاب‌شده'))} · ` : ''}${escapeBookingHtml(footerLabel)}</span>
           </button>
         </div>
       `;
@@ -726,7 +726,7 @@
         <div class="rounded-2xl border border-amber-200 bg-amber-50 px-4 py-6 text-center text-amber-900" role="status">
           <div class="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-white text-amber-500"><i class="fa-regular fa-calendar-xmark text-xl" aria-hidden="true"></i></div>
           <p class="text-sm font-black">${escapeBookingHtml(bookingText('no_times','برای این روز زمانی موجود نیست'))}</p>
-          <p class="mt-2 text-xs leading-6 text-amber-800">روز دیگری را انتخاب کن یا اگر این خدمت بعد از خدمت قبلی جا نمی‌شود، آن را در روز دیگری قرار بده.</p>
+          <p class="mt-2 text-xs leading-6 text-amber-800">${escapeBookingHtml(bookingText('other_day_hint','روز دیگری را انتخاب کن یا اگر این خدمت بعد از خدمت قبلی جا نمی‌شود، آن را در روز دیگری قرار بده.'))}</p>
           ${canOfferSplit ? '<button type="button" id="enableSplitDayBtn" class="mt-4 inline-flex items-center justify-center rounded-full border border-amber-200 bg-white px-4 py-2 text-xs font-black text-amber-800 shadow-sm transition hover:bg-amber-100">برای این خدمت روز دیگری انتخاب می‌کنم</button>' : ''}
         </div>
       `;
@@ -828,7 +828,7 @@
     const desktopList = document.getElementById('desktopSelectedServicesList');
     const desktopPicked = document.getElementById('desktopPickedSummary');
     const totalParts = [];
-    if (totals.count > 0) totalParts.push(`${toPersianDigits(totals.count)} خدمت`);
+    if (totals.count > 0) totalParts.push(`${toPersianDigits(totals.count)} ${bookingText('service','خدمت')}`);
     if (totals.duration > 0) totalParts.push(formatDuration(totals.duration));
     if (totals.price > 0) totalParts.push(`${formatAmount(totals.price)} ${bookingText('toman','تومان')}`);
 
@@ -854,10 +854,10 @@
       servicesSummary.innerHTML = `
         <div class="flex flex-wrap items-start justify-between gap-3">
           <div>
-            <p class="text-xs font-black text-loomera-textMuted">خلاصه خدمات و متخصص‌ها</p>
-            <h2 class="mt-1 text-base font-black text-loomera-textPrimary">${totalParts.join(' • ') || 'خدمات انتخاب‌شده'}</h2>
+            <p class="text-xs font-black text-loomera-textMuted">${escapeBookingHtml(bookingText('summary','خدمات و متخصص‌ها'))}</p>
+            <h2 class="mt-1 text-base font-black text-loomera-textPrimary">${escapeBookingHtml(totalParts.join(' • ') || bookingText('chosen_services','خدمات انتخاب‌شده'))}</h2>
           </div>
-          <span class="inline-flex rounded-full border border-loomera-primary/20 bg-loomera-primarySoft px-3 py-1 text-xs font-black text-loomera-primary">مرحله زمان</span>
+          <span class="inline-flex rounded-full border border-loomera-primary/20 bg-loomera-primarySoft px-3 py-1 text-xs font-black text-loomera-primary">${escapeBookingHtml(bookingText('time_step','مرحله زمان'))}</span>
         </div>
         <ul class="mt-4 space-y-2" role="list">${rows}</ul>
       `;
@@ -866,7 +866,7 @@
     if (desktopList) {
       desktopList.innerHTML = `
         <div class="rounded-2xl border border-loomera-borderSoft bg-loomera-bgSubtle p-4">
-          <p class="text-xs font-black text-loomera-textMuted">خدمات و متخصص‌ها</p>
+          <p class="text-xs font-black text-loomera-textMuted">${escapeBookingHtml(bookingText('summary','خدمات و متخصص‌ها'))}</p>
           <ul class="mt-3 space-y-2" role="list">${rows}</ul>
         </div>
       `;
@@ -875,10 +875,10 @@
     if (desktopPicked) {
       const pickedRows = state.selections.map((selection, index) => {
         const summary = buildSelectionSummaryLine(selection, index);
-        if (!summary.picked) return `<p class="rounded-xl border border-dashed border-loomera-borderSoft bg-white px-3 py-2 text-xs text-loomera-textMuted">${escapeBookingHtml(selection.serviceName || 'خدمت')}: زمان انتخاب نشده</p>`;
-        return `<p class="rounded-xl border border-emerald-100 bg-emerald-50 px-3 py-2 text-xs font-black text-emerald-700">${escapeBookingHtml(selection.serviceName || 'خدمت')}: ${escapeBookingHtml(summary.pickedLabel)}</p>`;
+        if (!summary.picked) return `<p class="rounded-xl border border-dashed border-loomera-borderSoft bg-white px-3 py-2 text-xs text-loomera-textMuted">${escapeBookingHtml(selection.serviceName || bookingText('service', 'خدمت'))}: ${escapeBookingHtml(bookingText('no_time_short','زمان انتخاب نشده'))}</p>`;
+        return `<p class="rounded-xl border border-emerald-100 bg-emerald-50 px-3 py-2 text-xs font-black text-emerald-700">${escapeBookingHtml(selection.serviceName || bookingText('service', 'خدمت'))}: ${escapeBookingHtml(summary.pickedLabel)}</p>`;
       }).join('');
-      desktopPicked.innerHTML = pickedRows || bookingText('no_picked_yet','هنوز زمانی انتخاب نشده است.');
+      desktopPicked.innerHTML = pickedRows || escapeBookingHtml(bookingText('no_picked_yet','هنوز زمانی انتخاب نشده است.'));
     }
   }
   function buildSelectionSummaryLine(selection, index) {
@@ -900,7 +900,7 @@
     if (price > 0) parts.push(`${formatAmount(price)} ${bookingText('toman','تومان')}`);
     const specialist = selection.requestedStylistId === 'any'
       ? bookingText('any_professional', 'فرقی ندارد')
-      : (selection.requestedStylistName || selection.stylistName || 'متخصص');
+      : (selection.requestedStylistName || selection.stylistName || bookingText('specialist','متخصص'));
     const pickedLabel = picked
       ? `${formatGregorianToJalali(picked.date)}، ${picked.time}${picked.end_time ? ` تا ${picked.end_time}` : ''}`
       : bookingText('no_time_selected','زمان انتخاب نشده');
