@@ -1,4 +1,4 @@
-"""Phase 3.22: compiled checkout/settlement/reschedule flash locale boundary.
+"""Phase 3.22–3.23: compiled checkout/settlement/reschedule flash locale boundary.
 
 Exercises the actual Django message partial and all shipped PO/MO catalogs.
 Never executes a financial mutation, payment gateway, appointment write or SMS.
@@ -80,15 +80,15 @@ class CheckoutFlashLocaleTests(SimpleTestCase):
             ),
         )
 
-    def test_reviewed_tone_scope_is_immutable_and_contains_nineteen_messages(self):
+    def test_reviewed_tone_scope_is_immutable_and_contains_twenty_four_messages(self):
         self.assertIsInstance(CHECKOUT_FLASH_MSGIDS, MappingProxyType)
         self.assertEqual(set(CHECKOUT_FLASH_MSGIDS), set(LEVELS))
         self.assertEqual(
             {tone: len(messages) for tone, messages in CHECKOUT_FLASH_MSGIDS.items()},
-            {"error": 9, "info": 5, "warning": 3, "success": 2},
+            {"error": 14, "info": 5, "warning": 3, "success": 2},
         )
         flat = [m for phrases in CHECKOUT_FLASH_MSGIDS.values() for m in phrases]
-        self.assertEqual(len(flat), 19)
+        self.assertEqual(len(flat), 24)
         self.assertEqual(len(set(flat)), 19)
         self.assertFalse(set(flat) & {
             msgid for messages in BOOKING_FLASH_MSGIDS.values() for msgid in messages
@@ -101,18 +101,18 @@ class CheckoutFlashLocaleTests(SimpleTestCase):
         with self.assertRaises(TypeError):
             CHECKOUT_FLASH_MSGIDS["error"] = ("override",)
 
-    def test_po_and_compiled_mo_have_all_nineteen_exact_entries_per_language(self):
+    def test_po_and_compiled_mo_have_all_twenty_four_exact_entries_per_language(self):
         for language in ("fa", "en", "ar"):
             with self.subTest(lang=language):
                 po = (self.locale_dir(language) / "django.po").read_text(encoding="utf-8")
                 compiled = (self.locale_dir(language) / "django.mo").read_bytes()
                 self.assertEqual(struct.unpack_from("<I", compiled, 0)[0], 0x950412de)
-                self.assertEqual(struct.unpack_from("<I", compiled, 8)[0], 190)
+                self.assertEqual(struct.unpack_from("<I", compiled, 8)[0], 195)
                 approved = inspect_checkout_gettext_catalog(language, po)
-                self.assertEqual(len(approved), 19)
+                self.assertEqual(len(approved), 24)
                 self.assertEqual(po.count(
                     "#: loomera/globalization/checkout_flash_messages.py"
-                ), 19)
+                ), 24)
                 self.assertEqual(len(inspect_booking_gettext_catalog(language, po)), 14)
                 with translation.override(language):
                     for msgid, expected in approved.items():
