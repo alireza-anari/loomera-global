@@ -8,7 +8,6 @@ from types import MappingProxyType
 BOOKING_JOURNEY_MESSAGE_IDS = MappingProxyType({
     "booking.calendar_guidance": "We try to keep this service on the same day. If not possible, you can choose another day.",
     "booking.choose_service_date_time": "Choose a suitable date and time for this service.",
-    "booking.same_day_option": "Same day",
     "booking.another_day_for_service": "Another day for this service",
     "booking.suggested": "Suggested",
     "booking.available_90_days": "Available and unavailable dates for this service over the next 90 days",
