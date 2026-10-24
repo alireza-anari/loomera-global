@@ -1104,3 +1104,52 @@ authorization, idempotency, OTP, Iranian locale defaults, database
 migrations or production deployment. Physical browser, RTL/LTR visual
 and assistive-technology acceptance remain outstanding before closing
 Phase 3.
+
+## Phase 3 — Slice 3.25: Booking Bidirectional and Accessibility Guards
+
+This slice addresses concrete **presentation-only** issues in the
+customer booking/checkout journey, without changing transaction
+processing or POST form semantics.
+
+Booking headers, professional/date selection and appointment-detail
+back-arrow icons now carry a narrow `data-booking-back-icon` hook.
+`bidirectional_booking.css` mirrors those arrows **only when the
+actual deployment document has `html[dir="ltr"]`**. Persian/Arabic
+RTL remains the original rightward icon direction. DOM/tab order,
+routes, history and layout order are unchanged. A scoped stylesheet
+loaded after the existing shell layer also isolates Latin coupon
+codes inside mixed Persian/Arabic descriptions with `bdi dir="ltr"`
+in the preview, checkout and payment result templates; currency,
+discount calculations and original code values are untouched.
+
+The booking preview's single available payment option previously
+rendered a focusable screen-reader-only radio as a sibling of its
+visual card, not inside any label. It is now nested inside a real
+`label[data-payment-option]`, retaining its name, checked state
+and submit value. This restores a readable accessible name, keyboard
+label activation and compatibility with the existing JS selector
+that reads `option.querySelector('input[type="radio"]')`. Focus
+indication is scoped to that payment option. Multi-choice
+RadioSelect behavior is not modified.
+
+Both checkout and reservation-preview error summaries now use
+Django BoundField `auto_id + "_error"` IDs. Native Django coupon
+widgets refer to their error ID; the hand-built preview coupon input
+sets explicit `aria-invalid`, conditional `aria-describedby` and
+`dir="ltr"`. Django's RadioSelect does **not** attach an error
+description by default, so the payment `radiogroup` now conditionally
+sets `aria-invalid` and `aria-describedby` when validation fails,
+including the labeled single-choice payment card. Associated inline
+errors have `role="alert"`. Coupon/payment validation and server
+decisions are unchanged.
+
+A ten-test DB-free Django suite validates the actual bound-widget
+error references, template-rendered preview input states, source
+markup for the labeled single payment radio, JavaScript hook parity,
+scoped CSS and default fa/Jalali/timezone invariants. CI runs the
+suite alongside existing Phase 1–3 tests.
+
+These automated **structural/render checks are not a substitute**
+for acceptance in real browsers using screen readers and keyboard
+navigation, nor for visual review at varied viewport sizes. Those
+Phase 3 exit gates remain open; no production deployment is included.

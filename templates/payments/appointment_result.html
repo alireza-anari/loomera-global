@@ -221,7 +221,7 @@
                 <div class="flex items-center justify-between gap-4 py-3 text-sm">
                   <dt class="text-loomera-textMuted">
                     تخفیف کد
-                    {% if order.coupon_code %} • {{ order.coupon_code }}{% endif %}
+                    {% if order.coupon_code %} • <bdi dir="ltr" data-booking-coupon-token>{{ order.coupon_code }}</bdi>{% endif %}
                   </dt>
                   <dd class="text-left font-black text-emerald-700">
                     {{ order.coupon_discount_amount|floatformat:0 }} تومان

@@ -92,7 +92,7 @@
   <header class="sticky top-0 z-40 border-b border-loomera-borderSoft bg-white/90 px-4 py-3 shadow-lm-soft backdrop-blur-xl lg:hidden" aria-label="جزئیات نوبت">
     <div class="mx-auto flex max-w-7xl items-center justify-between gap-3">
       <a href="{% url 'orders:appointments' %}" class="inline-flex h-10 w-10 items-center justify-center rounded-full border border-loomera-borderSoft bg-white text-loomera-textPrimary shadow-sm transition hover:bg-loomera-primarySoft focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-loomera-focusRing/30" aria-label="بازگشت به نوبت‌های من">
-        <i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
+        <i data-booking-back-icon class="fa-solid fa-arrow-right" aria-hidden="true"></i>
       </a>
       <div class="min-w-0 text-center">
         <p class="text-[11px] font-black text-loomera-primary">جزئیات نوبت</p>
@@ -118,7 +118,7 @@
         <div class="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
           <div class="min-w-0 text-white">
             <a href="{% url 'orders:appointments' %}" class="mb-5 hidden h-11 w-11 items-center justify-center rounded-full border border-white/20 bg-white/90 text-slate-900 shadow-lm-soft transition hover:bg-white lg:inline-flex" aria-label="بازگشت به نوبت‌های من">
-              <i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
+              <i data-booking-back-icon class="fa-solid fa-arrow-right" aria-hidden="true"></i>
             </a>
             <p class="text-xs font-black text-white/70">جزئیات نوبت</p>
             <h1 class="mt-2 text-2xl font-black leading-10 lg:text-4xl">{{ appointment.salon.salon_name }}</h1>
