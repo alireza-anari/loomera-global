@@ -790,7 +790,3 @@ msgstr "تعذر بدء الدفع الإلكتروني. يُرجى المحاو
 #: loomera/globalization/checkout_flash_messages.py
 msgid "شروع پرداخت ناموفق بود."
 msgstr "تعذر بدء الدفع."
-
-#: loomera/globalization/checkout_flash_messages.py
-msgid "نوبت شما قطعی شد و در برنامه کاری متخصص قرار گرفت. پرداخت این سفارش در مجموعه انجام می‌شود."
-msgstr "تم تأكيد موعدك وإضافته إلى جدول عمل المتخصص. تتم تسوية هذا الطلب في الصالون."
