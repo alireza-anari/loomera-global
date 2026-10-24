@@ -1174,3 +1174,235 @@ msgstr "مدیریت نوبت"
 #: loomera/globalization/booking_journey_messages.py
 msgid "Schedule booking"
 msgstr "رزرو نوبت"
+
+#: templates/orders/reservation_preview.html templates/orders/checkout.html apps/orders/forms.py
+msgid "Booking confirmation"
+msgstr "تأیید رزرو"
+
+#: templates/orders/reservation_preview.html templates/orders/checkout.html apps/orders/forms.py
+msgid "Review the service, professional, time, and price before confirming."
+msgstr "جزئیات خدمت، متخصص، زمان و هزینه را قبل از تأیید نهایی بررسی کن."
+
+#: templates/orders/reservation_preview.html templates/orders/checkout.html apps/orders/forms.py
+msgid "Back to time selection"
+msgstr "بازگشت به انتخاب زمان"
+
+#: templates/orders/reservation_preview.html templates/orders/checkout.html apps/orders/forms.py
+msgid "Step 4 of 4"
+msgstr "مرحله ۴ از ۴"
+
+#: templates/orders/reservation_preview.html templates/orders/checkout.html apps/orders/forms.py
+msgid "Review booking details"
+msgstr "بررسی جزئیات رزرو"
+
+#: templates/orders/reservation_preview.html templates/orders/checkout.html apps/orders/forms.py
+msgid "Overall booking time"
+msgstr "زمان کلی رزرو"
+
+#: templates/orders/reservation_preview.html templates/orders/checkout.html apps/orders/forms.py
+msgid "Multi-day booking"
+msgstr "رزرو چندروزه"
+
+#: templates/orders/reservation_preview.html templates/orders/checkout.html apps/orders/forms.py
+msgid "This booking is scheduled across multiple days."
+msgstr "این رزرو در چند روز برنامه‌ریزی شده است."
+
+#: templates/orders/reservation_preview.html templates/orders/checkout.html apps/orders/forms.py
+msgid "To keep the services in order, part of this booking is scheduled for later days. Details for each day are shown before final confirmation."
+msgstr "برای حفظ ترتیب خدمات، بخشی از این رزرو در روزهای بعد برنامه‌ریزی شده است. جزئیات هر روز پیش از تأیید نهایی نمایش داده می‌شود."
+
+#: templates/orders/reservation_preview.html templates/orders/checkout.html apps/orders/forms.py
+msgid "services"
+msgstr "خدمت"
+
+#: templates/orders/reservation_preview.html templates/orders/checkout.html apps/orders/forms.py
+msgid "Services, professionals and times"
+msgstr "خدمات، متخصص‌ها و زمان"
+
+#: templates/orders/reservation_preview.html templates/orders/checkout.html apps/orders/forms.py
+msgid "Appointment date"
+msgstr "تاریخ"
+
+#: templates/orders/reservation_preview.html templates/orders/checkout.html apps/orders/forms.py
+msgid "Appointment time"
+msgstr "ساعت"
+
+#: templates/orders/reservation_preview.html templates/orders/checkout.html apps/orders/forms.py
+msgid "Duration"
+msgstr "مدت"
+
+#: templates/orders/reservation_preview.html templates/orders/checkout.html apps/orders/forms.py
+msgid "Auto-selected"
+msgstr "انتخاب خودکار"
+
+#: templates/orders/reservation_preview.html templates/orders/checkout.html apps/orders/forms.py
+msgid "Service discount"
+msgstr "تخفیف خدمات"
+
+#: templates/orders/reservation_preview.html templates/orders/checkout.html apps/orders/forms.py
+msgid "Payment"
+msgstr "پرداخت"
+
+#: templates/orders/reservation_preview.html templates/orders/checkout.html apps/orders/forms.py
+msgid "Discounts and payment method"
+msgstr "تخفیف و روش پرداخت"
+
+#: templates/orders/reservation_preview.html templates/orders/checkout.html apps/orders/forms.py
+msgid "First visit · digital payment"
+msgstr "اولین مراجعه • پرداخت دیجیتال"
+
+#: templates/orders/reservation_preview.html templates/orders/checkout.html apps/orders/forms.py
+msgid "Have a discount code?"
+msgstr "کد تخفیف داری؟"
+
+#: templates/orders/reservation_preview.html templates/orders/checkout.html apps/orders/forms.py
+msgid "Discount code"
+msgstr "کد تخفیف"
+
+#: templates/orders/reservation_preview.html templates/orders/checkout.html apps/orders/forms.py
+msgid "Enter your discount code"
+msgstr "کد تخفیف را وارد کن"
+
+#: templates/orders/reservation_preview.html templates/orders/checkout.html apps/orders/forms.py
+msgid "Apply discount"
+msgstr "اعمال تخفیف"
+
+#: templates/orders/reservation_preview.html templates/orders/checkout.html apps/orders/forms.py
+msgid "Remove code"
+msgstr "حذف کد"
+
+#: templates/orders/reservation_preview.html templates/orders/checkout.html apps/orders/forms.py
+msgid "Coupon code"
+msgstr "کد"
+
+#: templates/orders/reservation_preview.html templates/orders/checkout.html apps/orders/forms.py
+msgid "was applied successfully."
+msgstr "با موفقیت اعمال شد."
+
+#: templates/orders/reservation_preview.html templates/orders/checkout.html apps/orders/forms.py
+msgid "Discount cap for this code:"
+msgstr "سقف این کد:"
+
+#: templates/orders/reservation_preview.html templates/orders/checkout.html apps/orders/forms.py
+msgid "Discount amount:"
+msgstr "مبلغ تخفیف:"
+
+#: templates/orders/reservation_preview.html templates/orders/checkout.html apps/orders/forms.py
+msgid "Campaign cap:"
+msgstr "سقف کمپین:"
+
+#: templates/orders/reservation_preview.html templates/orders/checkout.html apps/orders/forms.py
+msgid "Payment method"
+msgstr "روش پرداخت"
+
+#: templates/orders/reservation_preview.html templates/orders/checkout.html apps/orders/forms.py
+msgid "The appointment is booked now; pay at the salon when you arrive."
+msgstr "نوبت اکنون ثبت می‌شود و مبلغ هنگام مراجعه در مجموعه پرداخت خواهد شد."
+
+#: templates/orders/reservation_preview.html templates/orders/checkout.html apps/orders/forms.py
+msgid "Payment is completed through the online gateway."
+msgstr "پرداخت از طریق درگاه آنلاین انجام می‌شود."
+
+#: templates/orders/reservation_preview.html templates/orders/checkout.html apps/orders/forms.py
+msgid "Wallet balance:"
+msgstr "موجودی کیف پول:"
+
+#: templates/orders/reservation_preview.html templates/orders/checkout.html apps/orders/forms.py
+msgid "Payment is made when you arrive at the salon."
+msgstr "پرداخت هنگام مراجعه به مجموعه انجام می‌شود."
+
+#: templates/orders/reservation_preview.html templates/orders/checkout.html apps/orders/forms.py
+msgid "The booking is registered now; payment will be made when you arrive at the salon."
+msgstr "رزرو اکنون ثبت می‌شود و پرداخت هنگام مراجعه به مجموعه انجام خواهد شد."
+
+#: templates/orders/reservation_preview.html templates/orders/checkout.html apps/orders/forms.py
+msgid "Online payment is completed through the gateway; the booking is finalized after payment is confirmed."
+msgstr "پرداخت آنلاین از طریق درگاه انجام می‌شود و پس از تأیید پرداخت، رزرو نهایی خواهد شد."
+
+#: templates/orders/reservation_preview.html templates/orders/checkout.html apps/orders/forms.py
+msgid "Price summary"
+msgstr "خلاصه هزینه"
+
+#: templates/orders/reservation_preview.html templates/orders/checkout.html apps/orders/forms.py
+msgid "Service subtotal"
+msgstr "جمع خدمات"
+
+#: templates/orders/reservation_preview.html templates/orders/checkout.html apps/orders/forms.py
+msgid "Coupon discount"
+msgstr "تخفیف کد"
+
+#: templates/orders/reservation_preview.html templates/orders/checkout.html apps/orders/forms.py
+msgid "Total discounts"
+msgstr "جمع کل تخفیف"
+
+#: templates/orders/reservation_preview.html templates/orders/checkout.html apps/orders/forms.py
+msgid "Amount due"
+msgstr "مبلغ قابل پرداخت"
+
+#: templates/orders/reservation_preview.html templates/orders/checkout.html apps/orders/forms.py
+msgid "Final amount"
+msgstr "مبلغ نهایی"
+
+#: templates/orders/reservation_preview.html templates/orders/checkout.html apps/orders/forms.py
+msgid "Finalize booking"
+msgstr "ثبت نهایی رزرو"
+
+#: templates/orders/reservation_preview.html templates/orders/checkout.html apps/orders/forms.py
+msgid "Submitting booking"
+msgstr "در حال ثبت رزرو"
+
+#: templates/orders/reservation_preview.html templates/orders/checkout.html apps/orders/forms.py
+msgid "Payment summary"
+msgstr "خلاصه پرداخت"
+
+#: templates/orders/reservation_preview.html templates/orders/checkout.html apps/orders/forms.py
+msgid "Salon"
+msgstr "مجموعه"
+
+#: templates/orders/reservation_preview.html templates/orders/checkout.html apps/orders/forms.py
+msgid "Number of services"
+msgstr "تعداد خدمات"
+
+#: templates/orders/reservation_preview.html templates/orders/checkout.html apps/orders/forms.py
+msgid "Review the services, professionals, and times before finalizing your booking."
+msgstr "قبل از ثبت نهایی، جزئیات خدمات، متخصص‌ها و زمان رزرو را بررسی کن."
+
+#: templates/orders/reservation_preview.html templates/orders/checkout.html apps/orders/forms.py
+msgid "Back to booking preview"
+msgstr "بازگشت به پیش‌نمایش رزرو"
+
+#: templates/orders/reservation_preview.html templates/orders/checkout.html apps/orders/forms.py
+msgid "Payment and confirmation"
+msgstr "تأیید و پرداخت"
+
+#: templates/orders/reservation_preview.html templates/orders/checkout.html apps/orders/forms.py
+msgid "Review your booking details"
+msgstr "جزئیات رزرو را بررسی کن"
+
+#: templates/orders/reservation_preview.html templates/orders/checkout.html apps/orders/forms.py
+msgid "Online payment"
+msgstr "پرداخت آنلاین"
+
+#: templates/orders/reservation_preview.html templates/orders/checkout.html apps/orders/forms.py
+msgid "Pay with wallet"
+msgstr "پرداخت با کیف پول"
+
+#: templates/orders/reservation_preview.html templates/orders/checkout.html apps/orders/forms.py
+msgid "Pay at the salon"
+msgstr "پرداخت در مجموعه"
+
+#: templates/orders/reservation_preview.html templates/orders/checkout.html apps/orders/forms.py
+msgid "In the beta, only pay-at-the-salon is available."
+msgstr "در نسخه بتا فقط پرداخت در مجموعه فعال است."
+
+#: templates/orders/reservation_preview.html templates/orders/checkout.html apps/orders/forms.py
+msgid "For a first visit to this salon, only digital payment (online or wallet) is allowed."
+msgstr "برای اولین مراجعه به این مجموعه، فقط پرداخت دیجیتال (آنلاین یا کیف پول) مجاز است."
+
+#: templates/orders/reservation_preview.html templates/orders/checkout.html apps/orders/forms.py
+msgid "on"
+msgstr "روی"
+
+#: templates/orders/reservation_preview.html templates/orders/checkout.html apps/orders/forms.py
+msgid "%(amount)s toman discount has been applied to this booking."
+msgstr "به مبلغ %(amount)s تومان تخفیف روی این رزرو اعمال شده است."
