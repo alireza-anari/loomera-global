@@ -135,7 +135,7 @@ class BookingBidirectionalAccessibilityTests(SimpleTestCase):
         src = self.source("templates/orders/reservation_preview.html")
         start = src.rfind("<input", 0, src.index("data-checkout-coupon-input"))
         end = src.index(">", src.index("data-checkout-coupon-input")) + 1
-        fragment = engines["django"].from_string(src[start:end])
+        fragment = engines["django"].from_string("{% load i18n %}" + src[start:end])
         for coupon, valid in (("INVALID" * 20, False), ("SAVE10", True)):
             form = AppointmentCheckoutForm(data={
                 "coupon_code": coupon, "payment_method": "pay_in_salon",
