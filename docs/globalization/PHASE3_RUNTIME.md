@@ -1067,3 +1067,40 @@ No booking or payment business logic was changed. The preview-only guard
 still prevents creation of a reservation when the request only refreshes
 the preview. No deployment is included. Browser visual review and
 assistive-technology validation remain open Phase 3 exit criteria.
+
+## Phase 3 — Slice 3.24: Payment Completion Flash Locale Parity
+
+Two remaining static checkout success notifications have been reviewed
+against their **actual issuing branches** and localized in the compiled
+fa/en/ar Django gettext catalogs. The first is issued after wallet
+withdrawal, successful wallet payment recording and the order being
+marked paid. The second is issued when the reservation is confirmed
+and scheduled with the order still in the `pending` state: **payment
+will be made at the salon**, and must not be described as already
+collected. Both reviewed messages have identical legacy Persian
+sources, distinct English/Arabic copy, and are approved only for
+success-tone server flashes.
+
+All three `django.po` files and the corresponding three compiled
+`django.mo` files were updated in one atomic Git commit: the existing
+195 messages remain and two were added, for **197 catalog entries per
+language**. The immutable checkout allowlist grows from 24 to 26
+messages (14 errors, 5 information, 3 warnings and 4 successes). The
+existing strict complete-string and tone match, generic en/ar fallback
+for any user data or appended payment amounts, and historical fa
+sanitizer remain unchanged. The read-only PO audit and Django rendered
+flash suite now verify all 26 entries and the compiled MO payloads.
+
+Three new DB-free regression methods independently pin wallet versus
+pay-at-salon wording, check that the real issuing view only presents
+the wallet success after payment/order state changes and the on-site
+success while payment remains pending, and verify that augmented
+phone, wallet, amount and gateway-like details are never displayed.
+The existing Phase 3 checkout gettext CI step automatically runs these
+tests together with the full previous Phase 1–3 checks.
+
+There is no change to business/order/payment logic, transaction
+authorization, idempotency, OTP, Iranian locale defaults, database
+migrations or production deployment. Physical browser, RTL/LTR visual
+and assistive-technology acceptance remain outstanding before closing
+Phase 3.
