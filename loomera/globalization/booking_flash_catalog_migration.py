@@ -58,7 +58,7 @@ def inspect_booking_gettext_catalog(language: str, po_content: str) -> dict[str,
 
 
 def inspect_checkout_gettext_catalog(language: str, po_content: str) -> dict[str, str]:
-    """Audit 19 exact approved checkout, settlement and rescheduling msgids.
+    """Audit 24 exact approved checkout, settlement and rescheduling msgids.
 
     This validates only checked-in native PO text, never calls external
     translators or writes to a catalog. A separate runtime test checks MO
@@ -98,6 +98,6 @@ def inspect_checkout_gettext_catalog(language: str, po_content: str) -> dict[str
             if language != "fa" and translated == source:
                 raise ValueError("Checkout translation missing")
             result[source] = translated
-    if len(result) != 19:
+    if len(result) != 24:
         raise ValueError("Unexpected checkout catalog size")
     return result

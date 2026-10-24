@@ -766,3 +766,23 @@ msgstr "کد تخفیف روی مبلغ نهایی اعمال شد."
 #: loomera/globalization/checkout_flash_messages.py
 msgid "زمان نوبت با موفقیت تغییر کرد."
 msgstr "زمان نوبت با موفقیت تغییر کرد."
+
+#: loomera/globalization/checkout_flash_messages.py
+msgid "اطلاعات انتخاب زمان دریافت نشد."
+msgstr "اطلاعات انتخاب زمان دریافت نشد."
+
+#: loomera/globalization/checkout_flash_messages.py
+msgid "فرمت اطلاعات انتخاب زمان نامعتبر است."
+msgstr "فرمت اطلاعات انتخاب زمان نامعتبر است."
+
+#: loomera/globalization/checkout_flash_messages.py
+msgid "این عملیات فقط برای به‌روزرسانی پیش‌نمایش است و رزرو ثبت نشد."
+msgstr "این عملیات فقط برای به‌روزرسانی پیش‌نمایش است و رزرو ثبت نشد."
+
+#: loomera/globalization/checkout_flash_messages.py
+msgid "شروع پرداخت آنلاین ناموفق بود. لطفاً دوباره تلاش کنید."
+msgstr "شروع پرداخت آنلاین ناموفق بود. لطفاً دوباره تلاش کنید."
+
+#: loomera/globalization/checkout_flash_messages.py
+msgid "شروع پرداخت ناموفق بود."
+msgstr "شروع پرداخت ناموفق بود."
