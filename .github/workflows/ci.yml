@@ -136,6 +136,16 @@ jobs:
             apps.main.test_phase3_rebooking_locale_flow \
             --failfast
 
+      - name: Phase 3 compiled booking dynamic UI gettext and flash isolation
+        run: |
+          node --check static/js/interactive_i18n.js
+          node --check static/js/select_stylist.js
+          node --check static/js/select_datetime.js
+          python manage.py test \
+            apps.main.test_phase3_booking_dynamic_locale \
+            --failfast
+          node --test tests/js/phase3_booking_dynamic_locale.test.cjs
+
       - name: Phase 3 booking journey dynamic markup and locale guards
         run: |
           node --check static/js/select_stylist.js
