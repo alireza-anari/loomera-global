@@ -1044,3 +1044,26 @@ suite alongside all prior Phase 1–3 checks.
 There is no migration, SMS/OTP change, production deployment or source
 repository write. Real browser and assistive-technology acceptance
 remain outstanding; Phase 3 is not closed.
+
+## Phase 3 — Slice 3.23: Remaining Checkout Error Messages
+
+Five additional exact, static error notices from the active checkout flow
+are now covered by the existing gettext boundary: missing time-selection
+data, malformed time-selection data, preview-only requests that must not
+create a booking, and two generic payment-start fallback messages. These
+messages are approved in Persian, English and Arabic and are included only
+in the immutable error-tone allowlist.
+
+All three native `django.po` catalogs and their matching compiled
+`django.mo` files were updated together in one atomic Git tree commit.
+The existing 190 entries were preserved and five were added, yielding
+195 entries per language. The cumulative checkout allowlist contains
+24 messages: 14 errors, five information notices, three warnings and
+two successes. The read-only catalog audit and database-free regression
+suite verify the exact source IDs, all compiled locales, MO entry counts,
+tone isolation, escaping, generic fallbacks and unchanged checkout guards.
+
+No booking or payment business logic was changed. The preview-only guard
+still prevents creation of a reservation when the request only refreshes
+the preview. No deployment is included. Browser visual review and
+assistive-technology validation remain open Phase 3 exit criteria.
