@@ -7,9 +7,9 @@ from loomera.globalization.interactive_messages import MESSAGE_IDS
 
 register = template.Library()
 
-# Only these existing, audited *static* browser feedback strings may cross from
-# server flash messages into non-Persian UI. No user data, provider errors,
-# formatting arguments or domain-specific message text is translated here.
+# Only existing audited browser feedback strings and the reviewed *literal*
+# account/OTP gettext messages may cross into non-Persian flash UI.
+# No dynamic domain text, user data, provider errors or formatting arguments.
 _TRUSTED_ERROR_KEYS = ("validation.notice", "validation.server_form")
 _TRUSTED_DOMAIN_FLASH_MSGIDS = {
     # Only literal account/OTP messages from the live views which already have
