@@ -635,3 +635,58 @@ msgstr "Passwords do not match."
 msgid "Password must be at least 8 characters long."
 msgstr "Password must be at least 8 characters long."
 
+#: loomera/globalization/booking_flash_messages.py
+msgid "خدمات انتخاب‌شده معتبر نیستند."
+msgstr "The selected services are invalid."
+
+#: loomera/globalization/booking_flash_messages.py
+msgid "اطلاعات سالن و خدمات برای رزرو کامل نیست."
+msgstr "Salon and service details are incomplete for this booking."
+
+#: loomera/globalization/booking_flash_messages.py
+msgid "یک یا چند خدمت انتخاب‌شده معتبر نیست."
+msgstr "One or more selected services are invalid."
+
+#: loomera/globalization/booking_flash_messages.py
+msgid "متخصص انتخاب‌شده معتبر نیست."
+msgstr "The selected professional is invalid."
+
+#: loomera/globalization/booking_flash_messages.py
+msgid "سالن مربوط به این لینک فعال نیست یا در دسترس نیست."
+msgstr "The salon for this link is inactive or unavailable."
+
+#: loomera/globalization/booking_flash_messages.py
+msgid "برای این متخصص در این مجموعه خدمت فعالی پیدا نشد."
+msgstr "No active services are available for this professional at this salon."
+
+#: loomera/globalization/booking_flash_messages.py
+msgid "خدمت انتخاب‌شده برای این متخصص معتبر نیست."
+msgstr "The selected service is not valid for this professional."
+
+#: loomera/globalization/booking_flash_messages.py
+msgid "اطلاعات رزرو ناقص است."
+msgstr "The booking details are incomplete."
+
+#: loomera/globalization/booking_flash_messages.py
+msgid "این زمان همین حالا توسط کاربر دیگری نهایی شده است. لطفاً یک زمان آزاد دیگر انتخاب کنید."
+msgstr "This time slot has just been booked by someone else. Please choose another available time."
+
+#: loomera/globalization/booking_flash_messages.py
+msgid "برای این رزرو امکان رزرو مجدد وجود ندارد."
+msgstr "This booking cannot be booked again."
+
+#: loomera/globalization/booking_flash_messages.py
+msgid "رزرو شما با موفقیت ثبت شد."
+msgstr "Your booking was completed successfully."
+
+#: loomera/globalization/booking_flash_messages.py
+msgid "اطلاعات رزرو قبلی بازیابی شد. حالا زمان جدید را انتخاب کنید."
+msgstr "Your previous booking details were restored. Now choose a new time."
+
+#: loomera/globalization/booking_flash_messages.py
+msgid "دیدگاه و امتیاز شما ثبت شد و بعد از بررسی نمایش داده می‌شود."
+msgstr "Your review and rating were submitted and will appear after moderation."
+
+#: loomera/globalization/booking_flash_messages.py
+msgid "برای برخی خدمات، متخصص قبلی در دسترس نبود و می‌توانید زمان جدید را با متخصص آزاد انتخاب کنید."
+msgstr "The previous professional is unavailable for some services. You can choose a new time with an available professional."
