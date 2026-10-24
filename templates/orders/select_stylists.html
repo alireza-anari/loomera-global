@@ -141,7 +141,7 @@
                   <span class="mt-1 inline-flex rounded-full bg-loomera-bgSubtle px-2.5 py-1 text-[11px] font-black text-loomera-textSecondary">{{ card.any_option.availability_label }}</span>
                 </span>
                 <span class="hidden shrink-0 text-left text-xs font-black text-loomera-textSecondary sm:block">
-                  {% if card.any_option.price %}{{ card.any_option.price|floatformat:0 }} تومان{% else %}قیمت بعداً مشخص می‌شود{% endif %}
+                  {% if card.any_option.price %}{{ card.any_option.price|floatformat:0 }} تومان{% else %}{% trans 'Price will be confirmed later' %}{% endif %}
                 </span>
                 <span class="selection-indicator hidden h-8 w-8 shrink-0 scale-90 items-center justify-center flex rounded-full bg-loomera-primary text-white transition" aria-hidden="true">
                   <i class="fa-solid fa-check text-xs"></i>
