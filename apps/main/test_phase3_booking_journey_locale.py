@@ -87,7 +87,7 @@ class BookingJourneyLocaleTests(SimpleTestCase):
 
     def test_reviewed_persian_multi_day_error_copy_did_not_change(self):
         expected = {
-            "booking.available_90_days": "روزهای آزاد و غیرفعال این خدمت در ۹۰ روز آینده",
+            "booking.available_ninety_days": "روزهای آزاد و غیرفعال این خدمت در ۹۰ روز آینده",
             "booking.no_slot": "بدون وقت",
             "booking.before_previous": "قبل از خدمت قبلی",
             "booking.no_room": "بدون جای خالی",
@@ -140,7 +140,7 @@ class BookingJourneyLocaleTests(SimpleTestCase):
 
     def test_client_day_choices_use_approved_bounded_gettext_at_html_sink(self):
         js = self.source("static/js/select_datetime.js")
-        for key in ("calendar_guidance", "suggested", "available_90_days",
+        for key in ("calendar_guidance", "suggested", "available_ninety_days",
                     "default_still", "default_same_day", "no_slot", "no_room",
                     "before_previous", "other_day_hint", "choose_other_day_action",
                     "time_step", "chosen_services", "no_time_short"):
