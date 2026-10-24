@@ -131,7 +131,7 @@ class PostCheckoutJourneyLocaleTests(SimpleTestCase):
             "templates/components/appointment_past_item.html",
             "templates/components/appointments_empty_state.html",
         ):
-            self.assertIn("{% load i18n %}", self.source(path))
+            self.assertRegex(self.source(path), r"{% load (?:humanize )?i18n %}")
         upcoming = self.source("templates/components/appointment_upcoming_card.html")
         self.assertIn("{% trans 'Paid' %}", upcoming)
         self.assertIn("{% trans 'Pay at salon' %}", upcoming)
