@@ -117,6 +117,9 @@
                     value="{% if checkout.coupon %}{{ checkout.coupon.coupon_code }}{% endif %}"
                     placeholder="کد تخفیف را وارد کن"
                     autocomplete="off"
+                    dir="ltr"
+                    aria-invalid="{% if form.coupon_code.errors %}true{% else %}false{% endif %}"
+                    {% if form.coupon_code.errors %}aria-describedby="{{ form.coupon_code.id_for_label }}_error"{% endif %}
                     data-checkout-coupon-input
                     class="h-12 w-full rounded-full border border-loomera-borderSoft bg-white px-4 text-sm font-bold text-loomera-textPrimary outline-none transition placeholder:text-loomera-textMuted/70 focus:border-loomera-primary focus:ring-4 focus:ring-loomera-primary/15"
                   >
@@ -126,9 +129,9 @@
                   {% endif %}
                 </div>
                 {% if form.coupon_code.errors %}
-                  <p class="mt-2 text-xs font-bold text-rose-700">{{ form.coupon_code.errors|join:'، ' }}</p>
+                  <p id="{{ form.coupon_code.id_for_label }}_error" role="alert" class="mt-2 text-xs font-bold text-rose-700">{{ form.coupon_code.errors|join:'، ' }}</p>
                 {% elif checkout.coupon %}
-                  <p class="mt-2 text-xs font-black text-emerald-700">کد {{ checkout.coupon.coupon_code }} با موفقیت اعمال شد.</p>
+                  <p class="mt-2 text-xs font-black text-emerald-700">کد <bdi dir="ltr" data-booking-coupon-token>{{ checkout.coupon.coupon_code }}</bdi> با موفقیت اعمال شد.</p>
                 {% endif %}
               </div>
             </details>
@@ -144,16 +147,16 @@
               <p class="mb-3 text-sm font-black text-loomera-textPrimary">روش پرداخت</p>
               {% if form.payment_method.field.choices|length == 1 %}
                 {% for value, label in form.payment_method.field.choices %}
-                  <input type="radio" name="{{ form.payment_method.html_name }}" value="{{ value }}" checked class="sr-only">
-                  <div data-payment-option
-                       data-selected="0"
-                       class="flex items-start gap-3 rounded-[1.4rem] border border-loomera-primary/20 bg-loomera-primarySoft/45 p-4 data-[selected=1]:border-loomera-primary data-[selected=1]:bg-loomera-primarySoft/55 data-[selected=1]:ring-2 data-[selected=1]:ring-loomera-primary/15">
+                  <label data-payment-option
+                         data-selected="0"
+                         class="flex cursor-pointer items-start gap-3 rounded-[1.4rem] border border-loomera-primary/20 bg-loomera-primarySoft/45 p-4 data-[selected=1]:border-loomera-primary data-[selected=1]:bg-loomera-primarySoft/55 data-[selected=1]:ring-2 data-[selected=1]:ring-loomera-primary/15">
+                    <input type="radio" name="{{ form.payment_method.html_name }}" value="{{ value }}" checked class="sr-only">
                     <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-white text-loomera-primary shadow-sm"><i class="fa-solid fa-store" aria-hidden="true"></i></span>
                     <span class="min-w-0 flex-1">
                       <span class="block text-sm font-black text-loomera-textPrimary">{{ label }}</span>
                       <span class="mt-1 block text-xs leading-6 text-loomera-textMuted">نوبت الان ثبت می‌شود و مبلغ هنگام مراجعه داخل مجموعه پرداخت خواهد شد.</span>
                     </span>
-                  </div>
+                  </label>
                 {% endfor %}
               {% else %}
                 <fieldset>
@@ -179,7 +182,7 @@
                   </div>
                 </fieldset>
               {% endif %}
-              {% if form.payment_method.errors %}<p class="mt-2 text-xs font-bold text-rose-700">{{ form.payment_method.errors|join:'، ' }}</p>{% endif %}
+              {% if form.payment_method.errors %}<p id="{{ form.payment_method.id_for_label }}_error" role="alert" class="mt-2 text-xs font-bold text-rose-700">{{ form.payment_method.errors|join:'، ' }}</p>{% endif %}
             </div>
           </section>
 
@@ -188,7 +191,7 @@
             <dl class="mt-5 space-y-3 text-sm">
               <div class="flex items-center justify-between gap-4 rounded-2xl bg-loomera-bgSubtle px-4 py-3"><dt class="font-bold text-loomera-textMuted">جمع خدمات</dt><dd class="font-black text-loomera-textPrimary">{{ checkout.subtotal|floatformat:0 }} تومان</dd></div>
               {% if checkout.basket_discount_amount %}<div class="flex items-center justify-between gap-4 rounded-2xl bg-emerald-50 px-4 py-3"><dt class="font-bold text-emerald-700">تخفیف خدمات{% if checkout.basket_discount_title %} • {{ checkout.basket_discount_title }}{% endif %}</dt><dd class="font-black text-emerald-700">{{ checkout.basket_discount_amount|floatformat:0 }} تومان</dd></div>{% endif %}
-              {% if checkout.coupon_discount_amount %}<div class="flex items-center justify-between gap-4 rounded-2xl bg-emerald-50 px-4 py-3"><dt class="font-bold text-emerald-700">تخفیف کد{% if checkout.coupon_code %} • {{ checkout.coupon_code }}{% endif %}</dt><dd class="font-black text-emerald-700">{{ checkout.coupon_discount_amount|floatformat:0 }} تومان</dd></div>{% endif %}
+              {% if checkout.coupon_discount_amount %}<div class="flex items-center justify-between gap-4 rounded-2xl bg-emerald-50 px-4 py-3"><dt class="font-bold text-emerald-700">تخفیف کد{% if checkout.coupon_code %} • <bdi dir="ltr" data-booking-coupon-token>{{ checkout.coupon_code }}</bdi>{% endif %}</dt><dd class="font-black text-emerald-700">{{ checkout.coupon_discount_amount|floatformat:0 }} تومان</dd></div>{% endif %}
               <div class="flex items-center justify-between gap-4 rounded-2xl bg-emerald-50 px-4 py-3"><dt class="font-bold text-emerald-700">جمع کل تخفیف</dt><dd class="font-black text-emerald-700">{{ checkout.discount_amount|floatformat:0 }} تومان</dd></div>
               <div class="flex items-center justify-between gap-4 rounded-[1.4rem] bg-loomera-primary px-4 py-4 text-white shadow-lm-soft"><dt class="text-sm font-black">مبلغ قابل پرداخت</dt><dd class="text-lg font-black">{{ checkout.total_amount|floatformat:0 }} تومان</dd></div>
             </dl>
