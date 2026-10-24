@@ -727,7 +727,7 @@
           <div class="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-white text-amber-500"><i class="fa-regular fa-calendar-xmark text-xl" aria-hidden="true"></i></div>
           <p class="text-sm font-black">${escapeBookingHtml(bookingText('no_times','برای این روز زمانی موجود نیست'))}</p>
           <p class="mt-2 text-xs leading-6 text-amber-800">${escapeBookingHtml(bookingText('other_day_hint','روز دیگری را انتخاب کن یا اگر این خدمت بعد از خدمت قبلی جا نمی‌شود، آن را در روز دیگری قرار بده.'))}</p>
-          ${canOfferSplit ? '<button type="button" id="enableSplitDayBtn" class="mt-4 inline-flex items-center justify-center rounded-full border border-amber-200 bg-white px-4 py-2 text-xs font-black text-amber-800 shadow-sm transition hover:bg-amber-100">برای این خدمت روز دیگری انتخاب می‌کنم</button>' : ''}
+          ${canOfferSplit ? `<button type="button" id="enableSplitDayBtn" class="mt-4 inline-flex items-center justify-center rounded-full border border-amber-200 bg-white px-4 py-2 text-xs font-black text-amber-800 shadow-sm transition hover:bg-amber-100">${escapeBookingHtml(bookingText('choose_other_day_action','برای این خدمت روز دیگری انتخاب می‌کنم'))}</button>` : ''}
         </div>
       `;
       document.getElementById('enableSplitDayBtn')?.addEventListener('click', async () => {
