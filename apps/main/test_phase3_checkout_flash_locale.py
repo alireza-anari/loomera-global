@@ -13,6 +13,7 @@ from django.contrib.messages.storage.base import Message
 from django.template.loader import render_to_string
 from django.test import SimpleTestCase
 from django.utils import translation
+from django.utils.html import escape
 from django.utils.safestring import mark_safe
 
 from apps.main.templatetags.ui_message_extras import clean_ui_message
@@ -138,7 +139,7 @@ class CheckoutFlashLocaleTests(SimpleTestCase):
                                 expected = translated[language][source]
                                 self.assertEqual(clean_ui_message(supplied, tone), expected)
                                 html = self.render(level, supplied)
-                                self.assertIn(expected, html)
+                                self.assertIn(escape(expected), html)
                                 self.assertIn(f'role="{expected_role}"', html)
                                 self.assertIn("data-flash-close", html)
                                 self.assertNotIn(
