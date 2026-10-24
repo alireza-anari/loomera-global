@@ -126,9 +126,9 @@ class BookingFlashLocaleTests(SimpleTestCase):
 
     def test_unreviewed_payment_and_sensitive_user_data_fail_closed(self):
         threats = (
-            "پرداخت در مجموعه فقط بعد از پایان خدمت فعال می‌شود.",
+            "پرداخت درگاه برای این مشتری با اطلاعات مالی ناشناخته انجام شد.",
             "اطلاعات این رزرو برای رزرو مجدد کامل نیست.",
-            "کد تخفیف روی مبلغ نهایی اعمال شد.",
+            "کد تخفیف VIP100 برای این مشتری اعمال شد.",
             "رزرو شما با موفقیت ثبت شد. شماره: 09123456789",
             "Your booking was completed successfully. user@email.test",
             "SQL Error: SELECT * FROM users",
