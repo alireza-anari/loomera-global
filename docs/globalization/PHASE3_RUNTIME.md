@@ -1242,3 +1242,54 @@ CI test coverage and release checks remain in place.
 hands-on keyboard tests, NVDA/VoiceOver, additional legacy dynamic
 customer text localization and production approval. No manual results
 or deployed success are implied; Phase 3 remains unclosed.
+
+## Phase 3 — Slice 3.28: Compiled Interactive Booking UI Gettext
+
+After the broader Phase 3.27 exit audit, the specialist and date/time
+browser steps still displayed a substantial amount of static Persian
+UI text in their dynamic controls even under an English or Arabic
+document locale. This coherent slice adds **37 reviewed UI-only
+English-source message identifiers**, mapped to original Persian and
+reviewed Arabic translations in the project's **native compiled
+fa/en/ar Django gettext catalogs**. All six PO/MO files were updated
+atomically, growing from 197 to 234 entries per language. The
+original 41 generic browser validation/feedback message identifiers
+remain completely unchanged.
+
+The existing request-scoped `interactive_messages` context processor
+now emits the reviewed `booking.*` keys in its existing safe Django
+`json_script` payload. The browser bridge accepts the bounded
+namespaced values as **display-only text** and does not promote them
+to `LoomeraFeedback.isTrustedMessage`. This prevents a translated
+short label such as "Morning", "Service" or "Selected" from becoming
+a newly trusted server flash. There is no runtime translation
+dictionary, interpolation with user or payment values, or generic
+translation of backend exceptions.
+
+The actual specialist and datetime browser scripts use this shared
+compiled catalog for navigation labels, selection counts, duration
+and currency suffixes, summary states, daypart names, calendar
+controls, time-slot headings and CTA buttons. Static initial
+Continue/Choose Time/No Selection states also use Django's native
+`{% trans %}` tags, preventing an initial flash of untranslated
+copy on those controls. The Persian fallbacks remain available
+without JavaScript/catalog bootstrap. The scripts still escape
+translated text before placing it in a generated HTML string,
+while dynamic customer/stylist names are still escaped at the
+existing sink. Stored ISO times, amounts, Jalali conversions,
+availability API, POST data and business behavior are unchanged.
+
+A new DB-free Django suite checks 37 exact PO/MO equivalents
+for all three languages, original Persian wording, immutability,
+the 41-key generic catalog boundary, context serialization
+and initial template translations. New Node tests execute the
+actual browser bridge and real booking UI helpers in fa/en/ar,
+verify the strict flash trust boundary and ensure unknown,
+oversized, malformed and unsupported values fail closed. CI adds
+one integrated gate on top of all previous Django and Node suites.
+
+**Outstanding:** Many older hardcoded Persian explanatory paragraphs
+and conditional backend responses on the booking pages are not yet
+covered, and real-browser visual, keyboard, zoom and screen-reader
+acceptance remains open. This patch is not Phase 3 sign-off and
+includes no Production deployment.
