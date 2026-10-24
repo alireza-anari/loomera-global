@@ -101,6 +101,7 @@
       ],
       "automated": [
         "apps/main/test_phase3_booking_bidirectional_accessibility.py",
+        "apps/main/test_phase3_booking_checkout_locale.py",
         "apps/main/test_phase3_checkout_flash_locale.py"
       ],
       "checks": [
