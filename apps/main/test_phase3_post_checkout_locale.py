@@ -143,7 +143,7 @@ class PostCheckoutJourneyLocaleTests(SimpleTestCase):
     def test_financial_identifiers_and_coupon_tokens_keep_correct_direction(self):
         source = self.source("templates/payments/appointment_result.html")
         for name in ("payment.ref_id", "payment.gateway_track_id", "order.order_number"):
-            self.assertRegex(source, r'<bdi dir="ltr">[^<]*' + re.escape(name) + r"[^<]*</bdi>")
+            self.assertRegex(source, r'<bdi dir="ltr" data-payment-machine-id>[^<]*' + re.escape(name) + r"[^<]*</bdi>")
         self.assertIn('data-booking-coupon-token', source)
         self.assertIn('<bdi dir="ltr" data-booking-coupon-token>', source)
         self.assertIn("{% trans 'toman' %}", source)
