@@ -149,6 +149,12 @@ jobs:
             apps.main.test_phase3_rebooking_locale_flow \
             --failfast
 
+      - name: Phase 3 checkout settlement and reschedule gettext safety
+        run: |
+          python manage.py test \
+            apps.main.test_phase3_checkout_flash_locale \
+            --failfast
+
       - name: Phase 3 localized submission progress guards
         run: |
           python manage.py test \

@@ -5,6 +5,7 @@ from django.utils import translation
 from apps.main.ui_feedback import user_error_message, user_ui_message
 from loomera.globalization.interactive_messages import MESSAGE_IDS
 from loomera.globalization.booking_flash_messages import BOOKING_FLASH_MSGIDS
+from loomera.globalization.checkout_flash_messages import CHECKOUT_FLASH_MSGIDS
 
 register = template.Library()
 
@@ -59,6 +60,7 @@ def _approved_flash_body(value, tone, language):
         tuple(MESSAGE_IDS[key] for key in keys)
         + _TRUSTED_DOMAIN_FLASH_MSGIDS.get(tone, ())
         + BOOKING_FLASH_MSGIDS.get(tone, ())
+        + CHECKOUT_FLASH_MSGIDS.get(tone, ())
     )
     if raw and len(raw) <= 300:
         for msgid in candidates:

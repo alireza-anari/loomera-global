@@ -998,3 +998,49 @@ database schema, Iranian mobile/Jalali/timezone/currency defaults,
 deployment or source-repository writes are introduced. Real browser
 visual and assistive-technology acceptance remains outstanding. Phase 3
 is still open.
+
+## Phase 3 — Slice 3.22: Checkout, Settlement and Rescheduling Gettext
+
+Nineteen additional **exact, user-facing static** flash strings used by
+active `apps/orders/views.py` routes are now approved and available
+through native Django gettext, with original Persian plus reviewed
+English and Arabic text. The breakdown is nine error messages
+(including on-site settlement eligibility, cancelled/invalid payable
+bookings and rescheduling failures), five information notices
+(already-settled or in-progress payments, receipt recording and coupon
+removal), three warnings (taken time slot, changed checkout
+price/financial preview requiring renewed confirmation, and invalid
+coupon), and two successes (coupon applied and appointment rescheduled).
+
+All six `locale/{fa,en,ar}/LC_MESSAGES/django.po` and `django.mo`
+files were updated together in an atomic Git tree commit, retaining
+the previous **171** catalog entries and adding exactly **19** (190
+entries per language). The active display filter uses the immutable
+`CHECKOUT_FLASH_MSGIDS` tone-scoped allowlist alongside the existing
+booking, OTP and generic message allowlists. Each exact approved
+Persian msgid or corresponding compiled English/Arabic translation is
+translated into the current request locale only when the flash tone
+matches. Existing status markup and escaping remain unchanged.
+
+**Security and business policy:** no submitted coupon codes, personal
+identifiers, monetary amounts, exception contents, payment gateway
+responses, interpolated text or arbitrary operational messages were
+added to the trusted boundary. Modified/concatenated strings and
+cross-tone copies in en/ar still fall back to the existing localized
+generic message. Static notices about payments do **not** authorize,
+calculate, confirm, collect or settle payments; no checkout, payment,
+rescheduling or order backend logic was changed. Persian flash bodies
+still use the original server sanitizer with the same default copy.
+
+A new database-free regression suite uses the actual server flash
+partial to verify all 19 compiled messages for fa/en/ar, the expected
+190-entry MO headers, read-only PO audit, existing 14 booking notices,
+strict tone isolation, warning alert roles, sensitive-data rejection,
+independently pinned critical financial notices and unmodified Iranian
+defaults. Prior unapproved-copy tests are adjusted to check genuinely
+unapproved messages, not newly reviewed literals. CI runs the new
+suite alongside all prior Phase 1–3 checks.
+
+There is no migration, SMS/OTP change, production deployment or source
+repository write. Real browser and assistive-technology acceptance
+remain outstanding; Phase 3 is not closed.
