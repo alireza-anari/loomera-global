@@ -782,6 +782,11 @@
       button.addEventListener('click', () => {
         state.currentTime = button.dataset.time;
         renderTimeSlots(slots, selection, false);
+        // Re-render replaces the clicked button. Restore focus to the new
+        // selected slot so keyboard and assistive-tech navigation is continuous.
+        const replacement = Array.from(container.querySelectorAll('[data-time-slot]'))
+          .find((candidate) => candidate.dataset.time === state.currentTime);
+        replacement?.focus({ preventScroll: true });
         updateContinueButton();
       });
     });
@@ -918,7 +923,9 @@
   function formatAmount(value) {
     const amount = Number(value || 0);
     if (!Number.isFinite(amount) || amount <= 0) return '';
-    return toPersianDigits(new Intl.NumberFormat('fa-IR').format(Math.round(amount)));
+    const lang = (document.documentElement.lang || 'fa').toLowerCase().split('-')[0];
+    const locale = lang === 'en' ? 'en-US' : lang === 'ar' ? 'ar-EG' : 'fa-IR';
+    return new Intl.NumberFormat(locale).format(Math.round(amount));
   }
 
   function formatDuration(minutes) {
