@@ -1946,3 +1946,19 @@ msgstr "Settlement status unavailable"
 #: docs/globalization/PHASE3_32_MESSAGE_REVIEW.json
 msgid "Refund status"
 msgstr "Refund status"
+
+#: docs/globalization/PHASE3_32_MESSAGE_REVIEW.json
+msgid "Deposit"
+msgstr "Deposit"
+
+#: docs/globalization/PHASE3_32_MESSAGE_REVIEW.json
+msgid "Withdrawal"
+msgstr "Withdrawal"
+
+#: docs/globalization/PHASE3_32_MESSAGE_REVIEW.json
+msgid "Purchase"
+msgstr "Purchase"
+
+#: docs/globalization/PHASE3_32_MESSAGE_REVIEW.json
+msgid "Rejected withdrawal returned"
+msgstr "Rejected withdrawal returned"

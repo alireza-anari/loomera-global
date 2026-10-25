@@ -1950,3 +1950,19 @@ msgstr "حالة التسوية غير متاحة"
 #: docs/globalization/PHASE3_32_MESSAGE_REVIEW.json
 msgid "Refund status"
 msgstr "حالة الاسترداد"
+
+#: docs/globalization/PHASE3_32_MESSAGE_REVIEW.json
+msgid "Deposit"
+msgstr "إيداع"
+
+#: docs/globalization/PHASE3_32_MESSAGE_REVIEW.json
+msgid "Withdrawal"
+msgstr "سحب"
+
+#: docs/globalization/PHASE3_32_MESSAGE_REVIEW.json
+msgid "Purchase"
+msgstr "شراء"
+
+#: docs/globalization/PHASE3_32_MESSAGE_REVIEW.json
+msgid "Rejected withdrawal returned"
+msgstr "إعادة المبلغ بعد رفض السحب"

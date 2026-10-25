@@ -1946,3 +1946,19 @@ msgstr "وضعیت تسویه در دسترس نیست"
 #: docs/globalization/PHASE3_32_MESSAGE_REVIEW.json
 msgid "Refund status"
 msgstr "وضعیت بازگشت وجه"
+
+#: docs/globalization/PHASE3_32_MESSAGE_REVIEW.json
+msgid "Deposit"
+msgstr "واریز"
+
+#: docs/globalization/PHASE3_32_MESSAGE_REVIEW.json
+msgid "Withdrawal"
+msgstr "برداشت"
+
+#: docs/globalization/PHASE3_32_MESSAGE_REVIEW.json
+msgid "Purchase"
+msgstr "خرید"
+
+#: docs/globalization/PHASE3_32_MESSAGE_REVIEW.json
+msgid "Rejected withdrawal returned"
+msgstr "بازگشت برداشت ردشده"
