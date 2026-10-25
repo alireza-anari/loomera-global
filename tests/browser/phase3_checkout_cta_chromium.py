@@ -23,6 +23,34 @@ SOURCES = {
 }
 
 
+# Strings below remain user-authored data, never trusted translation or HTML.
+# Extract the actual production BDI elements, not hand-crafted stand-ins.
+DIRECTION_FIXTURES = (
+    ("checkout.salon.salon_name", "استودیو O'Reilly & <img src=x onerror=1>", "auto", "rtl"),
+    ("detail.service.service_name", "Cut & Color <svg/onload=1> مریم", "auto", "ltr"),
+    ("detail.stylist.user.get_fullName", "Sara O'Reilly & <img src=x>", "auto", "ltr"),
+    ("checkout.booking_policy.description", 'شرایط & <script>alert(1)</script>', "auto", "rtl"),
+    ("detail.date", "۱۴۰۵/۰۸/۱۲", "auto", None),
+    ("detail.time", "09:30", "ltr", "ltr"),
+    ("detail.end_time", "10:15", "ltr", "ltr"),
+)
+
+
+def production_direction_fragments(source):
+    parts = []
+    for index, (variable, customer_value, direction, _) in enumerate(DIRECTION_FIXTURES):
+        token = "{{ " + variable + " }}"
+        expression = (
+            r'<bdi dir="' + direction +
+            r'" data-checkout-[a-z-]+>' + re.escape(token) + r'</bdi>'
+        )
+        match = re.search(expression, source)
+        assert match, f"Actual checkout BDI boundary not found: {variable}"
+        fragment = match.group(0).replace(token, html.escape(customer_value, quote=True))
+        parts.append(f'<span data-checkout-bidi-fixture="{index}">{fragment}</span>')
+    return '<section id="checkout-bidi-fixtures">' + "".join(parts) + '</section>'
+
+
 def build_fixture(template, language):
     src = (ROOT / "templates/orders" / template).read_text(encoding="utf-8")
     match = re.search(r"<form\b[^>]*?data-checkout-guard-form\b[^>]*?>", src, re.DOTALL)
@@ -35,6 +63,7 @@ def build_fixture(template, language):
     assert 'data-checkout-wallet-loading=' in form
     assert 'data-checkout-salon-label=' in form
 
+    isolated_names = production_direction_fragments(src)
     choices = "".join(
         f'<label data-payment-option><input type="radio" name="payment_method" '
         f'value="{value}" {"checked" if value == "pay_in_salon" else ""}>'
@@ -48,6 +77,7 @@ def build_fixture(template, language):
       button {{padding:.4rem}} label {{display:block;margin:.2rem}}</style>
       </head><body><main>
       {form}
+      {isolated_names}
       {choices}
       <input data-checkout-coupon-input id="coupon" type="text" name="coupon_code">
       <button id="coupon-apply" data-checkout-coupon-action="apply" type="submit"
@@ -84,6 +114,17 @@ def run_one(browser, template, language, width):
         desktop = page.locator('#desktop-confirm')
         assert page.evaluate("document.documentElement.dir") == ("ltr" if language == "en" else "rtl")
         assert form.get_attribute("data-checkout-guard-bound") == "1"
+        for index, (_, original, direction, expected_direction) in enumerate(DIRECTION_FIXTURES):
+            tag = page.locator(f'[data-checkout-bidi-fixture="{index}"] bdi')
+            assert tag.count() == 1, (template, language, index)
+            assert tag.get_attribute("dir") == direction
+            assert tag.inner_text() == original, (template, language, index)
+            if expected_direction:
+                assert tag.evaluate("node => getComputedStyle(node).direction") == expected_direction
+        assert page.locator("#checkout-bidi-fixtures img").count() == 0
+        assert page.locator("#checkout-bidi-fixtures svg").count() == 0
+        assert page.locator("#checkout-bidi-fixtures script").count() == 0
+
         for method, (label_id, busy_id) in SOURCES.items():
             page.locator(f'input[name="payment_method"][value="{method}"]').check()
             expected = catalog.gettext(label_id)
