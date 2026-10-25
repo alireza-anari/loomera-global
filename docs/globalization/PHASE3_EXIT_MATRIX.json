@@ -119,7 +119,8 @@
       "automated": [
         "apps/main/test_phase3_checkout_flash_locale.py",
         "apps/main/test_phase3_booking_flash_locale.py",
-        "apps/main/test_phase3_post_checkout_locale.py"
+        "apps/main/test_phase3_post_checkout_locale.py",
+        "apps/main/test_phase3_financial_runtime_locale.py"
       ],
       "checks": [
         "paid wallet and unpaid pay-at-salon clearly distinct",
@@ -137,7 +138,8 @@
       "automated": [
         "apps/main/test_phase3_rebooking_locale_flow.py",
         "apps/main/test_phase3_booking_flash_locale.py",
-        "apps/main/test_phase3_post_checkout_locale.py"
+        "apps/main/test_phase3_post_checkout_locale.py",
+        "apps/main/test_phase3_financial_runtime_locale.py"
       ],
       "checks": [
         "back and return icons correct for ltr/rtl",
@@ -154,7 +156,8 @@
       ],
       "automated": [
         "apps/main/test_phase3_server_flash_safe_locale.py",
-        "tests/js/phase3_interactive_i18n.test.cjs"
+        "tests/js/phase3_interactive_i18n.test.cjs",
+        "apps/main/test_phase3_financial_runtime_locale.py"
       ],
       "checks": [
         "native fa/en/ar error/success/warning copy",
