@@ -1962,3 +1962,7 @@ msgstr "Purchase"
 #: docs/globalization/PHASE3_32_MESSAGE_REVIEW.json
 msgid "Rejected withdrawal returned"
 msgstr "Rejected withdrawal returned"
+
+#: docs/globalization/PHASE3_32_MESSAGE_REVIEW.json
+msgid "Transaction type unavailable"
+msgstr "Transaction type unavailable"

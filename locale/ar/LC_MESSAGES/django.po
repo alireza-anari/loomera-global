@@ -1966,3 +1966,7 @@ msgstr "شراء"
 #: docs/globalization/PHASE3_32_MESSAGE_REVIEW.json
 msgid "Rejected withdrawal returned"
 msgstr "إعادة المبلغ بعد رفض السحب"
+
+#: docs/globalization/PHASE3_32_MESSAGE_REVIEW.json
+msgid "Transaction type unavailable"
+msgstr "نوع المعاملة غير متاح"

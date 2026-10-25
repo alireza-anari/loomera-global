@@ -1962,3 +1962,7 @@ msgstr "خرید"
 #: docs/globalization/PHASE3_32_MESSAGE_REVIEW.json
 msgid "Rejected withdrawal returned"
 msgstr "بازگشت برداشت ردشده"
+
+#: docs/globalization/PHASE3_32_MESSAGE_REVIEW.json
+msgid "Transaction type unavailable"
+msgstr "نوع تراکنش در دسترس نیست"
