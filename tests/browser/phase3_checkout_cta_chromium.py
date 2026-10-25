@@ -100,7 +100,11 @@ def run_one(browser, template, language, width):
         assert bar.get_attribute("inert") is not None
         page.keyboard.type("SAVE10")
         page.keyboard.press("Enter")
-        assert page.evaluate("window.fixtureSubmits[-1]") == "apply_coupon"
+        coupon_actions = page.evaluate("window.fixtureSubmits")
+        assert coupon_actions and coupon_actions[-1] == "apply_coupon", (
+            template, language, width, coupon_actions,
+            page.evaluate("Array.from(document.querySelectorAll('[data-checkout-action-proxy]')).map(x => [x.name,x.value])"),
+        )
         assert form.get_attribute("aria-busy") == "false"
         assert desktop.is_enabled() and mobile.is_enabled()
         page.evaluate("document.getElementById('coupon').blur()")
