@@ -197,6 +197,12 @@ jobs:
             apps.main.test_phase3_post_booking_tail_locale \
             --failfast
 
+      - name: Phase 3.39 real booking POST session handoff and localized specialist accessibility
+        run: |
+          python manage.py test \
+            apps.main.test_phase3_booking_server_handoff_locale \
+            --failfast
+
       - name: Phase 3.38 localized checkout CTA, financial method and coupon focus guards
         run: |
           node --check static/js/pages/booking_checkout_submit_guard.js
