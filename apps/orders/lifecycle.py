@@ -210,7 +210,7 @@ def build_progress_steps(order: Order):
                 "is_done": bool(order.is_paid),
                 "is_current": False,
                 "meta": _("Pay at salon") if not order.is_paid else _("Paid"),
-                "description": _("The service is complete. The salon will record your in-person payment once it has been collected; you do not need to confirm it."),
+                "description": _("Payment for this appointment is completed at the salon."),
             }
         )
     else:
