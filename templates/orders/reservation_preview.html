@@ -31,8 +31,8 @@
           </div>
 
           <div class="mt-5 flex flex-wrap items-center gap-2" aria-label="{% trans 'Overall booking time' %}">
-            <span class="inline-flex items-center gap-2 rounded-full border border-loomera-borderSoft bg-loomera-bgSubtle px-4 py-2 text-xs font-black text-loomera-textSecondary"><i class="fa-regular fa-calendar text-loomera-primary" aria-hidden="true"></i>{{ checkout.overall_date_label }}</span>
-            <span class="inline-flex items-center gap-2 rounded-full border border-loomera-borderSoft bg-loomera-bgSubtle px-4 py-2 text-xs font-black text-loomera-textSecondary"><i class="fa-regular fa-clock text-loomera-primary" aria-hidden="true"></i>{{ checkout.overall_time_label }}</span>
+            <span class="inline-flex items-center gap-2 rounded-full border border-loomera-borderSoft bg-loomera-bgSubtle px-4 py-2 text-xs font-black text-loomera-textSecondary"><i class="fa-regular fa-calendar text-loomera-primary" aria-hidden="true"></i><bdi dir="auto" data-checkout-date-time-summary>{{ checkout.overall_date_label }}</bdi></span>
+            <span class="inline-flex items-center gap-2 rounded-full border border-loomera-borderSoft bg-loomera-bgSubtle px-4 py-2 text-xs font-black text-loomera-textSecondary"><i class="fa-regular fa-clock text-loomera-primary" aria-hidden="true"></i><bdi dir="auto" data-checkout-date-time-summary>{{ checkout.overall_time_label }}</bdi></span>
             {% if checkout.is_split_day_booking %}
               <span class="inline-flex items-center rounded-full bg-loomera-infoSoft px-4 py-2 text-xs font-black text-loomera-info">{% trans 'Multi-day booking' %}</span>
             {% endif %}
@@ -253,21 +253,21 @@
             <div class="flex justify-between gap-4 rounded-2xl bg-loomera-bgSubtle px-3 py-2">
               <dt>{% trans 'Salon' %}</dt>
               <dd class="font-black text-loomera-textPrimary">
-                {{ checkout.salon.salon_name }}
+                <bdi dir="auto" data-checkout-human-label>{{ checkout.salon.salon_name }}</bdi>
               </dd>
             </div>
 
             <div class="flex justify-between gap-4 rounded-2xl bg-loomera-bgSubtle px-3 py-2">
               <dt>{% trans 'Appointment date' %}</dt>
               <dd class="font-black text-loomera-textPrimary">
-                {{ checkout.overall_date_label }}
+                <bdi dir="auto" data-checkout-date-time-summary>{{ checkout.overall_date_label }}</bdi>
               </dd>
             </div>
 
             <div class="flex justify-between gap-4 rounded-2xl bg-loomera-bgSubtle px-3 py-2">
               <dt>{% trans 'Appointment time' %}</dt>
               <dd class="font-black text-loomera-textPrimary">
-                {{ checkout.overall_time_label }}
+                <bdi dir="auto" data-checkout-date-time-summary>{{ checkout.overall_time_label }}</bdi>
               </dd>
             </div>
 
