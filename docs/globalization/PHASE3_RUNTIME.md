@@ -1573,3 +1573,54 @@ full visual acceptance, Firefox/Safari parity, screen reader
 (NVDA/VoiceOver) acceptance or actual checkout/payment test.
 The Phase 3 matrix retains all manual release blockers, and
 Production remains undeployed.
+
+## Phase 3 — Slice 3.38: Checkout Payment Method CTAs and Live Browser Fixture Checks
+
+Reviewing the actual checkout guard identified a localization regression:
+both checkout templates used native gettext for first paint, but
+`booking_checkout_submit_guard.js` subsequently overwrote mobile
+and desktop payment buttons with **hard-coded Persian text**, including
+gateway/wallet loading states. This slice fixes those transitions at
+the real consumer boundary, without changing the payment authorization
+or request payload.
+
+Six payment-label/loading-state attributes are now emitted on both
+checkout forms via native `{% trans %}`; four distinct financial-state
+phrases were reviewed and added atomically to fa/en/ar `django.po` +
+compiled `django.mo` catalogs, growing from **601 to 605 entries**
+per language. Existing reviewed `Pay with wallet` and
+`Submitting booking` strings are reused. The online state describes
+a redirect to the payment gateway (not a confirmed charge); wallet
+describes processing rather than silently implying completed settlement;
+the salon state identifies a reservation without prepayment.
+
+The guard continues to recognize only the original online, wallet and
+pay-at-salon methods. Its icon classes remain fixed, while button labels
+are rendered with `textContent` and `replaceChildren` instead of
+dynamic `innerHTML`: even damaged or tampered form metadata cannot
+create executable HTML. On confirmation both mobile and external
+desktop buttons receive the same localized busy state, are disabled
+and expose `aria-disabled` while the form reports `aria-busy`.
+The existing pageshow reset, coupon-submit action proxy, duplicate-
+confirmation protection and method-dependent presentation are preserved.
+The mobile action bar becomes `inert` while the coupon's soft-keyboard
+focus temporarily hides it, so assistive technologies cannot reach
+focusable buttons inside an `aria-hidden` bar.
+
+A new database-free Django suite verifies exact compiled translations,
+both real form metadata declarations, safe button rendering, native
+form action/financial guards and explicit manual release blockers.
+A new Chromium fixture suite loads the **complete production checkout
+guard** together with the real form-opening attributes and native
+compiled fa/en/ar gettext at 360, 768 and 1440 px, on both preview
+and checkout pages (18 scenarios). The browser runs actual payment
+radio selection, coupon Enter action, mobile-bar focus/inert behavior,
+busy/disabled states, duplicate submit prevention, pageshow restoration,
+and markup-injection rejection. No actual network payment, order
+creation, authenticated browser session, banking sandbox or
+accessibility screen reader is invoked.
+
+The Phase 3 release matrix still shows all five manual gates **open**:
+authenticated full-user booking checks, real visual and zoom audits,
+NVDA/VoiceOver, hands-on multi-browser keyboard checks and independent
+Production approval. No deployment is included.
