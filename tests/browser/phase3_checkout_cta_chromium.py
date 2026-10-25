@@ -129,7 +129,7 @@ def run_one(browser, template, language, width):
         expected_busy = catalog.gettext(SOURCES["online"][1])
         assert mobile.locator("span").inner_text() == expected_busy
         assert desktop.locator("span").inner_text() == expected_busy
-        assert "confirm_checkout" in page.evaluate("window.fixtureSubmits[-1]")
+        assert "confirm_checkout" in page.evaluate("window.fixtureSubmits.at(-1)")
 
         # Second submit must be blocked by original guard. Browser back/restore
         # clears both disabled state and transient confirmation action proxy.
