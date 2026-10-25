@@ -2406,3 +2406,7 @@ msgstr "For navigation with your device, open this page on your phone. The desti
 #: templates/payments/appointment_result.html templates/orders/appointment_detail.html
 msgid "The service and professional come from this appointment; select a rating and optionally write a review."
 msgstr "The service and professional come from this appointment; select a rating and optionally write a review."
+
+#: templates/orders/appointment_detail.html
+msgid "Please select a rating before submitting your review."
+msgstr "Please select a rating before submitting your review."

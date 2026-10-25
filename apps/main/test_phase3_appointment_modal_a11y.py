@@ -1,5 +1,8 @@
 """Phase 3.37 — appointment modal keyboard/focus regression guards."""
+import json
+from gettext import translation as load_translation
 from pathlib import Path
+import struct
 
 from django.conf import settings
 from django.template.loader import get_template
@@ -29,6 +32,7 @@ class AppointmentModalA11yTests(SimpleTestCase):
         self.assertEqual(source.count("data-modal-initial-focus"), 2)
         self.assertIn('aria-hidden="true" tabindex="-1" data-modal-backdrop', source)
         self.assertIn('aria-pressed="false"', source)
+        self.assertIn('aria-describedby="reviewRatingInstructions reviewRatingError"', source)
 
     def test_modal_controller_traps_focus_handles_escape_and_restores_opener(self):
         source = self.read("templates/orders/appointment_detail.html")
@@ -46,17 +50,35 @@ class AppointmentModalA11yTests(SimpleTestCase):
             "opener.focus();",
             "window.openManageModal = () => openModal(manageModal);",
             "window.openReviewModal = () => openModal(reviewModal);",
+            "ratingForm?.addEventListener('submit', (event) => {",
+            "ratingPicker.setAttribute('aria-invalid', 'true');",
+            "if (buttons[0]) buttons[0].focus();",
         ):
             with self.subTest(contract=contract):
                 self.assertIn(contract, source)
+
+    def test_missing_rating_has_reviewed_fa_en_ar_message_and_compiled_catalogs(self):
+        ledger = json.loads(self.read("docs/globalization/PHASE3_37_MESSAGE_REVIEW.json"))
+        self.assertEqual(ledger["phase"], "3.37")
+        self.assertEqual(len(ledger["message_rows"]), 1)
+        row = ledger["message_rows"][0]
+        self.assertEqual(row["en"], "Please select a rating before submitting your review.")
+        source = self.read("templates/orders/appointment_detail.html")
+        self.assertIn("{% trans 'Please select a rating before submitting your review.' %}", source)
+        for language in ("fa", "en", "ar"):
+            with self.subTest(language=language):
+                folder = Path(settings.BASE_DIR) / "locale" / language / "LC_MESSAGES"
+                compiled = (folder / "django.mo").read_bytes()
+                self.assertEqual(struct.unpack_from("<I", compiled, 8)[0], 601)
+                with load_translation("django", localedir=str(Path(settings.BASE_DIR) / "locale"), languages=[language]) as catalog:
+                    self.assertEqual(catalog.gettext(row["en"]), row[language])
+                    self.assertTrue(row[language])
 
     def test_phase337_browser_smoke_is_wired_into_ci_and_exit_matrix(self):
         workflow = self.read(".github/workflows/ci.yml")
         self.assertIn("apps.main.test_phase3_appointment_modal_a11y", workflow)
         self.assertIn("python tests/browser/phase3_post_booking_chromium.py", workflow)
-        matrix = __import__("json").loads(
-            self.read("docs/globalization/PHASE3_EXIT_MATRIX.json")
-        )
+        matrix = json.loads(self.read("docs/globalization/PHASE3_EXIT_MATRIX.json"))
         appointment_area = next(
             row for row in matrix["manual_scenarios"]
             if row["area"] == "Appointments and rebooking"

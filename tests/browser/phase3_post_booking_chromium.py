@@ -173,6 +173,15 @@ def run_one(browser, language, width):
         fixture, catalog = build_modal_fixture(language)
         page.set_content(fixture)
         page.add_script_tag(content=MODAL_JS)
+        page.evaluate(
+            """() => {
+              const form = document.querySelector('#reviewModal form');
+              form.addEventListener('submit', (event) => {
+                window.reviewSubmitWasPrevented = event.defaultPrevented;
+                event.preventDefault();
+              });
+            }"""
+        )
         assert page.evaluate("document.documentElement.dir") == direction
         assert page.locator("#manageModal").get_attribute("aria-hidden") == "true"
         assert page.locator("#reviewModal").get_attribute("aria-hidden") == "true"
@@ -194,8 +203,8 @@ def run_one(browser, language, width):
         assert page.evaluate("document.body.style.overflow") == ""
         assert page.evaluate("document.activeElement.id") == "manage-trigger"
 
-        # Review modal: rating stays keyboard-operable and updates the real
-        # hidden POST score and pressed states, including its initial state.
+        # Review modal: invalid submissions are stopped and announced, and the
+        # actual score field/pressed states are updated with keyboard input.
         page.locator("#review-trigger").click()
         assert page.locator("#reviewModal").get_attribute("aria-hidden") == "false"
         assert page.evaluate("document.activeElement.id") == "reviewModalTitle"
@@ -205,15 +214,27 @@ def run_one(browser, language, width):
             assert page.locator(f'[data-score="{star}"]').get_attribute("aria-label") == label
             assert page.locator(f'[data-score="{star}"]').get_attribute("aria-pressed") == "false"
         assert page.locator('[data-review-score]').input_value() == ""
-        assert not page.locator("#reviewModal form").evaluate("(form) => form.checkValidity()")
+
+        page.locator('#reviewModal form button[type="submit"]').click()
+        assert page.evaluate("window.reviewSubmitWasPrevented") is True
+        assert page.locator('[data-review-rating]').get_attribute("aria-invalid") == "true"
+        error = page.locator('[data-review-rating-error]')
+        assert error.get_attribute("aria-hidden") == "false"
+        assert "hidden" not in (error.get_attribute("class") or "").split()
+        assert error.inner_text() == catalog.gettext(
+            "Please select a rating before submitting your review."
+        )
+        assert page.evaluate("document.activeElement.dataset.score") == "1"
 
         page.locator('[data-score="3"]').focus()
         page.keyboard.press("Space")
         assert page.locator('[data-review-score]').input_value() == "3"
+        assert page.locator('[data-review-rating]').get_attribute("aria-invalid") == "false"
+        assert error.get_attribute("aria-hidden") == "true"
+        assert "hidden" in (error.get_attribute("class") or "").split()
         for star in "12345":
             expected = "true" if int(star) <= 3 else "false"
             assert page.locator(f'[data-score="{star}"]').get_attribute("aria-pressed") == expected
-        assert page.locator("#reviewModal form").evaluate("(form) => form.checkValidity()")
         assert page.evaluate("document.documentElement.scrollWidth <= window.innerWidth + 1")
         page.keyboard.press("Escape")
         assert page.locator("#reviewModal").get_attribute("aria-hidden") == "true"
