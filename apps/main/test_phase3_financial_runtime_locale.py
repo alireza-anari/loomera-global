@@ -35,7 +35,6 @@ class FinancialRuntimeLocaleTests(SimpleTestCase):
     @classmethod
     def rows(cls):
         payload = json.loads(cls.source("docs/globalization/PHASE3_32_MESSAGE_REVIEW.json"))
-        cls.assertTrue  # Keep the schema assertion in the test method, not import time.
         return payload
 
     def tearDown(self):
@@ -223,8 +222,12 @@ class FinancialRuntimeLocaleTests(SimpleTestCase):
         self.assertIn("{{ payment_provider_label|default:'—' }}", result)
         self.assertIn("{% blocktrans with amount=refund_amount|floatformat:0 %}", result)
         self.assertIn("{% blocktrans with time=refund_time|jalali_datetime %}", result)
-        self.assertNotIn("payment.get_state_display()", self.source("apps/payments/views.py"))
-        self.assertNotIn("order.get_status_display()", self.source("apps/payments/views.py"))
+        payment_views = self.source("apps/payments/views.py")
+        result_view = payment_views[payment_views.index("class AppointmentPaymentResultView("):]
+        self.assertIn('"payment_status_label": payment_state_label(payment.state)', result_view)
+        self.assertIn('"order_status_label": (', result_view)
+        self.assertNotIn("payment.get_state_display()", result_view)
+        self.assertNotIn("order.get_status_display()", result_view)
         detail = self.source("templates/orders/appointment_detail.html")
         self.assertIn("{% trans 'Cancellation reason' %}", detail)
         self.assertIn("{% trans 'Service discount campaign' %}", self.source("apps/orders/views.py"))
