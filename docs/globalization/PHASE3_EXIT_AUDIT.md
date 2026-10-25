@@ -200,8 +200,8 @@ reminder retains its historical due timestamp. Jalali formatting,
 payment state, review eligibility, salon-authored copy and stored
 notifications remain unchanged.
 
-The 23-message reviewed ledger is compiled in all three locales, bringing
-each PO/MO catalog to 513 entries. Eight database-free tests protect
+The 24-message reviewed ledger is compiled in all three locales, bringing
+each PO/MO catalog to 514 entries. Eight database-free tests protect
 catalog parity, lazy locale resolution, lifecycle stage decisions,
 reminder semantics and template rendering. The manual acceptance matrix
 remains **BLOCKED_MANUAL_ACCEPTANCE** with no manual evidence recorded.
