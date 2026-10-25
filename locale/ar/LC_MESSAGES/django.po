@@ -2222,3 +2222,191 @@ msgstr "الوقت المحدد في رابط الحجز السريع هذا غ�
 #: templates/orders/quick_link_invalid.html templates/orders/quick_link_stylist_services.html apps/orders/views.py
 msgid "This quick booking link is invalid."
 msgstr "رابط الحجز السريع هذا غير صالح."
+
+#: templates/payments/appointment_result.html templates/orders/appointment_detail.html
+msgid "Time range:"
+msgstr "النطاق الزمني:"
+
+#: templates/payments/appointment_result.html templates/orders/appointment_detail.html
+msgid "Date"
+msgstr "التاريخ"
+
+#: templates/payments/appointment_result.html templates/orders/appointment_detail.html
+msgid "Time"
+msgstr "الوقت"
+
+#: templates/payments/appointment_result.html templates/orders/appointment_detail.html
+msgid "to"
+msgstr "إلى"
+
+#: templates/payments/appointment_result.html templates/orders/appointment_detail.html
+msgid "Your appointment is ready for follow-up."
+msgstr "موعدك جاهز للمتابعة."
+
+#: templates/payments/appointment_result.html templates/orders/appointment_detail.html
+msgid "Payment is under review."
+msgstr "الدفع قيد المراجعة."
+
+#: templates/payments/appointment_result.html templates/orders/appointment_detail.html
+msgid "The payment window has expired."
+msgstr "انتهت مهلة الدفع."
+
+#: templates/payments/appointment_result.html templates/orders/appointment_detail.html
+msgid "To avoid a duplicate payment, follow up on this transaction and do not pay again until its final status is known."
+msgstr "لتجنب الدفع المكرر، تابع هذه المعاملة ولا تدفع مرة أخرى حتى تتضح حالتها النهائية."
+
+#: templates/payments/appointment_result.html templates/orders/appointment_detail.html
+msgid "This reservation is no longer held. Choose a new available time to book again."
+msgstr "لم يعد هذا الحجز محفوظًا. اختر موعدًا متاحًا جديدًا للحجز مرة أخرى."
+
+#: templates/payments/appointment_result.html templates/orders/appointment_detail.html
+msgid "Payment was not completed. You can return to the salon page to book again."
+msgstr "لم يكتمل الدفع. يمكنك العودة إلى صفحة الصالون للحجز مجددًا."
+
+#: templates/payments/appointment_result.html templates/orders/appointment_detail.html
+msgid "Payment was not confirmed. If an amount was deducted, contact support."
+msgstr "لم يتم تأكيد الدفع. إذا خُصم مبلغ، فتواصل مع الدعم."
+
+#: templates/payments/appointment_result.html templates/orders/appointment_detail.html
+msgid "You can view your appointment details, wallet or account from here."
+msgstr "يمكنك الاطلاع على تفاصيل موعدك أو محفظتك أو حسابك من هنا."
+
+#: templates/payments/appointment_result.html templates/orders/appointment_detail.html
+msgid "View appointments"
+msgstr "عرض المواعيد"
+
+#: templates/payments/appointment_result.html templates/orders/appointment_detail.html
+msgid "Follow up with support"
+msgstr "المتابعة مع الدعم"
+
+#: templates/payments/appointment_result.html templates/orders/appointment_detail.html
+msgid "Back to my appointments"
+msgstr "العودة إلى مواعيدي"
+
+#: templates/payments/appointment_result.html templates/orders/appointment_detail.html
+msgid "Appointment overview"
+msgstr "نظرة عامة على الموعد"
+
+#: templates/payments/appointment_result.html templates/orders/appointment_detail.html
+msgid "Appointment at a glance"
+msgstr "الموعد في لمحة"
+
+#: templates/payments/appointment_result.html templates/orders/appointment_detail.html
+msgid "View transactions"
+msgstr "عرض المعاملات"
+
+#: templates/payments/appointment_result.html templates/orders/appointment_detail.html
+msgid "Salon page"
+msgstr "صفحة الصالون"
+
+#: templates/payments/appointment_result.html templates/orders/appointment_detail.html
+msgid "Call"
+msgstr "اتصال"
+
+#: templates/payments/appointment_result.html templates/orders/appointment_detail.html
+msgid "Directions"
+msgstr "الاتجاهات"
+
+#: templates/payments/appointment_result.html templates/orders/appointment_detail.html
+msgid "Add to calendar"
+msgstr "الإضافة إلى التقويم"
+
+#: templates/payments/appointment_result.html templates/orders/appointment_detail.html
+msgid "Appointment summary"
+msgstr "ملخص الموعد"
+
+#: templates/payments/appointment_result.html templates/orders/appointment_detail.html
+msgid "Services, professionals and time"
+msgstr "الخدمات ومقدمو الخدمة والوقت"
+
+#: templates/payments/appointment_result.html templates/orders/appointment_detail.html
+msgid "Visit date"
+msgstr "تاريخ الزيارة"
+
+#: templates/payments/appointment_result.html templates/orders/appointment_detail.html
+msgid "Time range"
+msgstr "النطاق الزمني"
+
+#: templates/payments/appointment_result.html templates/orders/appointment_detail.html
+msgid "Financial summary"
+msgstr "الملخص المالي"
+
+#: templates/payments/appointment_result.html templates/orders/appointment_detail.html
+msgid "Appointment transactions"
+msgstr "معاملات هذا الموعد"
+
+#: templates/payments/appointment_result.html templates/orders/appointment_detail.html
+msgid "Salon information"
+msgstr "معلومات الصالون"
+
+#: templates/payments/appointment_result.html templates/orders/appointment_detail.html
+msgid "Appointment summary and actions"
+msgstr "ملخص الموعد وإجراءاته"
+
+#: templates/payments/appointment_result.html templates/orders/appointment_detail.html
+msgid "Back to appointments"
+msgstr "العودة إلى المواعيد"
+
+#: templates/payments/appointment_result.html templates/orders/appointment_detail.html
+msgid "Booking number"
+msgstr "رقم الحجز"
+
+#: templates/payments/appointment_result.html templates/orders/appointment_detail.html
+msgid "View salon page"
+msgstr "عرض صفحة الصالون"
+
+#: templates/payments/appointment_result.html templates/orders/appointment_detail.html
+msgid "Close appointment management"
+msgstr "إغلاق إدارة الموعد"
+
+#: templates/payments/appointment_result.html templates/orders/appointment_detail.html
+msgid "Only actions currently available for this appointment are shown."
+msgstr "تُعرض فقط الإجراءات المتاحة حاليًا لهذا الموعد."
+
+#: templates/payments/appointment_result.html templates/orders/appointment_detail.html
+msgid "Close"
+msgstr "إغلاق"
+
+#: templates/payments/appointment_result.html templates/orders/appointment_detail.html
+msgid "Reschedule"
+msgstr "إعادة الجدولة"
+
+#: templates/payments/appointment_result.html templates/orders/appointment_detail.html
+msgid "Choose a new date and time"
+msgstr "اختيار تاريخ ووقت جديدين"
+
+#: templates/payments/appointment_result.html templates/orders/appointment_detail.html
+msgid "Review"
+msgstr "التقييم"
+
+#: templates/payments/appointment_result.html templates/orders/appointment_detail.html
+msgid "Your rating"
+msgstr "تقييمك"
+
+#: templates/payments/appointment_result.html templates/orders/appointment_detail.html
+msgid "Rating %(star)s out of 5"
+msgstr "التقييم %(star)s من ٥"
+
+#: templates/payments/appointment_result.html templates/orders/appointment_detail.html
+msgid "Selecting a rating highlights all stars up to that level."
+msgstr "عند اختيار تقييم، تُضاء جميع النجوم حتى ذلك المستوى."
+
+#: templates/payments/appointment_result.html templates/orders/appointment_detail.html
+msgid "Optional review"
+msgstr "مراجعة اختيارية"
+
+#: templates/payments/appointment_result.html templates/orders/appointment_detail.html
+msgid "Share details of your experience to help others..."
+msgstr "شارك تفاصيل من تجربتك قد تساعد الآخرين..."
+
+#: templates/payments/appointment_result.html templates/orders/appointment_detail.html
+msgid "Cancel"
+msgstr "إلغاء"
+
+#: templates/payments/appointment_result.html templates/orders/appointment_detail.html
+msgid "For navigation with your device, open this page on your phone. The destination was copied."
+msgstr "للملاحة باستخدام جهازك، افتح هذه الصفحة على هاتفك. تم نسخ الوجهة."
+
+#: templates/payments/appointment_result.html templates/orders/appointment_detail.html
+msgid "The service and professional come from this appointment; select a rating and optionally write a review."
+msgstr "تم تحديد الخدمة ومقدمها من هذا الموعد؛ اختر تقييمًا ويمكنك كتابة مراجعة اختيارية."

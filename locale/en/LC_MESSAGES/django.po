@@ -2218,3 +2218,191 @@ msgstr "The time recorded in this quick booking link is invalid."
 #: templates/orders/quick_link_invalid.html templates/orders/quick_link_stylist_services.html apps/orders/views.py
 msgid "This quick booking link is invalid."
 msgstr "This quick booking link is invalid."
+
+#: templates/payments/appointment_result.html templates/orders/appointment_detail.html
+msgid "Time range:"
+msgstr "Time range:"
+
+#: templates/payments/appointment_result.html templates/orders/appointment_detail.html
+msgid "Date"
+msgstr "Date"
+
+#: templates/payments/appointment_result.html templates/orders/appointment_detail.html
+msgid "Time"
+msgstr "Time"
+
+#: templates/payments/appointment_result.html templates/orders/appointment_detail.html
+msgid "to"
+msgstr "to"
+
+#: templates/payments/appointment_result.html templates/orders/appointment_detail.html
+msgid "Your appointment is ready for follow-up."
+msgstr "Your appointment is ready for follow-up."
+
+#: templates/payments/appointment_result.html templates/orders/appointment_detail.html
+msgid "Payment is under review."
+msgstr "Payment is under review."
+
+#: templates/payments/appointment_result.html templates/orders/appointment_detail.html
+msgid "The payment window has expired."
+msgstr "The payment window has expired."
+
+#: templates/payments/appointment_result.html templates/orders/appointment_detail.html
+msgid "To avoid a duplicate payment, follow up on this transaction and do not pay again until its final status is known."
+msgstr "To avoid a duplicate payment, follow up on this transaction and do not pay again until its final status is known."
+
+#: templates/payments/appointment_result.html templates/orders/appointment_detail.html
+msgid "This reservation is no longer held. Choose a new available time to book again."
+msgstr "This reservation is no longer held. Choose a new available time to book again."
+
+#: templates/payments/appointment_result.html templates/orders/appointment_detail.html
+msgid "Payment was not completed. You can return to the salon page to book again."
+msgstr "Payment was not completed. You can return to the salon page to book again."
+
+#: templates/payments/appointment_result.html templates/orders/appointment_detail.html
+msgid "Payment was not confirmed. If an amount was deducted, contact support."
+msgstr "Payment was not confirmed. If an amount was deducted, contact support."
+
+#: templates/payments/appointment_result.html templates/orders/appointment_detail.html
+msgid "You can view your appointment details, wallet or account from here."
+msgstr "You can view your appointment details, wallet or account from here."
+
+#: templates/payments/appointment_result.html templates/orders/appointment_detail.html
+msgid "View appointments"
+msgstr "View appointments"
+
+#: templates/payments/appointment_result.html templates/orders/appointment_detail.html
+msgid "Follow up with support"
+msgstr "Follow up with support"
+
+#: templates/payments/appointment_result.html templates/orders/appointment_detail.html
+msgid "Back to my appointments"
+msgstr "Back to my appointments"
+
+#: templates/payments/appointment_result.html templates/orders/appointment_detail.html
+msgid "Appointment overview"
+msgstr "Appointment overview"
+
+#: templates/payments/appointment_result.html templates/orders/appointment_detail.html
+msgid "Appointment at a glance"
+msgstr "Appointment at a glance"
+
+#: templates/payments/appointment_result.html templates/orders/appointment_detail.html
+msgid "View transactions"
+msgstr "View transactions"
+
+#: templates/payments/appointment_result.html templates/orders/appointment_detail.html
+msgid "Salon page"
+msgstr "Salon page"
+
+#: templates/payments/appointment_result.html templates/orders/appointment_detail.html
+msgid "Call"
+msgstr "Call"
+
+#: templates/payments/appointment_result.html templates/orders/appointment_detail.html
+msgid "Directions"
+msgstr "Directions"
+
+#: templates/payments/appointment_result.html templates/orders/appointment_detail.html
+msgid "Add to calendar"
+msgstr "Add to calendar"
+
+#: templates/payments/appointment_result.html templates/orders/appointment_detail.html
+msgid "Appointment summary"
+msgstr "Appointment summary"
+
+#: templates/payments/appointment_result.html templates/orders/appointment_detail.html
+msgid "Services, professionals and time"
+msgstr "Services, professionals and time"
+
+#: templates/payments/appointment_result.html templates/orders/appointment_detail.html
+msgid "Visit date"
+msgstr "Visit date"
+
+#: templates/payments/appointment_result.html templates/orders/appointment_detail.html
+msgid "Time range"
+msgstr "Time range"
+
+#: templates/payments/appointment_result.html templates/orders/appointment_detail.html
+msgid "Financial summary"
+msgstr "Financial summary"
+
+#: templates/payments/appointment_result.html templates/orders/appointment_detail.html
+msgid "Appointment transactions"
+msgstr "Appointment transactions"
+
+#: templates/payments/appointment_result.html templates/orders/appointment_detail.html
+msgid "Salon information"
+msgstr "Salon information"
+
+#: templates/payments/appointment_result.html templates/orders/appointment_detail.html
+msgid "Appointment summary and actions"
+msgstr "Appointment summary and actions"
+
+#: templates/payments/appointment_result.html templates/orders/appointment_detail.html
+msgid "Back to appointments"
+msgstr "Back to appointments"
+
+#: templates/payments/appointment_result.html templates/orders/appointment_detail.html
+msgid "Booking number"
+msgstr "Booking number"
+
+#: templates/payments/appointment_result.html templates/orders/appointment_detail.html
+msgid "View salon page"
+msgstr "View salon page"
+
+#: templates/payments/appointment_result.html templates/orders/appointment_detail.html
+msgid "Close appointment management"
+msgstr "Close appointment management"
+
+#: templates/payments/appointment_result.html templates/orders/appointment_detail.html
+msgid "Only actions currently available for this appointment are shown."
+msgstr "Only actions currently available for this appointment are shown."
+
+#: templates/payments/appointment_result.html templates/orders/appointment_detail.html
+msgid "Close"
+msgstr "Close"
+
+#: templates/payments/appointment_result.html templates/orders/appointment_detail.html
+msgid "Reschedule"
+msgstr "Reschedule"
+
+#: templates/payments/appointment_result.html templates/orders/appointment_detail.html
+msgid "Choose a new date and time"
+msgstr "Choose a new date and time"
+
+#: templates/payments/appointment_result.html templates/orders/appointment_detail.html
+msgid "Review"
+msgstr "Review"
+
+#: templates/payments/appointment_result.html templates/orders/appointment_detail.html
+msgid "Your rating"
+msgstr "Your rating"
+
+#: templates/payments/appointment_result.html templates/orders/appointment_detail.html
+msgid "Rating %(star)s out of 5"
+msgstr "Rating %(star)s out of 5"
+
+#: templates/payments/appointment_result.html templates/orders/appointment_detail.html
+msgid "Selecting a rating highlights all stars up to that level."
+msgstr "Selecting a rating highlights all stars up to that level."
+
+#: templates/payments/appointment_result.html templates/orders/appointment_detail.html
+msgid "Optional review"
+msgstr "Optional review"
+
+#: templates/payments/appointment_result.html templates/orders/appointment_detail.html
+msgid "Share details of your experience to help others..."
+msgstr "Share details of your experience to help others..."
+
+#: templates/payments/appointment_result.html templates/orders/appointment_detail.html
+msgid "Cancel"
+msgstr "Cancel"
+
+#: templates/payments/appointment_result.html templates/orders/appointment_detail.html
+msgid "For navigation with your device, open this page on your phone. The destination was copied."
+msgstr "For navigation with your device, open this page on your phone. The destination was copied."
+
+#: templates/payments/appointment_result.html templates/orders/appointment_detail.html
+msgid "The service and professional come from this appointment; select a rating and optionally write a review."
+msgstr "The service and professional come from this appointment; select a rating and optionally write a review."
