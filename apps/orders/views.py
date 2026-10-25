@@ -24,7 +24,11 @@ from apps.stylists.models import StaffLeaveRequest, StylistSchedule
 from loomera.branding.config import get_deployment_brand_config
 from loomera.globalization.financial_status import (
     appointment_payment_status_label,
+    booking_status_label,
     payment_method_label,
+    payment_provider_label,
+    payment_state_label,
+    wallet_transaction_type_label,
 )
 from .booking_utils import (
     BLOCKING_STATUSES,
@@ -2766,6 +2770,22 @@ class AppointmentDetailView(LoginRequiredMixin, DetailView):
         wallet_transactions = list(
             order.wallet_transactions.order_by("-created_at")[:5]
         )
+        context["payment_method_label"] = payment_method_label(
+            order.selected_payment_method
+        )
+        context["booking_status_label"] = booking_status_label(order.status)
+        context["payment_record_provider_label"] = (
+            payment_provider_label(payment_record.provider)
+            if payment_record else _("Payment provider unavailable")
+        )
+        context["payment_record_status_label"] = (
+            payment_state_label(payment_record.state)
+            if payment_record else _("Payment status unavailable")
+        )
+        for wallet_transaction in wallet_transactions:
+            wallet_transaction.localized_type_label = wallet_transaction_type_label(
+                wallet_transaction.transaction_type
+            )
         context["payment_status_label"] = appointment_payment_status_label(
             order.selected_payment_method, order.is_paid
         )
