@@ -27,7 +27,7 @@ class QuickBookingLocaleTests(SimpleTestCase):
             po = self.source(f"locale/{lang}/LC_MESSAGES/django.po")
             mo = (Path(settings.BASE_DIR) / f"locale/{lang}/LC_MESSAGES/django.mo").read_bytes()
             self.assertEqual(struct.unpack_from("<I", mo)[0], 0x950412de)
-            self.assertEqual(struct.unpack_from("<I", mo, 8)[0], 601)
+            self.assertEqual(struct.unpack_from("<I", mo, 8)[0], 605)
             with translation.override(lang):
                 for row in rows:
                     msgid, value = row["en"], row[lang]
