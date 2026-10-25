@@ -93,6 +93,29 @@ class QuickBookingLocaleTests(SimpleTestCase):
         self.assertIn("_('minutes')", quick)
         self.assertIn("_('toman')", quick)
 
+    def test_empty_service_selection_flash_uses_only_exact_reviewed_message(self):
+        from types import MappingProxyType
+        from apps.main.templatetags.ui_message_extras import clean_ui_message
+        from loomera.globalization.quick_link_flash_messages import QUICK_LINK_FLASH_MSGIDS
+        from loomera.globalization.interactive_messages import MESSAGE_IDS
+
+        msgid = "Select at least one service for this professional."
+        ledger = json.loads(self.source("docs/globalization/PHASE3_35_MESSAGE_REVIEW.json"))
+        reviewed = next(row for row in ledger["message_rows"] if row["en"] == msgid)
+        self.assertIsInstance(QUICK_LINK_FLASH_MSGIDS, MappingProxyType)
+        self.assertEqual(dict(QUICK_LINK_FLASH_MSGIDS), {"error": (msgid,)})
+        with self.assertRaises(TypeError):
+            QUICK_LINK_FLASH_MSGIDS["success"] = (msgid,)
+        for lang in ("en", "ar"):
+            with translation.override(lang):
+                expected = reviewed[lang]
+                self.assertEqual(clean_ui_message(msgid, "error"), expected)
+                self.assertEqual(clean_ui_message(expected, "error"), expected)
+                generic = translation.gettext(MESSAGE_IDS["feedback.default.error"])
+                self.assertEqual(clean_ui_message(msgid + " private phone 09123456789", "error"), generic)
+                self.assertEqual(clean_ui_message(msgid, "success"),
+                                 translation.gettext(MESSAGE_IDS["feedback.default.success"]))
+
     def test_exit_matrix_still_requires_manual_acceptance(self):
         matrix = json.loads(self.source("docs/globalization/PHASE3_EXIT_MATRIX.json"))
         self.assertEqual(matrix["release_gate"], "BLOCKED_MANUAL_ACCEPTANCE")

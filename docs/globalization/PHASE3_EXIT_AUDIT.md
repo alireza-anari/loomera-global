@@ -238,3 +238,8 @@ logic, amounts and salon-authored text are unchanged.
 **This is not Phase 3 exit.** CI and structural template checks do not substitute
 for real-browser localization, keyboard, assistive technology or zoom acceptance.
 All five manual release gates and Production deployment approval remain blocked.
+
+The selected-service empty POST notice is added to a dedicated immutable,
+error-tone-only flash allowlist; its native compiled gettext identifier is
+matched exactly so arbitrary customer, provider or technical payloads still
+fall back safely. Historical Persian booking flash identifiers are preserved.
