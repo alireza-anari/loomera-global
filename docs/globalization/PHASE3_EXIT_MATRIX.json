@@ -5,7 +5,7 @@
   "release_gate": "BLOCKED_MANUAL_ACCEPTANCE",
   "production_deployment": "NOT_PERFORMED",
   "source_repository": "READ_ONLY",
-  "notes": "Automated CI verifies code contracts, not real browser visuals, usability, screen readers, or production readiness.",
+  "notes": "Automated CI verifies code contracts, not real browser visuals, usability, screen readers, or production readiness. Phase 3.34 adds 9 isolated Chromium keyboard/focus renderer smoke scenarios (fa/en/ar x 3 viewports). These are not real application E2E acceptance, screen-reader, browser visual sign-off or true 400% zoom tests; all manual gates remain open.",
   "required_locales": [
     {
       "language": "fa",
@@ -35,7 +35,8 @@
       ],
       "automated": [
         "apps/main/test_phase3_locale_shell.py",
-        "apps/main/test_phase3_language_switch.py"
+        "apps/main/test_phase3_language_switch.py",
+        "apps/main/test_phase3_browser_keyboard_zoom.py"
       ],
       "checks": [
         "language switch and persistence",
@@ -84,7 +85,8 @@
       ],
       "automated": [
         "apps/main/test_phase3_booking_journey_security_a11y.py",
-        "tests/js/phase3_booking_journey_runtime.test.cjs"
+        "tests/js/phase3_booking_journey_runtime.test.cjs",
+        "tests/browser/phase3_booking_keyboard_chromium.py"
       ],
       "checks": [
         "Jalali calendar remains correct and selected date remains visible",
