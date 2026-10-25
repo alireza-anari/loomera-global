@@ -40,6 +40,15 @@ PAYMENT_PROVIDER_MESSAGES = MappingProxyType({
     "mock": "Simulator",
 })
 
+SETTLEMENT_STATE_MESSAGES = MappingProxyType({
+    "awaiting_payment": "Awaiting payment for settlement",
+    "manual_collection": "Pay at salon",
+    "ready": "Ready for settlement",
+    "hold": "Settlement on hold for review",
+    "paid": "Settled",
+    "cancelled": "Settlement cancelled",
+})
+
 
 def _label(messages, value, fallback):
     """Translate only a recognized state code; never render unknown raw codes."""
@@ -61,6 +70,10 @@ def payment_method_label(method):
 
 def payment_provider_label(provider):
     return _label(PAYMENT_PROVIDER_MESSAGES, provider, "Payment provider unavailable")
+
+
+def settlement_status_label(status):
+    return _label(SETTLEMENT_STATE_MESSAGES, status, "Settlement status unavailable")
 
 
 def appointment_payment_status_label(method, is_paid):
