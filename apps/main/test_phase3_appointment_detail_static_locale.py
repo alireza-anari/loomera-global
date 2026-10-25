@@ -98,11 +98,11 @@ class AppointmentDetailStaticLocaleTests(SimpleTestCase):
         ):
             self.assertIn(msgid, template)
 
-        self.assertIn('{% trans "Appointment details" %}', template)
-        self.assertIn("{% trans 'Appointment date' %}", template)
-        self.assertIn("{% trans 'Final amount' %}", template)
-        self.assertIn("{% trans 'Order number' %}", template)
-        self.assertIn("{% trans 'Manage appointment' %}", template)
+        self.assertIn("Appointment details", template)
+        self.assertIn("Appointment date", template)
+        self.assertIn("Final amount", template)
+        self.assertIn("Order number", template)
+        self.assertIn("Manage appointment", template)
         self.assertIn("{% trans 'Service' as service_fallback %}", template)
         self.assertIn('default:service_fallback', template)
         self.assertIn('{% blocktrans with score=star %}Rate {{ score }} out of 5{% endblocktrans %}', template)
