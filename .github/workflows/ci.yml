@@ -196,6 +196,12 @@ jobs:
             apps.main.test_phase3_appointment_progress_locale \
             --failfast
 
+      - name: Phase 3.34 appointment detail and review form native gettext
+        run: |
+          python manage.py test \
+            apps.main.test_phase3_appointment_detail_static_locale \
+            --failfast
+
       - name: Phase 3 localized submission progress guards
         run: |
           python manage.py test \
