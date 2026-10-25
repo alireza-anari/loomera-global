@@ -5,7 +5,7 @@
   "release_gate": "BLOCKED_MANUAL_ACCEPTANCE",
   "production_deployment": "NOT_PERFORMED",
   "source_repository": "READ_ONLY",
-  "notes": "Automated CI verifies code contracts, not real browser visuals, usability, screen readers, or production readiness. Phase 3.34 adds 9 isolated Chromium keyboard/focus renderer smoke scenarios (fa/en/ar x 3 viewports). These are not real application E2E acceptance, screen-reader, browser visual sign-off or true 400% zoom tests; all manual gates remain open.",
+  "notes": "Automated CI verifies code contracts, not real browser visuals, usability, screen readers, or production readiness. Phase 3.34 adds 9 isolated Chromium keyboard/focus renderer smoke scenarios (fa/en/ar x 3 viewports). These are not real application E2E acceptance, screen-reader, browser visual sign-off or true 400% zoom tests; all manual gates remain open. Phase 3.37 adds Chromium fixture tests of production appointment-modal markup/controller across fa/en/ar and 360/768/1440 widths; this remains fixture-level evidence, not full authenticated E2E, screen-reader review or manual release acceptance.",
   "required_locales": [
     {
       "language": "fa",
@@ -149,14 +149,17 @@
         "apps/main/test_phase3_post_checkout_locale.py",
         "apps/main/test_phase3_financial_runtime_locale.py",
         "apps/main/test_phase3_appointment_progress_locale.py",
-        "apps/main/test_phase3_post_booking_tail_locale.py"
+        "apps/main/test_phase3_post_booking_tail_locale.py",
+        "apps/main/test_phase3_appointment_modal_a11y.py",
+        "tests/browser/phase3_post_booking_chromium.py"
       ],
       "checks": [
         "back and return icons correct for ltr/rtl",
         "rebooking preserves consent and session guards",
         "dates and times readable on narrow devices",
         "all actions keyboard operable",
-        "localized appointment management and review dialogs, five-star accessible names and browser-safe navigation notice"
+        "localized appointment management and review dialogs, five-star accessible names and browser-safe navigation notice",
+        "appointment management and review dialogs focus their title, trap Tab/Shift+Tab, close on Escape and restore focus to the opener"
       ]
     },
     {

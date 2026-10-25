@@ -769,13 +769,13 @@
 <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
 
 <!-- MANAGE MODAL -->
-<div id="manageModal" class="fixed inset-0 z-[1200] hidden overflow-y-auto" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="manageModalTitle">
+<div id="manageModal" class="fixed inset-0 z-[1200] hidden overflow-y-auto" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="manageModalTitle" tabindex="-1">
   <div class="flex min-h-dvh items-center justify-center px-4 py-6">
-    <button type="button" class="fixed inset-0 bg-black/50 backdrop-blur-sm" onclick="closeManageModal()" aria-label="{% trans 'Close appointment management' %}"></button>
+    <button type="button" class="fixed inset-0 bg-black/50 backdrop-blur-sm" onclick="closeManageModal()" aria-label="{% trans 'Close appointment management' %}" aria-hidden="true" tabindex="-1" data-modal-backdrop></button>
     <div class="relative w-full max-w-md rounded-[2rem] border border-loomera-borderSoft bg-white p-5 shadow-2xl lg:p-6">
       <div class="flex items-start justify-between gap-4">
         <div>
-          <h3 id="manageModalTitle" class="text-xl font-black text-loomera-textPrimary">{% trans 'Manage appointment' %}</h3>
+          <h3 id="manageModalTitle" tabindex="-1" data-modal-initial-focus class="text-xl font-black text-loomera-textPrimary">{% trans 'Manage appointment' %}</h3>
           <p class="mt-2 text-sm leading-7 text-loomera-textSecondary">{% trans 'Only actions currently available for this appointment are shown.' %}</p>
         </div>
         <button type="button" onclick="closeManageModal()" class="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-loomera-bgSubtle text-loomera-textMuted transition hover:bg-rose-50 hover:text-rose-600" aria-label="{% trans 'Close' %}">
@@ -812,12 +812,12 @@
   </div>
 </div>
 {% if customer_progress.can_review %}
-<div id="reviewModal" class="fixed inset-0 z-[80] hidden items-center justify-center bg-slate-950/55 px-4 py-6 backdrop-blur-sm" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="reviewModalTitle">
+<div id="reviewModal" class="fixed inset-0 z-[80] hidden items-center justify-center bg-slate-950/55 px-4 py-6 backdrop-blur-sm" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="reviewModalTitle" tabindex="-1">
   <div class="w-full max-w-lg overflow-hidden rounded-[2rem] border border-loomera-borderSoft bg-white shadow-lm-elevated">
     <div class="flex items-start justify-between gap-4 border-b border-loomera-borderSoft bg-loomera-primarySoft/50 px-5 py-4">
       <div>
         <p class="text-xs font-black uppercase tracking-[0.2em] text-loomera-primary">{% trans 'Review' %}</p>
-        <h2 id="reviewModalTitle" class="mt-1 text-lg font-black text-loomera-textPrimary">{% trans "Rate and review" %}</h2>
+        <h2 id="reviewModalTitle" tabindex="-1" data-modal-initial-focus class="mt-1 text-lg font-black text-loomera-textPrimary">{% trans "Rate and review" %}</h2>
         <p class="mt-1 text-xs leading-6 text-loomera-textMuted">{% trans 'The service and professional come from this appointment; select a rating and optionally write a review.' %}</p>
       </div>
       <button type="button" onclick="window.closeReviewModal && window.closeReviewModal()" class="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-loomera-borderSoft bg-white text-loomera-textSecondary transition hover:bg-loomera-primarySoft" aria-label="{% trans 'Close' %}">
@@ -843,7 +843,7 @@
         <div class="mt-3 grid grid-cols-5 gap-2" dir="ltr" data-review-rating>
           <input type="hidden" name="score" value="" required data-review-score>
           {% for star in "12345" %}
-            <button type="button" data-score="{{ star }}" class="flex h-12 items-center justify-center rounded-2xl border border-loomera-borderSoft bg-white text-lg text-loomera-textMuted transition hover:border-amber-200 hover:bg-amber-50" aria-label="{% blocktrans with star=star %}Rating {{ star }} out of 5{% endblocktrans %}">
+            <button type="button" data-score="{{ star }}" class="flex h-12 items-center justify-center rounded-2xl border border-loomera-borderSoft bg-white text-lg text-loomera-textMuted transition hover:border-amber-200 hover:bg-amber-50" aria-label="{% blocktrans with star=star %}Rating {{ star }} out of 5{% endblocktrans %}" aria-pressed="false">
               <i class="fa-solid fa-star" aria-hidden="true"></i>
             </button>
           {% endfor %}
@@ -881,34 +881,114 @@
   const IS_ANDROID = /Android/.test(navigator.userAgent);
 
   const manageModal = document.getElementById('manageModal');
-  window.openManageModal = () => {
-    if (!manageModal) return;
-    manageModal.classList.remove('hidden');
-    manageModal.setAttribute('aria-hidden', 'false');
-    document.body.style.overflow = 'hidden';
-  };
-  window.closeManageModal = () => {
-    if (!manageModal) return;
-    manageModal.classList.add('hidden');
-    manageModal.setAttribute('aria-hidden', 'true');
-    document.body.style.overflow = '';
+  const reviewModal = document.getElementById('reviewModal');
+  const modalOpeners = new WeakMap();
+  const modalStack = [];
+  let bodyOverflowBeforeModal = '';
+
+  const getOpenModal = () => {
+    for (let index = modalStack.length - 1; index >= 0; index -= 1) {
+      const modal = modalStack[index];
+      if (modal && modal.getAttribute('aria-hidden') === 'false') return modal;
+    }
+    return null;
   };
 
-  const reviewModal = document.getElementById('reviewModal');
-  window.openReviewModal = () => {
-    if (!reviewModal) return;
-    reviewModal.classList.remove('hidden');
-    reviewModal.classList.add('flex');
-    reviewModal.setAttribute('aria-hidden', 'false');
+  const getModalFocusable = (modal) => Array.from(
+    modal.querySelectorAll('a[href], button, input:not([type="hidden"]), textarea, select, [tabindex]')
+  ).filter((element) => (
+    !element.disabled
+    && element.tabIndex >= 0
+    && element.getClientRects().length > 0
+    && window.getComputedStyle(element).visibility !== 'hidden'
+  ));
+
+  const openModal = (modal) => {
+    if (!modal || modal.getAttribute('aria-hidden') === 'false') return;
+    if (!getOpenModal()) bodyOverflowBeforeModal = document.body.style.overflow;
+
+    modalOpeners.set(modal, document.activeElement);
+    modalStack.push(modal);
+    modal.classList.remove('hidden');
+    if (modal === reviewModal) modal.classList.add('flex');
+    modal.setAttribute('aria-hidden', 'false');
     document.body.style.overflow = 'hidden';
+
+    const target = modal.querySelector('[data-modal-initial-focus]')
+      || getModalFocusable(modal)[0]
+      || modal;
+    target.focus();
   };
-  window.closeReviewModal = () => {
-    if (!reviewModal) return;
-    reviewModal.classList.add('hidden');
-    reviewModal.classList.remove('flex');
-    reviewModal.setAttribute('aria-hidden', 'true');
-    document.body.style.overflow = '';
+
+  const closeModal = (modal) => {
+    if (!modal || modal.getAttribute('aria-hidden') !== 'false') return;
+
+    modal.classList.add('hidden');
+    if (modal === reviewModal) modal.classList.remove('flex');
+    modal.setAttribute('aria-hidden', 'true');
+
+    const opener = modalOpeners.get(modal);
+    modalOpeners.delete(modal);
+    const stackIndex = modalStack.lastIndexOf(modal);
+    if (stackIndex !== -1) modalStack.splice(stackIndex, 1);
+
+    const nextModal = getOpenModal();
+    if (nextModal) {
+      document.body.style.overflow = 'hidden';
+      const target = opener && nextModal.contains(opener)
+        ? opener
+        : (nextModal.querySelector('[data-modal-initial-focus]')
+          || getModalFocusable(nextModal)[0]);
+      if (target) target.focus();
+      return;
+    }
+
+    document.body.style.overflow = bodyOverflowBeforeModal;
+    if (
+      opener
+      && opener.isConnected
+      && !opener.disabled
+      && opener.getClientRects().length > 0
+      && typeof opener.focus === 'function'
+    ) {
+      opener.focus();
+    }
   };
+
+  window.openManageModal = () => openModal(manageModal);
+  window.closeManageModal = () => closeModal(manageModal);
+  window.openReviewModal = () => openModal(reviewModal);
+  window.closeReviewModal = () => closeModal(reviewModal);
+
+  document.addEventListener('keydown', (event) => {
+    const modal = getOpenModal();
+    if (!modal) return;
+
+    if (event.key === 'Escape' || event.key === 'Esc') {
+      event.preventDefault();
+      closeModal(modal);
+      return;
+    }
+    if (event.key !== 'Tab') return;
+
+    const focusable = getModalFocusable(modal);
+    if (!focusable.length) {
+      event.preventDefault();
+      modal.focus();
+      return;
+    }
+
+    const activeIndex = focusable.indexOf(document.activeElement);
+    const first = focusable[0];
+    const last = focusable[focusable.length - 1];
+    if (event.shiftKey && activeIndex <= 0) {
+      event.preventDefault();
+      last.focus();
+    } else if (!event.shiftKey && (activeIndex === -1 || activeIndex === focusable.length - 1)) {
+      event.preventDefault();
+      first.focus();
+    }
+  });
 
   const ratingPicker = document.querySelector('[data-review-rating]');
   if (ratingPicker) {

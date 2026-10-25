@@ -197,6 +197,12 @@ jobs:
             apps.main.test_phase3_post_booking_tail_locale \
             --failfast
 
+      - name: Phase 3.37 appointment modal keyboard and focus guards
+        run: |
+          python manage.py test \
+            apps.main.test_phase3_appointment_modal_a11y \
+            --failfast
+
       - name: Phase 3.35 quick-link language and token-safety guards
         run: |
           python manage.py test \
@@ -321,8 +327,10 @@ jobs:
           python -m pip install --disable-pip-version-check playwright==1.55.0
           python -m playwright install --with-deps chromium
 
-      - name: Verify real browser keyboard, focus and locale DOM behavior
-        run: python tests/browser/phase3_booking_keyboard_chromium.py
+      - name: Verify production booking renderer and post-booking modal keyboard behavior
+        run: |
+          python tests/browser/phase3_booking_keyboard_chromium.py
+          python tests/browser/phase3_post_booking_chromium.py
 
       - name: Upload browser failure screenshots
         if: failure()

@@ -267,3 +267,25 @@ branches and manual release blockers.
 
 No browser viewport/screen-reader/manual keyboard/zoom acceptance is claimed.
 The five manual Phase 3 gates and Production deployment approval remain open.
+
+## Phase 3.37 — Appointment dialog keyboard and focus management
+
+The appointment management and review dialogs now move initial focus to
+their accessible title, contain Tab/Shift+Tab navigation, close on Escape,
+and restore focus to the triggering control while restoring the previous
+body scroll state. A modal stack handles the active dialog, and the
+decorative management backdrop is removed from keyboard order. Review
+rating buttons expose an explicit initial `aria-pressed=false` state;
+their existing score/comment POST contract remains unchanged.
+
+CI now runs a dedicated database-free Django contract suite and a Chromium
+fixture suite using the real production modal HTML fragments and the
+production modal/rating controller. The browser suite exercises both dialogs
+for fa/en/ar at 360, 768 and 1440 CSS-pixel widths, including focus wrapping,
+Escape, focus restoration, scroll locking, horizontal overflow and keyboard
+rating submission state.
+
+This is **fixture-level browser evidence**, not a full authenticated
+server-rendered journey or screen-reader acceptance. The five manual Phase 3
+gates and Production deployment approval remain open; no manual evidence
+has been fabricated and no Production deployment is performed.
