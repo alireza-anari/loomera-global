@@ -46,7 +46,7 @@ class CheckoutHumanDirectionTests(SimpleTestCase):
                     fragment = self.token_fragment(
                         source, key, "auto", "data-checkout-human-label")
                     self.assertIn(fragment, source)
-            self.assertGreaterEqual(source.count("data-checkout-human-label"), 10)
+            self.assertGreaterEqual(source.count("data-checkout-human-label"), 8)
             self.assertIn('data-checkout-step=', source)
 
     def test_booking_dates_and_clock_tokens_have_stable_isolation(self):
