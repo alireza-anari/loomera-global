@@ -205,3 +205,20 @@ each PO/MO catalog to 514 entries. Eight database-free tests protect
 catalog parity, lazy locale resolution, lifecycle stage decisions,
 reminder semantics and template rendering. The manual acceptance matrix
 remains **BLOCKED_MANUAL_ACCEPTANCE** with no manual evidence recorded.
+
+## Phase 3.34 — browser-level renderer smoke (not release acceptance)
+
+The shared mobile viewport no longer disables zoom. Booking time
+options expose valid group semantics and localized accessible
+names; the service switcher is likewise a named native-button
+group. GitHub CI now runs nine real Chromium fixture scenarios
+covering fa/en/ar, keyboard Tab/Enter/Space, focus restoration
+after dynamic DOM updates, pressed-state synchronization,
+HTML-injection handling and clock direction isolation.
+
+This is **partial automated browser evidence only**, not a
+representative customer booking across real server APIs, real
+viewport zoom, a visual screenshot audit or NVDA/VoiceOver
+screen reader verification. The acceptance matrix continues
+to mark all five manual gates open; no fake tester records or
+deployment approval have been added.

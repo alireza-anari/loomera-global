@@ -164,6 +164,7 @@ jobs:
             apps.main.test_phase3_booking_journey_security_a11y \
             apps.main.test_phase3_booking_bidirectional_accessibility \
             apps.main.test_phase3_exit_evidence \
+            apps.main.test_phase3_browser_keyboard_zoom \
             --failfast
 
       - name: Phase 3 checkout settlement and reschedule gettext safety
@@ -285,3 +286,37 @@ jobs:
           python manage.py test \
             apps.main.test_phase3_locale_shell \
             --failfast
+
+  browser-smoke:
+    name: Chromium keyboard smoke (isolated booking renderer)
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Configure Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: Install Chromium smoke dependencies
+        run: |
+          if [ -f /etc/apt/apt-mirrors.txt ]; then
+            printf '%s\n' 'https://archive.ubuntu.com/ubuntu/' | sudo tee /etc/apt/apt-mirrors.txt
+          fi
+          python -m pip install --disable-pip-version-check playwright==1.55.0
+          python -m playwright install --with-deps chromium
+
+      - name: Verify real browser keyboard, focus and locale DOM behavior
+        run: python tests/browser/phase3_booking_keyboard_chromium.py
+
+      - name: Upload browser failure screenshots
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: phase3-browser-keyboard-failures
+          path: artifacts/phase3-browser/
+          if-no-files-found: ignore
+          retention-days: 7

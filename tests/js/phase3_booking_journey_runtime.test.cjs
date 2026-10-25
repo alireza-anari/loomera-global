@@ -115,7 +115,7 @@ test("time selection maintains native button state, escapes stylist and restores
   vm.runInContext(escapeSource + times + "\nthis.__render = renderTimeSlots;", runtime);
   runtime.__render(slots, {requestedStylistId:"any"}, false);
   assert.ok(fake.markup.includes("&lt;img src=x onerror=1&gt; &amp; Aya"));
-  assert.ok(fake.markup.includes('role="group" aria-label="ساعت‌های آزاد"'));
+  assert.ok(fake.markup.includes('role="group" aria-label="ساعت‌های قابل رزرو"'));
   assert.ok(fake.markup.includes('aria-pressed="false"'));
   fake.buttons[0].handlers.click();
   assert.equal(state.currentTime, "10:00");
