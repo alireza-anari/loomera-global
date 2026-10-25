@@ -297,3 +297,7 @@ an announced localized error, focuses the first rating button, and clears the
 error when the user chooses a score. One reviewed gettext message is compiled
 into fa/en/ar; each catalog now contains 601 entries. This is still automated
 fixture evidence only and does not change the open manual acceptance gates.
+
+The existing server-side score-range guard is unchanged; its invalid-score
+fallback message now uses the same reviewed gettext identifier as the client
+validation, so bypassing JavaScript does not force Persian-only feedback.

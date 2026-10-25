@@ -65,6 +65,10 @@ class AppointmentModalA11yTests(SimpleTestCase):
         self.assertEqual(row["en"], "Please select a rating before submitting your review.")
         source = self.read("templates/orders/appointment_detail.html")
         self.assertIn("{% trans 'Please select a rating before submitting your review.' %}", source)
+        view = self.read("apps/orders/views.py")
+        self.assertIn('messages.error(request, _("Please select a rating before submitting your review."))', view)
+        self.assertIn('score = int(request.POST.get("score") or 0)', view)
+        self.assertIn("if score < 1 or score > 5:", view)
         for language in ("fa", "en", "ar"):
             with self.subTest(language=language):
                 folder = Path(settings.BASE_DIR) / "locale" / language / "LC_MESSAGES"
