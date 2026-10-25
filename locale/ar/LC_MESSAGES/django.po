@@ -2062,3 +2062,7 @@ msgstr "قيّم واترك تعليقًا"
 #: docs/globalization/PHASE3_33_MESSAGE_REVIEW.json
 msgid "Payment for this appointment has been recorded."
 msgstr "تم تسجيل الدفع لهذا الموعد."
+
+#: docs/globalization/PHASE3_33_MESSAGE_REVIEW.json
+msgid "Payment for this appointment is completed at the salon."
+msgstr "يُستكمل دفع هذا الموعد في الصالون."

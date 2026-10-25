@@ -2058,3 +2058,7 @@ msgstr "ثبت امتیاز و دیدگاه"
 #: docs/globalization/PHASE3_33_MESSAGE_REVIEW.json
 msgid "Payment for this appointment has been recorded."
 msgstr "پرداخت این نوبت ثبت شده است."
+
+#: docs/globalization/PHASE3_33_MESSAGE_REVIEW.json
+msgid "Payment for this appointment is completed at the salon."
+msgstr "پرداخت این نوبت در سالن تکمیل می‌شود."
