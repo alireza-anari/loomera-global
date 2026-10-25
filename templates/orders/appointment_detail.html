@@ -216,7 +216,7 @@
           {% if appointment.order.status == "cancelled" and appointment.order.cancellation_reason %}
           <section
             class="rounded-[1.5rem] border border-rose-200 bg-rose-50 p-4 shadow-sm"
-            aria-label="دلیل لغو نوبت"
+            aria-label="{% trans 'Cancellation reason' %}"
             data-customer-cancellation-reason
           >
             <div class="flex items-start gap-3">
@@ -224,14 +224,13 @@
                 <i class="fa-solid fa-circle-info" aria-hidden="true"></i>
               </span>
               <div class="min-w-0 flex-1">
-                <p class="text-[11px] font-black text-rose-700">دلیل لغو نوبت</p>
+                <p class="text-[11px] font-black text-rose-700">{% trans 'Cancellation reason' %}</p>
                 <p class="mt-1 text-sm font-bold leading-7 text-rose-950">
-                  {{ appointment.order.cancellation_reason }}
+                  <bdi dir="auto">{{ appointment.order.cancellation_reason }}</bdi>
                 </p>
                 {% if appointment.order.refunded_to_wallet_amount %}
                   <p class="mt-2 border-t border-rose-200 pt-2 text-xs font-bold leading-6 text-rose-700">
-                    {{ appointment.order.refunded_to_wallet_amount|floatformat:0|intcomma }}
-                    تومان به کیف پول شما بازگشت داده شده است.
+                    {% blocktrans with amount=appointment.order.refunded_to_wallet_amount|floatformat:0|intcomma %}{{ amount }} toman was returned to your wallet under the cancellation policy.{% endblocktrans %}
                   </p>
                 {% endif %}
               </div>
@@ -428,7 +427,7 @@
         {% if appointment.order.status == "cancelled" and appointment.order.cancellation_reason %}
         <section
           class="hidden rounded-[2rem] border border-rose-200 bg-rose-50 p-5 shadow-lm-card lg:block"
-          aria-label="دلیل لغو نوبت"
+          aria-label="{% trans 'Cancellation reason' %}"
           data-customer-cancellation-reason
         >
           <div class="flex items-start gap-4">
@@ -438,12 +437,11 @@
             <div class="min-w-0 flex-1">
               <h2 class="text-base font-black text-rose-950">دلیل لغو نوبت</h2>
               <p class="mt-1.5 text-sm font-bold leading-7 text-rose-800">
-                {{ appointment.order.cancellation_reason }}
+                <bdi dir="auto">{{ appointment.order.cancellation_reason }}</bdi>
               </p>
               {% if appointment.order.refunded_to_wallet_amount %}
                 <p class="mt-3 inline-flex rounded-full bg-white px-3 py-1.5 text-xs font-black text-rose-700 ring-1 ring-rose-200">
-                  {{ appointment.order.refunded_to_wallet_amount|floatformat:0|intcomma }}
-                  تومان به کیف پول شما بازگشت داده شده است.
+                  {% blocktrans with amount=appointment.order.refunded_to_wallet_amount|floatformat:0|intcomma %}{{ amount }} toman was returned to your wallet under the cancellation policy.{% endblocktrans %}
                 </p>
               {% endif %}
             </div>
@@ -970,8 +968,17 @@
     window.LoomeraFeedback?.info?.('برای مسیریابی با برنامه دستگاه، این صفحه را روی موبایل باز کن. مقصد برایت کپی شد.');
   };
 
+  {% trans 'Are you sure you want to cancel this appointment?' as cancelConfirmMessage %}
+  {% trans 'Cancellation is temporarily unavailable. Please try again.' as cancelFallbackError %}
+  {% trans 'Your appointment was cancelled successfully.' as cancelFallbackSuccess %}
+  {% trans 'Cancellation request could not be sent.' as cancelNetworkError %}
+  const cancelConfirmMessage = "{{ cancelConfirmMessage|escapejs }}";
+  const cancelFallbackError = "{{ cancelFallbackError|escapejs }}";
+  const cancelFallbackSuccess = "{{ cancelFallbackSuccess|escapejs }}";
+  const cancelNetworkError = "{{ cancelNetworkError|escapejs }}";
+
   window.confirmCancel = function () {
-    if (!confirm('آیا از لغو نوبت مطمئن هستید؟')) return;
+    if (!confirm(cancelConfirmMessage)) return;
 
     fetch("{% url 'orders:cancel_appointment' appointment.id %}", {
       method: 'POST',
@@ -983,13 +990,13 @@
       .then(async (response) => {
         const data = await response.json().catch(() => ({}));
         if (!response.ok || !data.success) {
-          window.LoomeraFeedback?.error?.(data.error || 'خطا در لغو نوبت');
+          window.LoomeraFeedback?.error?.(data.error || cancelFallbackError);
           return;
         }
-        window.LoomeraFeedback?.success?.(data.message || 'نوبت شما لغو شد.');
+        window.LoomeraFeedback?.success?.(data.message || cancelFallbackSuccess);
         window.location.reload();
       })
-      .catch(() => window.LoomeraFeedback?.error?.('خطا در ارسال درخواست'))
+      .catch(() => window.LoomeraFeedback?.error?.(cancelNetworkError))
       .finally(() => window.closeManageModal());
   };
 
