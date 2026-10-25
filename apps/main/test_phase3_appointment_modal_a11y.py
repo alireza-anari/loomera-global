@@ -29,7 +29,7 @@ class AppointmentModalA11yTests(SimpleTestCase):
                 self.assertIn('aria-hidden="true"', opening)
                 self.assertIn('aria-labelledby="' + title_id + '"', opening)
                 self.assertIn('tabindex="-1"', opening)
-        self.assertEqual(source.count("data-modal-initial-focus"), 2)
+        self.assertEqual(source.count('tabindex="-1" data-modal-initial-focus'), 2)
         self.assertIn('aria-hidden="true" tabindex="-1" data-modal-backdrop', source)
         self.assertIn('aria-pressed="false"', source)
         self.assertIn('aria-describedby="reviewRatingInstructions reviewRatingError"', source)
