@@ -322,7 +322,7 @@
                 <div class="mt-2 space-y-1.5">
                   {% if payment_record %}
                     <div class="flex items-center justify-between gap-3 rounded-xl bg-loomera-bgSubtle px-3 py-2 text-[11px]">
-                      <span class="font-bold text-loomera-textMuted">پرداخت اصلی</span>
+                      <span class="font-bold text-loomera-textMuted">{% trans 'Primary payment' %}</span>
                       <strong>{{ payment_record.amount|floatformat:0|intcomma }} {% trans 'toman' %}</strong>
                     </div>
                   {% endif %}
@@ -588,7 +588,7 @@
                 </span>
                 <div class="min-w-0">
                   <h3 class="text-sm font-black text-blue-950">{% trans "Pay at salon" %}</h3>
-                  <p class="mt-1 text-sm leading-7 text-blue-800">خدمت انجام شده است. پس از دریافت وجه، مجموعه پرداخت حضوری را ثبت می‌کند؛ نیازی به تأیید شما نیست.</p>
+                  <p class="mt-1 text-sm leading-7 text-blue-800">{% trans 'The service is complete. The salon will record your in-person payment once it has been collected; you do not need to confirm it.' %}</p>
                 </div>
               </div>
             </div>
