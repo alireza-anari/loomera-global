@@ -1505,9 +1505,9 @@ This slice translates the fixed customer-facing lifecycle labels and
 descriptions on appointment detail pages, including booking receipt,
 professional confirmation, arrival, service progress/completion, payment
 follow-up and review readiness. Existing reviewed msgids are reused where
-their meaning matches; 23 new static strings are recorded in
+their meaning matches; 24 new static strings are recorded in
 `PHASE3_33_MESSAGE_REVIEW.json` and compiled into fa/en/ar catalogs, each
-now containing **513 entries**.
+now containing **514 entries**.
 
 Lifecycle labels use lazy gettext values so the active request locale is
 resolved when the response is rendered, not frozen to Persian at module
@@ -1532,7 +1532,7 @@ date/time output and LTR/RTL isolation remain unchanged. Eight
 database-free tests cover the reviewed ledger, all three compiled
 catalogs, lazy label localization, progress descriptions, reminder-state
 semantics, pay-at-salon financial state, template compilation and the
-unchanged release gate. Existing locale guards now expect 513 catalog
+unchanged release gate. Existing locale guards now expect 514 catalog
 entries.
 
 This is structural evidence only. Real-browser visual, keyboard,
