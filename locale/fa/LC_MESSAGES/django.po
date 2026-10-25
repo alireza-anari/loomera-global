@@ -1966,3 +1966,91 @@ msgstr "بازگشت برداشت ردشده"
 #: docs/globalization/PHASE3_32_MESSAGE_REVIEW.json
 msgid "Transaction type unavailable"
 msgstr "نوع تراکنش در دسترس نیست"
+
+#: docs/globalization/PHASE3_33_MESSAGE_REVIEW.json
+msgid "Booking received"
+msgstr "رزرو ثبت شد"
+
+#: docs/globalization/PHASE3_33_MESSAGE_REVIEW.json
+msgid "Your booking request has been received."
+msgstr "درخواست رزرو شما ثبت شده است."
+
+#: docs/globalization/PHASE3_33_MESSAGE_REVIEW.json
+msgid "After your booking is confirmed, the selected time is finalized in the professional's schedule."
+msgstr "پس از تأیید رزرو، زمان انتخاب‌شده در برنامه متخصص قطعی می‌شود."
+
+#: docs/globalization/PHASE3_33_MESSAGE_REVIEW.json
+msgid "This appointment time is confirmed and has been added to the professional's schedule."
+msgstr "زمان این نوبت تأیید و در برنامه متخصص ثبت شده است."
+
+#: docs/globalization/PHASE3_33_MESSAGE_REVIEW.json
+msgid "Your arrival at the salon has been recorded."
+msgstr "حضور شما در سالن ثبت شده است."
+
+#: docs/globalization/PHASE3_33_MESSAGE_REVIEW.json
+msgid "Your service is in progress."
+msgstr "خدمت شما در حال انجام است."
+
+#: docs/globalization/PHASE3_33_MESSAGE_REVIEW.json
+msgid "Your service is complete."
+msgstr "خدمت شما به پایان رسیده است."
+
+#: docs/globalization/PHASE3_33_MESSAGE_REVIEW.json
+msgid "You can share your experience of this appointment."
+msgstr "می‌توانید تجربه خود از این نوبت را ثبت کنید."
+
+#: docs/globalization/PHASE3_33_MESSAGE_REVIEW.json
+msgid "Your review has been submitted."
+msgstr "دیدگاه شما ثبت شده است."
+
+#: docs/globalization/PHASE3_33_MESSAGE_REVIEW.json
+msgid "Your appointment reminder is scheduled for %(date)s at %(time)s."
+msgstr "یادآوری این نوبت برای %(date)s ساعت %(time)s برنامه‌ریزی شده است."
+
+#: docs/globalization/PHASE3_33_MESSAGE_REVIEW.json
+msgid "An automatic reminder could not be scheduled because the appointment was too soon or no valid time was available."
+msgstr "به‌دلیل نزدیک بودن زمان نوبت یا نبود زمان معتبر، یادآوری خودکار زمان‌بندی نشد."
+
+#: docs/globalization/PHASE3_33_MESSAGE_REVIEW.json
+msgid "Your appointment reminder has been sent."
+msgstr "یادآوری نوبت شما ارسال شده است."
+
+#: docs/globalization/PHASE3_33_MESSAGE_REVIEW.json
+msgid "The service is complete. The salon will record your in-person payment once it has been collected; you do not need to confirm it."
+msgstr "خدمت به پایان رسیده است. پس از دریافت وجه، مجموعه پرداخت حضوری را ثبت می‌کند؛ نیازی به تأیید شما نیست."
+
+#: docs/globalization/PHASE3_33_MESSAGE_REVIEW.json
+msgid "Leave a review"
+msgstr "ثبت دیدگاه"
+
+#: docs/globalization/PHASE3_33_MESSAGE_REVIEW.json
+msgid "Selected service and professional"
+msgstr "خدمت و متخصص انتخاب‌شده"
+
+#: docs/globalization/PHASE3_33_MESSAGE_REVIEW.json
+msgid "Payment, policies and salon information"
+msgstr "پرداخت، قوانین و اطلاعات مجموعه"
+
+#: docs/globalization/PHASE3_33_MESSAGE_REVIEW.json
+msgid "Primary payment"
+msgstr "پرداخت اصلی"
+
+#: docs/globalization/PHASE3_33_MESSAGE_REVIEW.json
+msgid "Total duration"
+msgstr "مدت کل"
+
+#: docs/globalization/PHASE3_33_MESSAGE_REVIEW.json
+msgid "Appointment reminder"
+msgstr "یادآوری نوبت"
+
+#: docs/globalization/PHASE3_33_MESSAGE_REVIEW.json
+msgid "More details"
+msgstr "جزئیات بیشتر"
+
+#: docs/globalization/PHASE3_33_MESSAGE_REVIEW.json
+msgid "Service details"
+msgstr "جزئیات خدمات"
+
+#: docs/globalization/PHASE3_33_MESSAGE_REVIEW.json
+msgid "Rate and review"
+msgstr "ثبت امتیاز و دیدگاه"
