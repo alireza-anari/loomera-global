@@ -193,7 +193,9 @@ class BookingBidirectionalAccessibilityTests(SimpleTestCase):
                 if path in self.CHECKOUT_TEMPLATES:
                     self.assertIn("{% trans 'toman' %}", src)
                 else:
-                    self.assertIn("تومان", src)
+                    self.assertIn("{% trans 'toman' %}", src)
+                    with translation.override("fa"):
+                        self.assertEqual(translation.gettext("toman"), "تومان")
                 self.assertNotIn('dir="rtl" data-booking-coupon-token', src)
 
     def test_booking_direction_guards_are_separate_from_locale_and_payment_logic(self):
