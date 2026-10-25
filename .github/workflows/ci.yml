@@ -184,6 +184,12 @@ jobs:
             apps.main.test_phase3_post_checkout_locale \
             --failfast
 
+      - name: Phase 3.32 financial state and cancellation/refund native gettext
+        run: |
+          python manage.py test \
+            apps.main.test_phase3_financial_runtime_locale \
+            --failfast
+
       - name: Phase 3 localized submission progress guards
         run: |
           python manage.py test \
