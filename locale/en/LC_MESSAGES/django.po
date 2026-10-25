@@ -2054,3 +2054,7 @@ msgstr "Service details"
 #: docs/globalization/PHASE3_33_MESSAGE_REVIEW.json
 msgid "Rate and review"
 msgstr "Rate and review"
+
+#: docs/globalization/PHASE3_33_MESSAGE_REVIEW.json
+msgid "Payment for this appointment has been recorded."
+msgstr "Payment for this appointment has been recorded."
