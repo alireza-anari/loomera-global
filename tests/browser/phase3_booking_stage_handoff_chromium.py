@@ -26,6 +26,8 @@ def between(content, start, end):
     return content[a:b]
 
 
+AMOUNT_PARSER = between(STAFF, "    function parseAmount(value) {",
+                        "    function formatAmount(value) {")
 STYLIST_FUNCTIONS = between(
     STAFF, "    function buildSelectionFromButton(button) {",
     "    function updateSelectionUI(selectedButton) {"
@@ -82,7 +84,7 @@ def run_one(browser, language, width):
           window.getDefaultDateForCurrentStep=()=> '2026-11-03';
           window.getPickedForIndex=()=> null;
           window.renderCurrentStep=()=>Promise.resolve();
-        """ + "\n" + STYLIST_FUNCTIONS + "\n" + DATE_HELPERS
+        """ + "\n" + AMOUNT_PARSER + "\n" + STYLIST_FUNCTIONS + "\n" + DATE_HELPERS
             + "\n" + SWITCHER + "\n" + SUBMIT + """
           document.querySelector('#choose-any').addEventListener('click',handleStylistSelection);
           document.querySelector('#dateTimeSelectionForm').submit=()=>{window.bookingSubmitted=true};
