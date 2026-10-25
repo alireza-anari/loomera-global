@@ -88,7 +88,7 @@ def wallet_transaction_type_label(transaction_type):
     return _label(
         WALLET_TRANSACTION_TYPE_MESSAGES,
         transaction_type,
-        "Refund status",
+        "Transaction type unavailable",
     )
 
 
