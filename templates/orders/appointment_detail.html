@@ -733,7 +733,7 @@
             {% if show_manage_cta %}
               <button type="button" onclick="openManageModal()" class="inline-flex items-center justify-center gap-2 rounded-full border border-rose-200 bg-rose-50 px-5 py-3 text-sm font-black text-rose-700 transition hover:bg-rose-100 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-rose-100"><i class="fa-solid fa-sliders" aria-hidden="true"></i>{% trans "Manage appointment" %}</button>
             {% endif %}
-            <a href="{% url 'orders:appointments' %}" class="inline-flex items-center justify-center rounded-full bg-loomera-primary px-5 py-3 text-sm font-black text-white shadow-lm-soft transition hover:bg-loomera-primaryHover focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-loomera-focusRing/30">بازگشت به نوبت‌ها</a>
+            <a href="{% url 'orders:appointments' %}" class="inline-flex items-center justify-center rounded-full bg-loomera-primary px-5 py-3 text-sm font-black text-white shadow-lm-soft transition hover:bg-loomera-primaryHover focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-loomera-focusRing/30">{% trans 'Back to my appointments' %}</a>
           </div>
         </section>
 
