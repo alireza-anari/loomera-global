@@ -72,7 +72,8 @@
       ],
       "automated": [
         "apps/main/test_phase3_booking_journey_security_a11y.py",
-        "apps/main/test_phase3_quick_booking_locale.py"
+        "apps/main/test_phase3_quick_booking_locale.py",
+        "tests/browser/phase3_booking_stage_handoff_chromium.py"
       ],
       "checks": [
         "Tab and Space/Enter activate grouped specialist buttons",
@@ -90,7 +91,9 @@
       "automated": [
         "apps/main/test_phase3_booking_journey_security_a11y.py",
         "tests/js/phase3_booking_journey_runtime.test.cjs",
-        "tests/browser/phase3_booking_keyboard_chromium.py"
+        "tests/browser/phase3_booking_keyboard_chromium.py",
+        "apps/main/test_phase3_booking_server_handoff_locale.py",
+        "tests/browser/phase3_booking_stage_handoff_chromium.py"
       ],
       "checks": [
         "Jalali calendar remains correct and selected date remains visible",
@@ -110,7 +113,8 @@
         "apps/main/test_phase3_booking_checkout_locale.py",
         "apps/main/test_phase3_checkout_flash_locale.py",
         "apps/main/test_phase3_checkout_cta_locale.py",
-        "tests/browser/phase3_checkout_cta_chromium.py"
+        "tests/browser/phase3_checkout_cta_chromium.py",
+        "apps/main/test_phase3_booking_server_handoff_locale.py"
       ],
       "checks": [
         "coupon mixed-direction code and currency alignment",
