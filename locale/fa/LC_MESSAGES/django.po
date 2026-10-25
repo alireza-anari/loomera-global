@@ -2062,3 +2062,159 @@ msgstr "پرداخت این نوبت ثبت شده است."
 #: docs/globalization/PHASE3_33_MESSAGE_REVIEW.json
 msgid "Payment for this appointment is completed at the salon."
 msgstr "پرداخت این نوبت در سالن تکمیل می‌شود."
+
+#: templates/orders/quick_link_invalid.html templates/orders/quick_link_stylist_services.html apps/orders/views.py
+msgid "Quick booking link unavailable"
+msgstr "لینک رزرو سریع در دسترس نیست"
+
+#: templates/orders/quick_link_invalid.html templates/orders/quick_link_stylist_services.html apps/orders/views.py
+msgid "This link may have expired, been disabled or is incomplete."
+msgstr "این لینک ممکن است منقضی، غیرفعال یا ناقص باشد."
+
+#: templates/orders/quick_link_invalid.html templates/orders/quick_link_stylist_services.html apps/orders/views.py
+msgid "Browse salons"
+msgstr "مشاهده مجموعه‌ها"
+
+#: templates/orders/quick_link_invalid.html templates/orders/quick_link_stylist_services.html apps/orders/views.py
+msgid "Select services for quick booking"
+msgstr "انتخاب خدمت برای رزرو سریع"
+
+#: templates/orders/quick_link_invalid.html templates/orders/quick_link_stylist_services.html apps/orders/views.py
+msgid "Back to salon"
+msgstr "بازگشت به مجموعه"
+
+#: templates/orders/quick_link_invalid.html templates/orders/quick_link_stylist_services.html apps/orders/views.py
+msgid "Quick booking with a professional"
+msgstr "رزرو سریع متخصص"
+
+#: templates/orders/quick_link_invalid.html templates/orders/quick_link_stylist_services.html apps/orders/views.py
+msgid "Select the services offered by this professional. Only their available times will appear in the next step."
+msgstr "خدمت‌های قابل ارائه توسط این متخصص را انتخاب کن؛ در مرحله بعد فقط زمان‌های همین متخصص برای رزرو نمایش داده می‌شود."
+
+#: templates/orders/quick_link_invalid.html templates/orders/quick_link_stylist_services.html apps/orders/views.py
+msgid "Service count"
+msgstr "تعداد خدمات"
+
+#: templates/orders/quick_link_invalid.html templates/orders/quick_link_stylist_services.html apps/orders/views.py
+msgid "Selected professional"
+msgstr "متخصص انتخاب‌شده"
+
+#: templates/orders/quick_link_invalid.html templates/orders/quick_link_stylist_services.html apps/orders/views.py
+msgid "Next step"
+msgstr "مرحله بعد"
+
+#: templates/orders/quick_link_invalid.html templates/orders/quick_link_stylist_services.html apps/orders/views.py
+msgid "Choose time"
+msgstr "انتخاب زمان"
+
+#: templates/orders/quick_link_invalid.html templates/orders/quick_link_stylist_services.html apps/orders/views.py
+msgid "Choose service"
+msgstr "انتخاب خدمت"
+
+#: templates/orders/quick_link_invalid.html templates/orders/quick_link_stylist_services.html apps/orders/views.py
+msgid "Bookable services with"
+msgstr "خدمات قابل رزرو با"
+
+#: templates/orders/quick_link_invalid.html templates/orders/quick_link_stylist_services.html apps/orders/views.py
+msgid "You can select one or more services."
+msgstr "می‌توانی یک یا چند خدمت را انتخاب کنی."
+
+#: templates/orders/quick_link_invalid.html templates/orders/quick_link_stylist_services.html apps/orders/views.py
+msgid "Professional services"
+msgstr "خدمات متخصص"
+
+#: templates/orders/quick_link_invalid.html templates/orders/quick_link_stylist_services.html apps/orders/views.py
+msgid "Price"
+msgstr "قیمت"
+
+#: templates/orders/quick_link_invalid.html templates/orders/quick_link_stylist_services.html apps/orders/views.py
+msgid "No services found for this professional."
+msgstr "خدمتی برای این متخصص پیدا نشد"
+
+#: templates/orders/quick_link_invalid.html templates/orders/quick_link_stylist_services.html apps/orders/views.py
+msgid "Choose another professional or service from the salon page."
+msgstr "از صفحه مجموعه، متخصص یا خدمت دیگری را انتخاب کن."
+
+#: templates/orders/quick_link_invalid.html templates/orders/quick_link_stylist_services.html apps/orders/views.py
+msgid "Quick booking summary"
+msgstr "خلاصه رزرو سریع"
+
+#: templates/orders/quick_link_invalid.html templates/orders/quick_link_stylist_services.html apps/orders/views.py
+msgid "Selection summary"
+msgstr "خلاصه انتخاب"
+
+#: templates/orders/quick_link_invalid.html templates/orders/quick_link_stylist_services.html apps/orders/views.py
+msgid "You will see this professional's available times in the next step."
+msgstr "در مرحله بعد، زمان‌های قابل رزرو همین متخصص را می‌بینی."
+
+#: templates/orders/quick_link_invalid.html templates/orders/quick_link_stylist_services.html apps/orders/views.py
+msgid "Booking path"
+msgstr "مسیر رزرو"
+
+#: templates/orders/quick_link_invalid.html templates/orders/quick_link_stylist_services.html apps/orders/views.py
+msgid "Choose preferred services"
+msgstr "انتخاب خدمت‌های موردنظر"
+
+#: templates/orders/quick_link_invalid.html templates/orders/quick_link_stylist_services.html apps/orders/views.py
+msgid "Choose date and time"
+msgstr "انتخاب تاریخ و ساعت"
+
+#: templates/orders/quick_link_invalid.html templates/orders/quick_link_stylist_services.html apps/orders/views.py
+msgid "Review and finalize booking"
+msgstr "مرور و ثبت نهایی رزرو"
+
+#: templates/orders/quick_link_invalid.html templates/orders/quick_link_stylist_services.html apps/orders/views.py
+msgid "Select at least one service for this professional."
+msgstr "حداقل یک خدمت را برای این متخصص انتخاب کنید."
+
+#: templates/orders/quick_link_invalid.html templates/orders/quick_link_stylist_services.html apps/orders/views.py
+msgid "This service is offered by this professional at this salon."
+msgstr "این خدمت توسط همین متخصص در این مجموعه ارائه می‌شود."
+
+#: templates/orders/quick_link_invalid.html templates/orders/quick_link_stylist_services.html apps/orders/views.py
+msgid "Price will be finalized in the next step."
+msgstr "قیمت در مرحله بعد نهایی می‌شود"
+
+#: templates/orders/quick_link_invalid.html templates/orders/quick_link_stylist_services.html apps/orders/views.py
+msgid "The selected professional is invalid."
+msgstr "متخصص انتخاب‌شده معتبر نیست."
+
+#: templates/orders/quick_link_invalid.html templates/orders/quick_link_stylist_services.html apps/orders/views.py
+msgid "The salon for this link is not active or unavailable."
+msgstr "سالن مربوط به این لینک فعال نیست یا در دسترس نیست."
+
+#: templates/orders/quick_link_invalid.html templates/orders/quick_link_stylist_services.html apps/orders/views.py
+msgid "No active services were found for this professional at this salon."
+msgstr "برای این متخصص در این مجموعه خدمت فعالی پیدا نشد."
+
+#: templates/orders/quick_link_invalid.html templates/orders/quick_link_stylist_services.html apps/orders/views.py
+msgid "The selected service is not valid for this professional."
+msgstr "خدمت انتخاب‌شده برای این متخصص معتبر نیست."
+
+#: templates/orders/quick_link_invalid.html templates/orders/quick_link_stylist_services.html apps/orders/views.py
+msgid "The salon for this quick booking link is no longer available."
+msgstr "سالن مربوط به این لینک رزرو سریع فعال نیست یا دیگر در دسترس نیست."
+
+#: templates/orders/quick_link_invalid.html templates/orders/quick_link_stylist_services.html apps/orders/views.py
+msgid "The service for this quick booking link is no longer available."
+msgstr "خدمت مربوط به این لینک رزرو سریع فعال نیست یا از سالن حذف شده است."
+
+#: templates/orders/quick_link_invalid.html templates/orders/quick_link_stylist_services.html apps/orders/views.py
+msgid "The professional for this quick booking link is no longer available."
+msgstr "متخصص مربوط به این لینک رزرو سریع فعال نیست یا دیگر در این سالن فعالیت ندارد."
+
+#: templates/orders/quick_link_invalid.html templates/orders/quick_link_stylist_services.html apps/orders/views.py
+msgid "This quick booking link is incomplete."
+msgstr "اطلاعات این لینک رزرو سریع کامل نیست."
+
+#: templates/orders/quick_link_invalid.html templates/orders/quick_link_stylist_services.html apps/orders/views.py
+msgid "The selected service is no longer offered by this professional."
+msgstr "خدمت انتخاب‌شده دیگر توسط این متخصص ارائه نمی‌شود."
+
+#: templates/orders/quick_link_invalid.html templates/orders/quick_link_stylist_services.html apps/orders/views.py
+msgid "The time recorded in this quick booking link is invalid."
+msgstr "زمان ثبت‌شده در این لینک رزرو سریع معتبر نیست."
+
+#: templates/orders/quick_link_invalid.html templates/orders/quick_link_stylist_services.html apps/orders/views.py
+msgid "This quick booking link is invalid."
+msgstr "این لینک رزرو سریع معتبر نیست."
