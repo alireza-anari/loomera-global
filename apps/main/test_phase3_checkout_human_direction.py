@@ -127,7 +127,7 @@ class CheckoutHumanDirectionTests(SimpleTestCase):
                 'value="confirm_checkout"',
                 'value="apply_coupon"',
                 'value="clear_coupon"',
-                "data-payment-option",
+                'role="radiogroup"',
                 "data-checkout-final-submit",
             ):
                 self.assertIn(marker, source)
