@@ -112,6 +112,11 @@
       "en": "Rate and review",
       "fa": "ثبت امتیاز و دیدگاه",
       "ar": "قيّم واترك تعليقًا"
+    },
+    {
+      "en": "Payment for this appointment has been recorded.",
+      "fa": "پرداخت این نوبت ثبت شده است.",
+      "ar": "تم تسجيل الدفع لهذا الموعد."
     }
   ]
 }
