@@ -1714,3 +1714,207 @@ msgstr "الخدمة قيد التنفيذ"
 #: docs/globalization/PHASE3_31_MESSAGE_REVIEW.json
 msgid "Salon payment outstanding"
 msgstr "الدفع في الصالون لم يُسوَّ بعد"
+
+#: docs/globalization/PHASE3_32_MESSAGE_REVIEW.json
+msgid "Payment started"
+msgstr "بدأ الدفع"
+
+#: docs/globalization/PHASE3_32_MESSAGE_REVIEW.json
+msgid "Payment successful"
+msgstr "تم الدفع بنجاح"
+
+#: docs/globalization/PHASE3_32_MESSAGE_REVIEW.json
+msgid "Awaiting payment"
+msgstr "بانتظار الدفع"
+
+#: docs/globalization/PHASE3_32_MESSAGE_REVIEW.json
+msgid "Paid at salon"
+msgstr "تم الدفع في الصالون"
+
+#: docs/globalization/PHASE3_32_MESSAGE_REVIEW.json
+msgid "Awaiting confirmation"
+msgstr "بانتظار التأكيد"
+
+#: docs/globalization/PHASE3_32_MESSAGE_REVIEW.json
+msgid "Confirmed"
+msgstr "تم التأكيد"
+
+#: docs/globalization/PHASE3_32_MESSAGE_REVIEW.json
+msgid "No-show"
+msgstr "عدم الحضور"
+
+#: docs/globalization/PHASE3_32_MESSAGE_REVIEW.json
+msgid "Under dispute"
+msgstr "قيد النزاع"
+
+#: docs/globalization/PHASE3_32_MESSAGE_REVIEW.json
+msgid "Wallet"
+msgstr "المحفظة"
+
+#: docs/globalization/PHASE3_32_MESSAGE_REVIEW.json
+msgid "Manual"
+msgstr "يدوي"
+
+#: docs/globalization/PHASE3_32_MESSAGE_REVIEW.json
+msgid "Simulator"
+msgstr "محاكي"
+
+#: docs/globalization/PHASE3_32_MESSAGE_REVIEW.json
+msgid "Payment status unavailable"
+msgstr "حالة الدفع غير متاحة"
+
+#: docs/globalization/PHASE3_32_MESSAGE_REVIEW.json
+msgid "Booking status unavailable"
+msgstr "حالة الحجز غير متاحة"
+
+#: docs/globalization/PHASE3_32_MESSAGE_REVIEW.json
+msgid "Payment method unavailable"
+msgstr "طريقة الدفع غير متاحة"
+
+#: docs/globalization/PHASE3_32_MESSAGE_REVIEW.json
+msgid "Payment provider unavailable"
+msgstr "مزود الدفع غير متاح"
+
+#: docs/globalization/PHASE3_32_MESSAGE_REVIEW.json
+msgid "Payment requires review"
+msgstr "الدفع يتطلب المراجعة"
+
+#: docs/globalization/PHASE3_32_MESSAGE_REVIEW.json
+msgid "The payment gateway response did not match the order details. For financial safety, this transaction is under review."
+msgstr "لم تتطابق استجابة بوابة الدفع مع تفاصيل الطلب. تخضع هذه المعاملة للمراجعة حفاظًا على السلامة المالية."
+
+#: docs/globalization/PHASE3_32_MESSAGE_REVIEW.json
+msgid "Payment result is not final yet"
+msgstr "لم تُحسم نتيجة الدفع بعد"
+
+#: docs/globalization/PHASE3_32_MESSAGE_REVIEW.json
+msgid "The transaction has not been finalized. The bank or payment gateway may have processed it, but Loomera has not received a confirmed result."
+msgstr "لم تُحسم هذه المعاملة بعد. ربما عالجها البنك أو بوابة الدفع، لكن لوميرا لم تتلقَّ نتيجة مؤكدة."
+
+#: docs/globalization/PHASE3_32_MESSAGE_REVIEW.json
+msgid "Connection to the payment gateway could not be completed. The bank may have processed the transaction, but Loomera has not received a confirmed result."
+msgstr "تعذر إكمال الاتصال ببوابة الدفع للتأكيد النهائي. ربما عالج البنك المعاملة، لكن لوميرا لم تتلقَّ نتيجة مؤكدة."
+
+#: docs/globalization/PHASE3_32_MESSAGE_REVIEW.json
+msgid "Please do not pay again while this transaction is being checked."
+msgstr "يرجى عدم الدفع مرة أخرى أثناء التحقق من هذه المعاملة."
+
+#: docs/globalization/PHASE3_32_MESSAGE_REVIEW.json
+msgid "If money was deducted, the result will be confirmed after the gateway or automated transaction review."
+msgstr "إذا تم خصم مبلغ، فسيتم تأكيد النتيجة بعد مراجعة البوابة أو التحقق الآلي من المعاملة."
+
+#: docs/globalization/PHASE3_32_MESSAGE_REVIEW.json
+msgid "Online payment was not completed in time. The booking is no longer pending and the selected time has been released."
+msgstr "لم يكتمل الدفع الإلكتروني ضمن المهلة المحددة. لم يعد الحجز قيد الانتظار وتم إتاحة الوقت المختار مجددًا."
+
+#: docs/globalization/PHASE3_32_MESSAGE_REVIEW.json
+msgid "Choose a new available time to book this service."
+msgstr "اختر وقتًا متاحًا جديدًا لحجز هذه الخدمة."
+
+#: docs/globalization/PHASE3_32_MESSAGE_REVIEW.json
+msgid "If money was deducted, support or an automatic transaction review can help confirm its status."
+msgstr "إذا تم خصم مبلغ، يمكن للدعم أو المراجعة الآلية للمعاملة تأكيد حالته."
+
+#: docs/globalization/PHASE3_32_MESSAGE_REVIEW.json
+msgid "Your appointment was cancelled successfully."
+msgstr "تم إلغاء موعدك بنجاح."
+
+#: docs/globalization/PHASE3_32_MESSAGE_REVIEW.json
+msgid "Your appointment was cancelled successfully. Refunded %(amount)s toman to your wallet."
+msgstr "تم إلغاء موعدك بنجاح. أُعيد مبلغ %(amount)s تومان إلى محفظتك."
+
+#: docs/globalization/PHASE3_32_MESSAGE_REVIEW.json
+msgid "Cancellation is not available for this appointment. Please contact the salon."
+msgstr "لا يمكن إلغاء هذا الموعد. يرجى التواصل مع الصالون."
+
+#: docs/globalization/PHASE3_32_MESSAGE_REVIEW.json
+msgid "This appointment has already been cancelled."
+msgstr "تم إلغاء هذا الموعد مسبقًا."
+
+#: docs/globalization/PHASE3_32_MESSAGE_REVIEW.json
+msgid "Cancellation is temporarily unavailable. Please try again."
+msgstr "إلغاء الموعد غير متاح مؤقتًا. يرجى المحاولة مرة أخرى."
+
+#: docs/globalization/PHASE3_32_MESSAGE_REVIEW.json
+msgid "Are you sure you want to cancel this appointment?"
+msgstr "هل أنت متأكد من رغبتك في إلغاء هذا الموعد؟"
+
+#: docs/globalization/PHASE3_32_MESSAGE_REVIEW.json
+msgid "Cancellation request could not be sent."
+msgstr "تعذر إرسال طلب إلغاء الموعد."
+
+#: docs/globalization/PHASE3_32_MESSAGE_REVIEW.json
+msgid "Cancellation policy"
+msgstr "سياسة الإلغاء"
+
+#: docs/globalization/PHASE3_32_MESSAGE_REVIEW.json
+msgid "Salon cancellation policy"
+msgstr "سياسة الإلغاء الخاصة بالصالون"
+
+#: docs/globalization/PHASE3_32_MESSAGE_REVIEW.json
+msgid "Online cancellation is available up to %(hours)s hours before the appointment. For online or wallet payments, %(percent)s%% of the amount is returned to your wallet."
+msgstr "يمكن إلغاء الموعد إلكترونيًا حتى %(hours)s ساعة قبل الموعد. في الدفع الإلكتروني أو عبر المحفظة، يُعاد %(percent)s٪ من المبلغ إلى محفظتك."
+
+#: docs/globalization/PHASE3_32_MESSAGE_REVIEW.json
+msgid "Online cancellation is currently available. If you cancel, %(percent)s%% of the digital payment will be returned to your wallet."
+msgstr "الإلغاء الإلكتروني متاح حاليًا. إذا ألغيت الموعد، فسيُعاد %(percent)s٪ من المبلغ المدفوع رقميًا إلى محفظتك."
+
+#: docs/globalization/PHASE3_32_MESSAGE_REVIEW.json
+msgid "Online cancellation is not available for this appointment. Please contact the salon if you need help."
+msgstr "لا يتوفر الإلغاء الإلكتروني لهذا الموعد حاليًا. يرجى التواصل مع الصالون إذا احتجت إلى المساعدة."
+
+#: docs/globalization/PHASE3_32_MESSAGE_REVIEW.json
+msgid "Online cancellation is not available for completed or past appointments."
+msgstr "لا يتوفر الإلغاء الإلكتروني للمواعيد المكتملة أو السابقة."
+
+#: docs/globalization/PHASE3_32_MESSAGE_REVIEW.json
+msgid "Refund recorded at %(time)s."
+msgstr "تم تسجيل الاسترداد في %(time)s."
+
+#: docs/globalization/PHASE3_32_MESSAGE_REVIEW.json
+msgid "%(amount)s toman was returned to your wallet under the cancellation policy."
+msgstr "وفقًا لسياسة الإلغاء، أُعيد مبلغ %(amount)s تومان إلى محفظتك."
+
+#: docs/globalization/PHASE3_32_MESSAGE_REVIEW.json
+msgid "Refund"
+msgstr "استرداد المبلغ"
+
+#: docs/globalization/PHASE3_32_MESSAGE_REVIEW.json
+msgid "Refund date"
+msgstr "تاريخ الاسترداد"
+
+#: docs/globalization/PHASE3_32_MESSAGE_REVIEW.json
+msgid "No refund"
+msgstr "لا يوجد استرداد"
+
+#: docs/globalization/PHASE3_32_MESSAGE_REVIEW.json
+msgid "Service discount campaign"
+msgstr "عنوان حملة خصم الخدمات"
+
+#: docs/globalization/PHASE3_32_MESSAGE_REVIEW.json
+msgid "No service discount campaign"
+msgstr "لا توجد حملة خصم للخدمات"
+
+#: docs/globalization/PHASE3_32_MESSAGE_REVIEW.json
+msgid "No coupon"
+msgstr "بدون قسيمة"
+
+#: docs/globalization/PHASE3_32_MESSAGE_REVIEW.json
+msgid "Payment status is still being finalized. To avoid duplicate charges, follow up on this same transaction."
+msgstr "لا تزال حالة الدفع قيد التأكيد. لتجنب الخصم المكرر، تابع هذه المعاملة نفسها."
+
+#: docs/globalization/PHASE3_32_MESSAGE_REVIEW.json
+msgid "The payment deadline for this booking has passed and the selected time has been released. Choose a new available time to book again."
+msgstr "انتهت مهلة الدفع لهذا الحجز وتم إتاحة الوقت المختار مجددًا. اختر وقتًا متاحًا جديدًا لإعادة الحجز."
+
+#: docs/globalization/PHASE3_32_MESSAGE_REVIEW.json
+msgid "You cancelled the payment. If money was deducted, support can help confirm its status."
+msgstr "لقد ألغيت الدفع. إذا تم خصم مبلغ، يمكن للدعم تأكيد حالته."
+
+#: docs/globalization/PHASE3_32_MESSAGE_REVIEW.json
+msgid "Payment was not confirmed. If money was deducted, support can help confirm its status."
+msgstr "لم يتم تأكيد الدفع. إذا تم خصم مبلغ، يمكن للدعم تأكيد حالته."
+
+#: docs/globalization/PHASE3_32_MESSAGE_REVIEW.json
+msgid "Cancellation reason"
+msgstr "سبب الإلغاء"
