@@ -66,16 +66,20 @@
     {
       "area": "Specialist and service selection",
       "pages": [
-        "select_stylists.html"
+        "select_stylists.html",
+        "quick_link_stylist_services.html",
+        "quick_link_invalid.html"
       ],
       "automated": [
-        "apps/main/test_phase3_booking_journey_security_a11y.py"
+        "apps/main/test_phase3_booking_journey_security_a11y.py",
+        "apps/main/test_phase3_quick_booking_locale.py"
       ],
       "checks": [
         "Tab and Space/Enter activate grouped specialist buttons",
         "selected pressed state announced",
         "mixed Persian/Latin names do not distort layout",
-        "disabled choices cannot be selected"
+        "disabled choices cannot be selected",
+        "quick-link invalid token and professional service selector: all locales, keyboard focus and mixed-direction names"
       ]
     },
     {

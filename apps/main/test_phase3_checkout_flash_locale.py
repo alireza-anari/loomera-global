@@ -107,7 +107,7 @@ class CheckoutFlashLocaleTests(SimpleTestCase):
                 po = (self.locale_dir(language) / "django.po").read_text(encoding="utf-8")
                 compiled = (self.locale_dir(language) / "django.mo").read_bytes()
                 self.assertEqual(struct.unpack_from("<I", compiled, 0)[0], 0x950412de)
-                self.assertEqual(struct.unpack_from("<I", compiled, 8)[0], 514)
+                self.assertEqual(struct.unpack_from("<I", compiled, 8)[0], 553)
                 approved = inspect_checkout_gettext_catalog(language, po)
                 self.assertEqual(len(approved), 26)
                 self.assertEqual(po.count(

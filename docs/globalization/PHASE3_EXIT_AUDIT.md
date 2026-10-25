@@ -222,3 +222,24 @@ viewport zoom, a visual screenshot audit or NVDA/VoiceOver
 screen reader verification. The acceptance matrix continues
 to mark all five manual gates open; no fake tester records or
 deployment approval have been added.
+
+## Phase 3.35 — Quick booking link locale and selection affordances
+
+The invalid token-entry page and professional-specific service selector now use
+39 new reviewed native gettext strings (plus reused compiled entries) in
+fa/en/ar. These include fixed error states, static first-paint copy, form feedback,
+service-description fallback, price/duration units and names in direction-isolated
+markup. English navigation arrows are mirrored without changing DOM or tab order.
+The reviewed JSON ledger, six native PO/MO files and database-free Django CI
+check the new behavior. Existing quick-link ownership and token validation,
+HTTP 410, POST field names, selected IDs, session transitions, checkout/business
+logic, amounts and salon-authored text are unchanged.
+
+**This is not Phase 3 exit.** CI and structural template checks do not substitute
+for real-browser localization, keyboard, assistive technology or zoom acceptance.
+All five manual release gates and Production deployment approval remain blocked.
+
+The selected-service empty POST notice is added to a dedicated immutable,
+error-tone-only flash allowlist; its native compiled gettext identifier is
+matched exactly so arbitrary customer, provider or technical payloads still
+fall back safely. Historical Persian booking flash identifiers are preserved.

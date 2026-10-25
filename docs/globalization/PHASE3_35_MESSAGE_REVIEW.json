@@ -1,0 +1,202 @@
+{
+  "schema_version": 1,
+  "phase": "3.35",
+  "purpose": "Reviewed static fa/en/ar quick-link token invalid, specialist service selection, dynamic price/duration units and fixed server feedback. Token validation, booking state and salon-authored content are unchanged.",
+  "message_rows": [
+    {
+      "en": "Quick booking link unavailable",
+      "fa": "لینک رزرو سریع در دسترس نیست",
+      "ar": "رابط الحجز السريع غير متاح"
+    },
+    {
+      "en": "This link may have expired, been disabled or is incomplete.",
+      "fa": "این لینک ممکن است منقضی، غیرفعال یا ناقص باشد.",
+      "ar": "قد تكون صلاحية هذا الرابط انتهت أو تم تعطيله أو أنه غير مكتمل."
+    },
+    {
+      "en": "Browse salons",
+      "fa": "مشاهده مجموعه‌ها",
+      "ar": "تصفح الصالونات"
+    },
+    {
+      "en": "Select services for quick booking",
+      "fa": "انتخاب خدمت برای رزرو سریع",
+      "ar": "اختيار الخدمات للحجز السريع"
+    },
+    {
+      "en": "Back to salon",
+      "fa": "بازگشت به مجموعه",
+      "ar": "العودة إلى الصالون"
+    },
+    {
+      "en": "Quick booking with a professional",
+      "fa": "رزرو سریع متخصص",
+      "ar": "حجز سريع مع مقدم الخدمة"
+    },
+    {
+      "en": "Select the services offered by this professional. Only their available times will appear in the next step.",
+      "fa": "خدمت‌های قابل ارائه توسط این متخصص را انتخاب کن؛ در مرحله بعد فقط زمان‌های همین متخصص برای رزرو نمایش داده می‌شود.",
+      "ar": "اختر الخدمات التي يقدمها هذا المختص؛ ستظهر مواعيده المتاحة فقط في الخطوة التالية."
+    },
+    {
+      "en": "Service count",
+      "fa": "تعداد خدمات",
+      "ar": "عدد الخدمات"
+    },
+    {
+      "en": "Selected professional",
+      "fa": "متخصص انتخاب‌شده",
+      "ar": "مقدم الخدمة المحدد"
+    },
+    {
+      "en": "Next step",
+      "fa": "مرحله بعد",
+      "ar": "الخطوة التالية"
+    },
+    {
+      "en": "Choose time",
+      "fa": "انتخاب زمان",
+      "ar": "اختيار الوقت"
+    },
+    {
+      "en": "Choose service",
+      "fa": "انتخاب خدمت",
+      "ar": "اختيار الخدمة"
+    },
+    {
+      "en": "Bookable services with",
+      "fa": "خدمات قابل رزرو با",
+      "ar": "الخدمات المتاحة مع"
+    },
+    {
+      "en": "You can select one or more services.",
+      "fa": "می‌توانی یک یا چند خدمت را انتخاب کنی.",
+      "ar": "يمكنك اختيار خدمة واحدة أو أكثر."
+    },
+    {
+      "en": "Professional services",
+      "fa": "خدمات متخصص",
+      "ar": "خدمات مقدم الخدمة"
+    },
+    {
+      "en": "Price",
+      "fa": "قیمت",
+      "ar": "السعر"
+    },
+    {
+      "en": "No services found for this professional.",
+      "fa": "خدمتی برای این متخصص پیدا نشد",
+      "ar": "لم يتم العثور على خدمات لهذا المختص."
+    },
+    {
+      "en": "Choose another professional or service from the salon page.",
+      "fa": "از صفحه مجموعه، متخصص یا خدمت دیگری را انتخاب کن.",
+      "ar": "اختر مقدم خدمة آخر أو خدمة أخرى من صفحة الصالون."
+    },
+    {
+      "en": "Quick booking summary",
+      "fa": "خلاصه رزرو سریع",
+      "ar": "ملخص الحجز السريع"
+    },
+    {
+      "en": "Selection summary",
+      "fa": "خلاصه انتخاب",
+      "ar": "ملخص الاختيار"
+    },
+    {
+      "en": "You will see this professional's available times in the next step.",
+      "fa": "در مرحله بعد، زمان‌های قابل رزرو همین متخصص را می‌بینی.",
+      "ar": "ستظهر الأوقات المتاحة لهذا المختص في الخطوة التالية."
+    },
+    {
+      "en": "Booking path",
+      "fa": "مسیر رزرو",
+      "ar": "مسار الحجز"
+    },
+    {
+      "en": "Choose preferred services",
+      "fa": "انتخاب خدمت‌های موردنظر",
+      "ar": "اختيار الخدمات المطلوبة"
+    },
+    {
+      "en": "Choose date and time",
+      "fa": "انتخاب تاریخ و ساعت",
+      "ar": "اختيار التاريخ والوقت"
+    },
+    {
+      "en": "Review and finalize booking",
+      "fa": "مرور و ثبت نهایی رزرو",
+      "ar": "مراجعة الحجز وتأكيده"
+    },
+    {
+      "en": "Select at least one service for this professional.",
+      "fa": "حداقل یک خدمت را برای این متخصص انتخاب کنید.",
+      "ar": "اختر خدمة واحدة على الأقل لهذا المختص."
+    },
+    {
+      "en": "This service is offered by this professional at this salon.",
+      "fa": "این خدمت توسط همین متخصص در این مجموعه ارائه می‌شود.",
+      "ar": "يقدم هذا المختص هذه الخدمة في هذا الصالون."
+    },
+    {
+      "en": "Price will be finalized in the next step.",
+      "fa": "قیمت در مرحله بعد نهایی می‌شود",
+      "ar": "سيتم تأكيد السعر في الخطوة التالية."
+    },
+    {
+      "en": "The selected professional is invalid.",
+      "fa": "متخصص انتخاب‌شده معتبر نیست.",
+      "ar": "مقدم الخدمة المختار غير صالح."
+    },
+    {
+      "en": "The salon for this link is not active or unavailable.",
+      "fa": "سالن مربوط به این لینک فعال نیست یا در دسترس نیست.",
+      "ar": "الصالون المرتبط بهذا الرابط غير نشط أو غير متاح."
+    },
+    {
+      "en": "No active services were found for this professional at this salon.",
+      "fa": "برای این متخصص در این مجموعه خدمت فعالی پیدا نشد.",
+      "ar": "لم يتم العثور على خدمات نشطة لهذا المختص في هذا الصالون."
+    },
+    {
+      "en": "The selected service is not valid for this professional.",
+      "fa": "خدمت انتخاب‌شده برای این متخصص معتبر نیست.",
+      "ar": "الخدمة المختارة غير صالحة لهذا المختص."
+    },
+    {
+      "en": "The salon for this quick booking link is no longer available.",
+      "fa": "سالن مربوط به این لینک رزرو سریع فعال نیست یا دیگر در دسترس نیست.",
+      "ar": "الصالون المرتبط برابط الحجز السريع هذا لم يعد متاحًا."
+    },
+    {
+      "en": "The service for this quick booking link is no longer available.",
+      "fa": "خدمت مربوط به این لینک رزرو سریع فعال نیست یا از سالن حذف شده است.",
+      "ar": "الخدمة المرتبطة برابط الحجز السريع هذا لم تعد متاحة."
+    },
+    {
+      "en": "The professional for this quick booking link is no longer available.",
+      "fa": "متخصص مربوط به این لینک رزرو سریع فعال نیست یا دیگر در این سالن فعالیت ندارد.",
+      "ar": "مقدم الخدمة المرتبط برابط الحجز السريع هذا لم يعد متاحًا."
+    },
+    {
+      "en": "This quick booking link is incomplete.",
+      "fa": "اطلاعات این لینک رزرو سریع کامل نیست.",
+      "ar": "رابط الحجز السريع هذا غير مكتمل."
+    },
+    {
+      "en": "The selected service is no longer offered by this professional.",
+      "fa": "خدمت انتخاب‌شده دیگر توسط این متخصص ارائه نمی‌شود.",
+      "ar": "لم يعد هذا المختص يقدم الخدمة المختارة."
+    },
+    {
+      "en": "The time recorded in this quick booking link is invalid.",
+      "fa": "زمان ثبت‌شده در این لینک رزرو سریع معتبر نیست.",
+      "ar": "الوقت المحدد في رابط الحجز السريع هذا غير صالح."
+    },
+    {
+      "en": "This quick booking link is invalid.",
+      "fa": "این لینک رزرو سریع معتبر نیست.",
+      "ar": "رابط الحجز السريع هذا غير صالح."
+    }
+  ]
+}

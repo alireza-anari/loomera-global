@@ -31,3 +31,8 @@ html[dir="ltr"] [data-booking-step="staff-selection"] .stylist-option {
   unicode-bidi: plaintext;
   text-align: start;
 }
+
+/* Quick-link forward icon mirrors under LTR without reordering controls. */
+html[dir="ltr"] [data-quick-link-forward-icon] {
+  transform: scaleX(-1);
+}
