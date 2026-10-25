@@ -116,6 +116,20 @@ class QuickBookingLocaleTests(SimpleTestCase):
                 self.assertEqual(clean_ui_message(msgid, "success"),
                                  translation.gettext(MESSAGE_IDS["feedback.default.success"]))
 
+    def test_unreviewed_legacy_token_exception_is_localized_fail_closed(self):
+        from django.core.exceptions import ValidationError
+        from apps.main.ui_feedback import user_error_message
+        from apps.orders.views import _quick_booking_safe_token_error
+        problem = ValidationError("لینک رزرو نامعتبر یا منقضی شده است.")
+        with translation.override("fa"):
+            self.assertEqual(_quick_booking_safe_token_error(problem),
+                             user_error_message(problem))
+        for lang in ("en", "ar"):
+            with translation.override(lang):
+                self.assertEqual(_quick_booking_safe_token_error(problem),
+                                 translation.gettext("This quick booking link is invalid."))
+                self.assertNotIn("منقضی", _quick_booking_safe_token_error(problem))
+
     def test_exit_matrix_still_requires_manual_acceptance(self):
         matrix = json.loads(self.source("docs/globalization/PHASE3_EXIT_MATRIX.json"))
         self.assertEqual(matrix["release_gate"], "BLOCKED_MANUAL_ACCEPTANCE")

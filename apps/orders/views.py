@@ -11,7 +11,7 @@ from django.forms import ValidationError
 from django.http import JsonResponse, Http404
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
-from django.utils import timezone
+from django.utils import timezone, translation
 from django.utils.translation import gettext as _
 from django.views import View
 from django.views.decorators.http import require_GET
@@ -1843,6 +1843,19 @@ class BookingQuickLinkStylistServicesView(View):
         return redirect("orders:select_dateTime")
 
 
+def _quick_booking_safe_token_error(error):
+    """Preserve safe Persian detail; avoid untranslated validation text elsewhere.
+
+    Token resolution exceptions can contain a dynamic status/legacy validation
+    message. Do not feed it to non-Persian presentation without review.
+    """
+    safe_fa = user_error_message(error)
+    language = (translation.get_language() or "fa").split("-")[0].lower()
+    if language == "fa":
+        return safe_fa
+    return _("This quick booking link is invalid.")
+
+
 class QuickBookingEntryView(View):
 
     def _redirect_with_error(self, request, message):
@@ -1900,7 +1913,7 @@ class QuickBookingEntryView(View):
                     quick_link=quick_link,
                 )
         except ValidationError as exc:
-            return self._redirect_with_error(request, user_error_message(exc))
+            return self._redirect_with_error(request, _quick_booking_safe_token_error(exc))
 
         if quick_link:
             request.session["booking_quick_link_id"] = quick_link.id
