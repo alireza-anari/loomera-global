@@ -50,7 +50,7 @@ class PostCheckoutJourneyLocaleTests(SimpleTestCase):
             po = (folder / "django.po").read_text(encoding="utf-8")
             mo = (folder / "django.mo").read_bytes()
             self.assertEqual(struct.unpack_from("<I", mo, 0)[0], 0x950412de)
-            self.assertEqual(struct.unpack_from("<I", mo, 8)[0], 513)
+            self.assertEqual(struct.unpack_from("<I", mo, 8)[0], 514)
             marker = "#: docs/globalization/PHASE3_31_MESSAGE_REVIEW.json"
             self.assertEqual(po.count(marker), 76)
             new_msgids = set()
