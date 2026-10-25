@@ -14,31 +14,12 @@
   const CLEAR_COUPON_ACTION = "clear_coupon";
   const ACTION_BUTTON_SELECTOR = 'button[type="submit"][name="form_action"]';
 
-  const PAYMENT_PRESENTATIONS = {
-    online: {
-      label: "پرداخت و ثبت رزرو",
-      loadingLabel: "در حال انتقال به درگاه",
-      icon: "fa-lock",
-    },
-    wallet: {
-      label: "پرداخت از کیف پول",
-      loadingLabel: "در حال پرداخت",
-      icon: "fa-wallet",
-    },
-    pay_in_salon: {
-      label: "ثبت رزرو",
-      loadingLabel: "در حال ثبت رزرو",
-      icon: "fa-calendar-check",
-    },
-  };
-
-  const DEFAULT_PAYMENT_PRESENTATION = {
-    label: "ثبت رزرو",
-    loadingLabel: "در حال ثبت رزرو",
-    icon: "fa-calendar-check",
-  };
-
-  const originalLabels = new WeakMap();
+  const PAYMENT_PRESENTATIONS = Object.freeze({
+    online: {labelKey:"checkoutOnlineLabel", loadingKey:"checkoutOnlineLoading", label:"پرداخت و ثبت رزرو", loadingLabel:"در حال انتقال به درگاه", icon:"fa-lock"},
+    wallet: {labelKey:"checkoutWalletLabel", loadingKey:"checkoutWalletLoading", label:"پرداخت از کیف پول", loadingLabel:"در حال پرداخت", icon:"fa-wallet"},
+    pay_in_salon: {labelKey:"checkoutSalonLabel", loadingKey:"checkoutSalonLoading", label:"ثبت رزرو", loadingLabel:"در حال ثبت رزرو", icon:"fa-calendar-check"},
+  });
+  const DEFAULT_PAYMENT_PRESENTATION = PAYMENT_PRESENTATIONS.pay_in_salon;
 
   function finalSubmitButtons(form) {
     const formId = form.getAttribute("id");
@@ -59,12 +40,6 @@
     return Array.from(new Set([...scopedButtons, ...externalButtons]));
   }
 
-  function rememberOriginalLabel(button) {
-    if (!originalLabels.has(button)) {
-      originalLabels.set(button, button.innerHTML);
-    }
-  }
-
   function selectedPaymentMethod(form) {
     const selectedInput = form.querySelector(
       `${PAYMENT_INPUT_SELECTOR}:checked`,
@@ -73,15 +48,29 @@
     return selectedInput ? selectedInput.value : "";
   }
 
-  function paymentPresentation(method) {
-    return PAYMENT_PRESENTATIONS[method] || DEFAULT_PAYMENT_PRESENTATION;
+  function safeFormText(form, key, fallback) {
+    const value = form.dataset[key];
+    return typeof value === "string" && value.length > 0 && value.length <= 160
+      ? value : fallback;
   }
 
-  function paymentButtonHtml(presentation) {
-    return [
-      `<i class="fa-solid ${presentation.icon} text-xs" aria-hidden="true"></i>`,
-      `<span>${presentation.label}</span>`,
-    ].join("");
+  function paymentPresentation(form, method) {
+    const item = PAYMENT_PRESENTATIONS[method] || DEFAULT_PAYMENT_PRESENTATION;
+    return {
+      label: safeFormText(form, item.labelKey, item.label),
+      loadingLabel: safeFormText(form, item.loadingKey, item.loadingLabel),
+      icon: item.icon,
+    };
+  }
+
+  function renderPaymentButton(button, label, iconName, busy = false) {
+    const icon = document.createElement("i");
+    icon.className = `fa-solid ${busy ? "fa-spinner fa-spin" : iconName} text-xs`;
+    icon.setAttribute("aria-hidden", "true");
+    const caption = document.createElement("span");
+    caption.textContent = label;
+    // Keep even unexpected translated/attribute text out of HTML parsing.
+    button.replaceChildren(icon, caption);
   }
 
   function updatePaymentOptionState(form) {
@@ -94,45 +83,25 @@
   }
 
   function updatePaymentPresentation(form) {
-    const method = selectedPaymentMethod(form);
-    const presentation = paymentPresentation(method);
-    const idleHtml = paymentButtonHtml(presentation);
+    const presentation = paymentPresentation(form, selectedPaymentMethod(form));
     const busy = form.dataset.checkoutSubmitting === "1";
-
     updatePaymentOptionState(form);
-
     finalSubmitButtons(form).forEach((button) => {
-      originalLabels.set(button, idleHtml);
       button.dataset.loadingLabel = presentation.loadingLabel;
-
-      if (!busy) {
-        button.innerHTML = idleHtml;
-      }
+      if (!busy) renderPaymentButton(button, presentation.label, presentation.icon);
     });
   }
 
   function setBusy(form, busy) {
     form.dataset.checkoutSubmitting = busy ? "1" : "0";
     form.setAttribute("aria-busy", busy ? "true" : "false");
-
+    const presentation = paymentPresentation(form, selectedPaymentMethod(form));
     finalSubmitButtons(form).forEach((button) => {
-      rememberOriginalLabel(button);
-
       button.disabled = busy;
       button.setAttribute("aria-disabled", busy ? "true" : "false");
       button.classList.toggle("opacity-70", busy);
       button.classList.toggle("cursor-not-allowed", busy);
-
-      if (busy) {
-        const label = button.dataset.loadingLabel || "در حال ثبت رزرو";
-
-        button.innerHTML = [
-          '<i class="fa-solid fa-spinner fa-spin text-xs" aria-hidden="true"></i>',
-          `<span>${label}</span>`,
-        ].join("");
-      } else {
-        button.innerHTML = originalLabels.get(button);
-      }
+      renderPaymentButton(button, busy ? presentation.loadingLabel : presentation.label, presentation.icon, busy);
     });
   }
 
@@ -220,6 +189,7 @@
 
     bar.dataset.keyboardHidden = hidden ? "true" : "false";
     bar.setAttribute("aria-hidden", hidden ? "true" : "false");
+    bar.inert = hidden;
   }
 
   function bindPaymentUX(form) {
