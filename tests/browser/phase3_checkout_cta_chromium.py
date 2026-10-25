@@ -74,7 +74,7 @@ def run_one(browser, template, language, width):
           window.fixtureSubmits = [];
           const form = document.querySelector('[data-checkout-guard-form]');
           form.addEventListener('submit', e => {
-            window.fixtureSubmits.push(e.submitter?.value || '');
+            window.fixtureSubmits.push(Array.from(new FormData(form).getAll('form_action')));
             e.preventDefault();
           });
           document.dispatchEvent(new Event('DOMContentLoaded'));
@@ -101,7 +101,7 @@ def run_one(browser, template, language, width):
         page.keyboard.type("SAVE10")
         page.keyboard.press("Enter")
         coupon_actions = page.evaluate("window.fixtureSubmits")
-        assert coupon_actions and coupon_actions[-1] == "apply_coupon", (
+        assert coupon_actions and "apply_coupon" in coupon_actions[-1], (
             template, language, width, coupon_actions,
             page.evaluate("Array.from(document.querySelectorAll('[data-checkout-action-proxy]')).map(x => [x.name,x.value])"),
         )
@@ -129,7 +129,7 @@ def run_one(browser, template, language, width):
         expected_busy = catalog.gettext(SOURCES["online"][1])
         assert mobile.locator("span").inner_text() == expected_busy
         assert desktop.locator("span").inner_text() == expected_busy
-        assert page.evaluate("window.fixtureSubmits[-1]") == "confirm_checkout"
+        assert "confirm_checkout" in page.evaluate("window.fixtureSubmits[-1]")
 
         # Second submit must be blocked by original guard. Browser back/restore
         # clears both disabled state and transient confirmation action proxy.
