@@ -49,6 +49,14 @@ SETTLEMENT_STATE_MESSAGES = MappingProxyType({
     "cancelled": "Settlement cancelled",
 })
 
+WALLET_TRANSACTION_TYPE_MESSAGES = MappingProxyType({
+    "DEPOSIT": "Deposit",
+    "WITHDRAW": "Withdrawal",
+    "PURCHASE": "Purchase",
+    "REFUND": "Refund",
+    "WITHDRAW_RESTORE": "Rejected withdrawal returned",
+})
+
 
 def _label(messages, value, fallback):
     """Translate only a recognized state code; never render unknown raw codes."""
@@ -74,6 +82,14 @@ def payment_provider_label(provider):
 
 def settlement_status_label(status):
     return _label(SETTLEMENT_STATE_MESSAGES, status, "Settlement status unavailable")
+
+
+def wallet_transaction_type_label(transaction_type):
+    return _label(
+        WALLET_TRANSACTION_TYPE_MESSAGES,
+        transaction_type,
+        "Refund status",
+    )
 
 
 def appointment_payment_status_label(method, is_paid):
