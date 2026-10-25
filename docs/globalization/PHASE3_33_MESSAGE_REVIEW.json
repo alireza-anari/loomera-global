@@ -1,0 +1,297 @@
+{
+  "schema_version": 1,
+  "phase": "3.33",
+  "purpose": "Reviewed appointment lifecycle, timeline, review and post-payment action copy; customer and salon data remains unmodified",
+  "message_rows": [
+    {
+      "en": "Booking registered",
+      "fa": "رزرو ثبت شد",
+      "ar": "تم تسجيل الحجز"
+    },
+    {
+      "en": "Awaiting finalization",
+      "fa": "در انتظار نهایی‌شدن",
+      "ar": "بانتظار الإتمام النهائي"
+    },
+    {
+      "en": "Customer arrived at the salon",
+      "fa": "مشتری به مجموعه رسید",
+      "ar": "وصل العميل إلى الصالون"
+    },
+    {
+      "en": "Service started",
+      "fa": "شروع خدمت",
+      "ar": "بدأت الخدمة"
+    },
+    {
+      "en": "Service completed",
+      "fa": "پایان خدمت",
+      "ar": "اكتملت الخدمة"
+    },
+    {
+      "en": "Payment is still due at the salon",
+      "fa": "پرداخت در مجموعه باقی مانده است",
+      "ar": "لا يزال الدفع مستحقًا في الصالون"
+    },
+    {
+      "en": "Payment completed",
+      "fa": "پرداخت انجام شد",
+      "ar": "اكتمل الدفع"
+    },
+    {
+      "en": "Ready to leave a review",
+      "fa": "آماده ثبت دیدگاه",
+      "ar": "جاهز لكتابة تقييم"
+    },
+    {
+      "en": "Review submitted",
+      "fa": "دیدگاه ثبت شد",
+      "ar": "تم إرسال التقييم"
+    },
+    {
+      "en": "Your booking request has been recorded.",
+      "fa": "درخواست رزرو شما ثبت شده است.",
+      "ar": "تم تسجيل طلب الحجز."
+    },
+    {
+      "en": "Once the booking is confirmed, the selected time is finalized in the professional's schedule.",
+      "fa": "پس از نهایی‌شدن رزرو، زمان انتخاب‌شده در برنامه متخصص قطعی می‌شود.",
+      "ar": "بعد تأكيد الحجز، يُثبّت الوقت المختار في جدول المختص."
+    },
+    {
+      "en": "Your appointment time is confirmed and has been added to the professional's schedule.",
+      "fa": "زمان نوبت قطعی و در برنامه متخصص ثبت شده است.",
+      "ar": "تم تأكيد وقت موعدك وإضافته إلى جدول المختص."
+    },
+    {
+      "en": "Your arrival at the salon has been recorded.",
+      "fa": "حضور شما در مجموعه ثبت شده است.",
+      "ar": "تم تسجيل وصولك إلى الصالون."
+    },
+    {
+      "en": "Your service is in progress.",
+      "fa": "خدمت شما در حال انجام است.",
+      "ar": "الخدمة قيد التنفيذ."
+    },
+    {
+      "en": "Your service is complete.",
+      "fa": "خدمت شما به پایان رسیده است.",
+      "ar": "اكتملت خدمتك."
+    },
+    {
+      "en": "Payment for this appointment is completed at the salon.",
+      "fa": "پرداخت این نوبت در مجموعه تکمیل می‌شود.",
+      "ar": "يُستكمل دفع هذا الموعد في الصالون."
+    },
+    {
+      "en": "Payment for this appointment has been recorded.",
+      "fa": "پرداخت این نوبت ثبت شده است.",
+      "ar": "تم تسجيل الدفع لهذا الموعد."
+    },
+    {
+      "en": "You can share your experience with this appointment.",
+      "fa": "می‌توانید تجربه خود از این نوبت را ثبت کنید.",
+      "ar": "يمكنك مشاركة تجربتك حول هذا الموعد."
+    },
+    {
+      "en": "Your review has been submitted.",
+      "fa": "دیدگاه شما ثبت شده است.",
+      "ar": "تم إرسال تقييمك."
+    },
+    {
+      "en": "A reminder for this appointment is scheduled for %(date)s at %(time)s.",
+      "fa": "یادآوری این نوبت برای %(date)s ساعت %(time)s برنامه‌ریزی شده است.",
+      "ar": "تمت جدولة تذكير لهذا الموعد في %(date)s الساعة %(time)s."
+    },
+    {
+      "en": "An automatic reminder was not scheduled because the appointment is too close or no valid time is available.",
+      "fa": "به‌دلیل نزدیک بودن زمان رزرو یا نبود زمان معتبر، یادآوری خودکار زمان‌بندی نشد.",
+      "ar": "لم تتم جدولة تذكير تلقائي لأن الموعد قريب جدًا أو لا يتوفر وقت صالح."
+    },
+    {
+      "en": "Finalized",
+      "fa": "نهایی شد",
+      "ar": "تم الإنهاء"
+    },
+    {
+      "en": "Appointment at a glance",
+      "fa": "نوبت در یک نگاه",
+      "ar": "نظرة سريعة على الموعد"
+    },
+    {
+      "en": "Appointment services",
+      "fa": "خدمات نوبت",
+      "ar": "خدمات الموعد"
+    },
+    {
+      "en": "Selected service and professional",
+      "fa": "خدمت و متخصص انتخاب‌شده",
+      "ar": "الخدمة والمختص المختاران"
+    },
+    {
+      "en": "More details",
+      "fa": "جزئیات بیشتر",
+      "ar": "مزيد من التفاصيل"
+    },
+    {
+      "en": "Payment, policies and salon information",
+      "fa": "پرداخت، قوانین و اطلاعات مجموعه",
+      "ar": "الدفع والسياسات ومعلومات الصالون"
+    },
+    {
+      "en": "View transactions",
+      "fa": "مشاهده تراکنش‌ها",
+      "ar": "عرض المعاملات"
+    },
+    {
+      "en": "Primary payment",
+      "fa": "پرداخت اصلی",
+      "ar": "الدفعة الأساسية"
+    },
+    {
+      "en": "Salon page",
+      "fa": "صفحه مجموعه",
+      "ar": "صفحة الصالون"
+    },
+    {
+      "en": "Call",
+      "fa": "تماس",
+      "ar": "اتصال"
+    },
+    {
+      "en": "Get directions",
+      "fa": "مسیریابی",
+      "ar": "الاتجاهات"
+    },
+    {
+      "en": "Add to calendar",
+      "fa": "افزودن به تقویم",
+      "ar": "إضافة إلى التقويم"
+    },
+    {
+      "en": "Manageable",
+      "fa": "قابل مدیریت",
+      "ar": "قابل للإدارة"
+    },
+    {
+      "en": "Appointment summary",
+      "fa": "خلاصه نوبت",
+      "ar": "ملخص الموعد"
+    },
+    {
+      "en": "Services, professionals and time",
+      "fa": "خدمات، متخصص‌ها و زمان",
+      "ar": "الخدمات والمختصون والوقت"
+    },
+    {
+      "en": "Visit date",
+      "fa": "تاریخ مراجعه",
+      "ar": "تاريخ الزيارة"
+    },
+    {
+      "en": "Time range",
+      "fa": "بازه زمانی",
+      "ar": "النطاق الزمني"
+    },
+    {
+      "en": "In-salon settlement",
+      "fa": "تسویه در مجموعه",
+      "ar": "التسوية في الصالون"
+    },
+    {
+      "en": "Service details",
+      "fa": "جزئیات خدمات",
+      "ar": "تفاصيل الخدمة"
+    },
+    {
+      "en": "Appointment transactions",
+      "fa": "تراکنش‌های این نوبت",
+      "ar": "معاملات هذا الموعد"
+    },
+    {
+      "en": "Appointment overview and actions",
+      "fa": "خلاصه و اقدام‌های نوبت",
+      "ar": "ملخص الموعد والإجراءات"
+    },
+    {
+      "en": "Change time",
+      "fa": "تغییر زمان",
+      "ar": "تغيير الوقت"
+    },
+    {
+      "en": "Choose a new date and time",
+      "fa": "انتخاب تاریخ و ساعت جدید",
+      "ar": "اختر تاريخًا ووقتًا جديدين"
+    },
+    {
+      "en": "Only valid and available actions are shown at this stage.",
+      "fa": "در این مرحله فقط عمل‌های معتبر و قابل انجام نمایش داده می‌شوند.",
+      "ar": "تُعرض في هذه المرحلة الإجراءات الصالحة والمتاحة فقط."
+    },
+    {
+      "en": "Close appointment management",
+      "fa": "بستن مدیریت نوبت",
+      "ar": "إغلاق إدارة الموعد"
+    },
+    {
+      "en": "Rate and review",
+      "fa": "ثبت امتیاز و دیدگاه",
+      "ar": "قيّم واكتب مراجعة"
+    },
+    {
+      "en": "The service and professional are already selected from this appointment. Choose a rating and optionally leave a comment.",
+      "fa": "خدمت و متخصص از همین نوبت انتخاب شده‌اند؛ فقط امتیاز را ثبت کن و اگر خواستی توضیح بنویس.",
+      "ar": "الخدمة والمختص محددان مسبقًا من هذا الموعد. اختر تقييمًا ويمكنك إضافة تعليق اختياريًا."
+    },
+    {
+      "en": "Your rating",
+      "fa": "امتیاز شما",
+      "ar": "تقييمك"
+    },
+    {
+      "en": "Selecting a rating highlights all stars up to that level.",
+      "fa": "با انتخاب امتیاز، همه ستاره‌های همان سطح روشن می‌شوند.",
+      "ar": "عند اختيار تقييم، تُضاء جميع النجوم حتى المستوى المحدد."
+    },
+    {
+      "en": "Optional review",
+      "fa": "دیدگاه اختیاری",
+      "ar": "مراجعة اختيارية"
+    },
+    {
+      "en": "Submit review",
+      "fa": "ثبت دیدگاه",
+      "ar": "إرسال التقييم"
+    },
+    {
+      "en": "To use your device's navigation app, open this page on your phone. The destination was copied.",
+      "fa": "برای مسیریابی با برنامه دستگاه، این صفحه را روی موبایل باز کن. مقصد برایت کپی شد.",
+      "ar": "لاستخدام تطبيق الملاحة على جهازك، افتح هذه الصفحة على هاتفك. تم نسخ الوجهة."
+    },
+    {
+      "en": "Next action",
+      "fa": "اقدام بعدی",
+      "ar": "الإجراء التالي"
+    },
+    {
+      "en": "Your appointment is ready to follow up",
+      "fa": "نوبتت آماده پیگیری است",
+      "ar": "موعدك جاهز للمتابعة"
+    },
+    {
+      "en": "From here, you can view appointment details, your wallet or your account.",
+      "fa": "از اینجا می‌توانی جزئیات نوبت، کیف پول یا حساب کاربری را ببینی.",
+      "ar": "من هنا يمكنك عرض تفاصيل الموعد أو محفظتك أو حسابك."
+    },
+    {
+      "en": "The payment did not complete. You can return to the salon page to book again.",
+      "fa": "پرداخت کامل نشد. می‌توانی برای رزرو دوباره به صفحه مجموعه برگردی.",
+      "ar": "لم يكتمل الدفع. يمكنك العودة إلى صفحة الصالون لإعادة الحجز."
+    },
+    {
+      "en": "to",
+      "fa": "تا",
+      "ar": "إلى"
+    }
+  ]
+}
