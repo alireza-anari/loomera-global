@@ -62,13 +62,30 @@ class QuickBookingLocaleTests(SimpleTestCase):
         begin = source.index("class BookingQuickLinkStylistServicesView(View):")
         end = source.index("class ReservationPreview(", begin)
         quick = source[begin:end]
-        for msgid in ("The selected professional is invalid.",
-                      "The salon for this link is not active or unavailable.",
-                      "No active services were found for this professional at this salon.",
-                      "Select at least one service for this professional.",
+        # Legacy booking flashes must remain exact Persian allowlisted IDs.
+        # Their fa/en/ar presentation already flows through clean_ui_message;
+        # replacing these with new English gettext IDs would fall back to a
+        # generic banner and break the historical fail-closed allowlist.
+        for msgid in ("متخصص انتخاب‌شده معتبر نیست.",
+                      "سالن مربوط به این لینک فعال نیست یا در دسترس نیست.",
+                      "برای این متخصص در این مجموعه خدمت فعالی پیدا نشد.",
+                      "خدمت انتخاب‌شده برای این متخصص معتبر نیست."):
+            self.assertIn(json.dumps(msgid, ensure_ascii=False), quick)
+        for msgid in ("Select at least one service for this professional.",
                       "This quick booking link is incomplete.",
                       "This quick booking link is invalid."):
             self.assertIn('_(' + json.dumps(msgid) + ')', quick)
+        from apps.main.templatetags.ui_message_extras import clean_ui_message
+        with translation.override("en"):
+            self.assertEqual(
+                clean_ui_message("سالن مربوط به این لینک فعال نیست یا در دسترس نیست.", "error"),
+                "The salon for this link is inactive or unavailable.",
+            )
+        with translation.override("ar"):
+            self.assertEqual(
+                clean_ui_message("خدمت انتخاب‌شده برای این متخصص معتبر نیست.", "error"),
+                "الخدمة المحددة غير صالحة لهذا المتخصص.",
+            )
         for contract in ("resolve_booking_quick_link_token(token)",
                          "_quick_booking_parse_service_ids(", "status=410",
                          '"salon_id"', '"stylist_selections"', '"datetime_selections"'):

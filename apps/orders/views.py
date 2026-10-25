@@ -1737,13 +1737,13 @@ class BookingQuickLinkStylistServicesView(View):
 
         parsed_stylist_user_id = _parse_positive_int_param(stylist_user_id)
         if parsed_stylist_user_id is None:
-            messages.error(request, _("The selected professional is invalid."))
+            messages.error(request, "متخصص انتخاب‌شده معتبر نیست.")
             return redirect("salons:show_salons")
 
         salon, error_response = _public_booking_salon_or_response(salon_id)
         if error_response is not None:
             messages.error(
-                request, _("The salon for this link is not active or unavailable.")
+                request, "سالن مربوط به این لینک فعال نیست یا در دسترس نیست."
             )
             return redirect("salons:show_salons")
 
@@ -1760,7 +1760,7 @@ class BookingQuickLinkStylistServicesView(View):
         )
 
         if not services:
-            messages.error(request, _("No active services were found for this professional at this salon."))
+            messages.error(request, "برای این متخصص در این مجموعه خدمت فعالی پیدا نشد.")
             return redirect(salon.get_absolute_url())
 
         return render(
@@ -1775,13 +1775,13 @@ class BookingQuickLinkStylistServicesView(View):
 
         parsed_stylist_user_id = _parse_positive_int_param(stylist_user_id)
         if parsed_stylist_user_id is None:
-            messages.error(request, _("The selected professional is invalid."))
+            messages.error(request, "متخصص انتخاب‌شده معتبر نیست.")
             return redirect("salons:show_salons")
 
         salon, error_response = _public_booking_salon_or_response(salon_id)
         if error_response is not None:
             messages.error(
-                request, _("The salon for this link is not active or unavailable.")
+                request, "سالن مربوط به این لینک فعال نیست یا در دسترس نیست."
             )
             return redirect("salons:show_salons")
 
@@ -1813,7 +1813,7 @@ class BookingQuickLinkStylistServicesView(View):
         if selected_service_ids is None or not set(selected_service_ids).issubset(
             available_service_ids
         ):
-            messages.error(request, _("The selected service is not valid for this professional."))
+            messages.error(request, "خدمت انتخاب‌شده برای این متخصص معتبر نیست.")
             return render(
                 request,
                 self.template_name,
