@@ -292,7 +292,7 @@
               <section aria-labelledby="mobile-finance-title">
                 <div class="flex items-center justify-between gap-3">
                   <h3 id="mobile-finance-title" class="text-xs font-black text-loomera-textPrimary">{% trans 'Payment' %}</h3>
-                  <span class="text-[11px] font-bold text-loomera-textMuted">{{ appointment.order.get_selected_payment_method_display }}</span>
+                  <span class="text-[11px] font-bold text-loomera-textMuted">{{ payment_method_label }}</span>
                 </div>
                 <div class="mt-2 space-y-1.5">
                   {% for row in finance_summary %}
@@ -301,7 +301,7 @@
                       {% if row.text %}
                         <strong class="text-left text-loomera-textPrimary">{{ row.text }}</strong>
                       {% else %}
-                        <strong class="text-left {% if row.tone == 'discount' %}text-emerald-700{% elif row.tone == 'refund' %}text-blue-700{% elif row.tone == 'total' %}text-loomera-primary{% else %}text-loomera-textPrimary{% endif %}">{{ row.value|floatformat:0|intcomma }} تومان</strong>
+                        <strong class="text-left {% if row.tone == 'discount' %}text-emerald-700{% elif row.tone == 'refund' %}text-blue-700{% elif row.tone == 'total' %}text-loomera-primary{% else %}text-loomera-textPrimary{% endif %}">{{ row.value|floatformat:0|intcomma }} {% trans 'toman' %}</strong>
                       {% endif %}
                     </div>
                   {% endfor %}
@@ -320,8 +320,8 @@
                   {% endif %}
                   {% for tx in financial_transactions %}
                     <div class="flex items-center justify-between gap-3 rounded-xl bg-loomera-bgSubtle px-3 py-2 text-[11px]">
-                      <span class="font-bold text-loomera-textMuted">{{ tx.get_transaction_type_display }}</span>
-                      <strong class="{% if tx.amount >= 0 %}text-emerald-700{% else %}text-rose-700{% endif %}">{% if tx.amount >= 0 %}+{% endif %}{{ tx.amount|floatformat:0|intcomma }} تومان</strong>
+                      <span class="font-bold text-loomera-textMuted">{{ tx.localized_type_label }}</span>
+                      <strong class="{% if tx.amount >= 0 %}text-emerald-700{% else %}text-rose-700{% endif %}">{% if tx.amount >= 0 %}+{% endif %}{{ tx.amount|floatformat:0|intcomma }} {% trans 'toman' %}</strong>
                     </div>
                   {% endfor %}
                 </div>
@@ -636,7 +636,7 @@
               <p class="text-xs font-black uppercase tracking-[0.18em] text-loomera-primary">{% trans 'Payment' %}</p>
               <h2 id="booking-finance-title" class="mt-1 text-xl font-black text-loomera-textPrimary lg:text-2xl">خلاصه مالی</h2>
             </div>
-            <span class="rounded-full bg-loomera-bgSubtle px-4 py-2 text-xs font-black text-loomera-textSecondary">{{ appointment.order.get_selected_payment_method_display }}</span>
+            <span class="rounded-full bg-loomera-bgSubtle px-4 py-2 text-xs font-black text-loomera-textSecondary">{{ payment_method_label }}</span>
           </div>
           <div class="space-y-3">
             {% for row in finance_summary %}
@@ -645,7 +645,7 @@
                 {% if row.text %}
                   <strong class="text-left text-loomera-textPrimary">{{ row.text }}</strong>
                 {% else %}
-                  <strong class="text-left {% if row.tone == 'discount' %}text-emerald-700{% elif row.tone == 'refund' %}text-blue-700{% elif row.tone == 'total' %}text-loomera-primary{% else %}text-loomera-textPrimary{% endif %}">{{ row.value|floatformat:0|intcomma }} تومان</strong>
+                  <strong class="text-left {% if row.tone == 'discount' %}text-emerald-700{% elif row.tone == 'refund' %}text-blue-700{% elif row.tone == 'total' %}text-loomera-primary{% else %}text-loomera-textPrimary{% endif %}">{{ row.value|floatformat:0|intcomma }} {% trans 'toman' %}</strong>
                 {% endif %}
               </div>
             {% endfor %}
@@ -658,14 +658,14 @@
           <div class="mt-4 space-y-3">
             {% if payment_record %}
               <div class="flex items-center justify-between gap-4 rounded-2xl bg-loomera-bgSubtle px-4 py-3 text-sm">
-                <span class="font-bold text-loomera-textMuted">پرداخت اصلی<br><small>{{ payment_record.get_provider_display }} • {{ payment_record.get_state_display }}</small></span>
+                <span class="font-bold text-loomera-textMuted">پرداخت اصلی<br><small>{{ payment_record_provider_label }} • {{ payment_record_status_label }}</small></span>
                 <strong class="text-loomera-textPrimary">{{ payment_record.amount|floatformat:0|intcomma }} {% trans 'toman' %}</strong>
               </div>
             {% endif %}
             {% for tx in financial_transactions %}
               <div class="flex items-center justify-between gap-4 rounded-2xl bg-loomera-bgSubtle px-4 py-3 text-sm">
-                <span class="font-bold text-loomera-textMuted">{{ tx.get_transaction_type_display }}<br><small>{{ tx.created_at|jalali_datetime }}</small></span>
-                <strong class="{% if tx.amount >= 0 %}text-emerald-700{% else %}text-rose-700{% endif %}">{% if tx.amount >= 0 %}+{% endif %}{{ tx.amount|floatformat:0|intcomma }} تومان</strong>
+                <span class="font-bold text-loomera-textMuted">{{ tx.localized_type_label }}<br><small>{{ tx.created_at|jalali_datetime }}</small></span>
+                <strong class="{% if tx.amount >= 0 %}text-emerald-700{% else %}text-rose-700{% endif %}">{% if tx.amount >= 0 %}+{% endif %}{{ tx.amount|floatformat:0|intcomma }} {% trans 'toman' %}</strong>
               </div>
             {% endfor %}
           </div>
@@ -704,7 +704,7 @@
             <p class="mt-2 text-xs leading-6 text-white/80">{{ visit_date_label }} • {{ visit_time_label }}</p>
           </div>
           <div class="space-y-3 p-5 text-sm text-loomera-textSecondary">
-            <div class="flex items-center justify-between gap-3 rounded-2xl bg-loomera-bgSubtle px-3 py-2"><span>{% trans 'Booking status' %}</span><strong class="text-loomera-textPrimary">{{ appointment.order.get_status_display|default:"ثبت‌شده" }}</strong></div>
+            <div class="flex items-center justify-between gap-3 rounded-2xl bg-loomera-bgSubtle px-3 py-2"><span>{% trans 'Booking status' %}</span><strong class="text-loomera-textPrimary">{{ booking_status_label }}</strong></div>
             <div class="flex items-center justify-between gap-3 rounded-2xl bg-loomera-bgSubtle px-3 py-2"><span>{% trans 'Payment status' %}</span><strong class="text-loomera-textPrimary">{{ payment_status_label }}</strong></div>
             <div class="flex items-center justify-between gap-3 rounded-2xl bg-loomera-bgSubtle px-3 py-2"><span>تعداد خدمات</span><strong class="text-loomera-textPrimary">{{ service_count }}</strong></div>
             <div class="flex items-center justify-between gap-3 rounded-2xl bg-loomera-bgSubtle px-3 py-2"><span>مدت کل</span><strong class="text-loomera-textPrimary">{{ total_duration }} دقیقه</strong></div>
