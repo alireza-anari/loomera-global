@@ -327,3 +327,18 @@ These are cross-stage **automated** checks with controlled domain
 validation and fixture DOM, not actual server-rendered
 authenticated payments or a manual browser accessibility review.
 The five manual release blockers and Production approval remain open.
+
+## Phase 3.40 — Mixed-script checkout display boundaries
+
+Real preview/checkout templates now isolate customer/salon service
+names and policy copy with automatic text direction, and date/time
+tokens with explicit directional containers without touching
+posted booking data. Six DB-free Django tests render actual template
+fragments with HTML metacharacters in fa/en/ar. The existing
+18-scenario Chromium fixture suite now checks real production BDI
+markup for hostile mixed-script names, date/time direction, injection
+absence and horizontal overflow alongside localized CTA/keyboard
+behavior. These are structural/fixture browser checks, **not**
+a live authenticated user journey, audited manual keyboard/zoom
+acceptance or a screen-reader run. The full manual release matrix
+remains blocked; no Production authorization is implied.
