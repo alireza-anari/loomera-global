@@ -1099,14 +1099,14 @@ class BookingStylistSelectPerService(View):
 
     def _format_next_available_label(self, first_slot):
         if not first_slot:
-            return "فعلاً زمان آزادی پیدا نشد"
+            return _("No available appointment time found yet")
         date_label = JalaliDate(first_slot["date"]).strftime("%Y/%m/%d")
         time_label = (
             first_slot["time"].strftime("%H:%M")
             if hasattr(first_slot["time"], "strftime")
             else str(first_slot["time"])
         )
-        return f"نخستین زمان آزاد: {date_label} • {time_label}"
+        return _("First available time: %(date)s • %(time)s") % {"date": date_label, "time": time_label}
 
     def get(self, request):
         salon_id = request.GET.get("salon_id") or request.session.get("salon_id")
@@ -1234,7 +1234,7 @@ class BookingStylistSelectPerService(View):
                                 best_available["first_slot"]
                             )
                             if best_available
-                            else ("فعلاً برای این خدمت متخصص " "آزادی پیدا نشد")
+                            else _("No available professional for this service yet")
                         ),
                     },
                 }
