@@ -10,7 +10,14 @@ from django.views.generic import View, ListView
 from django.core.exceptions import ValidationError
 from django.db import transaction
 from django.http import JsonResponse
+from django.utils.translation import gettext as _
 from .models import Wallet, WalletTransaction, WalletWithdrawalRequest, Payment
+from loomera.globalization.financial_status import (
+    booking_status_label,
+    payment_method_label,
+    payment_provider_label,
+    payment_state_label,
+)
 from apps.dashboards.jalali_utils import (
     to_english_digits,
     format_jalali_with_weekday,
@@ -1255,39 +1262,40 @@ def _appointment_payment_pending_review_context(payment):
 
     requires_review = bool(verify_pending.get("requires_review"))
     retryable = bool(verify_pending.get("retryable"))
-    message = str(verify_pending.get("message") or "").strip()
-
     if requires_review:
-        title = "پرداخت نیاز به بررسی دارد"
-        body = (
-            "اطلاعات برگشتی درگاه با اطلاعات سفارش کاملاً منطبق نبود. "
-            "برای امنیت مالی، وضعیت تراکنش در حال بررسی است."
+        title = _("Payment requires review")
+        body = _(
+            "The payment gateway response did not match the order details. "
+            "For financial safety, this transaction is under review."
         )
     else:
-        title = "نتیجه پرداخت هنوز قطعی نیست"
-        body = (
-            "وضعیت این تراکنش هنوز نهایی نشده است. "
-            "ممکن است تراکنش توسط بانک یا درگاه پردازش شده باشد، اما نتیجه قطعی هنوز برای لومرا مشخص نیست."
+        title = _("Payment result is not final yet")
+        body = _(
+            "The transaction has not been finalized. The bank or payment gateway "
+            "may have processed it, but Loomera has not received a confirmed result."
         )
 
     if retryable:
-        body = (
-            "ارتباط با درگاه برای تأیید نهایی کامل نشد. "
-            "ممکن است تراکنش توسط بانک پردازش شده باشد، اما نتیجه قطعی هنوز به لومرا نرسیده است."
+        body = _(
+            "Connection to the payment gateway could not be completed. The bank "
+            "may have processed the transaction, but Loomera has not received a "
+            "confirmed result."
         )
 
-    if message:
-        body = f"{body} پیام ثبت‌شده: {message}"
-
+    # Provider response text is operational metadata, not approved customer copy.
+    # Never append it to this message: it may contain technical or untrusted data.
     return {
         "is_active": is_pending_review,
         "requires_review": requires_review,
         "retryable": retryable,
         "title": title,
         "body": body,
-        "primary_hint": "لطفاً دوباره پرداخت نکنید تا وضعیت همین تراکنش مشخص شود.",
-        "secondary_hint": (
-            "اگر مبلغ از حساب شما کسر شده باشد، نتیجه پس از بررسی درگاه یا بررسی خودکار تراکنش مشخص می‌شود."
+        "primary_hint": _(
+            "Please do not pay again while this transaction is being checked."
+        ),
+        "secondary_hint": _(
+            "If money was deducted, the result will be confirmed after the gateway "
+            "or automated transaction review."
         ),
     }
 
@@ -1306,14 +1314,15 @@ def _appointment_payment_expired_checkout_context(payment):
         "is_active": is_expired,
         "reason": str(abandoned_checkout.get("reason") or "").strip(),
         "expired_at": str(abandoned_checkout.get("expired_at") or "").strip(),
-        "title": "مهلت پرداخت به پایان رسید",
-        "body": (
-            "چون پرداخت آنلاین در زمان مجاز کامل نشد، رزرو از حالت انتظار خارج شد "
-            "و زمان انتخاب‌شده دوباره آزاد شده است."
+        "title": _("Payment window expired"),
+        "body": _(
+            "Online payment was not completed in time. The booking is no longer "
+            "pending and the selected time has been released."
         ),
-        "primary_hint": "برای رزرو این خدمت، لطفاً یک زمان آزاد جدید انتخاب کنید.",
-        "secondary_hint": (
-            "اگر مبلغی از حساب شما کسر شده باشد، وضعیت آن از طریق پشتیبانی یا بررسی خودکار تراکنش قابل پیگیری است."
+        "primary_hint": _("Choose a new available time to book this service."),
+        "secondary_hint": _(
+            "If money was deducted, support or an automatic transaction review "
+            "can help confirm its status."
         ),
     }
 
@@ -1407,8 +1416,15 @@ class AppointmentPaymentResultView(View):
             "refund_time": (
                 getattr(order, "refunded_to_wallet_at", None) if order else None
             ),
-            "payment_status_label": payment.get_state_display(),
-            "order_status_label": order.get_status_display() if order else "—",
+            "payment_status_label": payment_state_label(payment.state),
+            "order_status_label": (
+                booking_status_label(order.status) if order else _("Booking status unavailable")
+            ),
+            "payment_method_label": (
+                payment_method_label(order.selected_payment_method)
+                if order else _("Payment method unavailable")
+            ),
+            "payment_provider_label": payment_provider_label(payment.provider),
             "grouped_days": grouped_days,
             "is_split_day_booking": is_split_day_booking,
             "is_pay_in_salon_followup": is_pay_in_salon_followup,
