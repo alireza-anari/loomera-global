@@ -12,6 +12,7 @@ from django.http import JsonResponse, Http404
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
 from django.utils import timezone
+from django.utils.translation import gettext as _
 from django.views import View
 from django.views.decorators.http import require_GET
 from khayyam import JalaliDate
@@ -21,6 +22,10 @@ from apps.salons.models import Salon
 from apps.services.models import ServicePrice, Services
 from apps.stylists.models import StaffLeaveRequest, StylistSchedule
 from loomera.branding.config import get_deployment_brand_config
+from loomera.globalization.financial_status import (
+    appointment_payment_status_label,
+    payment_method_label,
+)
 from .booking_utils import (
     BLOCKING_STATUSES,
     build_cancellation_policy,
@@ -2761,72 +2766,66 @@ class AppointmentDetailView(LoginRequiredMixin, DetailView):
         wallet_transactions = list(
             order.wallet_transactions.order_by("-created_at")[:5]
         )
-        if order.selected_payment_method == "pay_in_salon":
-            if order.is_paid:
-                context["payment_status_label"] = "پرداخت در مجموعه انجام شد"
-                context["payment_status_class"] = (
-                    "bg-green-50 text-green-700 border-green-200"
-                )
-            else:
-                context["payment_status_label"] = "پرداخت در مجموعه"
-                context["payment_status_class"] = (
-                    "bg-amber-50 text-amber-700 border-amber-200"
-                )
-        elif order.is_paid:
-            context["payment_status_label"] = "پرداخت شده"
+        context["payment_status_label"] = appointment_payment_status_label(
+            order.selected_payment_method, order.is_paid
+        )
+        if order.is_paid:
             context["payment_status_class"] = (
                 "bg-green-50 text-green-700 border-green-200"
             )
+        elif order.selected_payment_method == "pay_in_salon":
+            context["payment_status_class"] = (
+                "bg-amber-50 text-amber-700 border-amber-200"
+            )
         else:
-            context["payment_status_label"] = "در انتظار پرداخت"
             context["payment_status_class"] = (
                 "bg-orange-50 text-orange-700 border-orange-200"
             )
         context["show_manage_cta"] = can_cancel
         context["finance_summary"] = [
-            {"label": "جمع خدمات", "value": int(order.subtotal_amount or 0)},
+            {"label": _("Subtotal of services"), "value": int(order.subtotal_amount or 0)},
             {
-                "label": "تخفیف خدمات",
+                "label": _("Service discount"),
                 "value": int(order.basket_discount_amount or 0),
                 "tone": "discount",
                 "text": None,
             },
             {
-                "label": "عنوان کمپین خدمات",
-                "text": order.basket_discount_title or "بدون سبد تخفیف",
+                "label": _("Service discount campaign"),
+                "text": order.basket_discount_title or _("No service discount campaign"),
             },
-            {"label": "کد تخفیف", "text": order.coupon_code or "بدون کد"},
+            {"label": _("Coupon code"), "text": order.coupon_code or _("No coupon")},
             {
-                "label": "تخفیف کد",
+                "label": _("Coupon discount"),
                 "value": int(order.coupon_discount_amount or 0),
                 "tone": "discount",
                 "text": None,
             },
             {
-                "label": "جمع کل تخفیف",
+                "label": _("Total discount"),
                 "value": int(order.discount_amount or 0),
                 "tone": "discount",
             },
             {
-                "label": "روش پرداخت",
-                "text": order.get_selected_payment_method_display(),
+                "label": _("Payment method"),
+                "text": payment_method_label(order.selected_payment_method),
             },
             {
-                "label": "مبلغ نهایی",
+                "label": _("Final amount"),
                 "value": int(order.total_amount or 0),
                 "tone": "total",
             },
             {
-                "label": "بازگشت وجه",
+                "label": _("Refund"),
                 "value": int(order.refunded_to_wallet_amount or 0),
                 "tone": "refund",
             },
             {
-                "label": "زمان بازگشت وجه",
+                "label": _("Refund date"),
                 "text": (
                     _format_customer_datetime_fa(order.refunded_to_wallet_at)
                     if order.refunded_to_wallet_at
-                    else "بدون بازگشت وجه"
+                    else _("No refund")
                 ),
             },
         ]
@@ -3179,7 +3178,7 @@ class CancelAppointmentView(LoginRequiredMixin, View):
                 return JsonResponse(
                     {
                         "success": False,
-                        "error": "امکان لغو این نوبت وجود ندارد. لطفاً با مجموعه تماس بگیرید.",
+                        "error": _("Cancellation is not available for this appointment. Please contact the salon."),
                     },
                     status=400,
                 )
@@ -3194,7 +3193,7 @@ class CancelAppointmentView(LoginRequiredMixin, View):
                     return JsonResponse(
                         {
                             "success": False,
-                            "error": "این نوبت قبلاً لغو شده است.",
+                            "error": _("This appointment has already been cancelled."),
                         },
                         status=400,
                     )
@@ -3231,11 +3230,12 @@ class CancelAppointmentView(LoginRequiredMixin, View):
                 detail_meta={"refund_amount": int(refund_amount or 0)},
             )
 
-            message = "نوبت شما با موفقیت لغو شد."
+            message = _("Your appointment was cancelled successfully.")
             if refund_amount:
-                message += (
-                    f" مبلغ {refund_amount:,} تومان به کیف پول شما برگشت داده شد."
-                )
+                message = _(
+                    "Your appointment was cancelled successfully. "
+                    "Refunded %(amount)s toman to your wallet."
+                ) % {"amount": f"{refund_amount:,}"}
 
             return JsonResponse(
                 {
@@ -3257,7 +3257,7 @@ class CancelAppointmentView(LoginRequiredMixin, View):
             return JsonResponse(
                 {
                     "success": False,
-                    "error": "لغو نوبت در حال حاضر ممکن نیست. لطفاً دوباره تلاش کنید.",
+                    "error": _("Cancellation is temporarily unavailable. Please try again."),
                 },
                 status=500,
             )
