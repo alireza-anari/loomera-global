@@ -70,9 +70,9 @@ class AppointmentModalA11yTests(SimpleTestCase):
                 folder = Path(settings.BASE_DIR) / "locale" / language / "LC_MESSAGES"
                 compiled = (folder / "django.mo").read_bytes()
                 self.assertEqual(struct.unpack_from("<I", compiled, 8)[0], 601)
-                with load_translation("django", localedir=str(Path(settings.BASE_DIR) / "locale"), languages=[language]) as catalog:
-                    self.assertEqual(catalog.gettext(row["en"]), row[language])
-                    self.assertTrue(row[language])
+                catalog = load_translation("django", localedir=str(Path(settings.BASE_DIR) / "locale"), languages=[language])
+                self.assertEqual(catalog.gettext(row["en"]), row[language])
+                self.assertTrue(row[language])
 
     def test_phase337_browser_smoke_is_wired_into_ci_and_exit_matrix(self):
         workflow = self.read(".github/workflows/ci.yml")
