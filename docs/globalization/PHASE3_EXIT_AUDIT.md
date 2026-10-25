@@ -312,3 +312,18 @@ confirmation prevention, mobile-bar inert state and safe rendering of
 markup-bearing labels. It is **partial browser evidence**, not live
 authenticated checkout, gateway payment, NVDA/VoiceOver, zoom acceptance
 or Production readiness. All five manual release gates remain open.
+
+## Phase 3.39 — Booking Server Session and Client Handoff
+
+A database-free test now invokes the real pair of public booking POST
+handlers, their shared Django session, redirects and validation failure
+cleanup. A Chromium fixture executes the real specialist click handler,
+date/time step switcher and booking JSON serializer together, for
+fa/en/ar and mobile/tablet/desktop widths. Accessible professional
+labels, availability texts and the first-available name transported
+to the next step are now native compiled gettext in three locales.
+
+These are cross-stage **automated** checks with controlled domain
+validation and fixture DOM, not actual server-rendered
+authenticated payments or a manual browser accessibility review.
+The five manual release blockers and Production approval remain open.
