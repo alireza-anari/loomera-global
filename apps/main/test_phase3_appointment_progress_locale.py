@@ -55,13 +55,13 @@ class AppointmentProgressLocaleTests(SimpleTestCase):
     def tearDown(self):
         translation.deactivate_all()
 
-    def test_review_ledger_has_23_unique_messages_with_matching_placeholders(self):
+    def test_review_ledger_has_24_unique_messages_with_matching_placeholders(self):
         payload = self.ledger()
         self.assertEqual(payload["schema_version"], 1)
         self.assertEqual(payload["phase"], "3.33")
         rows = payload["message_rows"]
-        self.assertEqual(len(rows), 23)
-        self.assertEqual(len({row["en"] for row in rows}), 23)
+        self.assertEqual(len(rows), 24)
+        self.assertEqual(len({row["en"] for row in rows}), 24)
         for row in rows:
             self.assertEqual(set(row), {"en", "fa", "ar"})
             self.assertEqual(
@@ -86,15 +86,15 @@ class AppointmentProgressLocaleTests(SimpleTestCase):
             po = (folder / "django.po").read_text(encoding="utf-8")
             mo = (folder / "django.mo").read_bytes()
             self.assertEqual(struct.unpack_from("<I", mo, 0)[0], 0x950412de)
-            self.assertEqual(struct.unpack_from("<I", mo, 8)[0], 513)
-            self.assertEqual(po.count(marker), 23)
+            self.assertEqual(struct.unpack_from("<I", mo, 8)[0], 514)
+            self.assertEqual(po.count(marker), 24)
             lines = po.splitlines()
             added = {
                 json.loads(lines[index + 1][6:])
                 for index, line in enumerate(lines)
                 if line == marker and lines[index + 1].startswith("msgid ")
             }
-            self.assertEqual(len(added), 23)
+            self.assertEqual(len(added), 24)
             with translation.override(lang):
                 for row in rows:
                     with self.subTest(lang=lang, msgid=row["en"][:45]):
@@ -223,10 +223,7 @@ class AppointmentProgressLocaleTests(SimpleTestCase):
                 self.assertFalse(by_key["pay_in_salon_pending"]["is_done"])
                 self.assertEqual(
                     by_key["pay_in_salon_pending"]["description"],
-                    translation.gettext(
-                        "The service is complete. The salon will record your in-person "
-                        "payment once it has been collected; you do not need to confirm it."
-                    ),
+                    translation.gettext("Payment for this appointment is completed at the salon."),
                 )
                 self.assertEqual(
                     by_key["pay_in_salon_pending"]["meta"],
@@ -239,6 +236,11 @@ class AppointmentProgressLocaleTests(SimpleTestCase):
         self.assertEqual(template.count("default:booking_received_fallback"), 2)
         self.assertEqual(template.count("data-appointment-reminder"), 2)
         self.assertEqual(template.count('{% trans "Appointment reminder" %}'), 2)
+        self.assertIn(
+            "The service is complete. The salon will record your in-person payment "
+            "once it has been collected; you do not need to confirm it.",
+            template,
+        )
         for msgid in (
             "Rate and review", "Leave a review", "Services for this appointment",
             "Selected service and professional", "Payment, policies and salon information",
