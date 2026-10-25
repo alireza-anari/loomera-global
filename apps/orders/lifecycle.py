@@ -9,6 +9,7 @@ from django.conf import settings
 from loomera.logging_utils import mask_email, mask_mobile
 from django.db import transaction
 from django.utils import timezone
+from django.utils.translation import gettext as _
 
 from apps.comments_scores_favories.models import Comments
 from apps.dashboards.jalali_utils import (
@@ -23,19 +24,23 @@ logger = logging.getLogger(__name__)
 
 
 LIFECYCLE_LABELS = {
-    "booked": "رزرو ثبت شد",
-    "awaiting_stylist_confirmation": "در انتظار قطعی‌شدن رزرو",
-    "stylist_confirmed": "رزرو قطعی شد",
-    "arrived": "مشتری به سالن رسید",
-    "in_service": "انجام کار شروع شد",
-    "completed": "پایان کار",
-    "no_show": "عدم حضور تأیید شد",
-    "pay_in_salon_pending": "پرداخت در سالن مانده است",
-    "paid": "پرداخت انجام شد",
-    "review_pending": "آماده ثبت نظرسنجی",
-    "reviewed": "نظرسنجی ثبت شد",
-    "cancelled": "رزرو لغو شد",
+    "booked": "Booking registered",
+    "awaiting_stylist_confirmation": "Awaiting finalization",
+    "stylist_confirmed": "Booking confirmed",
+    "arrived": "Customer arrived at the salon",
+    "in_service": "Service started",
+    "completed": "Service completed",
+    "no_show": "No-show",
+    "pay_in_salon_pending": "Payment is still due at the salon",
+    "paid": "Payment completed",
+    "review_pending": "Ready to leave a review",
+    "reviewed": "Review submitted",
+    "cancelled": "Cancelled",
 }
+
+
+def _lifecycle_label(key):
+    return _(LIFECYCLE_LABELS.get(key, "Booking status unavailable"))
 
 
 def _safe_localtime(value):
@@ -142,27 +147,27 @@ def build_progress_steps(order: Order):
     steps = [
         {
             "key": "booked",
-            "label": LIFECYCLE_LABELS["booked"],
+            "label": _lifecycle_label("booked"),
             "is_done": True,
             "is_current": False,
             "meta": _format_progress_datetime(order.register_date),
-            "description": "درخواست رزرو شما ثبت شده است.",
+            "description": _("Your booking request has been recorded."),
         },
         {
             "key": "awaiting_stylist_confirmation",
-            "label": LIFECYCLE_LABELS["awaiting_stylist_confirmation"],
+            "label": _lifecycle_label("awaiting_stylist_confirmation"),
             "is_done": bool(order.stylist_confirmed_at or order.stylist_approved),
             "is_current": False,
             "meta": (
-                "در انتظار نهایی‌شدن"
+                _("Awaiting finalization")
                 if not (order.stylist_confirmed_at or order.stylist_approved)
-                else "نهایی شد"
+                else _("Finalized")
             ),
-            "description": "پس از نهایی‌شدن رزرو، زمان انتخاب‌شده در برنامه متخصص قطعی می‌شود.",
+            "description": _("Once the booking is confirmed, the selected time is finalized in the professional's schedule."),
         },
         {
             "key": "stylist_confirmed",
-            "label": LIFECYCLE_LABELS["stylist_confirmed"],
+            "label": _lifecycle_label("stylist_confirmed"),
             "is_done": bool(order.stylist_confirmed_at or order.stylist_approved),
             "is_current": False,
             "meta": (
@@ -170,31 +175,31 @@ def build_progress_steps(order: Order):
                 if order.stylist_confirmed_at
                 else ""
             ),
-            "description": "زمان این نوبت قطعی و در برنامه متخصص ثبت شده است.",
+            "description": _("Your appointment time is confirmed and has been added to the professional's schedule."),
         },
         {
             "key": "arrived",
-            "label": LIFECYCLE_LABELS["arrived"],
+            "label": _lifecycle_label("arrived"),
             "is_done": bool(order.customer_arrived_at),
             "is_current": False,
             "meta": _format_progress_datetime(order.customer_arrived_at),
-            "description": "حضور شما در سالن ثبت شده است.",
+            "description": _("Your arrival at the salon has been recorded."),
         },
         {
             "key": "in_service",
-            "label": LIFECYCLE_LABELS["in_service"],
+            "label": _lifecycle_label("in_service"),
             "is_done": bool(order.service_started_at),
             "is_current": False,
             "meta": _format_progress_datetime(order.service_started_at),
-            "description": "خدمت شما در حال انجام است.",
+            "description": _("Your service is in progress."),
         },
         {
             "key": "completed",
-            "label": LIFECYCLE_LABELS["completed"],
+            "label": _lifecycle_label("completed"),
             "is_done": bool(order.service_completed_at),
             "is_current": False,
             "meta": _format_progress_datetime(order.service_completed_at),
-            "description": "خدمت شما به پایان رسیده است.",
+            "description": _("Your service is complete."),
         },
     ]
 
@@ -202,44 +207,44 @@ def build_progress_steps(order: Order):
         steps.append(
             {
                 "key": "pay_in_salon_pending",
-                "label": LIFECYCLE_LABELS["pay_in_salon_pending"],
+                "label": _lifecycle_label("pay_in_salon_pending"),
                 "is_done": bool(order.is_paid),
                 "is_current": False,
-                "meta": "پرداخت در سالن" if not order.is_paid else "پرداخت نهایی شد",
-                "description": "پرداخت این نوبت در سالن تکمیل می‌شود.",
+                "meta": _("Pay at salon") if not order.is_paid else _("Payment completed"),
+                "description": _("Payment for this appointment is completed at the salon."),
             }
         )
     else:
         steps.append(
             {
                 "key": "paid",
-                "label": LIFECYCLE_LABELS["paid"],
+                "label": _lifecycle_label("paid"),
                 "is_done": bool(order.is_paid),
                 "is_current": False,
-                "meta": "پرداخت انجام شده" if order.is_paid else "در انتظار پرداخت",
-                "description": "پرداخت این نوبت ثبت شده است.",
+                "meta": _("Payment completed") if order.is_paid else _("Awaiting payment"),
+                "description": _("Payment for this appointment has been recorded."),
             }
         )
 
     steps.append(
         {
             "key": "review_pending",
-            "label": LIFECYCLE_LABELS["review_pending"],
+            "label": _lifecycle_label("review_pending"),
             "is_done": bool(order.review_requested_at),
             "is_current": False,
             "meta": _format_progress_datetime(order.review_requested_at),
-            "description": "می‌توانید تجربه خود از این نوبت را ثبت کنید.",
+            "description": _("You can share your experience with this appointment."),
         }
     )
 
     steps.append(
         {
             "key": "reviewed",
-            "label": LIFECYCLE_LABELS["reviewed"],
+            "label": _lifecycle_label("reviewed"),
             "is_done": bool(order.review_completed_at),
             "is_current": False,
             "meta": _format_progress_datetime(order.review_completed_at),
-            "description": "دیدگاه شما ثبت شده است.",
+            "description": _("Your review has been submitted."),
         }
     )
 
@@ -275,7 +280,7 @@ def build_customer_progress_context(order: Order):
     if current_step is None:
         current_step = {
             "key": current_stage,
-            "label": LIFECYCLE_LABELS.get(current_stage, "وضعیت رزرو"),
+            "label": _lifecycle_label(current_stage),
             "is_done": False,
             "is_current": True,
             "meta": "",
@@ -284,9 +289,9 @@ def build_customer_progress_context(order: Order):
     reminder_text = ""
     if order.reminder_due_at:
         local_due = _safe_localtime(order.reminder_due_at)
-        reminder_text = f"یادآوری این نوبت برای {format_jalali_with_weekday(local_due.date())} ساعت {format_time_fa(local_due.time())} برنامه‌ریزی شده است."
+        reminder_text = _("A reminder for this appointment is scheduled for %(date)s at %(time)s.") % {"date": format_jalali_with_weekday(local_due.date()), "time": format_time_fa(local_due.time())}
     elif order.reminder_status == "skipped":
-        reminder_text = "به‌دلیل نزدیک بودن زمان رزرو یا نبود زمان معتبر، یادآوری خودکار زمان‌بندی نشد."
+        reminder_text = _("An automatic reminder was not scheduled because the appointment is too close or no valid time is available.")
 
     cash_payment = None
     cash_meta = {}
@@ -328,7 +333,7 @@ def build_customer_progress_context(order: Order):
     if current_step is None:
         current_step = {
             "key": current_stage,
-            "label": LIFECYCLE_LABELS.get(current_stage, "وضعیت رزرو"),
+            "label": _lifecycle_label(current_stage),
             "is_done": False,
             "is_current": True,
             "meta": "",
@@ -337,10 +342,10 @@ def build_customer_progress_context(order: Order):
 
     return {
         "current_stage": current_stage,
-        "current_stage_label": LIFECYCLE_LABELS.get(current_stage, "وضعیت رزرو"),
+        "current_stage_label": _lifecycle_label(current_stage),
         "current_step": current_step,
         "current_step_label": current_step.get(
-            "label", LIFECYCLE_LABELS.get(current_stage, "وضعیت رزرو")
+            "label", _lifecycle_label(current_stage)
         ),
         "steps": steps,
         "reminder_text": reminder_text,
