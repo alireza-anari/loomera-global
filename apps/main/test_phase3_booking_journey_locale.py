@@ -68,7 +68,7 @@ class BookingJourneyLocaleTests(SimpleTestCase):
             po, mo = self.catalog(language)
             with self.subTest(language=language):
                 self.assertEqual(struct.unpack_from("<I", mo)[0], 0x950412de)
-                self.assertEqual(struct.unpack_from("<I", mo, 8)[0], 485)
+                self.assertEqual(struct.unpack_from("<I", mo, 8)[0], 489)
                 self.assertEqual(po.count("#: loomera/globalization/booking_journey_messages.py"), 58)
                 self.assertEqual(po.count("#: loomera/globalization/booking_interactive_messages.py"), 37)
                 with translation.override(language):
