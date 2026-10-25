@@ -33,8 +33,8 @@ class PaymentResultBidirectionalTests(SimpleTestCase):
         template = self.read("templates/payments/appointment_result.html")
         for raw in (
             "{{ order.salon.salon_name|default:'—' }}",
-            "{{ order.get_selected_payment_method_display|default:'—' }}",
-            "{{ payment.get_provider_display|default:'—' }}",
+            "{{ payment_method_label|default:'—' }}",
+            "{{ payment_provider_label|default:'—' }}",
             "{{ payment_status_label }}",
             "{{ order_status_label }}",
             "{{ day.date }}",

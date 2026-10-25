@@ -1710,3 +1710,259 @@ msgstr "Service in progress"
 #: docs/globalization/PHASE3_31_MESSAGE_REVIEW.json
 msgid "Salon payment outstanding"
 msgstr "Salon payment outstanding"
+
+#: docs/globalization/PHASE3_32_MESSAGE_REVIEW.json
+msgid "Payment started"
+msgstr "Payment started"
+
+#: docs/globalization/PHASE3_32_MESSAGE_REVIEW.json
+msgid "Payment successful"
+msgstr "Payment successful"
+
+#: docs/globalization/PHASE3_32_MESSAGE_REVIEW.json
+msgid "Awaiting payment"
+msgstr "Awaiting payment"
+
+#: docs/globalization/PHASE3_32_MESSAGE_REVIEW.json
+msgid "Paid at salon"
+msgstr "Paid at salon"
+
+#: docs/globalization/PHASE3_32_MESSAGE_REVIEW.json
+msgid "Awaiting confirmation"
+msgstr "Awaiting confirmation"
+
+#: docs/globalization/PHASE3_32_MESSAGE_REVIEW.json
+msgid "Confirmed"
+msgstr "Confirmed"
+
+#: docs/globalization/PHASE3_32_MESSAGE_REVIEW.json
+msgid "No-show"
+msgstr "No-show"
+
+#: docs/globalization/PHASE3_32_MESSAGE_REVIEW.json
+msgid "Under dispute"
+msgstr "Under dispute"
+
+#: docs/globalization/PHASE3_32_MESSAGE_REVIEW.json
+msgid "Wallet"
+msgstr "Wallet"
+
+#: docs/globalization/PHASE3_32_MESSAGE_REVIEW.json
+msgid "Manual"
+msgstr "Manual"
+
+#: docs/globalization/PHASE3_32_MESSAGE_REVIEW.json
+msgid "Simulator"
+msgstr "Simulator"
+
+#: docs/globalization/PHASE3_32_MESSAGE_REVIEW.json
+msgid "Payment status unavailable"
+msgstr "Payment status unavailable"
+
+#: docs/globalization/PHASE3_32_MESSAGE_REVIEW.json
+msgid "Booking status unavailable"
+msgstr "Booking status unavailable"
+
+#: docs/globalization/PHASE3_32_MESSAGE_REVIEW.json
+msgid "Payment method unavailable"
+msgstr "Payment method unavailable"
+
+#: docs/globalization/PHASE3_32_MESSAGE_REVIEW.json
+msgid "Payment provider unavailable"
+msgstr "Payment provider unavailable"
+
+#: docs/globalization/PHASE3_32_MESSAGE_REVIEW.json
+msgid "Payment requires review"
+msgstr "Payment requires review"
+
+#: docs/globalization/PHASE3_32_MESSAGE_REVIEW.json
+msgid "The payment gateway response did not match the order details. For financial safety, this transaction is under review."
+msgstr "The payment gateway response did not match the order details. For financial safety, this transaction is under review."
+
+#: docs/globalization/PHASE3_32_MESSAGE_REVIEW.json
+msgid "Payment result is not final yet"
+msgstr "Payment result is not final yet"
+
+#: docs/globalization/PHASE3_32_MESSAGE_REVIEW.json
+msgid "The transaction has not been finalized. The bank or payment gateway may have processed it, but Loomera has not received a confirmed result."
+msgstr "The transaction has not been finalized. The bank or payment gateway may have processed it, but Loomera has not received a confirmed result."
+
+#: docs/globalization/PHASE3_32_MESSAGE_REVIEW.json
+msgid "Connection to the payment gateway could not be completed. The bank may have processed the transaction, but Loomera has not received a confirmed result."
+msgstr "Connection to the payment gateway could not be completed. The bank may have processed the transaction, but Loomera has not received a confirmed result."
+
+#: docs/globalization/PHASE3_32_MESSAGE_REVIEW.json
+msgid "Please do not pay again while this transaction is being checked."
+msgstr "Please do not pay again while this transaction is being checked."
+
+#: docs/globalization/PHASE3_32_MESSAGE_REVIEW.json
+msgid "If money was deducted, the result will be confirmed after the gateway or automated transaction review."
+msgstr "If money was deducted, the result will be confirmed after the gateway or automated transaction review."
+
+#: docs/globalization/PHASE3_32_MESSAGE_REVIEW.json
+msgid "Online payment was not completed in time. The booking is no longer pending and the selected time has been released."
+msgstr "Online payment was not completed in time. The booking is no longer pending and the selected time has been released."
+
+#: docs/globalization/PHASE3_32_MESSAGE_REVIEW.json
+msgid "Choose a new available time to book this service."
+msgstr "Choose a new available time to book this service."
+
+#: docs/globalization/PHASE3_32_MESSAGE_REVIEW.json
+msgid "If money was deducted, support or an automatic transaction review can help confirm its status."
+msgstr "If money was deducted, support or an automatic transaction review can help confirm its status."
+
+#: docs/globalization/PHASE3_32_MESSAGE_REVIEW.json
+msgid "Your appointment was cancelled successfully."
+msgstr "Your appointment was cancelled successfully."
+
+#: docs/globalization/PHASE3_32_MESSAGE_REVIEW.json
+msgid "Your appointment was cancelled successfully. Refunded %(amount)s toman to your wallet."
+msgstr "Your appointment was cancelled successfully. Refunded %(amount)s toman to your wallet."
+
+#: docs/globalization/PHASE3_32_MESSAGE_REVIEW.json
+msgid "Cancellation is not available for this appointment. Please contact the salon."
+msgstr "Cancellation is not available for this appointment. Please contact the salon."
+
+#: docs/globalization/PHASE3_32_MESSAGE_REVIEW.json
+msgid "This appointment has already been cancelled."
+msgstr "This appointment has already been cancelled."
+
+#: docs/globalization/PHASE3_32_MESSAGE_REVIEW.json
+msgid "Cancellation is temporarily unavailable. Please try again."
+msgstr "Cancellation is temporarily unavailable. Please try again."
+
+#: docs/globalization/PHASE3_32_MESSAGE_REVIEW.json
+msgid "Are you sure you want to cancel this appointment?"
+msgstr "Are you sure you want to cancel this appointment?"
+
+#: docs/globalization/PHASE3_32_MESSAGE_REVIEW.json
+msgid "Cancellation request could not be sent."
+msgstr "Cancellation request could not be sent."
+
+#: docs/globalization/PHASE3_32_MESSAGE_REVIEW.json
+msgid "Cancellation policy"
+msgstr "Cancellation policy"
+
+#: docs/globalization/PHASE3_32_MESSAGE_REVIEW.json
+msgid "Salon cancellation policy"
+msgstr "Salon cancellation policy"
+
+#: docs/globalization/PHASE3_32_MESSAGE_REVIEW.json
+msgid "Online cancellation is available up to %(hours)s hours before the appointment. For online or wallet payments, %(percent)s%% of the amount is returned to your wallet."
+msgstr "Online cancellation is available up to %(hours)s hours before the appointment. For online or wallet payments, %(percent)s%% of the amount is returned to your wallet."
+
+#: docs/globalization/PHASE3_32_MESSAGE_REVIEW.json
+msgid "Online cancellation is currently available. If you cancel, %(percent)s%% of the digital payment will be returned to your wallet."
+msgstr "Online cancellation is currently available. If you cancel, %(percent)s%% of the digital payment will be returned to your wallet."
+
+#: docs/globalization/PHASE3_32_MESSAGE_REVIEW.json
+msgid "Online cancellation is not available for this appointment. Please contact the salon if you need help."
+msgstr "Online cancellation is not available for this appointment. Please contact the salon if you need help."
+
+#: docs/globalization/PHASE3_32_MESSAGE_REVIEW.json
+msgid "Online cancellation is not available for completed or past appointments."
+msgstr "Online cancellation is not available for completed or past appointments."
+
+#: docs/globalization/PHASE3_32_MESSAGE_REVIEW.json
+msgid "Refund recorded at %(time)s."
+msgstr "Refund recorded at %(time)s."
+
+#: docs/globalization/PHASE3_32_MESSAGE_REVIEW.json
+msgid "%(amount)s toman was returned to your wallet under the cancellation policy."
+msgstr "%(amount)s toman was returned to your wallet under the cancellation policy."
+
+#: docs/globalization/PHASE3_32_MESSAGE_REVIEW.json
+msgid "Refund"
+msgstr "Refund"
+
+#: docs/globalization/PHASE3_32_MESSAGE_REVIEW.json
+msgid "Refund date"
+msgstr "Refund date"
+
+#: docs/globalization/PHASE3_32_MESSAGE_REVIEW.json
+msgid "No refund"
+msgstr "No refund"
+
+#: docs/globalization/PHASE3_32_MESSAGE_REVIEW.json
+msgid "Service discount campaign"
+msgstr "Service discount campaign"
+
+#: docs/globalization/PHASE3_32_MESSAGE_REVIEW.json
+msgid "No service discount campaign"
+msgstr "No service discount campaign"
+
+#: docs/globalization/PHASE3_32_MESSAGE_REVIEW.json
+msgid "No coupon"
+msgstr "No coupon"
+
+#: docs/globalization/PHASE3_32_MESSAGE_REVIEW.json
+msgid "Payment status is still being finalized. To avoid duplicate charges, follow up on this same transaction."
+msgstr "Payment status is still being finalized. To avoid duplicate charges, follow up on this same transaction."
+
+#: docs/globalization/PHASE3_32_MESSAGE_REVIEW.json
+msgid "The payment deadline for this booking has passed and the selected time has been released. Choose a new available time to book again."
+msgstr "The payment deadline for this booking has passed and the selected time has been released. Choose a new available time to book again."
+
+#: docs/globalization/PHASE3_32_MESSAGE_REVIEW.json
+msgid "You cancelled the payment. If money was deducted, support can help confirm its status."
+msgstr "You cancelled the payment. If money was deducted, support can help confirm its status."
+
+#: docs/globalization/PHASE3_32_MESSAGE_REVIEW.json
+msgid "Payment was not confirmed. If money was deducted, support can help confirm its status."
+msgstr "Payment was not confirmed. If money was deducted, support can help confirm its status."
+
+#: docs/globalization/PHASE3_32_MESSAGE_REVIEW.json
+msgid "Cancellation reason"
+msgstr "Cancellation reason"
+
+#: docs/globalization/PHASE3_32_MESSAGE_REVIEW.json
+msgid "Cancel appointment"
+msgstr "Cancel appointment"
+
+#: docs/globalization/PHASE3_32_MESSAGE_REVIEW.json
+msgid "Awaiting payment for settlement"
+msgstr "Awaiting payment for settlement"
+
+#: docs/globalization/PHASE3_32_MESSAGE_REVIEW.json
+msgid "Ready for settlement"
+msgstr "Ready for settlement"
+
+#: docs/globalization/PHASE3_32_MESSAGE_REVIEW.json
+msgid "Settlement on hold for review"
+msgstr "Settlement on hold for review"
+
+#: docs/globalization/PHASE3_32_MESSAGE_REVIEW.json
+msgid "Settled"
+msgstr "Settled"
+
+#: docs/globalization/PHASE3_32_MESSAGE_REVIEW.json
+msgid "Settlement cancelled"
+msgstr "Settlement cancelled"
+
+#: docs/globalization/PHASE3_32_MESSAGE_REVIEW.json
+msgid "Settlement status unavailable"
+msgstr "Settlement status unavailable"
+
+#: docs/globalization/PHASE3_32_MESSAGE_REVIEW.json
+msgid "Refund status"
+msgstr "Refund status"
+
+#: docs/globalization/PHASE3_32_MESSAGE_REVIEW.json
+msgid "Deposit"
+msgstr "Deposit"
+
+#: docs/globalization/PHASE3_32_MESSAGE_REVIEW.json
+msgid "Withdrawal"
+msgstr "Withdrawal"
+
+#: docs/globalization/PHASE3_32_MESSAGE_REVIEW.json
+msgid "Purchase"
+msgstr "Purchase"
+
+#: docs/globalization/PHASE3_32_MESSAGE_REVIEW.json
+msgid "Rejected withdrawal returned"
+msgstr "Rejected withdrawal returned"
+
+#: docs/globalization/PHASE3_32_MESSAGE_REVIEW.json
+msgid "Transaction type unavailable"
+msgstr "Transaction type unavailable"

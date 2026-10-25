@@ -1,0 +1,327 @@
+{
+  "schema_version": 1,
+  "phase": "3.32",
+  "purpose": "Reviewed static financial state, cancellation and refund messages; never translate provider payloads or user/salon-authored text",
+  "message_rows": [
+    {
+      "en": "Payment started",
+      "fa": "پرداخت آغاز شد",
+      "ar": "بدأ الدفع"
+    },
+    {
+      "en": "Payment successful",
+      "fa": "پرداخت موفق بود",
+      "ar": "تم الدفع بنجاح"
+    },
+    {
+      "en": "Awaiting payment",
+      "fa": "در انتظار پرداخت",
+      "ar": "بانتظار الدفع"
+    },
+    {
+      "en": "Paid at salon",
+      "fa": "پرداخت در مجموعه انجام شد",
+      "ar": "تم الدفع في الصالون"
+    },
+    {
+      "en": "Awaiting confirmation",
+      "fa": "در انتظار تأیید",
+      "ar": "بانتظار التأكيد"
+    },
+    {
+      "en": "Confirmed",
+      "fa": "تأیید شده",
+      "ar": "تم التأكيد"
+    },
+    {
+      "en": "No-show",
+      "fa": "عدم حضور",
+      "ar": "عدم الحضور"
+    },
+    {
+      "en": "Under dispute",
+      "fa": "دارای اختلاف",
+      "ar": "قيد النزاع"
+    },
+    {
+      "en": "Wallet",
+      "fa": "کیف پول",
+      "ar": "المحفظة"
+    },
+    {
+      "en": "Manual",
+      "fa": "دستی",
+      "ar": "يدوي"
+    },
+    {
+      "en": "Simulator",
+      "fa": "شبیه‌ساز",
+      "ar": "محاكي"
+    },
+    {
+      "en": "Payment status unavailable",
+      "fa": "وضعیت پرداخت در دسترس نیست",
+      "ar": "حالة الدفع غير متاحة"
+    },
+    {
+      "en": "Booking status unavailable",
+      "fa": "وضعیت رزرو در دسترس نیست",
+      "ar": "حالة الحجز غير متاحة"
+    },
+    {
+      "en": "Payment method unavailable",
+      "fa": "روش پرداخت در دسترس نیست",
+      "ar": "طريقة الدفع غير متاحة"
+    },
+    {
+      "en": "Payment provider unavailable",
+      "fa": "درگاه پرداخت در دسترس نیست",
+      "ar": "مزود الدفع غير متاح"
+    },
+    {
+      "en": "Payment requires review",
+      "fa": "پرداخت نیاز به بررسی دارد",
+      "ar": "الدفع يتطلب المراجعة"
+    },
+    {
+      "en": "The payment gateway response did not match the order details. For financial safety, this transaction is under review.",
+      "fa": "پاسخ درگاه پرداخت با جزئیات سفارش مطابقت نداشت. برای حفظ امنیت مالی، این تراکنش در حال بررسی است.",
+      "ar": "لم تتطابق استجابة بوابة الدفع مع تفاصيل الطلب. تخضع هذه المعاملة للمراجعة حفاظًا على السلامة المالية."
+    },
+    {
+      "en": "Payment result is not final yet",
+      "fa": "نتیجه پرداخت هنوز قطعی نیست",
+      "ar": "لم تُحسم نتيجة الدفع بعد"
+    },
+    {
+      "en": "The transaction has not been finalized. The bank or payment gateway may have processed it, but Loomera has not received a confirmed result.",
+      "fa": "این تراکنش هنوز نهایی نشده است. ممکن است بانک یا درگاه آن را پردازش کرده باشد، اما لومرا هنوز نتیجه تأییدشده‌ای دریافت نکرده است.",
+      "ar": "لم تُحسم هذه المعاملة بعد. ربما عالجها البنك أو بوابة الدفع، لكن لوميرا لم تتلقَّ نتيجة مؤكدة."
+    },
+    {
+      "en": "Connection to the payment gateway could not be completed. The bank may have processed the transaction, but Loomera has not received a confirmed result.",
+      "fa": "ارتباط با درگاه برای تأیید نهایی کامل نشد. ممکن است بانک تراکنش را پردازش کرده باشد، اما لومرا هنوز نتیجه قطعی دریافت نکرده است.",
+      "ar": "تعذر إكمال الاتصال ببوابة الدفع للتأكيد النهائي. ربما عالج البنك المعاملة، لكن لوميرا لم تتلقَّ نتيجة مؤكدة."
+    },
+    {
+      "en": "Please do not pay again while this transaction is being checked.",
+      "fa": "تا زمان بررسی این تراکنش، لطفاً دوباره پرداخت نکنید.",
+      "ar": "يرجى عدم الدفع مرة أخرى أثناء التحقق من هذه المعاملة."
+    },
+    {
+      "en": "If money was deducted, the result will be confirmed after the gateway or automated transaction review.",
+      "fa": "اگر مبلغی کسر شده باشد، نتیجه پس از بررسی درگاه یا بررسی خودکار تراکنش مشخص می‌شود.",
+      "ar": "إذا تم خصم مبلغ، فسيتم تأكيد النتيجة بعد مراجعة البوابة أو التحقق الآلي من المعاملة."
+    },
+    {
+      "en": "Online payment was not completed in time. The booking is no longer pending and the selected time has been released.",
+      "fa": "پرداخت آنلاین در مهلت تعیین‌شده کامل نشد. رزرو دیگر در حالت انتظار نیست و زمان انتخاب‌شده آزاد شده است.",
+      "ar": "لم يكتمل الدفع الإلكتروني ضمن المهلة المحددة. لم يعد الحجز قيد الانتظار وتم إتاحة الوقت المختار مجددًا."
+    },
+    {
+      "en": "Choose a new available time to book this service.",
+      "fa": "برای رزرو این خدمت، یک زمان آزاد جدید انتخاب کنید.",
+      "ar": "اختر وقتًا متاحًا جديدًا لحجز هذه الخدمة."
+    },
+    {
+      "en": "If money was deducted, support or an automatic transaction review can help confirm its status.",
+      "fa": "اگر مبلغی کسر شده باشد، پشتیبانی یا بررسی خودکار تراکنش می‌تواند وضعیت آن را مشخص کند.",
+      "ar": "إذا تم خصم مبلغ، يمكن للدعم أو المراجعة الآلية للمعاملة تأكيد حالته."
+    },
+    {
+      "en": "Your appointment was cancelled successfully.",
+      "fa": "نوبت شما با موفقیت لغو شد.",
+      "ar": "تم إلغاء موعدك بنجاح."
+    },
+    {
+      "en": "Your appointment was cancelled successfully. Refunded %(amount)s toman to your wallet.",
+      "fa": "نوبت شما با موفقیت لغو شد. مبلغ %(amount)s تومان به کیف پول شما بازگردانده شد.",
+      "ar": "تم إلغاء موعدك بنجاح. أُعيد مبلغ %(amount)s تومان إلى محفظتك."
+    },
+    {
+      "en": "Cancellation is not available for this appointment. Please contact the salon.",
+      "fa": "لغو این نوبت امکان‌پذیر نیست. لطفاً با مجموعه تماس بگیرید.",
+      "ar": "لا يمكن إلغاء هذا الموعد. يرجى التواصل مع الصالون."
+    },
+    {
+      "en": "This appointment has already been cancelled.",
+      "fa": "این نوبت قبلاً لغو شده است.",
+      "ar": "تم إلغاء هذا الموعد مسبقًا."
+    },
+    {
+      "en": "Cancellation is temporarily unavailable. Please try again.",
+      "fa": "لغو نوبت در حال حاضر امکان‌پذیر نیست. لطفاً دوباره تلاش کنید.",
+      "ar": "إلغاء الموعد غير متاح مؤقتًا. يرجى المحاولة مرة أخرى."
+    },
+    {
+      "en": "Are you sure you want to cancel this appointment?",
+      "fa": "آیا از لغو این نوبت مطمئن هستید؟",
+      "ar": "هل أنت متأكد من رغبتك في إلغاء هذا الموعد؟"
+    },
+    {
+      "en": "Cancellation request could not be sent.",
+      "fa": "ارسال درخواست لغو نوبت ممکن نشد.",
+      "ar": "تعذر إرسال طلب إلغاء الموعد."
+    },
+    {
+      "en": "Cancellation policy",
+      "fa": "سیاست لغو",
+      "ar": "سياسة الإلغاء"
+    },
+    {
+      "en": "Salon cancellation policy",
+      "fa": "سیاست لغو مجموعه",
+      "ar": "سياسة الإلغاء الخاصة بالصالون"
+    },
+    {
+      "en": "Online cancellation is available up to %(hours)s hours before the appointment. For online or wallet payments, %(percent)s%% of the amount is returned to your wallet.",
+      "fa": "لغو آنلاین تا %(hours)s ساعت پیش از نوبت امکان‌پذیر است. در پرداخت آنلاین یا کیف پول، %(percent)s٪ مبلغ به کیف پول شما بازگردانده می‌شود.",
+      "ar": "يمكن إلغاء الموعد إلكترونيًا حتى %(hours)s ساعة قبل الموعد. في الدفع الإلكتروني أو عبر المحفظة، يُعاد %(percent)s٪ من المبلغ إلى محفظتك."
+    },
+    {
+      "en": "Online cancellation is currently available. If you cancel, %(percent)s%% of the digital payment will be returned to your wallet.",
+      "fa": "در حال حاضر لغو آنلاین برای شما فعال است. در صورت لغو، %(percent)s٪ از مبلغ پرداخت دیجیتال به کیف پول شما بازگردانده می‌شود.",
+      "ar": "الإلغاء الإلكتروني متاح حاليًا. إذا ألغيت الموعد، فسيُعاد %(percent)s٪ من المبلغ المدفوع رقميًا إلى محفظتك."
+    },
+    {
+      "en": "Online cancellation is not available for this appointment. Please contact the salon if you need help.",
+      "fa": "در حال حاضر لغو آنلاین این نوبت امکان‌پذیر نیست. در صورت نیاز با مجموعه تماس بگیرید.",
+      "ar": "لا يتوفر الإلغاء الإلكتروني لهذا الموعد حاليًا. يرجى التواصل مع الصالون إذا احتجت إلى المساعدة."
+    },
+    {
+      "en": "Online cancellation is not available for completed or past appointments.",
+      "fa": "برای نوبت‌های انجام‌شده یا گذشته، لغو آنلاین امکان‌پذیر نیست.",
+      "ar": "لا يتوفر الإلغاء الإلكتروني للمواعيد المكتملة أو السابقة."
+    },
+    {
+      "en": "Refund recorded at %(time)s.",
+      "fa": "زمان ثبت بازگشت وجه: %(time)s.",
+      "ar": "تم تسجيل الاسترداد في %(time)s."
+    },
+    {
+      "en": "%(amount)s toman was returned to your wallet under the cancellation policy.",
+      "fa": "طبق سیاست لغو، مبلغ %(amount)s تومان به کیف پول شما بازگردانده شد.",
+      "ar": "وفقًا لسياسة الإلغاء، أُعيد مبلغ %(amount)s تومان إلى محفظتك."
+    },
+    {
+      "en": "Refund",
+      "fa": "بازگشت وجه",
+      "ar": "استرداد المبلغ"
+    },
+    {
+      "en": "Refund date",
+      "fa": "زمان بازگشت وجه",
+      "ar": "تاريخ الاسترداد"
+    },
+    {
+      "en": "No refund",
+      "fa": "بدون بازگشت وجه",
+      "ar": "لا يوجد استرداد"
+    },
+    {
+      "en": "Service discount campaign",
+      "fa": "عنوان کمپین تخفیف خدمات",
+      "ar": "عنوان حملة خصم الخدمات"
+    },
+    {
+      "en": "No service discount campaign",
+      "fa": "بدون کمپین تخفیف خدمات",
+      "ar": "لا توجد حملة خصم للخدمات"
+    },
+    {
+      "en": "No coupon",
+      "fa": "بدون کد تخفیف",
+      "ar": "بدون قسيمة"
+    },
+    {
+      "en": "Payment status is still being finalized. To avoid duplicate charges, follow up on this same transaction.",
+      "fa": "وضعیت پرداخت هنوز نهایی نشده است. برای جلوگیری از پرداخت تکراری، همین تراکنش را پیگیری کنید.",
+      "ar": "لا تزال حالة الدفع قيد التأكيد. لتجنب الخصم المكرر، تابع هذه المعاملة نفسها."
+    },
+    {
+      "en": "The payment deadline for this booking has passed and the selected time has been released. Choose a new available time to book again.",
+      "fa": "مهلت پرداخت این رزرو تمام شده و زمان انتخاب‌شده آزاد شده است. برای رزرو دوباره، زمان آزاد جدیدی انتخاب کنید.",
+      "ar": "انتهت مهلة الدفع لهذا الحجز وتم إتاحة الوقت المختار مجددًا. اختر وقتًا متاحًا جديدًا لإعادة الحجز."
+    },
+    {
+      "en": "You cancelled the payment. If money was deducted, support can help confirm its status.",
+      "fa": "پرداخت را لغو کردید. اگر مبلغی کسر شده باشد، پشتیبانی می‌تواند وضعیت آن را مشخص کند.",
+      "ar": "لقد ألغيت الدفع. إذا تم خصم مبلغ، يمكن للدعم تأكيد حالته."
+    },
+    {
+      "en": "Payment was not confirmed. If money was deducted, support can help confirm its status.",
+      "fa": "پرداخت تأیید نشد. اگر مبلغی کسر شده باشد، پشتیبانی می‌تواند وضعیت آن را مشخص کند.",
+      "ar": "لم يتم تأكيد الدفع. إذا تم خصم مبلغ، يمكن للدعم تأكيد حالته."
+    },
+    {
+      "en": "Cancellation reason",
+      "fa": "دلیل لغو",
+      "ar": "سبب الإلغاء"
+    },
+    {
+      "en": "Cancel appointment",
+      "fa": "لغو نوبت",
+      "ar": "إلغاء الموعد"
+    },
+    {
+      "en": "Awaiting payment for settlement",
+      "fa": "در انتظار پرداخت برای تسویه",
+      "ar": "بانتظار الدفع للتسوية"
+    },
+    {
+      "en": "Ready for settlement",
+      "fa": "آماده تسویه",
+      "ar": "جاهز للتسوية"
+    },
+    {
+      "en": "Settlement on hold for review",
+      "fa": "تسویه نیازمند بررسی",
+      "ar": "التسوية معلقة للمراجعة"
+    },
+    {
+      "en": "Settled",
+      "fa": "تسویه‌شده",
+      "ar": "تمت التسوية"
+    },
+    {
+      "en": "Settlement cancelled",
+      "fa": "تسویه لغو شده",
+      "ar": "أُلغيت التسوية"
+    },
+    {
+      "en": "Settlement status unavailable",
+      "fa": "وضعیت تسویه در دسترس نیست",
+      "ar": "حالة التسوية غير متاحة"
+    },
+    {
+      "en": "Refund status",
+      "fa": "وضعیت بازگشت وجه",
+      "ar": "حالة الاسترداد"
+    },
+    {
+      "en": "Deposit",
+      "fa": "واریز",
+      "ar": "إيداع"
+    },
+    {
+      "en": "Withdrawal",
+      "fa": "برداشت",
+      "ar": "سحب"
+    },
+    {
+      "en": "Purchase",
+      "fa": "خرید",
+      "ar": "شراء"
+    },
+    {
+      "en": "Rejected withdrawal returned",
+      "fa": "بازگشت برداشت ردشده",
+      "ar": "إعادة المبلغ بعد رفض السحب"
+    },
+    {
+      "en": "Transaction type unavailable",
+      "fa": "نوع تراکنش در دسترس نیست",
+      "ar": "نوع المعاملة غير متاح"
+    }
+  ]
+}

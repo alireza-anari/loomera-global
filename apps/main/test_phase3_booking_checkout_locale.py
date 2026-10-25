@@ -113,7 +113,7 @@ class BookingCheckoutLocaleTests(SimpleTestCase):
             self.assertEqual(len(source_ids), 58)
             self.assertEqual(set(source_ids), set(CHECKOUT_MSGIDS))
             self.assertEqual(struct.unpack_from("<I", mo)[0], 0x950412de)
-            self.assertEqual(struct.unpack_from("<I", mo, 8)[0], 426)
+            self.assertEqual(struct.unpack_from("<I", mo, 8)[0], 490)
             with translation.override(language):
                 for msgid in CHECKOUT_MSGIDS:
                     anchor = "msgid " + json.dumps(msgid, ensure_ascii=False) + "\nmsgstr "
