@@ -317,6 +317,11 @@
       "en": "Rejected withdrawal returned",
       "fa": "بازگشت برداشت ردشده",
       "ar": "إعادة المبلغ بعد رفض السحب"
+    },
+    {
+      "en": "Transaction type unavailable",
+      "fa": "نوع تراکنش در دسترس نیست",
+      "ar": "نوع المعاملة غير متاح"
     }
   ]
 }
