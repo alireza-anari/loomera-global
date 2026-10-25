@@ -17,6 +17,7 @@ from loomera.globalization.financial_status import (
     payment_method_label,
     payment_provider_label,
     payment_state_label,
+    settlement_status_label,
 )
 from apps.dashboards.jalali_utils import (
     to_english_digits,
@@ -1425,6 +1426,10 @@ class AppointmentPaymentResultView(View):
                 if order else _("Payment method unavailable")
             ),
             "payment_provider_label": payment_provider_label(payment.provider),
+            "settlement_status_label": (
+                settlement_status_label(settlement.payout_state) if settlement
+                else _("Settlement status unavailable")
+            ),
             "grouped_days": grouped_days,
             "is_split_day_booking": is_split_day_booking,
             "is_pay_in_salon_followup": is_pay_in_salon_followup,
