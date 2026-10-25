@@ -345,6 +345,7 @@ jobs:
           python tests/browser/phase3_booking_keyboard_chromium.py
           python tests/browser/phase3_post_booking_chromium.py
           python tests/browser/phase3_checkout_cta_chromium.py
+          python tests/browser/phase3_booking_stage_handoff_chromium.py
 
       - name: Upload browser failure screenshots
         if: failure()
