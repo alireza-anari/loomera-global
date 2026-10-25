@@ -55,8 +55,8 @@ class PostBookingTailLocaleTests(SimpleTestCase):
                     self.assertNotIn("<", value)
                     self.assertNotIn(">", value)
                     self.assertEqual(
-                        re.findall(r"%\\(([^)]+)\\)s", en),
-                        re.findall(r"%\\(([^)]+)\\)s", value),
+                        re.findall(r"%\(([^)]+)\)s", en),
+                        re.findall(r"%\(([^)]+)\)s", value),
                     )
                     if lang == "en":
                         self.assertEqual(en, value)
