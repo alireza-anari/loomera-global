@@ -257,6 +257,46 @@
       "en": "Cancellation reason",
       "fa": "دلیل لغو",
       "ar": "سبب الإلغاء"
+    },
+    {
+      "en": "Cancel appointment",
+      "fa": "لغو نوبت",
+      "ar": "إلغاء الموعد"
+    },
+    {
+      "en": "Awaiting payment for settlement",
+      "fa": "در انتظار پرداخت برای تسویه",
+      "ar": "بانتظار الدفع للتسوية"
+    },
+    {
+      "en": "Ready for settlement",
+      "fa": "آماده تسویه",
+      "ar": "جاهز للتسوية"
+    },
+    {
+      "en": "Settlement on hold for review",
+      "fa": "تسویه نیازمند بررسی",
+      "ar": "التسوية معلقة للمراجعة"
+    },
+    {
+      "en": "Settled",
+      "fa": "تسویه‌شده",
+      "ar": "تمت التسوية"
+    },
+    {
+      "en": "Settlement cancelled",
+      "fa": "تسویه لغو شده",
+      "ar": "أُلغيت التسوية"
+    },
+    {
+      "en": "Settlement status unavailable",
+      "fa": "وضعیت تسویه در دسترس نیست",
+      "ar": "حالة التسوية غير متاحة"
+    },
+    {
+      "en": "Refund status",
+      "fa": "وضعیت بازگشت وجه",
+      "ar": "حالة الاسترداد"
     }
   ]
 }
