@@ -1914,3 +1914,35 @@ msgstr "پرداخت تأیید نشد. اگر مبلغی کسر شده باشد
 #: docs/globalization/PHASE3_32_MESSAGE_REVIEW.json
 msgid "Cancellation reason"
 msgstr "دلیل لغو"
+
+#: docs/globalization/PHASE3_32_MESSAGE_REVIEW.json
+msgid "Cancel appointment"
+msgstr "لغو نوبت"
+
+#: docs/globalization/PHASE3_32_MESSAGE_REVIEW.json
+msgid "Awaiting payment for settlement"
+msgstr "در انتظار پرداخت برای تسویه"
+
+#: docs/globalization/PHASE3_32_MESSAGE_REVIEW.json
+msgid "Ready for settlement"
+msgstr "آماده تسویه"
+
+#: docs/globalization/PHASE3_32_MESSAGE_REVIEW.json
+msgid "Settlement on hold for review"
+msgstr "تسویه نیازمند بررسی"
+
+#: docs/globalization/PHASE3_32_MESSAGE_REVIEW.json
+msgid "Settled"
+msgstr "تسویه‌شده"
+
+#: docs/globalization/PHASE3_32_MESSAGE_REVIEW.json
+msgid "Settlement cancelled"
+msgstr "تسویه لغو شده"
+
+#: docs/globalization/PHASE3_32_MESSAGE_REVIEW.json
+msgid "Settlement status unavailable"
+msgstr "وضعیت تسویه در دسترس نیست"
+
+#: docs/globalization/PHASE3_32_MESSAGE_REVIEW.json
+msgid "Refund status"
+msgstr "وضعیت بازگشت وجه"

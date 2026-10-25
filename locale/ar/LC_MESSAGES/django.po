@@ -1918,3 +1918,35 @@ msgstr "لم يتم تأكيد الدفع. إذا تم خصم مبلغ، يمك�
 #: docs/globalization/PHASE3_32_MESSAGE_REVIEW.json
 msgid "Cancellation reason"
 msgstr "سبب الإلغاء"
+
+#: docs/globalization/PHASE3_32_MESSAGE_REVIEW.json
+msgid "Cancel appointment"
+msgstr "إلغاء الموعد"
+
+#: docs/globalization/PHASE3_32_MESSAGE_REVIEW.json
+msgid "Awaiting payment for settlement"
+msgstr "بانتظار الدفع للتسوية"
+
+#: docs/globalization/PHASE3_32_MESSAGE_REVIEW.json
+msgid "Ready for settlement"
+msgstr "جاهز للتسوية"
+
+#: docs/globalization/PHASE3_32_MESSAGE_REVIEW.json
+msgid "Settlement on hold for review"
+msgstr "التسوية معلقة للمراجعة"
+
+#: docs/globalization/PHASE3_32_MESSAGE_REVIEW.json
+msgid "Settled"
+msgstr "تمت التسوية"
+
+#: docs/globalization/PHASE3_32_MESSAGE_REVIEW.json
+msgid "Settlement cancelled"
+msgstr "أُلغيت التسوية"
+
+#: docs/globalization/PHASE3_32_MESSAGE_REVIEW.json
+msgid "Settlement status unavailable"
+msgstr "حالة التسوية غير متاحة"
+
+#: docs/globalization/PHASE3_32_MESSAGE_REVIEW.json
+msgid "Refund status"
+msgstr "حالة الاسترداد"

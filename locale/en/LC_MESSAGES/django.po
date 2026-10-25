@@ -1914,3 +1914,35 @@ msgstr "Payment was not confirmed. If money was deducted, support can help confi
 #: docs/globalization/PHASE3_32_MESSAGE_REVIEW.json
 msgid "Cancellation reason"
 msgstr "Cancellation reason"
+
+#: docs/globalization/PHASE3_32_MESSAGE_REVIEW.json
+msgid "Cancel appointment"
+msgstr "Cancel appointment"
+
+#: docs/globalization/PHASE3_32_MESSAGE_REVIEW.json
+msgid "Awaiting payment for settlement"
+msgstr "Awaiting payment for settlement"
+
+#: docs/globalization/PHASE3_32_MESSAGE_REVIEW.json
+msgid "Ready for settlement"
+msgstr "Ready for settlement"
+
+#: docs/globalization/PHASE3_32_MESSAGE_REVIEW.json
+msgid "Settlement on hold for review"
+msgstr "Settlement on hold for review"
+
+#: docs/globalization/PHASE3_32_MESSAGE_REVIEW.json
+msgid "Settled"
+msgstr "Settled"
+
+#: docs/globalization/PHASE3_32_MESSAGE_REVIEW.json
+msgid "Settlement cancelled"
+msgstr "Settlement cancelled"
+
+#: docs/globalization/PHASE3_32_MESSAGE_REVIEW.json
+msgid "Settlement status unavailable"
+msgstr "Settlement status unavailable"
+
+#: docs/globalization/PHASE3_32_MESSAGE_REVIEW.json
+msgid "Refund status"
+msgstr "Refund status"
