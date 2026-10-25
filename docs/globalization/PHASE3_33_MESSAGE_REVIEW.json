@@ -1,0 +1,127 @@
+{
+  "schema_version": 1,
+  "phase": "3.33",
+  "purpose": "Reviewed customer-facing appointment lifecycle progress, reminder scheduling and review guidance; preserve financial/booking state, Jalali date-time formatting, and salon/customer-authored data",
+  "message_rows": [
+    {
+      "en": "Booking received",
+      "fa": "رزرو ثبت شد",
+      "ar": "تم استلام الحجز"
+    },
+    {
+      "en": "Your booking request has been received.",
+      "fa": "درخواست رزرو شما ثبت شده است.",
+      "ar": "تم تسجيل طلب الحجز الخاص بك."
+    },
+    {
+      "en": "After your booking is confirmed, the selected time is finalized in the professional's schedule.",
+      "fa": "پس از تأیید رزرو، زمان انتخاب‌شده در برنامه متخصص قطعی می‌شود.",
+      "ar": "بعد تأكيد الحجز، يتم تثبيت الوقت المحدد في جدول مقدم الخدمة."
+    },
+    {
+      "en": "This appointment time is confirmed and has been added to the professional's schedule.",
+      "fa": "زمان این نوبت تأیید و در برنامه متخصص ثبت شده است.",
+      "ar": "تم تأكيد هذا الموعد وإضافته إلى جدول مقدم الخدمة."
+    },
+    {
+      "en": "Your arrival at the salon has been recorded.",
+      "fa": "حضور شما در سالن ثبت شده است.",
+      "ar": "تم تسجيل وصولك إلى الصالون."
+    },
+    {
+      "en": "Your service is in progress.",
+      "fa": "خدمت شما در حال انجام است.",
+      "ar": "الخدمة قيد التنفيذ."
+    },
+    {
+      "en": "Your service is complete.",
+      "fa": "خدمت شما به پایان رسیده است.",
+      "ar": "اكتملت خدمتك."
+    },
+    {
+      "en": "You can share your experience of this appointment.",
+      "fa": "می‌توانید تجربه خود از این نوبت را ثبت کنید.",
+      "ar": "يمكنك مشاركة تجربتك بشأن هذا الموعد."
+    },
+    {
+      "en": "Your review has been submitted.",
+      "fa": "دیدگاه شما ثبت شده است.",
+      "ar": "تم إرسال تقييمك."
+    },
+    {
+      "en": "Your appointment reminder is scheduled for %(date)s at %(time)s.",
+      "fa": "یادآوری این نوبت برای %(date)s ساعت %(time)s برنامه‌ریزی شده است.",
+      "ar": "تمت جدولة تذكير موعدك في %(date)s الساعة %(time)s."
+    },
+    {
+      "en": "An automatic reminder could not be scheduled because the appointment was too soon or no valid time was available.",
+      "fa": "به‌دلیل نزدیک بودن زمان نوبت یا نبود زمان معتبر، یادآوری خودکار زمان‌بندی نشد.",
+      "ar": "تعذرت جدولة تذكير تلقائي لأن الموعد كان قريبًا جدًا أو لم يتوفر وقت صالح."
+    },
+    {
+      "en": "Your appointment reminder has been sent.",
+      "fa": "یادآوری نوبت شما ارسال شده است.",
+      "ar": "تم إرسال تذكير موعدك."
+    },
+    {
+      "en": "The service is complete. The salon will record your in-person payment once it has been collected; you do not need to confirm it.",
+      "fa": "خدمت به پایان رسیده است. پس از دریافت وجه، مجموعه پرداخت حضوری را ثبت می‌کند؛ نیازی به تأیید شما نیست.",
+      "ar": "اكتملت الخدمة. سيسجل الصالون الدفع الحضوري بعد استلام المبلغ؛ لا حاجة إلى تأكيدك."
+    },
+    {
+      "en": "Leave a review",
+      "fa": "ثبت دیدگاه",
+      "ar": "أضف تقييمًا"
+    },
+    {
+      "en": "Selected service and professional",
+      "fa": "خدمت و متخصص انتخاب‌شده",
+      "ar": "الخدمة ومقدم الخدمة المختاران"
+    },
+    {
+      "en": "Payment, policies and salon information",
+      "fa": "پرداخت، قوانین و اطلاعات مجموعه",
+      "ar": "الدفع والسياسات ومعلومات الصالون"
+    },
+    {
+      "en": "Primary payment",
+      "fa": "پرداخت اصلی",
+      "ar": "الدفعة الأساسية"
+    },
+    {
+      "en": "Total duration",
+      "fa": "مدت کل",
+      "ar": "المدة الإجمالية"
+    },
+    {
+      "en": "Appointment reminder",
+      "fa": "یادآوری نوبت",
+      "ar": "تذكير الموعد"
+    },
+    {
+      "en": "More details",
+      "fa": "جزئیات بیشتر",
+      "ar": "مزيد من التفاصيل"
+    },
+    {
+      "en": "Service details",
+      "fa": "جزئیات خدمات",
+      "ar": "تفاصيل الخدمة"
+    },
+    {
+      "en": "Rate and review",
+      "fa": "ثبت امتیاز و دیدگاه",
+      "ar": "قيّم واترك تعليقًا"
+    },
+    {
+      "en": "Payment for this appointment has been recorded.",
+      "fa": "پرداخت این نوبت ثبت شده است.",
+      "ar": "تم تسجيل الدفع لهذا الموعد."
+    },
+    {
+      "en": "Payment for this appointment is completed at the salon.",
+      "fa": "پرداخت این نوبت در سالن تکمیل می‌شود.",
+      "ar": "يُستكمل دفع هذا الموعد في الصالون."
+    }
+  ]
+}

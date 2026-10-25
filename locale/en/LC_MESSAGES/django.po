@@ -1966,3 +1966,99 @@ msgstr "Rejected withdrawal returned"
 #: docs/globalization/PHASE3_32_MESSAGE_REVIEW.json
 msgid "Transaction type unavailable"
 msgstr "Transaction type unavailable"
+
+#: docs/globalization/PHASE3_33_MESSAGE_REVIEW.json
+msgid "Booking received"
+msgstr "Booking received"
+
+#: docs/globalization/PHASE3_33_MESSAGE_REVIEW.json
+msgid "Your booking request has been received."
+msgstr "Your booking request has been received."
+
+#: docs/globalization/PHASE3_33_MESSAGE_REVIEW.json
+msgid "After your booking is confirmed, the selected time is finalized in the professional's schedule."
+msgstr "After your booking is confirmed, the selected time is finalized in the professional's schedule."
+
+#: docs/globalization/PHASE3_33_MESSAGE_REVIEW.json
+msgid "This appointment time is confirmed and has been added to the professional's schedule."
+msgstr "This appointment time is confirmed and has been added to the professional's schedule."
+
+#: docs/globalization/PHASE3_33_MESSAGE_REVIEW.json
+msgid "Your arrival at the salon has been recorded."
+msgstr "Your arrival at the salon has been recorded."
+
+#: docs/globalization/PHASE3_33_MESSAGE_REVIEW.json
+msgid "Your service is in progress."
+msgstr "Your service is in progress."
+
+#: docs/globalization/PHASE3_33_MESSAGE_REVIEW.json
+msgid "Your service is complete."
+msgstr "Your service is complete."
+
+#: docs/globalization/PHASE3_33_MESSAGE_REVIEW.json
+msgid "You can share your experience of this appointment."
+msgstr "You can share your experience of this appointment."
+
+#: docs/globalization/PHASE3_33_MESSAGE_REVIEW.json
+msgid "Your review has been submitted."
+msgstr "Your review has been submitted."
+
+#: docs/globalization/PHASE3_33_MESSAGE_REVIEW.json
+msgid "Your appointment reminder is scheduled for %(date)s at %(time)s."
+msgstr "Your appointment reminder is scheduled for %(date)s at %(time)s."
+
+#: docs/globalization/PHASE3_33_MESSAGE_REVIEW.json
+msgid "An automatic reminder could not be scheduled because the appointment was too soon or no valid time was available."
+msgstr "An automatic reminder could not be scheduled because the appointment was too soon or no valid time was available."
+
+#: docs/globalization/PHASE3_33_MESSAGE_REVIEW.json
+msgid "Your appointment reminder has been sent."
+msgstr "Your appointment reminder has been sent."
+
+#: docs/globalization/PHASE3_33_MESSAGE_REVIEW.json
+msgid "The service is complete. The salon will record your in-person payment once it has been collected; you do not need to confirm it."
+msgstr "The service is complete. The salon will record your in-person payment once it has been collected; you do not need to confirm it."
+
+#: docs/globalization/PHASE3_33_MESSAGE_REVIEW.json
+msgid "Leave a review"
+msgstr "Leave a review"
+
+#: docs/globalization/PHASE3_33_MESSAGE_REVIEW.json
+msgid "Selected service and professional"
+msgstr "Selected service and professional"
+
+#: docs/globalization/PHASE3_33_MESSAGE_REVIEW.json
+msgid "Payment, policies and salon information"
+msgstr "Payment, policies and salon information"
+
+#: docs/globalization/PHASE3_33_MESSAGE_REVIEW.json
+msgid "Primary payment"
+msgstr "Primary payment"
+
+#: docs/globalization/PHASE3_33_MESSAGE_REVIEW.json
+msgid "Total duration"
+msgstr "Total duration"
+
+#: docs/globalization/PHASE3_33_MESSAGE_REVIEW.json
+msgid "Appointment reminder"
+msgstr "Appointment reminder"
+
+#: docs/globalization/PHASE3_33_MESSAGE_REVIEW.json
+msgid "More details"
+msgstr "More details"
+
+#: docs/globalization/PHASE3_33_MESSAGE_REVIEW.json
+msgid "Service details"
+msgstr "Service details"
+
+#: docs/globalization/PHASE3_33_MESSAGE_REVIEW.json
+msgid "Rate and review"
+msgstr "Rate and review"
+
+#: docs/globalization/PHASE3_33_MESSAGE_REVIEW.json
+msgid "Payment for this appointment has been recorded."
+msgstr "Payment for this appointment has been recorded."
+
+#: docs/globalization/PHASE3_33_MESSAGE_REVIEW.json
+msgid "Payment for this appointment is completed at the salon."
+msgstr "Payment for this appointment is completed at the salon."

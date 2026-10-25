@@ -9,6 +9,7 @@
 {% block main_class %}!max-w-none !px-0 !py-0 bg-loomera-bg{% endblock %}
 
 {% block content %}
+{% trans 'Booking received' as booking_received_fallback %}
 <style>
   @media (max-width: 1023.98px) {
     [data-appointment-detail-page] {
@@ -167,7 +168,7 @@
           </div>
         </div>
         <span class="inline-flex max-w-[48%] shrink-0 items-center rounded-full bg-loomera-primarySoft px-3 py-1.5 text-center text-[11px] font-black leading-5 text-loomera-primary">
-          {{ customer_progress.current_stage_label|default:"رزرو ثبت شد" }}
+          {{ customer_progress.current_stage_label|default:booking_received_fallback }}
         </span>
       </div>
       <div class="mt-3 flex items-center justify-between gap-3 border-t border-loomera-borderSoft pt-3">
@@ -201,13 +202,20 @@
 
             {% if customer_progress.needs_pay_in_salon %}
               <div class="mt-3 border-t border-loomera-primary/10 pt-3">
-                <p class="text-xs leading-6 text-blue-800">خدمت انجام شده است. پس از دریافت وجه، مجموعه پرداخت حضوری را ثبت می‌کند؛ نیازی به تأیید شما نیست.</p>
+                <p class="text-xs leading-6 text-blue-800">{% trans "The service is complete. The salon will record your in-person payment once it has been collected; you do not need to confirm it." %}</p>
               </div>
             {% endif %}
 
+              {% if customer_progress.reminder_text %}
+                <div class="mt-3 rounded-2xl border border-loomera-borderSoft bg-loomera-bgSubtle px-3 py-3" data-appointment-reminder>
+                  <p class="text-[11px] font-black text-loomera-textPrimary">{% trans "Appointment reminder" %}</p>
+                  <p class="mt-1 text-xs leading-6 text-loomera-textSecondary">{{ customer_progress.reminder_text }}</p>
+                </div>
+              {% endif %}
+
             {% if customer_progress.can_review %}
               <button type="button" onclick="window.openReviewModal && window.openReviewModal()" class="mt-3 inline-flex w-full items-center justify-center rounded-full bg-loomera-primary px-4 py-2.5 text-xs font-black text-white shadow-lm-soft">
-                ثبت امتیاز و دیدگاه
+                {% trans "Rate and review" %}
               </button>
             {% endif %}
           </section>
@@ -245,8 +253,8 @@
                   <i class="fa-solid fa-wand-magic-sparkles text-xs" aria-hidden="true"></i>
                 </span>
                 <div class="min-w-0">
-                  <h2 id="mobile-services-title" class="text-sm font-black text-loomera-textPrimary">خدمات نوبت</h2>
-                  <p class="mt-0.5 text-[11px] text-loomera-textMuted">خدمت و متخصص انتخاب‌شده</p>
+                  <h2 id="mobile-services-title" class="text-sm font-black text-loomera-textPrimary">{% trans "Services for this appointment" %}</h2>
+                  <p class="mt-0.5 text-[11px] text-loomera-textMuted">{% trans "Selected service and professional" %}</p>
                 </div>
               </div>
               <span class="shrink-0 rounded-full bg-loomera-primarySoft px-2.5 py-1 text-[11px] font-black text-loomera-primary">{{ service_count }} {% trans 'Service' %}</span>
@@ -280,8 +288,8 @@
                   <i class="fa-solid fa-layer-group text-xs" aria-hidden="true"></i>
                 </span>
                 <div class="min-w-0">
-                  <h2 class="text-sm font-black text-loomera-textPrimary">جزئیات بیشتر</h2>
-                  <p class="mt-0.5 text-[11px] leading-5 text-loomera-textMuted">پرداخت، قوانین و اطلاعات مجموعه</p>
+                  <h2 class="text-sm font-black text-loomera-textPrimary">{% trans "More details" %}</h2>
+                  <p class="mt-0.5 text-[11px] leading-5 text-loomera-textMuted">{% trans "Payment, policies and salon information" %}</p>
                 </div>
               </div>
               <span class="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-loomera-bgSubtle text-loomera-textSecondary transition group-open:rotate-180">
@@ -314,7 +322,7 @@
                 <div class="mt-2 space-y-1.5">
                   {% if payment_record %}
                     <div class="flex items-center justify-between gap-3 rounded-xl bg-loomera-bgSubtle px-3 py-2 text-[11px]">
-                      <span class="font-bold text-loomera-textMuted">پرداخت اصلی</span>
+                      <span class="font-bold text-loomera-textMuted">{% trans 'Primary payment' %}</span>
                       <strong>{{ payment_record.amount|floatformat:0|intcomma }} {% trans 'toman' %}</strong>
                     </div>
                   {% endif %}
@@ -406,7 +414,7 @@
                 </span>
               {% else %}
                 <span class="inline-flex items-center rounded-full bg-loomera-bgSubtle px-4 py-2 text-xs font-black text-loomera-textSecondary ring-1 ring-loomera-borderSoft">
-                  {{ customer_progress.current_stage_label|default:"رزرو ثبت شد" }}
+                  {{ customer_progress.current_stage_label|default:booking_received_fallback }}
                 </span>
               {% endif %}
             {% endwith %}
@@ -417,7 +425,7 @@
 
             {% if can_cancel %}
               <span class="inline-flex items-center gap-2 rounded-full bg-loomera-infoSoft px-4 py-2 text-xs font-black text-loomera-info ring-1 ring-loomera-info/10">
-                <i class="fa-solid fa-sliders" aria-hidden="true"></i>قابل مدیریت
+                <i class="fa-solid fa-sliders" aria-hidden="true"></i>{% trans "Manage appointment" %}
               </span>
             {% endif %}
 
@@ -472,8 +480,8 @@
             </div>
             <div class="rounded-[1.5rem] border border-loomera-borderSoft bg-loomera-bgSubtle p-4 shadow-sm">
               <span class="flex h-11 w-11 items-center justify-center rounded-2xl bg-white text-loomera-primary shadow-sm"><i class="fa-solid fa-layer-group" aria-hidden="true"></i></span>
-              <span class="mt-3 block text-xs font-bold text-loomera-textMuted">مدت کل</span>
-              <strong class="mt-1 block text-sm font-black text-loomera-textPrimary">{{ total_duration }} دقیقه</strong>
+              <span class="mt-3 block text-xs font-bold text-loomera-textMuted">{% trans "Total duration" %}</span>
+              <strong class="mt-1 block text-sm font-black text-loomera-textPrimary">{{ total_duration }} {% trans 'minutes' %}</strong>
             </div>
             <div class="rounded-[1.5rem] border border-loomera-borderSoft bg-loomera-bgSubtle p-4 shadow-sm">
               <span class="flex h-11 w-11 items-center justify-center rounded-2xl bg-white text-loomera-primary shadow-sm"><i class="fa-solid fa-coins" aria-hidden="true"></i></span>
@@ -560,6 +568,13 @@
                     {{ customer_progress.current_step.description }}
                   </p>
                 {% endif %}
+
+                {% if customer_progress.reminder_text %}
+                  <div class="mt-3 rounded-2xl border border-loomera-borderSoft bg-loomera-bgSubtle px-3 py-3" data-appointment-reminder>
+                    <p class="text-xs font-black text-loomera-textPrimary">{% trans "Appointment reminder" %}</p>
+                    <p class="mt-1 text-xs leading-6 text-loomera-textSecondary">{{ customer_progress.reminder_text }}</p>
+                  </div>
+                {% endif %}
               </div>
             </div>
           </div>
@@ -572,8 +587,8 @@
                   <i class="fa-solid fa-money-bill-wave" aria-hidden="true"></i>
                 </span>
                 <div class="min-w-0">
-                  <h3 class="text-sm font-black text-blue-950">تسویه در مجموعه</h3>
-                  <p class="mt-1 text-sm leading-7 text-blue-800">خدمت انجام شده است. پس از دریافت وجه، مجموعه پرداخت حضوری را ثبت می‌کند؛ نیازی به تأیید شما نیست.</p>
+                  <h3 class="text-sm font-black text-blue-950">{% trans "Pay at salon" %}</h3>
+                  <p class="mt-1 text-sm leading-7 text-blue-800">{% trans 'The service is complete. The salon will record your in-person payment once it has been collected; you do not need to confirm it.' %}</p>
                 </div>
               </div>
             </div>
@@ -583,12 +598,12 @@
             <div class="mt-4 rounded-[1.5rem] border border-emerald-200 bg-emerald-50 p-4">
               <div class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
                 <div>
-                  <h3 class="text-sm font-black text-emerald-950">ثبت دیدگاه</h3>
-                  <p class="mt-1 text-sm leading-7 text-emerald-800">می‌توانید تجربه خود از این نوبت را ثبت کنید.</p>
+                  <h3 class="text-sm font-black text-emerald-950">{% trans "Leave a review" %}</h3>
+                  <p class="mt-1 text-sm leading-7 text-emerald-800">{% trans "You can share your experience of this appointment." %}</p>
                 </div>
 
                 <button type="button" onclick="window.openReviewModal && window.openReviewModal()" class="inline-flex items-center justify-center rounded-full bg-loomera-primary px-5 py-3 text-sm font-black text-white shadow-lm-soft transition hover:bg-loomera-primaryHover">
-                  ثبت دیدگاه
+                  {% trans 'Leave a review' %}
                 </button>
               </div>
             </div>
@@ -599,7 +614,7 @@
         <section class="hidden rounded-[2rem] border border-loomera-borderSoft bg-white p-4 shadow-lm-card lg:block lg:p-6" aria-labelledby="booking-services-title">
           <div class="mb-5 flex flex-wrap items-center justify-between gap-3">
             <div>
-              <p class="text-xs font-black uppercase tracking-[0.18em] text-loomera-primary">جزئیات خدمات</p>
+              <p class="text-xs font-black uppercase tracking-[0.18em] text-loomera-primary">{% trans "Service details" %}</p>
               <h2 id="booking-services-title" class="mt-1 text-xl font-black text-loomera-textPrimary lg:text-2xl">{% trans 'Services for this appointment' %}</h2>
             </div>
             <span class="rounded-full bg-loomera-primarySoft px-4 py-2 text-xs font-black text-loomera-primary">{{ service_count }} {% trans 'Service' %}</span>
@@ -615,7 +630,7 @@
                   </div>
                   <div class="mt-3 grid gap-2 text-xs text-loomera-textSecondary sm:grid-cols-2">
                     <p class="flex items-center gap-2 rounded-2xl bg-loomera-bgSubtle px-3 py-2"><i class="fa-regular fa-calendar text-loomera-primary" aria-hidden="true"></i><span>{{ item.date|jalali_with_weekday }}</span></p>
-                    <p class="flex items-center gap-2 rounded-2xl bg-loomera-bgSubtle px-3 py-2"><i class="fa-regular fa-clock text-loomera-primary" aria-hidden="true"></i><span><bdi dir="auto">{{ item.time|persian_time }}</bdi> تا <bdi dir="auto">{{ item.end_time|persian_time }}</bdi>{% if item.display_duration_minutes %} • {{ item.display_duration_minutes }} دقیقه{% endif %}</span></p>
+                    <p class="flex items-center gap-2 rounded-2xl bg-loomera-bgSubtle px-3 py-2"><i class="fa-regular fa-clock text-loomera-primary" aria-hidden="true"></i><span><bdi dir="auto">{{ item.time|persian_time }}</bdi> تا <bdi dir="auto">{{ item.end_time|persian_time }}</bdi>{% if item.display_duration_minutes %} • {{ item.display_duration_minutes }} {% trans 'minutes' %}{% endif %}</span></p>
                     {% if item.stylist %}
                     <p class="flex items-center gap-2 rounded-2xl bg-loomera-bgSubtle px-3 py-2 sm:col-span-2"><i class="fa-solid fa-user text-loomera-primary" aria-hidden="true"></i><span>{{ item.stylist.user.get_fullName|default:item.stylist.user.name }}</span></p>
                     {% endif %}
@@ -658,7 +673,7 @@
           <div class="mt-4 space-y-3">
             {% if payment_record %}
               <div class="flex items-center justify-between gap-4 rounded-2xl bg-loomera-bgSubtle px-4 py-3 text-sm">
-                <span class="font-bold text-loomera-textMuted">پرداخت اصلی<br><small>{{ payment_record_provider_label }} • {{ payment_record_status_label }}</small></span>
+                <span class="font-bold text-loomera-textMuted">{% trans "Primary payment" %}<br><small><bdi dir="auto">{{ payment_record_provider_label }}</bdi> • <bdi dir="auto">{{ payment_record_status_label }}</bdi></small></span>
                 <strong class="text-loomera-textPrimary">{{ payment_record.amount|floatformat:0|intcomma }} {% trans 'toman' %}</strong>
               </div>
             {% endif %}
@@ -706,8 +721,8 @@
           <div class="space-y-3 p-5 text-sm text-loomera-textSecondary">
             <div class="flex items-center justify-between gap-3 rounded-2xl bg-loomera-bgSubtle px-3 py-2"><span>{% trans 'Booking status' %}</span><strong class="text-loomera-textPrimary">{{ booking_status_label }}</strong></div>
             <div class="flex items-center justify-between gap-3 rounded-2xl bg-loomera-bgSubtle px-3 py-2"><span>{% trans 'Payment status' %}</span><strong class="text-loomera-textPrimary">{{ payment_status_label }}</strong></div>
-            <div class="flex items-center justify-between gap-3 rounded-2xl bg-loomera-bgSubtle px-3 py-2"><span>تعداد خدمات</span><strong class="text-loomera-textPrimary">{{ service_count }}</strong></div>
-            <div class="flex items-center justify-between gap-3 rounded-2xl bg-loomera-bgSubtle px-3 py-2"><span>مدت کل</span><strong class="text-loomera-textPrimary">{{ total_duration }} دقیقه</strong></div>
+            <div class="flex items-center justify-between gap-3 rounded-2xl bg-loomera-bgSubtle px-3 py-2"><span>{% trans "Number of services" %}</span><strong class="text-loomera-textPrimary">{{ service_count }}</strong></div>
+            <div class="flex items-center justify-between gap-3 rounded-2xl bg-loomera-bgSubtle px-3 py-2"><span>{% trans "Total duration" %}</span><strong class="text-loomera-textPrimary">{{ total_duration }} {% trans 'minutes' %}</strong></div>
           </div>
           <div class="grid gap-2 border-t border-loomera-borderSoft p-5">
             <button type="button" onclick="addToCalendar()" class="inline-flex items-center justify-center gap-2 rounded-full border border-loomera-borderSoft bg-white px-5 py-3 text-sm font-black text-loomera-textPrimary transition hover:bg-loomera-primarySoft hover:text-loomera-primary focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-loomera-focusRing/30"><i class="fa-regular fa-calendar-plus" aria-hidden="true"></i>افزودن به تقویم</button>
@@ -801,7 +816,7 @@
     <div class="flex items-start justify-between gap-4 border-b border-loomera-borderSoft bg-loomera-primarySoft/50 px-5 py-4">
       <div>
         <p class="text-xs font-black uppercase tracking-[0.2em] text-loomera-primary">دیدگاه</p>
-        <h2 id="reviewModalTitle" class="mt-1 text-lg font-black text-loomera-textPrimary">ثبت امتیاز و دیدگاه</h2>
+        <h2 id="reviewModalTitle" class="mt-1 text-lg font-black text-loomera-textPrimary">{% trans "Rate and review" %}</h2>
         <p class="mt-1 text-xs leading-6 text-loomera-textMuted">خدمت و متخصص از همین نوبت انتخاب شده‌اند؛ فقط امتیاز را ثبت کن و اگر خواستی توضیح بنویس.</p>
       </div>
       <button type="button" onclick="window.closeReviewModal && window.closeReviewModal()" class="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-loomera-borderSoft bg-white text-loomera-textSecondary transition hover:bg-loomera-primarySoft" aria-label="بستن">
@@ -842,7 +857,7 @@
 
       <div class="flex flex-col-reverse gap-3 sm:flex-row sm:justify-end">
         <button type="button" onclick="window.closeReviewModal && window.closeReviewModal()" class="inline-flex items-center justify-center rounded-full border border-loomera-borderSoft bg-white px-5 py-3 text-sm font-black text-loomera-textPrimary transition hover:bg-loomera-bgSubtle">انصراف</button>
-        <button type="submit" class="inline-flex items-center justify-center rounded-full bg-loomera-primary px-5 py-3 text-sm font-black text-white shadow-lm-soft transition hover:bg-loomera-primaryHover">ثبت دیدگاه</button>
+        <button type="submit" class="inline-flex items-center justify-center rounded-full bg-loomera-primary px-5 py-3 text-sm font-black text-white shadow-lm-soft transition hover:bg-loomera-primaryHover">{% trans "Leave a review" %}</button>
       </div>
     </form>
   </div>
