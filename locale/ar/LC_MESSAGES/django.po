@@ -2430,3 +2430,33 @@ msgstr "جارٍ الدفع من المحفظة"
 #: templates/orders/checkout.html templates/orders/reservation_preview.html
 msgid "Confirm pay-at-salon booking"
 msgstr "تأكيد الحجز والدفع في الصالون"
+
+#: apps/orders/views.py templates/orders/select_stylists.html
+#, python-format
+msgid "First available time: %(date)s • %(time)s"
+msgstr "أول موعد متاح: %(date)s • %(time)s"
+
+#: apps/orders/views.py templates/orders/select_stylists.html
+#, python-format
+msgid "No available appointment time found yet"
+msgstr "لم يتم العثور على موعد متاح حتى الآن"
+
+#: apps/orders/views.py templates/orders/select_stylists.html
+#, python-format
+msgid "No available professional for this service yet"
+msgstr "لا يوجد مختص متاح لهذه الخدمة حاليًا"
+
+#: apps/orders/views.py templates/orders/select_stylists.html
+#, python-format
+msgid "Available professionals for %(service)s"
+msgstr "المختصون المتاحون لخدمة %(service)s"
+
+#: apps/orders/views.py templates/orders/select_stylists.html
+#, python-format
+msgid "Choose first available professional for %(service)s"
+msgstr "اختيار أول مختص متاح لخدمة %(service)s"
+
+#: apps/orders/views.py templates/orders/select_stylists.html
+#, python-format
+msgid "Choose %(professional)s for %(service)s"
+msgstr "اختيار %(professional)s لخدمة %(service)s"

@@ -1624,3 +1624,53 @@ The Phase 3 release matrix still shows all five manual gates **open**:
 authenticated full-user booking checks, real visual and zoom audits,
 NVDA/VoiceOver, hands-on multi-browser keyboard checks and independent
 Production approval. No deployment is included.
+
+## Phase 3 — Slice 3.39: Cross-Stage Booking POST and Chromium Handoff
+
+The preceding browser fixture checks validated booking widget keyboard
+behavior, checkout button/coupon interactions and appointment management
+dialogs individually. This slice explicitly tests the **handoff** between
+the selection stages, and corrects a real localization leak at the
+professional-selection boundary.
+
+The actual `BookingStylistSelectPerService.post` and
+`BookingDateTimeSelectPersian.post` Django handlers are invoked in one
+database-free test flow with the **same real SessionStore**, real
+RequestFactory requests and Django message storage. Domain lookups and
+validators are controlled mocks: successful specialist JSON stores
+`salon_id` and `stylist_selections`, clears old datetime selections and
+redirects to date/time; successful booking-data JSON stores the selected
+slot and redirects to preview. Malformed JSON, invalid domain
+selections and stale-slot validation errors must fail closed, clear
+all three public booking session keys and preserve unrelated session
+values. No Order, Payment, SMS, gateway or persistent database write
+is part of this test.
+
+A new actual Chromium fixture combines the **production** specialist
+click handler, selection serialization, date/time service-switcher
+renderer and booking-data form serializer in one page. Nine scenarios
+cover fa/en/ar across 360, 768 and 1440 CSS px, keyboard Enter,
+`requestedStylistId=any`, native compiled names, hostile mixed-script
+service-name escaping, preserved booking JSON and no network submission.
+Existing individual Chromium tests (booking time choice, appointment
+dialogs and checkout) are retained.
+
+Previously the first-available specialist button displayed native
+translated content but its `data-stylist-name` and several ARIA labels
+were still hard-coded Persian; the chosen metadata then propagated
+into the next step. The attribute now uses the existing compiled
+`First available professional` msgid, with three reviewed native
+fa/en/ar `blocktrans` service/professional accessible labels. The
+view's next available time and no-availability text also use reviewed
+gettext at the current request locale. Six new static/parameterized
+msgids are atomically compiled in all three `django.po` and
+`django.mo` artifacts; each language catalog now has **611 entries**.
+Historical Persian wording, Jalali date formatting and stored
+ISO/date/price/stylist IDs remain unchanged. Duration and currency
+units in this choice page reuse existing compiled translations.
+
+This is **deeper automated evidence**, not a full authenticated
+server-rendered Chromium customer journey, real availability
+reservation, financial checkout, screen reader, visual/zoom signoff
+or Production approval. The Phase 3 release gate remains blocked
+pending the five manual acceptance items.

@@ -62,7 +62,7 @@ class CheckoutCtaRuntimeLocaleTests(SimpleTestCase):
             mo = (folder / "django.mo").read_bytes()
             with self.subTest(language=lang):
                 self.assertEqual(struct.unpack_from("<I", mo, 0)[0], 0x950412de)
-                self.assertEqual(struct.unpack_from("<I", mo, 8)[0], 605)
+                self.assertEqual(struct.unpack_from("<I", mo, 8)[0], 611)
                 for source, values in SOURCES.items():
                     entry = ("msgid " + json.dumps(source, ensure_ascii=False) +
                              "\nmsgstr " + json.dumps(values[lang], ensure_ascii=False))

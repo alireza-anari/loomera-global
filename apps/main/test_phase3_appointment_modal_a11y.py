@@ -73,7 +73,7 @@ class AppointmentModalA11yTests(SimpleTestCase):
             with self.subTest(language=language):
                 folder = Path(settings.BASE_DIR) / "locale" / language / "LC_MESSAGES"
                 compiled = (folder / "django.mo").read_bytes()
-                self.assertEqual(struct.unpack_from("<I", compiled, 8)[0], 605)
+                self.assertEqual(struct.unpack_from("<I", compiled, 8)[0], 611)
                 catalog = load_translation("django", localedir=str(Path(settings.BASE_DIR) / "locale"), languages=[language])
                 self.assertEqual(catalog.gettext(row["en"]), row[language])
                 self.assertTrue(row[language])

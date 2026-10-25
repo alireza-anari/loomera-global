@@ -106,7 +106,7 @@ class BookingJourneySecurityAndA11yTests(SimpleTestCase):
     def test_specialist_options_are_native_pressed_buttons_in_named_groups(self):
         template = self.source("templates/orders/select_stylists.html")
         js = self.source("static/js/select_stylist.js")
-        self.assertIn('role="group" aria-label="متخصص‌های قابل انتخاب', template)
+        self.assertIn('role="group" aria-label="{% blocktrans with service=', template)
         self.assertEqual(template.count('aria-pressed="false"'), 2)
         self.assertNotIn('aria-selected=', template)
         self.assertNotIn("setAttribute('aria-selected'", js)
