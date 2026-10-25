@@ -1,0 +1,245 @@
+{
+  "schema_version": 1,
+  "phase": "3.36",
+  "purpose": "Reviewed customer-visible fixed content for active payment-result actions, appointment-detail summary and management/review modals; preserve financial decision branches, authored business data and signed action payloads",
+  "reused_existing_msgids": [
+    "Manage appointment"
+  ],
+  "message_rows": [
+    {
+      "en": "Time range:",
+      "fa": "بازه زمانی:",
+      "ar": "النطاق الزمني:"
+    },
+    {
+      "en": "Date",
+      "fa": "تاریخ",
+      "ar": "التاريخ"
+    },
+    {
+      "en": "Time",
+      "fa": "ساعت",
+      "ar": "الوقت"
+    },
+    {
+      "en": "to",
+      "fa": "تا",
+      "ar": "إلى"
+    },
+    {
+      "en": "Your appointment is ready for follow-up.",
+      "fa": "نوبتت آماده پیگیری است",
+      "ar": "موعدك جاهز للمتابعة."
+    },
+    {
+      "en": "Payment is under review.",
+      "fa": "پرداخت در حال بررسی است",
+      "ar": "الدفع قيد المراجعة."
+    },
+    {
+      "en": "The payment window has expired.",
+      "fa": "مهلت پرداخت تمام شده است",
+      "ar": "انتهت مهلة الدفع."
+    },
+    {
+      "en": "To avoid a duplicate payment, follow up on this transaction and do not pay again until its final status is known.",
+      "fa": "برای جلوگیری از پرداخت تکراری، همین تراکنش را پیگیری کن و تا تعیین وضعیت نهایی دوباره پرداخت نکن.",
+      "ar": "لتجنب الدفع المكرر، تابع هذه المعاملة ولا تدفع مرة أخرى حتى تتضح حالتها النهائية."
+    },
+    {
+      "en": "This reservation is no longer held. Choose a new available time to book again.",
+      "fa": "این رزرو دیگر نگه‌داشته نمی‌شود. برای رزرو دوباره، یک زمان آزاد جدید انتخاب کن.",
+      "ar": "لم يعد هذا الحجز محفوظًا. اختر موعدًا متاحًا جديدًا للحجز مرة أخرى."
+    },
+    {
+      "en": "Payment was not completed. You can return to the salon page to book again.",
+      "fa": "پرداخت کامل نشد. می‌توانی برای رزرو دوباره به صفحه مجموعه برگردی.",
+      "ar": "لم يكتمل الدفع. يمكنك العودة إلى صفحة الصالون للحجز مجددًا."
+    },
+    {
+      "en": "Payment was not confirmed. If an amount was deducted, contact support.",
+      "fa": "پرداخت تأیید نشد. اگر مبلغی کسر شده، از پشتیبانی پیگیری کن.",
+      "ar": "لم يتم تأكيد الدفع. إذا خُصم مبلغ، فتواصل مع الدعم."
+    },
+    {
+      "en": "You can view your appointment details, wallet or account from here.",
+      "fa": "از اینجا می‌توانی جزئیات نوبت، کیف پول یا حساب کاربری را ببینی.",
+      "ar": "يمكنك الاطلاع على تفاصيل موعدك أو محفظتك أو حسابك من هنا."
+    },
+    {
+      "en": "View appointments",
+      "fa": "مشاهده نوبت‌ها",
+      "ar": "عرض المواعيد"
+    },
+    {
+      "en": "Follow up with support",
+      "fa": "پیگیری با پشتیبانی",
+      "ar": "المتابعة مع الدعم"
+    },
+    {
+      "en": "Back to my appointments",
+      "fa": "بازگشت به نوبت‌های من",
+      "ar": "العودة إلى مواعيدي"
+    },
+    {
+      "en": "Appointment overview",
+      "fa": "اطلاعات اصلی نوبت",
+      "ar": "نظرة عامة على الموعد"
+    },
+    {
+      "en": "Appointment at a glance",
+      "fa": "نوبت در یک نگاه",
+      "ar": "الموعد في لمحة"
+    },
+    {
+      "en": "View transactions",
+      "fa": "مشاهده تراکنش‌ها",
+      "ar": "عرض المعاملات"
+    },
+    {
+      "en": "Salon page",
+      "fa": "صفحه مجموعه",
+      "ar": "صفحة الصالون"
+    },
+    {
+      "en": "Call",
+      "fa": "تماس",
+      "ar": "اتصال"
+    },
+    {
+      "en": "Directions",
+      "fa": "مسیریابی",
+      "ar": "الاتجاهات"
+    },
+    {
+      "en": "Add to calendar",
+      "fa": "افزودن به تقویم",
+      "ar": "الإضافة إلى التقويم"
+    },
+    {
+      "en": "Appointment summary",
+      "fa": "خلاصه نوبت",
+      "ar": "ملخص الموعد"
+    },
+    {
+      "en": "Services, professionals and time",
+      "fa": "خدمات، متخصص‌ها و زمان",
+      "ar": "الخدمات ومقدمو الخدمة والوقت"
+    },
+    {
+      "en": "Visit date",
+      "fa": "تاریخ مراجعه",
+      "ar": "تاريخ الزيارة"
+    },
+    {
+      "en": "Time range",
+      "fa": "بازه زمانی",
+      "ar": "النطاق الزمني"
+    },
+    {
+      "en": "Financial summary",
+      "fa": "خلاصه مالی",
+      "ar": "الملخص المالي"
+    },
+    {
+      "en": "Appointment transactions",
+      "fa": "تراکنش‌های این نوبت",
+      "ar": "معاملات هذا الموعد"
+    },
+    {
+      "en": "Salon information",
+      "fa": "اطلاعات مجموعه",
+      "ar": "معلومات الصالون"
+    },
+    {
+      "en": "Appointment summary and actions",
+      "fa": "خلاصه و اقدام‌های نوبت",
+      "ar": "ملخص الموعد وإجراءاته"
+    },
+    {
+      "en": "Back to appointments",
+      "fa": "بازگشت به نوبت‌ها",
+      "ar": "العودة إلى المواعيد"
+    },
+    {
+      "en": "Booking number",
+      "fa": "شماره رزرو",
+      "ar": "رقم الحجز"
+    },
+    {
+      "en": "View salon page",
+      "fa": "مشاهده صفحه مجموعه",
+      "ar": "عرض صفحة الصالون"
+    },
+    {
+      "en": "Close appointment management",
+      "fa": "بستن مدیریت نوبت",
+      "ar": "إغلاق إدارة الموعد"
+    },
+    {
+      "en": "Only actions currently available for this appointment are shown.",
+      "fa": "در این مرحله فقط عمل‌های معتبر و قابل انجام نمایش داده می‌شوند.",
+      "ar": "تُعرض فقط الإجراءات المتاحة حاليًا لهذا الموعد."
+    },
+    {
+      "en": "Close",
+      "fa": "بستن",
+      "ar": "إغلاق"
+    },
+    {
+      "en": "Reschedule",
+      "fa": "تغییر زمان",
+      "ar": "إعادة الجدولة"
+    },
+    {
+      "en": "Choose a new date and time",
+      "fa": "انتخاب تاریخ و ساعت جدید",
+      "ar": "اختيار تاريخ ووقت جديدين"
+    },
+    {
+      "en": "Review",
+      "fa": "دیدگاه",
+      "ar": "التقييم"
+    },
+    {
+      "en": "Your rating",
+      "fa": "امتیاز شما",
+      "ar": "تقييمك"
+    },
+    {
+      "en": "Rating %(star)s out of 5",
+      "fa": "امتیاز %(star)s از ۵",
+      "ar": "التقييم %(star)s من ٥"
+    },
+    {
+      "en": "Selecting a rating highlights all stars up to that level.",
+      "fa": "با انتخاب امتیاز، همه ستاره‌های همان سطح روشن می‌شوند.",
+      "ar": "عند اختيار تقييم، تُضاء جميع النجوم حتى ذلك المستوى."
+    },
+    {
+      "en": "Optional review",
+      "fa": "دیدگاه اختیاری",
+      "ar": "مراجعة اختيارية"
+    },
+    {
+      "en": "Share details of your experience to help others...",
+      "fa": "اگر تجربه‌ای داشتی که به دیگران کمک می‌کند، اینجا بنویس...",
+      "ar": "شارك تفاصيل من تجربتك قد تساعد الآخرين..."
+    },
+    {
+      "en": "Cancel",
+      "fa": "انصراف",
+      "ar": "إلغاء"
+    },
+    {
+      "en": "For navigation with your device, open this page on your phone. The destination was copied.",
+      "fa": "برای مسیریابی با برنامه دستگاه، این صفحه را روی موبایل باز کن. مقصد برایت کپی شد.",
+      "ar": "للملاحة باستخدام جهازك، افتح هذه الصفحة على هاتفك. تم نسخ الوجهة."
+    },
+    {
+      "en": "The service and professional come from this appointment; select a rating and optionally write a review.",
+      "fa": "خدمت و متخصص از همین نوبت انتخاب شده‌اند؛ فقط امتیاز را ثبت کن و اگر خواستی توضیح بنویس.",
+      "ar": "تم تحديد الخدمة ومقدمها من هذا الموعد؛ اختر تقييمًا ويمكنك كتابة مراجعة اختيارية."
+    }
+  ]
+}
