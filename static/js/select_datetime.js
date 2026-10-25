@@ -758,7 +758,7 @@
           <h4 id="period-${group.key}" class="text-sm font-black text-loomera-textPrimary">${escapeBookingHtml(group.label)}</h4>
           <span class="text-xs text-loomera-textMuted">${toPersianDigits(group.slots.length)} ${escapeBookingHtml(bookingText('times','زمان'))}</span>
         </div>
-        <div class="grid grid-cols-2 gap-3 sm:grid-cols-3" role="group" aria-label="ساعت‌های آزاد">
+        <div class="grid grid-cols-2 gap-3 sm:grid-cols-3" role="group" aria-label="${escapeBookingHtml(bookingText('available_times','ساعت‌های قابل رزرو'))}">
           ${group.slots.map((slot) => {
             const isSelected = slot.time === selectedTime;
             const showStylist = selection.requestedStylistId === 'any';
@@ -771,9 +771,9 @@
                       data-time-slot
                       data-time="${escapeBookingHtml(slot.time)}"
                       aria-pressed="${isSelected ? 'true' : 'false'}"
-                      aria-label="${escapeBookingHtml(bookingText('available_times','ساعت‌های قابل رزرو'))} ${escapeBookingHtml(slot.time)} تا ${escapeBookingHtml(slot.end_time)}${showStylist ? `، ${escapeBookingHtml(slot.stylistName)}` : ''}">
+                      aria-label="${escapeBookingHtml(bookingText('available_times','ساعت‌های قابل رزرو'))} ${escapeBookingHtml(slot.time)} – ${escapeBookingHtml(slot.end_time)}${showStylist ? `، ${escapeBookingHtml(slot.stylistName)}` : ''}">
                 <span class="block text-base font-black" dir="ltr">${escapeBookingHtml(slot.time)}</span>
-                <span class="mt-1 block text-[11px] opacity-75">تا <bdi dir="ltr">${escapeBookingHtml(slot.end_time)}</bdi></span>
+                <span class="mt-1 block text-[11px] opacity-75">– <bdi dir="ltr">${escapeBookingHtml(slot.end_time)}</bdi></span>
                 ${isSelected ? `<span class="mt-1 block text-[10px] font-black"><i class="fa-solid fa-check ml-1" aria-hidden="true"></i>${escapeBookingHtml(bookingText('selected','انتخاب‌شده'))}</span>` : ''}
                 ${showStylist ? `<span class="mt-2 block truncate text-[11px] opacity-75">${escapeBookingHtml(slot.stylistName)}</span>` : ''}
               </button>
