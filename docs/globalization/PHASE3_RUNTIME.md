@@ -1539,3 +1539,37 @@ This is structural evidence only. Real-browser visual, keyboard,
 screen-reader, responsive-zoom and release/deployment acceptance remain
 open. No reminder is dispatched, no payment/refund is initiated, no
 migration is created and no Production deployment is performed.
+
+## Phase 3 — Slice 3.34: Unrestricted Zoom and Real Chromium Keyboard Smoke
+
+This slice removes the `maximum-scale=1` restriction from the shared
+HTML viewport so mobile users can zoom. All deployments share this
+one baseline, including fa/RTL, en/LTR and ar/RTL. The existing
+initial-scale and viewport-fit configuration remain intact.
+
+The date/time service switcher now exposes a correctly named
+`role="group"` around native buttons rather than a false list
+without listitems. Its dynamic time-button groups use an approved,
+localized accessible label. The time range uses a bidi-neutral
+en dash with the clock values still direction-isolated LTR. No
+API time, date, reservation, backend or payment value changes.
+
+A **separate** Chromium GitHub Actions job runs nine keyboard/focus
+smoke scenarios (fa/en/ar × 360/768/1440 simulated viewports).
+It loads the **real production** time-slot render function and
+HTML-escaping/number-format helpers into an isolated fixture in
+an actual Chromium browser engine. The tests press Tab, Enter and
+Space, check pressed state and restored focus after innerHTML
+replacement, verify mixed-script specialist names cannot inject
+HTML, locale digit maps, time-range isolation and the accessible
+group name. Failure screenshots are attached to the workflow
+run when present. This complements the existing Node and Django
+checks, which also guard unrestricted zoom and native semantics.
+
+**Strict limits:** This is real browser execution of production
+renderer *functions* against an isolated fixture, **not** a live
+logged-in Django booking flow, real 200%/400% user zoom test,
+full visual acceptance, Firefox/Safari parity, screen reader
+(NVDA/VoiceOver) acceptance or actual checkout/payment test.
+The Phase 3 matrix retains all manual release blockers, and
+Production remains undeployed.
