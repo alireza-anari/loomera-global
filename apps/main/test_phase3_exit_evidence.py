@@ -96,7 +96,7 @@ class Phase3ExitEvidenceTests(SimpleTestCase):
             source,
         )
         self.assertIn("escapeBookingHtml(summary.pickedLabel)", source)
-        self.assertIn('role="group" aria-label="ساعت‌های آزاد"', source)
+        self.assertIn('role="group" aria-label="${escapeBookingHtml(bookingText(\'available_times\'', source)
 
     def test_previously_approved_fa_legacy_contracts_remain(self):
         self.assertEqual(settings.LANGUAGE_CODE, "fa")
