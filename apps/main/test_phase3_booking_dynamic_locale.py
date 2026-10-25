@@ -53,7 +53,7 @@ class BookingDynamicLocaleTests(SimpleTestCase):
             mo = (folder / "django.mo").read_bytes()
             with self.subTest(lang=lang):
                 self.assertEqual(struct.unpack_from("<I", mo)[0], 0x950412de)
-                self.assertEqual(struct.unpack_from("<I", mo, 8)[0], 490)
+                self.assertEqual(struct.unpack_from("<I", mo, 8)[0], 513)
                 self.assertEqual(
                     po.count("#: loomera/globalization/booking_interactive_messages.py"),
                     37,
