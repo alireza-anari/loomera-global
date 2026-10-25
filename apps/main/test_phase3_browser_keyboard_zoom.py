@@ -35,7 +35,6 @@ class BrowserKeyboardZoomContractTests(SimpleTestCase):
             'role="group" aria-label="{% trans \'Selected services\' %}"',
             template,
         )
-        self.assertNotIn('id="serviceSwitcher" class=', "")
         self.assertRegex(template, r'id="serviceSwitcher"[^>]*role="group"')
         self.assertIn(
             'aria-label="{% trans \'Services and professionals\' %}"',
@@ -68,7 +67,7 @@ class BrowserKeyboardZoomContractTests(SimpleTestCase):
         self.assertIn('page.keyboard.press("Enter")', runner)
         self.assertIn('page.keyboard.press("Space")', runner)
         self.assertIn('page.keyboard.press("Tab")', runner)
-        self.assertIn("No-show" if False else "user-scalable=no", runner)
+        self.assertIn("user-scalable=no", runner)
         self.assertIn("not full journey or screen-reader acceptance", runner)
 
     def test_ci_has_separate_headless_chromium_job_and_failure_evidence(self):
