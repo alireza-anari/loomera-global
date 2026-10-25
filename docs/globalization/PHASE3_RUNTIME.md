@@ -1455,3 +1455,46 @@ and the continued absence of manual browser/screen-reader
 acceptance. CI runs the suite alongside prior booking bidi
 regressions. Visual browser and NVDA/VoiceOver tests are still
 required; **not Phase 3 sign-off or Production deployment**.
+
+## Phase 3 — Slice 3.32: Dynamic Financial Status, Cancellation and Refund Copy
+
+This slice localizes the **finite server-generated financial states** used
+on the payment-result and appointment-detail pages. A reviewed
+`loomera/globalization/financial_status.py` maps known payment, order,
+payment-method and provider enum values to approved English gettext IDs.
+Unknown codes return a localized generic label; arbitrary gateway status
+strings are never echoed to customers. No database choice, model field,
+stored order value or payment transition was changed.
+
+The payment result now resolves state and method labels at request time.
+The pending-review and expired-checkout context helpers use native gettext
+for their title, body and next-step hints. Raw provider verification text
+stored in `payment.meta["verify_pending"]` is no longer appended to the
+customer-facing message; it remains operational metadata. This avoids
+showing potentially technical or untrusted provider payloads as customer
+copy while preserving the existing pending/retry/review decisions.
+
+Cancellation JSON responses, refund-success wording, confirmation-dialog
+and network fallback messages now follow the active request locale.
+Generic cancellation policy text interpolates the existing hours and
+refund percentage using reviewed parameterized gettext strings. Salon-
+authored policy text and stored cancellation reasons remain untouched
+business data and are not machine-translated. Refund amounts and timestamps
+are parameterized; cancellation continues through the original atomic
+`cancel_order_with_financials` path and ownership-filtered endpoint.
+
+The appointment detail finance summary now localizes fixed labels and
+finite payment-status text while preserving salon campaign titles, coupon
+tokens, recorded cancellation reasons, calculated amounts and Jalali date
+values as data. Payment-result status/method/provider labels use the same
+reviewed helpers. Three compiled catalogs contain **477 entries each**
+(51 additional reviewed source IDs, with the existing `Coupon code`
+translation reused). The new database-free Django suite checks all three
+PO/MO catalogs, exact translations, known/unknown state codes, pending
+provider-message isolation, cancellation-policy interpolation, template
+compilation and release-gate integrity.
+
+This is structural and automated evidence only. Real-browser visual,
+keyboard, screen-reader, responsive-zoom and release approval remain
+open. No payment gateway is called, no refund is issued, no migration is
+created and no Production deployment is performed.
