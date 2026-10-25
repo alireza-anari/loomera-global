@@ -190,6 +190,12 @@ jobs:
             apps.main.test_phase3_financial_runtime_locale \
             --failfast
 
+      - name: Phase 3.33 appointment progress and reminder native gettext
+        run: |
+          python manage.py test \
+            apps.main.test_phase3_appointment_progress_locale \
+            --failfast
+
       - name: Phase 3 localized submission progress guards
         run: |
           python manage.py test \
