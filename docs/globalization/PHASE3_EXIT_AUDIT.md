@@ -182,8 +182,8 @@ The original ownership guard, atomic financial cancellation service,
 refund amount, provider state machine and stored salon-authored policy /
 cancellation reason remain unchanged.
 
-The 59-message reviewed ledger is compiled in all three locales, bringing
-each PO/MO catalog to 485 entries. Eight database-free Django tests cover
+The 63-message reviewed ledger is compiled in all three locales, bringing
+each PO/MO catalog to 489 entries. Eight database-free Django tests cover
 catalog parity, runtime state mapping, dynamic-message safety, policy
 interpolation, cancellation feedback and template compilation.
 
