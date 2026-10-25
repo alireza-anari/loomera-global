@@ -2426,3 +2426,33 @@ msgstr "Processing wallet payment"
 #: templates/orders/checkout.html templates/orders/reservation_preview.html
 msgid "Confirm pay-at-salon booking"
 msgstr "Confirm pay-at-salon booking"
+
+#: apps/orders/views.py templates/orders/select_stylists.html
+#, python-format
+msgid "First available time: %(date)s • %(time)s"
+msgstr "First available time: %(date)s • %(time)s"
+
+#: apps/orders/views.py templates/orders/select_stylists.html
+#, python-format
+msgid "No available appointment time found yet"
+msgstr "No available appointment time found yet"
+
+#: apps/orders/views.py templates/orders/select_stylists.html
+#, python-format
+msgid "No available professional for this service yet"
+msgstr "No available professional for this service yet"
+
+#: apps/orders/views.py templates/orders/select_stylists.html
+#, python-format
+msgid "Available professionals for %(service)s"
+msgstr "Available professionals for %(service)s"
+
+#: apps/orders/views.py templates/orders/select_stylists.html
+#, python-format
+msgid "Choose first available professional for %(service)s"
+msgstr "Choose first available professional for %(service)s"
+
+#: apps/orders/views.py templates/orders/select_stylists.html
+#, python-format
+msgid "Choose %(professional)s for %(service)s"
+msgstr "Choose %(professional)s for %(service)s"

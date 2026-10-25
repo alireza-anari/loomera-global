@@ -2426,3 +2426,33 @@ msgstr "در حال پرداخت"
 #: templates/orders/checkout.html templates/orders/reservation_preview.html
 msgid "Confirm pay-at-salon booking"
 msgstr "ثبت رزرو"
+
+#: apps/orders/views.py templates/orders/select_stylists.html
+#, python-format
+msgid "First available time: %(date)s • %(time)s"
+msgstr "نخستین زمان آزاد: %(date)s • %(time)s"
+
+#: apps/orders/views.py templates/orders/select_stylists.html
+#, python-format
+msgid "No available appointment time found yet"
+msgstr "فعلاً زمان آزادی پیدا نشد"
+
+#: apps/orders/views.py templates/orders/select_stylists.html
+#, python-format
+msgid "No available professional for this service yet"
+msgstr "فعلاً برای این خدمت متخصص آزادی پیدا نشد"
+
+#: apps/orders/views.py templates/orders/select_stylists.html
+#, python-format
+msgid "Available professionals for %(service)s"
+msgstr "متخصص‌های قابل انتخاب برای %(service)s"
+
+#: apps/orders/views.py templates/orders/select_stylists.html
+#, python-format
+msgid "Choose first available professional for %(service)s"
+msgstr "انتخاب اولین متخصص آزاد برای %(service)s"
+
+#: apps/orders/views.py templates/orders/select_stylists.html
+#, python-format
+msgid "Choose %(professional)s for %(service)s"
+msgstr "انتخاب %(professional)s برای %(service)s"
