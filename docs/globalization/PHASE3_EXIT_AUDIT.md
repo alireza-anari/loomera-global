@@ -170,3 +170,22 @@ Django tests protect financial and status branches and reference
 serialization. This is **structural** bidi evidence only: real
 browser, keyboard, screen reader, zoom, and release approval
 remain pending, with no manual test evidence added.
+
+## Phase 3.32 — Dynamic financial status and cancellation/refund copy
+
+Known payment/order enum values, payment-method labels, pending-review and
+expired-checkout copy, refund receipts, generic cancellation policy text,
+and customer cancellation JSON/fallback messages now use native gettext.
+Unknown enum codes fall back to a reviewed generic label. Raw gateway
+verification messages are not appended to customer-facing pending copy.
+The original ownership guard, atomic financial cancellation service,
+refund amount, provider state machine and stored salon-authored policy /
+cancellation reason remain unchanged.
+
+The 51-message reviewed ledger is compiled in all three locales, bringing
+each PO/MO catalog to 477 entries. Eight database-free Django tests cover
+catalog parity, runtime state mapping, dynamic-message safety, policy
+interpolation, cancellation feedback and template compilation.
+
+**Phase 3 remains NOT EXITED.** Real-browser, keyboard, screen-reader,
+responsive-zoom and deployment/rollback acceptance are still outstanding.
