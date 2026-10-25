@@ -1674,3 +1674,40 @@ server-rendered Chromium customer journey, real availability
 reservation, financial checkout, screen reader, visual/zoom signoff
 or Production approval. The Phase 3 release gate remains blocked
 pending the five manual acceptance items.
+
+## Phase 3 — Slice 3.40: Checkout Mixed-Direction Human Data Integrity
+
+The previous booking-stage handoff and checkout Chromium suites test
+event wiring, localized payment method CTAs and form submission. This
+slice fixes a distinct **presentation boundary**: actual customer-facing
+salon, service and professional names, salon-authored booking policy
+text, Jalali date labels and clock ranges were still interpolated
+directly into RTL/LTR checkout and reservation preview summaries.
+Mixed Persian/Latin values could reorder punctuation and adjacent
+time labels visually even though Django escaped HTML entities.
+
+Both real checkout and preview templates now enclose customer/salon
+human-language values in `bdi dir="auto"` and clock tokens in
+`bdi dir="ltr"`, leaving the en dash separator between isolated
+tokens. The displayed overview date/time labels also have local
+`dir="auto"` boundaries. No underlying service, specialist, date,
+time, payment method, policy, price, discount, wallet or POST values
+are altered. This does not change the booking/business rules.
+
+A new DB-free six-test Django suite reads **actual template
+fragments**, invokes the real Django template renderer and checks
+automatic HTML escaping with adversarial apostrophes, angle brackets
+and mixed-script names across fa/en/ar, as well as stability of
+exact checkout form actions and existing financial/status markup.
+The existing 18-scenario Chromium checkout suite now extracts
+**the actual BDI tags** from both production templates and checks
+their text, directionality, HTML injection safety and viewport
+overflow alongside its payment, coupon, keyboard and busy-state
+coverage at 360, 768 and 1440 px in fa/en/ar.
+
+Chromium scenarios remain isolated fixtures, **not** an
+authenticated server-rendered customer journey or a live
+reservation/payment/gateway invocation. NVDA/VoiceOver, manually
+recorded keyboard/browser and high-zoom evidence remain missing;
+the five Phase 3 exit gates and independent Production release
+approval remain open. No production deployment.

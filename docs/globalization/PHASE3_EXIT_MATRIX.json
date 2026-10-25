@@ -114,13 +114,15 @@
         "apps/main/test_phase3_checkout_flash_locale.py",
         "apps/main/test_phase3_checkout_cta_locale.py",
         "tests/browser/phase3_checkout_cta_chromium.py",
-        "apps/main/test_phase3_booking_server_handoff_locale.py"
+        "apps/main/test_phase3_booking_server_handoff_locale.py",
+        "apps/main/test_phase3_checkout_human_direction.py"
       ],
       "checks": [
         "coupon mixed-direction code and currency alignment",
         "error association and radio labels in screen reader",
         "invalid coupon and changed-price confirmation",
-        "confirm button prevents double submission"
+        "confirm button prevents double submission",
+        "mixed Persian/Latin salon, professional, service and policy copy; clock/date isolation and hostile HTML name escaping"
       ]
     },
     {
