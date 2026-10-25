@@ -197,6 +197,12 @@ jobs:
             apps.main.test_phase3_post_booking_tail_locale \
             --failfast
 
+      - name: Phase 3.40 checkout mixed-direction content and HTML sink guards
+        run: |
+          python manage.py test \
+            apps.main.test_phase3_checkout_human_direction \
+            --failfast
+
       - name: Phase 3.39 real booking POST session handoff and localized specialist accessibility
         run: |
           python manage.py test \
