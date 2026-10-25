@@ -51,6 +51,7 @@ class QuickBookingLocaleTests(SimpleTestCase):
         for token in ('name="salon_id"', 'name="stylist_id"', 'name="selected_services"',
                       'event.preventDefault()', 'form="quickStylistServicesForm"'):
             self.assertIn(token, select)
+        self.assertNotIn('<bdi dir="auto"><bdi', select)
         self.assertEqual(select.count("data-booking-back-icon"), 2)
         self.assertEqual(select.count("data-quick-link-forward-icon"), 3)
         self.assertIn('html[dir="ltr"] [data-quick-link-forward-icon]',
