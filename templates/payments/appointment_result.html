@@ -268,13 +268,14 @@
                 <div class="flex items-center justify-between gap-4 py-3 text-sm">
                   <dt class="text-loomera-textMuted">{% trans 'Salon settlement status' %}</dt>
                   <dd class="text-left font-bold text-loomera-textPrimary">
-                    {{ settlement.get_payout_state_display }}
+                    {{ settlement_status_label }}
                   </dd>
                 </div>
               {% endif %}
             </dl>
             {% if refund_amount %}
               <div class="mt-4 rounded-[1.5rem] border border-emerald-200 bg-emerald-50 p-4 text-sm leading-7 text-emerald-800">
+                <p class="font-black">{% trans 'Refund status' %}</p>
                 {% blocktrans with amount=refund_amount|floatformat:0 %}{{ amount }} toman was returned to your wallet under the cancellation policy.{% endblocktrans %}
                 {% if refund_time %}{% blocktrans with time=refund_time|jalali_datetime %}Refund recorded at {{ time }}.{% endblocktrans %}{% endif %}
               </div>
