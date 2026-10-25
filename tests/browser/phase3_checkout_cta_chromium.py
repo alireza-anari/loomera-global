@@ -103,7 +103,7 @@ def run_one(browser, template, language, width):
         assert page.evaluate("window.fixtureSubmits[-1]") == "apply_coupon"
         assert form.get_attribute("aria-busy") == "false"
         assert desktop.is_enabled() and mobile.is_enabled()
-        page.locator('#coupon').blur()
+        page.evaluate("document.getElementById('coupon').blur()")
         assert bar.get_attribute("aria-hidden") == "false"
         assert bar.get_attribute("inert") is None
 
