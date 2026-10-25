@@ -241,7 +241,7 @@ class FinancialRuntimeLocaleTests(SimpleTestCase):
         self.assertNotIn("order.get_status_display()", result_view)
         detail = self.source("templates/orders/appointment_detail.html")
         self.assertIn("{% trans 'Cancellation reason' %}", detail)
-        self.assertIn("{% trans 'Service discount campaign' %}", self.source("apps/orders/views.py"))
+        self.assertIn('_("Service discount campaign")', self.source("apps/orders/views.py"))
         self.assertIn("appointment_payment_status_label(", self.source("apps/orders/views.py"))
         self.assertIn("wallet_transaction_type_label(", self.source("apps/orders/views.py"))
         self.assertIn("{{ tx.localized_type_label }}", detail)
