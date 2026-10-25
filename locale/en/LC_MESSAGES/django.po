@@ -2410,3 +2410,19 @@ msgstr "The service and professional come from this appointment; select a rating
 #: templates/orders/appointment_detail.html
 msgid "Please select a rating before submitting your review."
 msgstr "Please select a rating before submitting your review."
+
+#: templates/orders/checkout.html templates/orders/reservation_preview.html
+msgid "Pay online and confirm booking"
+msgstr "Pay online and confirm booking"
+
+#: templates/orders/checkout.html templates/orders/reservation_preview.html
+msgid "Redirecting to payment gateway"
+msgstr "Redirecting to payment gateway"
+
+#: templates/orders/checkout.html templates/orders/reservation_preview.html
+msgid "Processing wallet payment"
+msgstr "Processing wallet payment"
+
+#: templates/orders/checkout.html templates/orders/reservation_preview.html
+msgid "Confirm pay-at-salon booking"
+msgstr "Confirm pay-at-salon booking"
