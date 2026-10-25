@@ -25,6 +25,7 @@ from loomera.globalization.financial_status import (
     payment_provider_label,
     payment_state_label,
     settlement_status_label,
+    wallet_transaction_type_label,
 )
 
 
@@ -41,13 +42,13 @@ class FinancialRuntimeLocaleTests(SimpleTestCase):
     def tearDown(self):
         translation.deactivate_all()
 
-    def test_review_ledger_has_51_unique_safe_static_messages(self):
+    def test_review_ledger_has_63_unique_safe_static_messages(self):
         payload = self.rows()
         self.assertEqual(payload["schema_version"], 1)
         self.assertEqual(payload["phase"], "3.32")
         rows = payload["message_rows"]
-        self.assertEqual(len(rows), 59)
-        self.assertEqual(len({row["en"] for row in rows}), 59)
+        self.assertEqual(len(rows), 63)
+        self.assertEqual(len({row["en"] for row in rows}), 63)
         for row in rows:
             with self.subTest(msgid=row["en"][:45]):
                 self.assertEqual(set(row), {"en", "fa", "ar"})
@@ -57,7 +58,7 @@ class FinancialRuntimeLocaleTests(SimpleTestCase):
                     for forbidden in ("<", ">", "{", "}"):
                         self.assertNotIn(forbidden, row[lang])
 
-    def test_all_51_reviewed_messages_match_three_compiled_catalogs(self):
+    def test_all_63_reviewed_messages_match_three_compiled_catalogs(self):
         rows = self.rows()["message_rows"]
         marker = "#: docs/globalization/PHASE3_32_MESSAGE_REVIEW.json"
         for lang in ("fa", "en", "ar"):
@@ -65,15 +66,15 @@ class FinancialRuntimeLocaleTests(SimpleTestCase):
             po = (folder / "django.po").read_text(encoding="utf-8")
             mo = (folder / "django.mo").read_bytes()
             self.assertEqual(struct.unpack_from("<I", mo, 0)[0], 0x950412de)
-            self.assertEqual(struct.unpack_from("<I", mo, 8)[0], 485)
-            self.assertEqual(po.count(marker), 59)
+            self.assertEqual(struct.unpack_from("<I", mo, 8)[0], 489)
+            self.assertEqual(po.count(marker), 63)
             lines = po.splitlines()
             added = {
                 json.loads(lines[index + 1][6:])
                 for index, line in enumerate(lines)
                 if line == marker and lines[index + 1].startswith("msgid ")
             }
-            self.assertEqual(len(added), 59)
+            self.assertEqual(len(added), 63)
             with translation.override(lang):
                 for row in rows:
                     with self.subTest(lang=lang, msgid=row["en"][:40]):
@@ -91,6 +92,10 @@ class FinancialRuntimeLocaleTests(SimpleTestCase):
                     self.assertEqual(payment_provider_label("zibal"), translation.gettext("Zibal"))
                     self.assertEqual(settlement_status_label("hold"), translation.gettext("Settlement on hold for review"))
                     self.assertEqual(settlement_status_label("manual_collection"), translation.gettext("Pay at salon"))
+                    self.assertEqual(wallet_transaction_type_label("DEPOSIT"), translation.gettext("Deposit"))
+                    self.assertEqual(wallet_transaction_type_label("WITHDRAW"), translation.gettext("Withdrawal"))
+                    self.assertEqual(wallet_transaction_type_label("PURCHASE"), translation.gettext("Purchase"))
+                    self.assertEqual(wallet_transaction_type_label("WITHDRAW_RESTORE"), translation.gettext("Rejected withdrawal returned"))
                     self.assertEqual(
                         appointment_payment_status_label("pay_in_salon", False),
                         translation.gettext("Pay at salon"),
@@ -237,6 +242,12 @@ class FinancialRuntimeLocaleTests(SimpleTestCase):
         self.assertIn("{% trans 'Cancellation reason' %}", detail)
         self.assertIn("{% trans 'Service discount campaign' %}", self.source("apps/orders/views.py"))
         self.assertIn("appointment_payment_status_label(", self.source("apps/orders/views.py"))
+        self.assertIn("wallet_transaction_type_label(", self.source("apps/orders/views.py"))
+        self.assertIn("{{ tx.localized_type_label }}", detail)
+        self.assertNotIn("get_transaction_type_display", detail)
+        self.assertNotIn("get_selected_payment_method_display", detail)
+        self.assertNotIn("payment_record.get_state_display", detail)
+        self.assertNotIn("appointment.order.get_status_display", detail)
         get_template("payments/appointment_result.html")
         get_template("orders/appointment_detail.html")
 
