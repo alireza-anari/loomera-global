@@ -435,7 +435,7 @@
               <i class="fa-solid fa-circle-info" aria-hidden="true"></i>
             </span>
             <div class="min-w-0 flex-1">
-              <h2 class="text-base font-black text-rose-950">دلیل لغو نوبت</h2>
+              <h2 class="text-base font-black text-rose-950">{% trans 'Cancellation reason' %}</h2>
               <p class="mt-1.5 text-sm font-bold leading-7 text-rose-800">
                 <bdi dir="auto">{{ appointment.order.cancellation_reason }}</bdi>
               </p>
@@ -783,7 +783,7 @@
           <div class="flex items-center gap-3">
             <div class="flex h-11 w-11 items-center justify-center rounded-2xl bg-rose-50 text-rose-600"><i class="fa-solid fa-ban" aria-hidden="true"></i></div>
             <div class="text-right">
-              <div class="font-black text-loomera-textPrimary">لغو نوبت</div>
+              <div class="font-black text-loomera-textPrimary">{% trans 'Cancel appointment' %}</div>
               <div class="text-xs text-loomera-textMuted">{{ cancellation_policy.title }}</div>
             </div>
           </div>
