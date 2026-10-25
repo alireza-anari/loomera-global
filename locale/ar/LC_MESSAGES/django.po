@@ -2066,3 +2066,111 @@ msgstr "تم تسجيل الدفع لهذا الموعد."
 #: docs/globalization/PHASE3_33_MESSAGE_REVIEW.json
 msgid "Payment for this appointment is completed at the salon."
 msgstr "يُستكمل دفع هذا الموعد في الصالون."
+
+#: docs/globalization/PHASE3_34_MESSAGE_REVIEW.json
+msgid "Back to my appointments"
+msgstr "العودة إلى مواعيدي"
+
+#: docs/globalization/PHASE3_34_MESSAGE_REVIEW.json
+msgid "Appointment at a glance"
+msgstr "الموعد في لمحة"
+
+#: docs/globalization/PHASE3_34_MESSAGE_REVIEW.json
+msgid "View transactions"
+msgstr "عرض المعاملات"
+
+#: docs/globalization/PHASE3_34_MESSAGE_REVIEW.json
+msgid "Call salon"
+msgstr "اتصل بالصالون"
+
+#: docs/globalization/PHASE3_34_MESSAGE_REVIEW.json
+msgid "Add to calendar"
+msgstr "إضافة إلى التقويم"
+
+#: docs/globalization/PHASE3_34_MESSAGE_REVIEW.json
+msgid "Appointment summary"
+msgstr "ملخص الموعد"
+
+#: docs/globalization/PHASE3_34_MESSAGE_REVIEW.json
+msgid "Services, professionals and time"
+msgstr "الخدمات ومقدمو الخدمة والوقت"
+
+#: docs/globalization/PHASE3_34_MESSAGE_REVIEW.json
+msgid "Time range"
+msgstr "النطاق الزمني"
+
+#: docs/globalization/PHASE3_34_MESSAGE_REVIEW.json
+msgid "Financial summary"
+msgstr "الملخص المالي"
+
+#: docs/globalization/PHASE3_34_MESSAGE_REVIEW.json
+msgid "Transactions for this appointment"
+msgstr "معاملات هذا الموعد"
+
+#: docs/globalization/PHASE3_34_MESSAGE_REVIEW.json
+msgid "Salon information"
+msgstr "معلومات الصالون"
+
+#: docs/globalization/PHASE3_34_MESSAGE_REVIEW.json
+msgid "Appointment summary and actions"
+msgstr "ملخص الموعد والإجراءات"
+
+#: docs/globalization/PHASE3_34_MESSAGE_REVIEW.json
+msgid "View salon page"
+msgstr "عرض صفحة الصالون"
+
+#: docs/globalization/PHASE3_34_MESSAGE_REVIEW.json
+msgid "Close appointment management"
+msgstr "إغلاق إدارة الموعد"
+
+#: docs/globalization/PHASE3_34_MESSAGE_REVIEW.json
+msgid "Only actions that are currently available are shown here."
+msgstr "تُعرض هنا فقط الإجراءات المتاحة حاليًا."
+
+#: docs/globalization/PHASE3_34_MESSAGE_REVIEW.json
+msgid "Change time"
+msgstr "تغيير الوقت"
+
+#: docs/globalization/PHASE3_34_MESSAGE_REVIEW.json
+msgid "Choose a new date and time"
+msgstr "اختر تاريخًا ووقتًا جديدين"
+
+#: docs/globalization/PHASE3_34_MESSAGE_REVIEW.json
+msgid "Close"
+msgstr "إغلاق"
+
+#: docs/globalization/PHASE3_34_MESSAGE_REVIEW.json
+msgid "Review"
+msgstr "التقييم"
+
+#: docs/globalization/PHASE3_34_MESSAGE_REVIEW.json
+msgid "Your service and professional are already selected for this appointment. Rate your experience and add a comment if you wish."
+msgstr "تم اختيار الخدمة ومقدم الخدمة لهذا الموعد؛ قيّم تجربتك وأضف تعليقًا إذا رغبت."
+
+#: docs/globalization/PHASE3_34_MESSAGE_REVIEW.json
+msgid "Your rating"
+msgstr "تقييمك"
+
+#: docs/globalization/PHASE3_34_MESSAGE_REVIEW.json
+msgid "Rate %(score)s out of 5"
+msgstr "قيّم %(score)s من 5"
+
+#: docs/globalization/PHASE3_34_MESSAGE_REVIEW.json
+msgid "Select a rating to highlight all stars at that level."
+msgstr "اختر تقييمًا لإضاءة جميع النجوم عند هذا المستوى."
+
+#: docs/globalization/PHASE3_34_MESSAGE_REVIEW.json
+msgid "Optional review"
+msgstr "تعليق اختياري"
+
+#: docs/globalization/PHASE3_34_MESSAGE_REVIEW.json
+msgid "If you have an experience that could help others, share it here..."
+msgstr "إذا كانت لديك تجربة قد تفيد الآخرين، شاركها هنا..."
+
+#: docs/globalization/PHASE3_34_MESSAGE_REVIEW.json
+msgid "Cancel"
+msgstr "إلغاء"
+
+#: docs/globalization/PHASE3_34_MESSAGE_REVIEW.json
+msgid "To use your device's navigation app, open this page on your phone. The destination has been copied."
+msgstr "لاستخدام تطبيق الملاحة على جهازك، افتح هذه الصفحة على هاتفك. تم نسخ الوجهة."
