@@ -86,7 +86,7 @@ class AppointmentProgressLocaleTests(SimpleTestCase):
             po = (folder / "django.po").read_text(encoding="utf-8")
             mo = (folder / "django.mo").read_bytes()
             self.assertEqual(struct.unpack_from("<I", mo, 0)[0], 0x950412de)
-            self.assertEqual(struct.unpack_from("<I", mo, 8)[0], 553)
+            self.assertEqual(struct.unpack_from("<I", mo, 8)[0], 600)
             self.assertEqual(po.count(marker), 24)
             lines = po.splitlines()
             added = {
