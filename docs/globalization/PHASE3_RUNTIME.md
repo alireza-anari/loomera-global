@@ -1487,8 +1487,8 @@ The appointment detail finance summary now localizes fixed labels and
 finite payment-status text while preserving salon campaign titles, coupon
 tokens, recorded cancellation reasons, calculated amounts and Jalali date
 values as data. Payment-result status/method/provider labels use the same
-reviewed helpers. Three compiled catalogs contain **485 entries each**
-(59 additional reviewed source IDs, with the existing `Coupon code`
+reviewed helpers. Three compiled catalogs contain **489 entries each**
+(63 additional reviewed source IDs, with the existing `Coupon code`
 translation reused). The new database-free Django suite checks all three
 PO/MO catalogs, exact translations, known/unknown state codes, pending
 provider-message isolation, cancellation-policy interpolation, template
