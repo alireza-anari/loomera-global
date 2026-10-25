@@ -1713,13 +1713,13 @@ class BookingQuickLinkStylistServicesView(View):
                 {
                     "id": service.id,
                     "name": service.service_name,
-                    "duration_label": f"{service.duration_minutes or 0} دقیقه",
+                    "duration_label": f"{service.duration_minutes or 0} {_('minutes')}",
                     "summary": service.summery_description
-                    or "این خدمت توسط همین متخصص در این مجموعه ارائه می‌شود.",
+                    or _("This service is offered by this professional at this salon."),
                     "price_label": (
-                        f"{price_value:,} تومان"
+                        f"{price_value:,} {_('toman')}"
                         if price_value
-                        else "قیمت در مرحله بعد نهایی می‌شود"
+                        else _("Price will be finalized in the next step.")
                     ),
                     "is_selected": service.id in selected_service_ids,
                 }
@@ -1737,13 +1737,13 @@ class BookingQuickLinkStylistServicesView(View):
 
         parsed_stylist_user_id = _parse_positive_int_param(stylist_user_id)
         if parsed_stylist_user_id is None:
-            messages.error(request, "متخصص انتخاب‌شده معتبر نیست.")
+            messages.error(request, _("The selected professional is invalid."))
             return redirect("salons:show_salons")
 
         salon, error_response = _public_booking_salon_or_response(salon_id)
         if error_response is not None:
             messages.error(
-                request, "سالن مربوط به این لینک فعال نیست یا در دسترس نیست."
+                request, _("The salon for this link is not active or unavailable.")
             )
             return redirect("salons:show_salons")
 
@@ -1760,7 +1760,7 @@ class BookingQuickLinkStylistServicesView(View):
         )
 
         if not services:
-            messages.error(request, "برای این متخصص در این مجموعه خدمت فعالی پیدا نشد.")
+            messages.error(request, _("No active services were found for this professional at this salon."))
             return redirect(salon.get_absolute_url())
 
         return render(
@@ -1775,13 +1775,13 @@ class BookingQuickLinkStylistServicesView(View):
 
         parsed_stylist_user_id = _parse_positive_int_param(stylist_user_id)
         if parsed_stylist_user_id is None:
-            messages.error(request, "متخصص انتخاب‌شده معتبر نیست.")
+            messages.error(request, _("The selected professional is invalid."))
             return redirect("salons:show_salons")
 
         salon, error_response = _public_booking_salon_or_response(salon_id)
         if error_response is not None:
             messages.error(
-                request, "سالن مربوط به این لینک فعال نیست یا در دسترس نیست."
+                request, _("The salon for this link is not active or unavailable.")
             )
             return redirect("salons:show_salons")
 
@@ -1803,7 +1803,7 @@ class BookingQuickLinkStylistServicesView(View):
         )
 
         if not selected_service_ids:
-            messages.error(request, "حداقل یک خدمت را برای این متخصص انتخاب کنید.")
+            messages.error(request, _("Select at least one service for this professional."))
             return render(
                 request,
                 self.template_name,
@@ -1813,7 +1813,7 @@ class BookingQuickLinkStylistServicesView(View):
         if selected_service_ids is None or not set(selected_service_ids).issubset(
             available_service_ids
         ):
-            messages.error(request, "خدمت انتخاب‌شده برای این متخصص معتبر نیست.")
+            messages.error(request, _("The selected service is not valid for this professional."))
             return render(
                 request,
                 self.template_name,
@@ -1910,7 +1910,7 @@ class QuickBookingEntryView(View):
         if not salon:
             return self._redirect_with_error(
                 request,
-                "سالن مربوط به این لینک رزرو سریع فعال نیست یا دیگر در دسترس نیست.",
+                _("The salon for this quick booking link is no longer available."),
             )
 
         mode = payload.get("mode")
@@ -1929,21 +1929,21 @@ class QuickBookingEntryView(View):
             if not services:
                 return self._redirect_with_error(
                     request,
-                    "خدمت مربوط به این لینک رزرو سریع فعال نیست یا از سالن حذف شده است.",
+                    _("The service for this quick booking link is no longer available."),
                 )
 
         elif mode == "stylist":
             if not stylist:
                 return self._redirect_with_error(
                     request,
-                    "متخصص مربوط به این لینک رزرو سریع فعال نیست یا دیگر در این سالن فعالیت ندارد.",
+                    _("The professional for this quick booking link is no longer available."),
                 )
 
         elif mode in {"service_stylist", "service_stylist_time"}:
             if not services or not stylist:
                 return self._redirect_with_error(
                     request,
-                    "اطلاعات این لینک رزرو سریع کامل نیست.",
+                    _("This quick booking link is incomplete."),
                 )
 
             invalid_service = next(
@@ -1957,7 +1957,7 @@ class QuickBookingEntryView(View):
             if invalid_service:
                 return self._redirect_with_error(
                     request,
-                    "خدمت انتخاب‌شده دیگر توسط این متخصص ارائه نمی‌شود.",
+                    _("The selected service is no longer offered by this professional."),
                 )
 
             if (
@@ -1966,11 +1966,11 @@ class QuickBookingEntryView(View):
             ):
                 return self._redirect_with_error(
                     request,
-                    "زمان ثبت‌شده در این لینک رزرو سریع معتبر نیست.",
+                    _("The time recorded in this quick booking link is invalid."),
                 )
 
         else:
-            return self._redirect_with_error(request, "این لینک رزرو سریع معتبر نیست.")
+            return self._redirect_with_error(request, _("This quick booking link is invalid."))
 
         if mode == "service":
             selected_services = ",".join(str(item) for item in service_ids)
@@ -1987,7 +1987,7 @@ class QuickBookingEntryView(View):
             if not services or not stylist:
                 return self._redirect_with_error(
                     request,
-                    "اطلاعات این لینک رزرو سریع کامل نیست.",
+                    _("This quick booking link is incomplete."),
                 )
 
             primary_service_id = int(service_ids[0])
@@ -2020,7 +2020,7 @@ class QuickBookingEntryView(View):
             request.session.modified = True
             return redirect("orders:select_dateTime")
 
-        return self._redirect_with_error(request, "این لینک رزرو سریع معتبر نیست.")
+        return self._redirect_with_error(request, _("This quick booking link is invalid."))
 
 
 # -----------------------------------------------------------------------------------------------------------------------
