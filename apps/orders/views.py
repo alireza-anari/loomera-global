@@ -2716,7 +2716,7 @@ class AppointmentDetailView(LoginRequiredMixin, DetailView):
             score = 0
 
         if score < 1 or score > 5:
-            messages.error(request, "لطفاً ابتدا امتیاز ۱ تا ۵ را انتخاب کنید.")
+            messages.error(request, _("Please select a rating before submitting your review."))
             return redirect("orders:appointment_detail", pk=appointment.pk)
 
         try:

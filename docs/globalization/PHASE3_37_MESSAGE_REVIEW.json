@@ -1,0 +1,13 @@
+{
+  "schema_version": 1,
+  "phase": "3.37",
+  "purpose": "Review validation copy for appointment review submission; no rating is submitted unless the customer selects a score",
+  "reused_existing_msgids": [],
+  "message_rows": [
+    {
+      "en": "Please select a rating before submitting your review.",
+      "fa": "لطفاً پیش از ثبت دیدگاه، امتیاز خود را انتخاب کن.",
+      "ar": "يرجى اختيار تقييم قبل إرسال مراجعتك."
+    }
+  ]
+}

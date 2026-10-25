@@ -2410,3 +2410,7 @@ msgstr "للملاحة باستخدام جهازك، افتح هذه الصفح�
 #: templates/payments/appointment_result.html templates/orders/appointment_detail.html
 msgid "The service and professional come from this appointment; select a rating and optionally write a review."
 msgstr "تم تحديد الخدمة ومقدمها من هذا الموعد؛ اختر تقييمًا ويمكنك كتابة مراجعة اختيارية."
+
+#: templates/orders/appointment_detail.html
+msgid "Please select a rating before submitting your review."
+msgstr "يرجى اختيار تقييم قبل إرسال مراجعتك."
