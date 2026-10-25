@@ -191,6 +191,12 @@ jobs:
             apps.main.test_phase3_financial_runtime_locale \
             --failfast
 
+      - name: Phase 3.36 post-booking payment and appointment locale guards
+        run: |
+          python manage.py test \
+            apps.main.test_phase3_post_booking_tail_locale \
+            --failfast
+
       - name: Phase 3.35 quick-link language and token-safety guards
         run: |
           python manage.py test \

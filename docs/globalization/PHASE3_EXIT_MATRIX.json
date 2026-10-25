@@ -126,13 +126,15 @@
         "apps/main/test_phase3_checkout_flash_locale.py",
         "apps/main/test_phase3_booking_flash_locale.py",
         "apps/main/test_phase3_post_checkout_locale.py",
-        "apps/main/test_phase3_financial_runtime_locale.py"
+        "apps/main/test_phase3_financial_runtime_locale.py",
+        "apps/main/test_phase3_post_booking_tail_locale.py"
       ],
       "checks": [
         "paid wallet and unpaid pay-at-salon clearly distinct",
         "refund/failed/pending banners announced accessibly",
         "amounts, dates, and phone/details do not leak or reorder",
-        "payment result call-to-action accessible"
+        "payment result call-to-action accessible",
+        "localized next-action guidance remains distinct across success, pending review, expiry and failure"
       ]
     },
     {
@@ -146,13 +148,15 @@
         "apps/main/test_phase3_booking_flash_locale.py",
         "apps/main/test_phase3_post_checkout_locale.py",
         "apps/main/test_phase3_financial_runtime_locale.py",
-        "apps/main/test_phase3_appointment_progress_locale.py"
+        "apps/main/test_phase3_appointment_progress_locale.py",
+        "apps/main/test_phase3_post_booking_tail_locale.py"
       ],
       "checks": [
         "back and return icons correct for ltr/rtl",
         "rebooking preserves consent and session guards",
         "dates and times readable on narrow devices",
-        "all actions keyboard operable"
+        "all actions keyboard operable",
+        "localized appointment management and review dialogs, five-star accessible names and browser-safe navigation notice"
       ]
     },
     {

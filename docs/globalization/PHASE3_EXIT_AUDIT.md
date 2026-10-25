@@ -243,3 +243,27 @@ The selected-service empty POST notice is added to a dedicated immutable,
 error-tone-only flash allowlist; its native compiled gettext identifier is
 matched exactly so arbitrary customer, provider or technical payloads still
 fall back safely. Historical Persian booking flash identifiers are preserved.
+
+## Phase 3.36 — Payment outcomes and appointment detail customer copy
+
+Forty-seven new reviewed, compiled fa/en/ar gettext entries complete the
+remaining customer-facing static labels and guidance on the active payment
+result and appointment-detail surfaces (600 catalog entries per language).
+Financial outcome branches remain governed by the existing trusted
+payment-state data; the locale change does not reinterpret a pending
+verification, expired window, cancelled payment or collected settlement.
+
+The appointment management and review dialogs now translate their fixed
+headings, action descriptions, rating accessible names and input
+placeholder. The rating uses reviewed gettext interpolation and keeps
+the existing POST score/comment fields. The navigation fallback notice
+is emitted into JavaScript through `escapejs`, not raw string insertion.
+Financial references, amount/currency values, existing support-route
+query identifiers, salon-authored content, order numbers, Jalali dates,
+time selection, payment and cancellation operations are not modified.
+A dedicated database-free Django suite validates native PO/MO parity,
+real Django template compilation, context-safe interpolation, financial
+branches and manual release blockers.
+
+No browser viewport/screen-reader/manual keyboard/zoom acceptance is claimed.
+The five manual Phase 3 gates and Production deployment approval remain open.
