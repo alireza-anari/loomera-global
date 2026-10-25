@@ -108,7 +108,9 @@
       "automated": [
         "apps/main/test_phase3_booking_bidirectional_accessibility.py",
         "apps/main/test_phase3_booking_checkout_locale.py",
-        "apps/main/test_phase3_checkout_flash_locale.py"
+        "apps/main/test_phase3_checkout_flash_locale.py",
+        "apps/main/test_phase3_checkout_cta_locale.py",
+        "tests/browser/phase3_checkout_cta_chromium.py"
       ],
       "checks": [
         "coupon mixed-direction code and currency alignment",

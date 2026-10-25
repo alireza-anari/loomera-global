@@ -39,7 +39,13 @@
           </div>
         </section>
 
-        <form method="post" id="appointment-checkout-form" action="{% url 'orders:checkout' %}" class="space-y-5" data-checkout-guard-form>
+        <form method="post" id="appointment-checkout-form" action="{% url 'orders:checkout' %}" class="space-y-5" data-checkout-guard-form
+      data-checkout-online-label="{% trans 'Pay online and confirm booking' %}"
+      data-checkout-online-loading="{% trans 'Redirecting to payment gateway' %}"
+      data-checkout-wallet-label="{% trans 'Pay with wallet' %}"
+      data-checkout-wallet-loading="{% trans 'Processing wallet payment' %}"
+      data-checkout-salon-label="{% trans 'Confirm pay-at-salon booking' %}"
+      data-checkout-salon-loading="{% trans 'Submitting booking' %}">
           {% csrf_token %}
 
           {% if checkout.is_split_day_booking %}

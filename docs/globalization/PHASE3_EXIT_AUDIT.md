@@ -301,3 +301,14 @@ fixture evidence only and does not change the open manual acceptance gates.
 The existing server-side score-range guard is unchanged; its invalid-score
 fallback message now uses the same reviewed gettext identifier as the client
 validation, so bypassing JavaScript does not force Persian-only feedback.
+
+## Phase 3.38 — Checkout CTA live Chromium fixture verification
+
+Production checkout guard code and native gettext form attributes are now
+executed in 18 isolated Chromium fixture scenarios across fa/en/ar, both
+checkout forms and three viewports. This tests payment-button label
+transitions, keyboard coupon submission, form action guards, duplicate
+confirmation prevention, mobile-bar inert state and safe rendering of
+markup-bearing labels. It is **partial browser evidence**, not live
+authenticated checkout, gateway payment, NVDA/VoiceOver, zoom acceptance
+or Production readiness. All five manual release gates remain open.
