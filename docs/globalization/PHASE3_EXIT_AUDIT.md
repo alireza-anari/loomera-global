@@ -289,3 +289,11 @@ This is **fixture-level browser evidence**, not a full authenticated
 server-rendered journey or screen-reader acceptance. The five manual Phase 3
 gates and Production deployment approval remain open; no manual evidence
 has been fabricated and no Production deployment is performed.
+
+The Phase 3.37 review-form follow-up also closes a native HTML validation gap:
+the score is stored in a hidden input, which browsers do not constraint-validate
+even when marked required. The form now prevents an empty-score POST, exposes
+an announced localized error, focuses the first rating button, and clears the
+error when the user chooses a score. One reviewed gettext message is compiled
+into fa/en/ar; each catalog now contains 601 entries. This is still automated
+fixture evidence only and does not change the open manual acceptance gates.
