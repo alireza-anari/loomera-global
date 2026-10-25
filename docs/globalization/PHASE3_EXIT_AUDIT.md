@@ -189,3 +189,19 @@ interpolation, cancellation feedback and template compilation.
 
 **Phase 3 remains NOT EXITED.** Real-browser, keyboard, screen-reader,
 responsive-zoom and deployment/rollback acceptance are still outstanding.
+
+## Phase 3.33 — Appointment lifecycle progress and reminder localization
+
+The customer appointment progress timeline now uses locale-aware lifecycle
+labels, translated fixed descriptions, review-entry copy and accurate
+reminder-state text. Reminder scheduling remains unchanged; the UI now
+distinguishes scheduled, sent and skipped states even when a skipped
+reminder retains its historical due timestamp. Jalali formatting,
+payment state, review eligibility, salon-authored copy and stored
+notifications remain unchanged.
+
+The 23-message reviewed ledger is compiled in all three locales, bringing
+each PO/MO catalog to 513 entries. Eight database-free tests protect
+catalog parity, lazy locale resolution, lifecycle stage decisions,
+reminder semantics and template rendering. The manual acceptance matrix
+remains **BLOCKED_MANUAL_ACCEPTANCE** with no manual evidence recorded.
