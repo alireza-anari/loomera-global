@@ -209,6 +209,10 @@ def run_one(browser, language, width):
         assert page.locator("#reviewModal").get_attribute("aria-hidden") == "false"
         assert page.evaluate("document.activeElement.id") == "reviewModalTitle"
         assert page.evaluate("document.body.style.overflow") == "hidden"
+        page.keyboard.press("Shift+Tab")
+        assert page.evaluate("document.activeElement.textContent.trim()") == catalog.gettext("Leave a review")
+        page.keyboard.press("Tab")
+        assert page.evaluate("document.activeElement.getAttribute('aria-label')") == catalog.gettext("Close")
         for star in "12345":
             label = catalog.gettext("Rating %(star)s out of 5") % {"star": star}
             assert page.locator(f'[data-score="{star}"]').get_attribute("aria-label") == label

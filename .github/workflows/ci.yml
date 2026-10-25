@@ -306,7 +306,7 @@ jobs:
             --failfast
 
   browser-smoke:
-    name: Chromium keyboard smoke (isolated booking renderer)
+    name: Chromium keyboard smoke (booking and post-booking fixtures)
     runs-on: ubuntu-latest
     timeout-minutes: 15
 
