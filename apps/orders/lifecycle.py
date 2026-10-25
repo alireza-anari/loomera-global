@@ -9,6 +9,8 @@ from django.conf import settings
 from loomera.logging_utils import mask_email, mask_mobile
 from django.db import transaction
 from django.utils import timezone
+from django.utils.translation import gettext as _
+from django.utils.translation import gettext_lazy as _lazy
 
 from apps.comments_scores_favories.models import Comments
 from apps.dashboards.jalali_utils import (
@@ -23,18 +25,20 @@ logger = logging.getLogger(__name__)
 
 
 LIFECYCLE_LABELS = {
-    "booked": "رزرو ثبت شد",
-    "awaiting_stylist_confirmation": "در انتظار قطعی‌شدن رزرو",
-    "stylist_confirmed": "رزرو قطعی شد",
-    "arrived": "مشتری به سالن رسید",
-    "in_service": "انجام کار شروع شد",
-    "completed": "پایان کار",
-    "no_show": "عدم حضور تأیید شد",
-    "pay_in_salon_pending": "پرداخت در سالن مانده است",
-    "paid": "پرداخت انجام شد",
-    "review_pending": "آماده ثبت نظرسنجی",
-    "reviewed": "نظرسنجی ثبت شد",
-    "cancelled": "رزرو لغو شد",
+    # Lazy values keep labels bound to the active request locale rather than
+    # freezing Persian copy when this module is imported.
+    "booked": _lazy("Booking received"),
+    "awaiting_stylist_confirmation": _lazy("Awaiting professional confirmation"),
+    "stylist_confirmed": _lazy("Confirmed by professional"),
+    "arrived": _lazy("Customer arrived at salon"),
+    "in_service": _lazy("Service in progress"),
+    "completed": _lazy("Completed"),
+    "no_show": _lazy("No-show"),
+    "pay_in_salon_pending": _lazy("Salon payment outstanding"),
+    "paid": _lazy("Paid"),
+    "review_pending": _lazy("Ready to leave a review"),
+    "reviewed": _lazy("Review submitted"),
+    "cancelled": _lazy("Cancelled"),
 }
 
 
@@ -146,7 +150,7 @@ def build_progress_steps(order: Order):
             "is_done": True,
             "is_current": False,
             "meta": _format_progress_datetime(order.register_date),
-            "description": "درخواست رزرو شما ثبت شده است.",
+            "description": _("Your booking request has been received."),
         },
         {
             "key": "awaiting_stylist_confirmation",
@@ -154,11 +158,11 @@ def build_progress_steps(order: Order):
             "is_done": bool(order.stylist_confirmed_at or order.stylist_approved),
             "is_current": False,
             "meta": (
-                "در انتظار نهایی‌شدن"
+                _("Awaiting professional confirmation")
                 if not (order.stylist_confirmed_at or order.stylist_approved)
-                else "نهایی شد"
+                else _("Confirmed")
             ),
-            "description": "پس از نهایی‌شدن رزرو، زمان انتخاب‌شده در برنامه متخصص قطعی می‌شود.",
+            "description": _("After your booking is confirmed, the selected time is finalized in the professional's schedule."),
         },
         {
             "key": "stylist_confirmed",
@@ -170,7 +174,7 @@ def build_progress_steps(order: Order):
                 if order.stylist_confirmed_at
                 else ""
             ),
-            "description": "زمان این نوبت قطعی و در برنامه متخصص ثبت شده است.",
+            "description": _("This appointment time is confirmed and has been added to the professional's schedule."),
         },
         {
             "key": "arrived",
@@ -178,7 +182,7 @@ def build_progress_steps(order: Order):
             "is_done": bool(order.customer_arrived_at),
             "is_current": False,
             "meta": _format_progress_datetime(order.customer_arrived_at),
-            "description": "حضور شما در سالن ثبت شده است.",
+            "description": _("Your arrival at the salon has been recorded."),
         },
         {
             "key": "in_service",
@@ -186,7 +190,7 @@ def build_progress_steps(order: Order):
             "is_done": bool(order.service_started_at),
             "is_current": False,
             "meta": _format_progress_datetime(order.service_started_at),
-            "description": "خدمت شما در حال انجام است.",
+            "description": _("Your service is in progress."),
         },
         {
             "key": "completed",
@@ -194,7 +198,7 @@ def build_progress_steps(order: Order):
             "is_done": bool(order.service_completed_at),
             "is_current": False,
             "meta": _format_progress_datetime(order.service_completed_at),
-            "description": "خدمت شما به پایان رسیده است.",
+            "description": _("Your service is complete."),
         },
     ]
 
@@ -205,8 +209,8 @@ def build_progress_steps(order: Order):
                 "label": LIFECYCLE_LABELS["pay_in_salon_pending"],
                 "is_done": bool(order.is_paid),
                 "is_current": False,
-                "meta": "پرداخت در سالن" if not order.is_paid else "پرداخت نهایی شد",
-                "description": "پرداخت این نوبت در سالن تکمیل می‌شود.",
+                "meta": _("Pay at salon") if not order.is_paid else _("Paid"),
+                "description": _("The service is complete. The salon will record your in-person payment once it has been collected; you do not need to confirm it."),
             }
         )
     else:
@@ -216,8 +220,8 @@ def build_progress_steps(order: Order):
                 "label": LIFECYCLE_LABELS["paid"],
                 "is_done": bool(order.is_paid),
                 "is_current": False,
-                "meta": "پرداخت انجام شده" if order.is_paid else "در انتظار پرداخت",
-                "description": "پرداخت این نوبت ثبت شده است.",
+                "meta": _("Paid") if order.is_paid else _("Awaiting payment"),
+                "description": _("Payment for this appointment has been recorded."),
             }
         )
 
@@ -228,7 +232,7 @@ def build_progress_steps(order: Order):
             "is_done": bool(order.review_requested_at),
             "is_current": False,
             "meta": _format_progress_datetime(order.review_requested_at),
-            "description": "می‌توانید تجربه خود از این نوبت را ثبت کنید.",
+            "description": _("You can share your experience of this appointment."),
         }
     )
 
@@ -239,7 +243,7 @@ def build_progress_steps(order: Order):
             "is_done": bool(order.review_completed_at),
             "is_current": False,
             "meta": _format_progress_datetime(order.review_completed_at),
-            "description": "دیدگاه شما ثبت شده است.",
+            "description": _("Your review has been submitted."),
         }
     )
 
@@ -275,18 +279,29 @@ def build_customer_progress_context(order: Order):
     if current_step is None:
         current_step = {
             "key": current_stage,
-            "label": LIFECYCLE_LABELS.get(current_stage, "وضعیت رزرو"),
+            "label": LIFECYCLE_LABELS.get(current_stage, _lazy("Booking status")),
             "is_done": False,
             "is_current": True,
             "meta": "",
             "description": "",
         }
     reminder_text = ""
-    if order.reminder_due_at:
+    if order.reminder_status == "scheduled" and order.reminder_due_at:
         local_due = _safe_localtime(order.reminder_due_at)
-        reminder_text = f"یادآوری این نوبت برای {format_jalali_with_weekday(local_due.date())} ساعت {format_time_fa(local_due.time())} برنامه‌ریزی شده است."
+        if local_due:
+            reminder_text = _(
+                "Your appointment reminder is scheduled for %(date)s at %(time)s."
+            ) % {
+                "date": format_jalali_with_weekday(local_due.date()),
+                "time": format_time_fa(local_due.time()),
+            }
+    elif order.reminder_status == "sent":
+        reminder_text = _("Your appointment reminder has been sent.")
     elif order.reminder_status == "skipped":
-        reminder_text = "به‌دلیل نزدیک بودن زمان رزرو یا نبود زمان معتبر، یادآوری خودکار زمان‌بندی نشد."
+        reminder_text = _(
+            "An automatic reminder could not be scheduled because the appointment "
+            "was too soon or no valid time was available."
+        )
 
     cash_payment = None
     cash_meta = {}
@@ -328,7 +343,7 @@ def build_customer_progress_context(order: Order):
     if current_step is None:
         current_step = {
             "key": current_stage,
-            "label": LIFECYCLE_LABELS.get(current_stage, "وضعیت رزرو"),
+            "label": LIFECYCLE_LABELS.get(current_stage, _lazy("Booking status")),
             "is_done": False,
             "is_current": True,
             "meta": "",
@@ -337,10 +352,10 @@ def build_customer_progress_context(order: Order):
 
     return {
         "current_stage": current_stage,
-        "current_stage_label": LIFECYCLE_LABELS.get(current_stage, "وضعیت رزرو"),
+        "current_stage_label": LIFECYCLE_LABELS.get(current_stage, _lazy("Booking status")),
         "current_step": current_step,
         "current_step_label": current_step.get(
-            "label", LIFECYCLE_LABELS.get(current_stage, "وضعیت رزرو")
+            "label", LIFECYCLE_LABELS.get(current_stage, _lazy("Booking status"))
         ),
         "steps": steps,
         "reminder_text": reminder_text,
