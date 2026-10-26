@@ -1,0 +1,163 @@
+{
+  "evidence_type": "automated Chromium component screenshots; not manual acceptance",
+  "source_commit": "1e379cec78f0833755c0c4cf212d6a79b6f6f8f3",
+  "source_tree": "d1fdc7b1f8d949e58e8733ee1b828d1ace3d0555",
+  "run_url": "https://github.com/alireza-anari/loomera-global/actions/runs/40282514206",
+  "job_id": 121438729268,
+  "captured_at_utc": "2026-10-26T06:54:49Z",
+  "browser": "Chromium Headless Shell 140.0.7339.16 (Playwright build v1187)",
+  "playwright": "1.55.0",
+  "django": "5.2.17",
+  "python": "3.13.16",
+  "os": "GitHub-hosted Ubuntu 24.04",
+  "application_route": null,
+  "rendering": "actual Django modal fragments and entire page script; controlled shell/context/URLconf, shipped CSS",
+  "zoom": "not performed; short-height viewport reflow only",
+  "screen_reader": "not run",
+  "scenarios": [
+    {
+      "file": "post-booking-pass-ar-1440.png",
+      "locale": "ar",
+      "direction": "rtl",
+      "initial_viewport": {
+        "width": 1440,
+        "height": 800
+      },
+      "captured_viewport": {
+        "width": 1440,
+        "height": 320
+      },
+      "state": "review panel scrolled to keyboard-focused submit button",
+      "sha256": "e7cc286ff2004b472450d336ab96e9db00c36e894bbe52e8ce4039c7d51f938b",
+      "result": "PASS"
+    },
+    {
+      "file": "post-booking-pass-ar-360.png",
+      "locale": "ar",
+      "direction": "rtl",
+      "initial_viewport": {
+        "width": 360,
+        "height": 800
+      },
+      "captured_viewport": {
+        "width": 360,
+        "height": 320
+      },
+      "state": "review panel scrolled to keyboard-focused submit button",
+      "sha256": "00d62b65d9058e456d4304b11d30014c9b510cd272071c28facf1340b431cd50",
+      "result": "PASS"
+    },
+    {
+      "file": "post-booking-pass-ar-768.png",
+      "locale": "ar",
+      "direction": "rtl",
+      "initial_viewport": {
+        "width": 768,
+        "height": 800
+      },
+      "captured_viewport": {
+        "width": 768,
+        "height": 320
+      },
+      "state": "review panel scrolled to keyboard-focused submit button",
+      "sha256": "e980fbd4ee7a88b966bca9585f33e3e03576b371bcfdce18fc36a113e3fe16b2",
+      "result": "PASS"
+    },
+    {
+      "file": "post-booking-pass-en-1440.png",
+      "locale": "en",
+      "direction": "ltr",
+      "initial_viewport": {
+        "width": 1440,
+        "height": 800
+      },
+      "captured_viewport": {
+        "width": 1440,
+        "height": 320
+      },
+      "state": "review panel scrolled to keyboard-focused submit button",
+      "sha256": "d176ebc20edc840fb54f801d6d1b553f9cb55306a25ba28052e0327ac4e3bb2b",
+      "result": "PASS"
+    },
+    {
+      "file": "post-booking-pass-en-360.png",
+      "locale": "en",
+      "direction": "ltr",
+      "initial_viewport": {
+        "width": 360,
+        "height": 800
+      },
+      "captured_viewport": {
+        "width": 360,
+        "height": 320
+      },
+      "state": "review panel scrolled to keyboard-focused submit button",
+      "sha256": "fb67a473e7182c3f0ae03e8a738d1d2e9a1cc4adb5028f6d9303c8f6a1426481",
+      "result": "PASS"
+    },
+    {
+      "file": "post-booking-pass-en-768.png",
+      "locale": "en",
+      "direction": "ltr",
+      "initial_viewport": {
+        "width": 768,
+        "height": 800
+      },
+      "captured_viewport": {
+        "width": 768,
+        "height": 320
+      },
+      "state": "review panel scrolled to keyboard-focused submit button",
+      "sha256": "6d8080aecb7055cfeabb92b38acd4870da824867b8c7c84cbc8004ec4193ddef",
+      "result": "PASS"
+    },
+    {
+      "file": "post-booking-pass-fa-1440.png",
+      "locale": "fa",
+      "direction": "rtl",
+      "initial_viewport": {
+        "width": 1440,
+        "height": 800
+      },
+      "captured_viewport": {
+        "width": 1440,
+        "height": 320
+      },
+      "state": "review panel scrolled to keyboard-focused submit button",
+      "sha256": "f5f36ee87a15c940597c9999f634f3c05e3651f256f1819188acb4f394ff2d75",
+      "result": "PASS"
+    },
+    {
+      "file": "post-booking-pass-fa-360.png",
+      "locale": "fa",
+      "direction": "rtl",
+      "initial_viewport": {
+        "width": 360,
+        "height": 800
+      },
+      "captured_viewport": {
+        "width": 360,
+        "height": 320
+      },
+      "state": "review panel scrolled to keyboard-focused submit button",
+      "sha256": "6e0ea6e28ff8aa890064081151596960b36f03a503998592ed71901d327752f1",
+      "result": "PASS"
+    },
+    {
+      "file": "post-booking-pass-fa-768.png",
+      "locale": "fa",
+      "direction": "rtl",
+      "initial_viewport": {
+        "width": 768,
+        "height": 800
+      },
+      "captured_viewport": {
+        "width": 768,
+        "height": 320
+      },
+      "state": "review panel scrolled to keyboard-focused submit button",
+      "sha256": "f107de55935c9491517d7713700d8a1220c53b4f0205af573b8ae55e5acaa59f",
+      "result": "PASS"
+    }
+  ]
+}

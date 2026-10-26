@@ -160,6 +160,7 @@ jobs:
           node --check static/js/select_stylist.js
           node --check static/js/select_datetime.js
           node --test tests/js/phase3_booking_journey_runtime.test.cjs
+          node --test tests/js/phase3_appointment_modal_isolation.test.cjs
           python manage.py test \
             apps.main.test_phase3_booking_journey_security_a11y \
             apps.main.test_phase3_booking_bidirectional_accessibility \
@@ -343,7 +344,7 @@ jobs:
           if [ -f /etc/apt/apt-mirrors.txt ]; then
             printf '%s\n' 'https://archive.ubuntu.com/ubuntu/' | sudo tee /etc/apt/apt-mirrors.txt
           fi
-          python -m pip install --disable-pip-version-check playwright==1.55.0
+          python -m pip install --disable-pip-version-check playwright==1.55.0 Django==5.2.17
           python -m playwright install --with-deps chromium
 
       - name: Verify production booking renderer and post-booking modal keyboard behavior
@@ -353,11 +354,11 @@ jobs:
           python tests/browser/phase3_checkout_cta_chromium.py
           python tests/browser/phase3_booking_stage_handoff_chromium.py
 
-      - name: Upload browser failure screenshots
-        if: failure()
+      - name: Upload browser component evidence
+        if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: phase3-browser-keyboard-failures
+          name: phase3-browser-keyboard-evidence
           path: artifacts/phase3-browser/
           if-no-files-found: ignore
           retention-days: 7

@@ -813,7 +813,7 @@
 </div>
 {% if customer_progress.can_review %}
 <div id="reviewModal" class="fixed inset-0 z-[80] hidden items-center justify-center bg-slate-950/55 px-4 py-6 backdrop-blur-sm" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="reviewModalTitle" tabindex="-1">
-  <div class="w-full max-w-lg overflow-hidden rounded-[2rem] border border-loomera-borderSoft bg-white shadow-lm-elevated">
+  <div class="w-full max-w-lg overflow-y-auto overscroll-contain rounded-[2rem] border border-loomera-borderSoft bg-white shadow-lm-elevated" style="max-height: calc(100dvh - 3rem)">
     <div class="flex items-start justify-between gap-4 border-b border-loomera-borderSoft bg-loomera-primarySoft/50 px-5 py-4">
       <div>
         <p class="text-xs font-black uppercase tracking-[0.2em] text-loomera-primary">{% trans 'Review' %}</p>
@@ -885,6 +885,8 @@
   const reviewModal = document.getElementById('reviewModal');
   const modalOpeners = new WeakMap();
   const modalStack = [];
+  const modalInertBeforeOpen = new Map();
+  const modalLayerBeforeOpen = new WeakMap();
   let bodyOverflowBeforeModal = '';
 
   const getOpenModal = () => {
@@ -902,18 +904,44 @@
     && element.tabIndex >= 0
     && element.getClientRects().length > 0
     && window.getComputedStyle(element).visibility !== 'hidden'
+    && !element.closest('[inert]')
   ));
+
+  // Dialogs live inside main, beside the page content. Isolate siblings at
+  // every ancestor level without making the active dialog's ancestors inert.
+  const syncModalIsolation = () => {
+    modalInertBeforeOpen.forEach((value, element) => {
+      if (value === null) element.removeAttribute('inert');
+      else element.setAttribute('inert', value);
+    });
+    modalInertBeforeOpen.clear();
+    modalStack.forEach((modal, index) => {
+      modal.style.zIndex = String(1201 + index);
+    });
+    const activeModal = getOpenModal();
+    if (!activeModal) return;
+    for (let branch = activeModal; branch.parentElement; branch = branch.parentElement) {
+      for (const sibling of branch.parentElement.children) {
+        if (sibling === branch) continue;
+        modalInertBeforeOpen.set(sibling, sibling.getAttribute('inert'));
+        sibling.setAttribute('inert', '');
+      }
+      if (branch.parentElement === document.body) break;
+    }
+  };
 
   const openModal = (modal) => {
     if (!modal || modal.getAttribute('aria-hidden') === 'false') return;
     if (!getOpenModal()) bodyOverflowBeforeModal = document.body.style.overflow;
 
     modalOpeners.set(modal, document.activeElement);
+    modalLayerBeforeOpen.set(modal, modal.style.zIndex);
     modalStack.push(modal);
     modal.classList.remove('hidden');
     if (modal === reviewModal) modal.classList.add('flex');
     modal.setAttribute('aria-hidden', 'false');
     document.body.style.overflow = 'hidden';
+    syncModalIsolation();
 
     const target = modal.querySelector('[data-modal-initial-focus]')
       || getModalFocusable(modal)[0]
@@ -927,11 +955,14 @@
     modal.classList.add('hidden');
     if (modal === reviewModal) modal.classList.remove('flex');
     modal.setAttribute('aria-hidden', 'true');
+    modal.style.zIndex = modalLayerBeforeOpen.get(modal) || '';
+    modalLayerBeforeOpen.delete(modal);
 
     const opener = modalOpeners.get(modal);
     modalOpeners.delete(modal);
     const stackIndex = modalStack.lastIndexOf(modal);
     if (stackIndex !== -1) modalStack.splice(stackIndex, 1);
+    syncModalIsolation();
 
     const nextModal = getOpenModal();
     if (nextModal) {
@@ -949,10 +980,20 @@
       opener
       && opener.isConnected
       && !opener.disabled
+      && !opener.closest('[inert]')
       && opener.getClientRects().length > 0
       && typeof opener.focus === 'function'
     ) {
       opener.focus();
+    } else {
+      const main = document.getElementById('main-content') || document.querySelector('main');
+      if (main && !main.closest('[inert]')) {
+        const previousTabindex = main.getAttribute('tabindex');
+        main.setAttribute('tabindex', '-1');
+        main.focus();
+        if (previousTabindex === null) main.removeAttribute('tabindex');
+        else main.setAttribute('tabindex', previousTabindex);
+      }
     }
   };
 
@@ -960,6 +1001,16 @@
   window.closeManageModal = () => closeModal(manageModal);
   window.openReviewModal = () => openModal(reviewModal);
   window.closeReviewModal = () => closeModal(reviewModal);
+
+  // Also recover focus after outside scripts or newly inserted page controls
+  // attempt to move it out of the active dialog between keyboard events.
+  document.addEventListener('focusin', (event) => {
+    const modal = getOpenModal();
+    if (modal && !modal.contains(event.target)) {
+      const target = modal.querySelector('[data-modal-initial-focus]') || modal;
+      target.focus();
+    }
+  });
 
   document.addEventListener('keydown', (event) => {
     const modal = getOpenModal();
@@ -1123,8 +1174,5 @@
       .finally(() => window.closeManageModal());
   };
 
-  document.addEventListener('keydown', (event) => {
-    if (event.key === 'Escape') { window.closeManageModal(); window.closeReviewModal && window.closeReviewModal(); }
-  });
 </script>
 {% endblock %}
