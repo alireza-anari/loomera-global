@@ -159,7 +159,8 @@
         "apps/main/test_phase3_appointment_progress_locale.py",
         "apps/main/test_phase3_post_booking_tail_locale.py",
         "apps/main/test_phase3_appointment_modal_a11y.py",
-        "tests/browser/phase3_post_booking_chromium.py"
+        "tests/browser/phase3_post_booking_chromium.py",
+        "tests/js/phase3_appointment_modal_isolation.test.cjs"
       ],
       "checks": [
         "back and return icons correct for ltr/rtl",
@@ -168,7 +169,8 @@
         "all actions keyboard operable",
         "localized appointment management and review dialogs, five-star accessible names and browser-safe navigation notice",
         "appointment management and review dialogs focus their title, trap Tab/Shift+Tab, close on Escape and restore focus to the opener",
-        "review submission without a selected score is blocked with a localized, announced error and clears after keyboard rating selection"
+        "review submission without a selected score is blocked with a localized, announced error and clears after keyboard rating selection",
+        "background focus isolation, pre-existing inert restoration, one-layer Escape dismissal and short-height review panel keyboard scrolling"
       ]
     },
     {

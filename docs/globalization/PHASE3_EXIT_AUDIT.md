@@ -342,3 +342,16 @@ behavior. These are structural/fixture browser checks, **not**
 a live authenticated user journey, audited manual keyboard/zoom
 acceptance or a screen-reader run. The full manual release matrix
 remains blocked; no Production authorization is implied.
+
+## Phase 3.41 local candidate — modal isolation and short-height scrolling
+
+See [PHASE3_41_ACCEPTANCE.md](PHASE3_41_ACCEPTANCE.md) for exact local
+observations, independent-review finding, environment limitations and the
+remaining acceptance procedure. The candidate adds background inert-state
+restoration, stack layering, focus fallback and a scrollable review panel,
+and removes a duplicate page-level Escape listener. The browser component
+harness now uses actual Django rendering, shipped CSS and the complete page
+script. Local Node and limited Django checks passed; candidate Chromium/CI,
+authenticated routes, screen-reader sessions and true zoom remain unverified.
+Publication was blocked by automatic approval review. No manual evidence or
+release authorization has been added; all five gates remain open.
