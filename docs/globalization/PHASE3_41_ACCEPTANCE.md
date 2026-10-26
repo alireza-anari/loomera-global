@@ -1,7 +1,7 @@
 # Phase 3.41 — Modal isolation candidate and acceptance handoff
 
 Date: 2026-10-26. Verified base/main: `69ec6a98cd2bc7f6bc30cbeafb365d3f2a840488` (PR #112).
-Status: local candidate; publication, new CI and merge blocked pending explicit GitHub transmission authorization accepted by automatic review. Production untouched.
+Status: PR #113 published after explicit user confirmation. Initial candidate CI passed both jobs; final-head checks and merge verification remain mandatory. Production untouched.
 
 ## Defects and candidate repairs
 
@@ -9,7 +9,7 @@ Status: local candidate; publication, new CI and merge blocked pending explicit 
 - Review's z-index was below management's. Recalculate active-stack layering, including closing/reopening a lower dialog.
 - A removed opener could strand focus in hidden content. Focus the main landmark as a fallback, restoring its original tabindex attribute.
 - A second legacy Escape listener closed every dialog after the stack listener closed the top one. Remove it. Independent review found this; the regression failed before removal and passed afterward.
-- The review panel used overflow-hidden with no height constraint. Give it a viewport-height limit and vertical scrolling. Actual rendered-browser verification of this layout remains NOT RUN.
+- The review panel used overflow-hidden with no height constraint. Give it a viewport-height limit and vertical scrolling. The nine Chromium component scenarios passed, including keyboard reachability at 320px height; this does not establish true browser zoom acceptance.
 
 The form method/action, score values and POST contract are unchanged. No payment, booking, auth, cancellation endpoint, database, catalog or source-repository edits.
 
@@ -21,17 +21,18 @@ The form method/action, score values and POST contract are unchanged. No payment
 | Existing appointment modal and checkout human-direction Django suites | Python 3.12, Django 5.2.17, minimal settings, real project template libraries, no application database/apps | PASS: 10 tests; not the production settings system check |
 | `python tests/browser/phase3_post_booking_chromium.py --render-only` | Django 5.2.17, native fa/en/ar catalogs | PASS: actual modal fragments and **complete page script** render, translations/escaping checked; controlled context, shell and URLconf |
 | PO format validation / compiled-catalog semantic comparison | GNU msgfmt, fa/en/ar | PASS: translated catalogs match fresh compiler output; existing missing-header metadata warnings; MO binary serialization differs, files unchanged |
-| Chromium component suite | Local Work environment | NOT RUN: no installed browser; download failed and bundled Playwright node execution was denied. New suite awaits GitHub CI |
+| Chromium component suite | GitHub Ubuntu 24.04, Python 3.13.16, Django 5.2.17, Playwright 1.55.0, Chromium Headless Shell 140.0.7339.16 | PASS: nine modal scenarios plus existing 9 booking-renderer, 18 checkout and 9 stage-handoff scenarios in [run 40282514206](https://github.com/alireza-anari/loomera-global/actions/runs/40282514206). Local browser remains unavailable |
+| Full configured CI Fast checks | Same run, pinned requirements, GIS libraries and CI SQLite configuration | PASS: system/migration checks and all scheduled regressions; logs report 618 Django test executions (includes combined suites), plus Node checks |
 | Full Django application / real authenticated routes | Local Work environment | NOT RUN: pinned requirements installation failed because pg_config is absent; GDAL library also absent. No documented authorized preview URL identified |
 | Prior PR #112 CI | PR head `520d01d4f2c1532b9938c9ce38f5b7472153ff2e` | Both jobs PASS in [run 40229063024](https://github.com/alireza-anari/loomera-global/actions/runs/40229063024); historical, does not validate this candidate |
 | Main-SHA workflow lookup | GitHub connector | No runs returned; connector explicitly filters to pull-request-triggered runs, so this cannot establish post-merge CI status |
 | NVDA/VoiceOver, true 200%/400% browser zoom, manual visuals/keyboard | Not available/executed | NOT RUN; all five acceptance gates remain open |
 
-The Chromium test now renders production fragments with Django, loads shipped CSS, executes the entire production page script, checks native inert behavior, layering, nested Escape, and 320px-height keyboard scrolling, and saves success/failure screenshots through CI. These are component scenarios, not authenticated route E2E or browser zoom signoff. No new browser screenshot or trace is claimed in this record.
+The Chromium test now renders production fragments with Django, loads shipped CSS, executes the entire production page script, checks native inert behavior, layering, nested Escape, and 320px-height keyboard scrolling, and saves success/failure screenshots through CI. These are component scenarios, not authenticated route E2E or browser zoom signoff. Nine genuine CI screenshots and their provenance/hashes are preserved in [evidence/phase3_41/manifest.json](evidence/phase3_41/manifest.json). Representative fa/360, en/768 and ar/1440 screenshots were visually inspected: keyboard-focused submit and cancel controls remain visible within the short-height panel. This is a limited component inspection, not the complete manual visual gate; no trace is claimed.
 
 ## Remaining execution and human acceptance
 
-1. Publish this candidate to `alireza-anari/loomera-global`, create its PR, run Fast checks and Chromium smoke at the exact head, and squash only after the merge conditions pass. Automatic approval review currently blocks the push. Do not bypass it.
+1. [PR #113](https://github.com/alireza-anari/loomera-global/pull/113) publishes the exact reviewed local tree through the GitHub connector (local Git lacks push credentials). Explicit user confirmation resolved the earlier automatic-review rejection. Run Fast checks and Chromium smoke at the final documentation/evidence head, then squash only after all merge conditions pass; verify the resulting main and push-triggered CI.
 2. Supply an authorized non-production base URL and disposable account/data, or run the full application in an environment with its pinned dependencies and GIS/database prerequisites. Actual route: `/orders/appointment_detail/<owned-test-appointment-pk>/`; rescheduling: `/orders/reschedule/<owned-test-appointment-pk>/`. Use separate manageable and completed/review-eligible synthetic appointments; do not assume both actions coexist in real business state.
 3. Across fa/en/ar at 360×800, 768×1024 and 1440×900, open available management/review dialogs with keyboard, verify initial focus, full Tab/Shift+Tab cycles, one-layer Escape and opener return. At short height reach comment, Cancel and Submit without clipping; submit an empty rating only in a disposable test environment, confirm error announcement and correction. Capture browser version, tester/date, route, locale, viewport, steps and screenshot/video; review all other matrix journeys as well.
 4. Perform real browser zoom at 200% and 400%, record the browser zoom method and effective viewport, verify reflow and keyboard reachability. The 320px-height component scenario is not zoom evidence.

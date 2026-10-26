@@ -351,7 +351,9 @@ remaining acceptance procedure. The candidate adds background inert-state
 restoration, stack layering, focus fallback and a scrollable review panel,
 and removes a duplicate page-level Escape listener. The browser component
 harness now uses actual Django rendering, shipped CSS and the complete page
-script. Local Node and limited Django checks passed; candidate Chromium/CI,
-authenticated routes, screen-reader sessions and true zoom remain unverified.
-Publication was blocked by automatic approval review. No manual evidence or
+script. Local Node and limited Django checks passed. After explicit user approval,
+PR #113 was published and initial Fast checks plus all 45 Chromium component
+scenarios passed in run 40282514206. Nine short-height modal screenshots and
+provenance are preserved in evidence/phase3_41/. Authenticated routes,
+screen-reader sessions and true zoom remain unverified. No manual evidence or
 release authorization has been added; all five gates remain open.

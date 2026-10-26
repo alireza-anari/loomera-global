@@ -15,3 +15,5 @@ Approach: retain the existing modal stack and public functions. Snapshot and res
 Review focus: nested modal ancestry, pre-existing inert attributes, non-top close, opener removal, small-height keyboard reachability. All five manual gates remain open until their actual requirements are satisfied.
 
 Execution: 99 Node tests and 10 existing Django tests (minimal local settings) passed. Native fa/en/ar template/script rendering and msgfmt semantic parity passed. Independent reviewer found duplicate Escape listener; regression failed with both listeners, then passed after removal. Browser execution and external CI remain NOT RUN. Publication was rejected by automatic review; no workaround attempted. Remaining unchecked steps require GitHub publication authorization and actual CI.
+
+Follow-up: explicit user confirmation received; GitHub connector published identical tree in PR #113. Initial CI run 40282514206 passed Fast checks and all 45 browser component scenarios. Nine real screenshots preserved with provenance; no manual gate closed. Final-head CI and squash verification remain pending.
