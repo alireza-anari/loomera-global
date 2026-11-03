@@ -2496,3 +2496,419 @@ msgstr "القائمة الرئيسية لتطبيق العميل"
 #: templates/partials/shell/desktop_site_header.html templates/partials/shell/customer_mobile_nav.html
 msgid "Log in"
 msgstr "تسجيل الدخول"
+
+#: templates/pages/home.html templates/pages/show_salons.html templates/components/salon_card.html templates/components/book_again_card.html
+msgid "An intelligent beauty and salon management platform"
+msgstr "منصة ذكية للجمال وإدارة الصالونات"
+
+#: templates/pages/home.html templates/pages/show_salons.html templates/components/salon_card.html templates/components/book_again_card.html
+msgid "Beauty, made simpler"
+msgstr "الجمال، ببساطة أكبر"
+
+#: templates/pages/home.html templates/pages/show_salons.html templates/components/salon_card.html templates/components/book_again_card.html
+msgid "when"
+msgstr "عندما"
+
+#: templates/pages/home.html templates/pages/show_salons.html templates/components/salon_card.html templates/components/book_again_card.html
+msgid "everything"
+msgstr "كل شيء"
+
+#: templates/pages/home.html templates/pages/show_salons.html templates/components/salon_card.html templates/components/book_again_card.html
+msgid "is in its place"
+msgstr "يكون في مكانه"
+
+#: templates/pages/home.html templates/pages/show_salons.html templates/components/salon_card.html templates/components/book_again_card.html
+msgid "Start for free"
+msgstr "ابدأ مجانًا"
+
+#: templates/pages/home.html templates/pages/show_salons.html templates/components/salon_card.html templates/components/book_again_card.html
+msgid "See how it works"
+msgstr "اكتشف كيف يعمل"
+
+#: templates/pages/home.html templates/pages/show_salons.html templates/components/salon_card.html templates/components/book_again_card.html
+msgid "Booking experience sample"
+msgstr "نموذج لتجربة الحجز"
+
+#: templates/pages/home.html templates/pages/show_salons.html templates/components/salon_card.html templates/components/book_again_card.html
+msgid "Booking interface preview"
+msgstr "معاينة واجهة الحجز"
+
+#: templates/pages/home.html templates/pages/show_salons.html templates/components/salon_card.html templates/components/book_again_card.html
+msgid "One booking. Three experiences."
+msgstr "حجز واحد. ثلاث تجارب."
+
+#: templates/pages/home.html templates/pages/show_salons.html templates/components/salon_card.html templates/components/book_again_card.html
+msgid "One connected flow."
+msgstr "مسار متكامل واحد."
+
+#: templates/pages/home.html templates/pages/show_salons.html templates/components/salon_card.html templates/components/book_again_card.html
+msgid "Customer"
+msgstr "العميل"
+
+#: templates/pages/home.html templates/pages/show_salons.html templates/components/salon_card.html templates/components/book_again_card.html
+msgid "Find with ease"
+msgstr "اعثر بسهولة"
+
+#: templates/pages/home.html templates/pages/show_salons.html templates/components/salon_card.html templates/components/book_again_card.html
+msgid "Choose with confidence"
+msgstr "اختر بثقة"
+
+#: templates/pages/home.html templates/pages/show_salons.html templates/components/salon_card.html templates/components/book_again_card.html
+msgid "Book quickly"
+msgstr "احجز بسرعة"
+
+#: templates/pages/home.html templates/pages/show_salons.html templates/components/salon_card.html templates/components/book_again_card.html
+msgid "Stylist"
+msgstr "المختص"
+
+#: templates/pages/home.html templates/pages/show_salons.html templates/components/salon_card.html templates/components/book_again_card.html
+msgid "See your schedule"
+msgstr "اطّلع على جدولك"
+
+#: templates/pages/home.html templates/pages/show_salons.html templates/components/salon_card.html templates/components/book_again_card.html
+msgid "Manage your clients"
+msgstr "أدر عملاءك"
+
+#: templates/pages/home.html templates/pages/show_salons.html templates/components/salon_card.html templates/components/book_again_card.html
+msgid "Focus on your work"
+msgstr "ركّز على عملك"
+
+#: templates/pages/home.html templates/pages/show_salons.html templates/components/salon_card.html templates/components/book_again_card.html
+msgid "Salon manager"
+msgstr "مدير الصالون"
+
+#: templates/pages/home.html templates/pages/show_salons.html templates/components/salon_card.html templates/components/book_again_card.html
+msgid "Team, appointments and performance"
+msgstr "الفريق والمواعيد والأداء"
+
+#: templates/pages/home.html templates/pages/show_salons.html templates/components/salon_card.html templates/components/book_again_card.html
+msgid "Manage your salon from one place"
+msgstr "أدر صالونك من مكان واحد"
+
+#: templates/pages/home.html templates/pages/show_salons.html templates/components/salon_card.html templates/components/book_again_card.html
+msgid "Simple for every role"
+msgstr "بسيط لكل دور"
+
+#: templates/pages/home.html templates/pages/show_salons.html templates/components/salon_card.html templates/components/book_again_card.html
+msgid "Everyone sees only what they need for their work"
+msgstr "يرى كل شخص ما يحتاج إليه لعمله فقط"
+
+#: templates/pages/home.html templates/pages/show_salons.html templates/components/salon_card.html templates/components/book_again_card.html
+msgid "The customer booking journey, stylist schedule and salon management are designed as clear, separate paths"
+msgstr "صُممت رحلة حجز العميل وجدول المختص وإدارة الصالون كمسارات واضحة ومنفصلة"
+
+#: templates/pages/home.html templates/pages/show_salons.html templates/components/salon_card.html templates/components/book_again_card.html
+msgid "so everyday work stays simple and connected."
+msgstr "لتبقى المهام اليومية بسيطة ومترابطة."
+
+#: templates/pages/home.html templates/pages/show_salons.html templates/components/salon_card.html templates/components/book_again_card.html
+msgid "Customer experience"
+msgstr "تجربة العميل"
+
+#: templates/pages/home.html templates/pages/show_salons.html templates/components/salon_card.html templates/components/book_again_card.html
+msgid "From choosing a service to booking, everything is clear"
+msgstr "كل شيء واضح من اختيار الخدمة حتى الحجز"
+
+#: templates/pages/home.html templates/pages/show_salons.html templates/components/salon_card.html templates/components/book_again_card.html
+msgid "Customers find the right salon and service, then choose a professional"
+msgstr "يعثر العملاء على الصالون والخدمة المناسبين ثم يختارون المختص"
+
+#: templates/pages/home.html templates/pages/show_salons.html templates/components/salon_card.html templates/components/book_again_card.html
+msgid "and see available times before completing their booking."
+msgstr "ويطّلعون على الأوقات المتاحة قبل إتمام الحجز."
+
+#: templates/pages/home.html templates/pages/show_salons.html templates/components/salon_card.html templates/components/book_again_card.html
+msgid "Search and discover"
+msgstr "البحث والاستكشاف"
+
+#: templates/pages/home.html templates/pages/show_salons.html templates/components/salon_card.html templates/components/book_again_card.html
+msgid "Complete booking"
+msgstr "إتمام الحجز"
+
+#: templates/pages/home.html templates/pages/show_salons.html templates/components/salon_card.html templates/components/book_again_card.html
+msgid "Customer booking experience illustration"
+msgstr "رسم توضيحي لتجربة حجز العميل"
+
+#: templates/pages/home.html templates/pages/show_salons.html templates/components/salon_card.html templates/components/book_again_card.html
+msgid "Stylist experience illustration"
+msgstr "رسم توضيحي لتجربة المختص"
+
+#: templates/pages/home.html templates/pages/show_salons.html templates/components/salon_card.html templates/components/book_again_card.html
+msgid "Salon management illustration"
+msgstr "رسم توضيحي لإدارة الصالون"
+
+#: templates/pages/home.html templates/pages/show_salons.html templates/components/salon_card.html templates/components/book_again_card.html
+msgid "Stylist workspace"
+msgstr "مساحة عمل المختص"
+
+#: templates/pages/home.html templates/pages/show_salons.html templates/components/salon_card.html templates/components/book_again_card.html
+msgid "An organized workday, without switching between tools"
+msgstr "يوم عمل منظم دون التنقل بين الأدوات"
+
+#: templates/pages/home.html templates/pages/show_salons.html templates/components/salon_card.html templates/components/book_again_card.html
+msgid "Professionals can see today's schedule and upcoming clients,"
+msgstr "يمكن للمختصين الاطلاع على جدول اليوم والعملاء القادمين،"
+
+#: templates/pages/home.html templates/pages/show_salons.html templates/components/salon_card.html templates/components/book_again_card.html
+msgid "along with their services and performance in one dashboard."
+msgstr "إلى جانب خدماتهم وأدائهم في لوحة تحكم واحدة."
+
+#: templates/pages/home.html templates/pages/show_salons.html templates/components/salon_card.html templates/components/book_again_card.html
+msgid "Today's schedule"
+msgstr "جدول اليوم"
+
+#: templates/pages/home.html templates/pages/show_salons.html templates/components/salon_card.html templates/components/book_again_card.html
+msgid "Clients"
+msgstr "العملاء"
+
+#: templates/pages/home.html templates/pages/show_salons.html templates/components/salon_card.html templates/components/book_again_card.html
+msgid "Performance"
+msgstr "الأداء"
+
+#: templates/pages/home.html templates/pages/show_salons.html templates/components/salon_card.html templates/components/book_again_card.html
+msgid "Stylist dashboard illustration"
+msgstr "رسم توضيحي للوحة تحكم المختص"
+
+#: templates/pages/home.html templates/pages/show_salons.html templates/components/salon_card.html templates/components/book_again_card.html
+msgid "Salon manager dashboard"
+msgstr "لوحة تحكم مدير الصالون"
+
+#: templates/pages/home.html templates/pages/show_salons.html templates/components/salon_card.html templates/components/book_again_card.html
+msgid "Your entire salon, at a glance"
+msgstr "صالونك بالكامل في لمحة"
+
+#: templates/pages/home.html templates/pages/show_salons.html templates/components/salon_card.html templates/components/book_again_card.html
+msgid "Managers can track appointments, revenue, professionals, services and booking channels"
+msgstr "يمكن لمديري الصالونات متابعة المواعيد والإيرادات والمختصين والخدمات وقنوات الحجز"
+
+#: templates/pages/home.html templates/pages/show_salons.html templates/components/salon_card.html templates/components/book_again_card.html
+msgid "in one organized view."
+msgstr "في عرض واحد منظم."
+
+#: templates/pages/home.html templates/pages/show_salons.html templates/components/salon_card.html templates/components/book_again_card.html
+msgid "Team and professionals"
+msgstr "الفريق والمختصون"
+
+#: templates/pages/home.html templates/pages/show_salons.html templates/components/salon_card.html templates/components/book_again_card.html
+msgid "Reports"
+msgstr "التقارير"
+
+#: templates/pages/home.html templates/pages/show_salons.html templates/components/salon_card.html templates/components/book_again_card.html
+msgid "Salon manager dashboard illustration"
+msgstr "رسم توضيحي للوحة تحكم مدير الصالون"
+
+#: templates/pages/home.html templates/pages/show_salons.html templates/components/salon_card.html templates/components/book_again_card.html
+msgid "One connected journey from the first click to the customer's return"
+msgstr "رحلة مترابطة من النقرة الأولى حتى عودة العميل"
+
+#: templates/pages/home.html templates/pages/show_salons.html templates/components/salon_card.html templates/components/book_again_card.html
+msgid "Discover"
+msgstr "اكتشف"
+
+#: templates/pages/home.html templates/pages/show_salons.html templates/components/salon_card.html templates/components/book_again_card.html
+msgid "Search and find the best option"
+msgstr "ابحث واعثر على الخيار الأنسب"
+
+#: templates/pages/home.html templates/pages/show_salons.html templates/components/salon_card.html templates/components/book_again_card.html
+msgid "Choose"
+msgstr "اختر"
+
+#: templates/pages/home.html templates/pages/show_salons.html templates/components/salon_card.html templates/components/book_again_card.html
+msgid "Explore services, professionals and available times"
+msgstr "استكشف الخدمات والمختصين والأوقات المتاحة"
+
+#: templates/pages/home.html templates/pages/show_salons.html templates/components/salon_card.html templates/components/book_again_card.html
+msgid "Book"
+msgstr "احجز"
+
+#: templates/pages/home.html templates/pages/show_salons.html templates/components/salon_card.html templates/components/book_again_card.html
+msgid "Choose a time and confirm the appointment"
+msgstr "اختر الوقت وأكّد الموعد"
+
+#: templates/pages/home.html templates/pages/show_salons.html templates/components/salon_card.html templates/components/book_again_card.html
+msgid "Service delivery"
+msgstr "تقديم الخدمة"
+
+#: templates/pages/home.html templates/pages/show_salons.html templates/components/salon_card.html templates/components/book_again_card.html
+msgid "Enjoy a professional experience at the salon"
+msgstr "استمتع بتجربة احترافية في الصالون"
+
+#: templates/pages/home.html templates/pages/show_salons.html templates/components/salon_card.html templates/components/book_again_card.html
+msgid "Manage"
+msgstr "أدر"
+
+#: templates/pages/home.html templates/pages/show_salons.html templates/components/salon_card.html templates/components/book_again_card.html
+msgid "Manage your team and appointments"
+msgstr "أدر فريقك ومواعيدك"
+
+#: templates/pages/home.html templates/pages/show_salons.html templates/components/salon_card.html templates/components/book_again_card.html
+msgid "Return"
+msgstr "عودة العميل"
+
+#: templates/pages/home.html templates/pages/show_salons.html templates/components/salon_card.html templates/components/book_again_card.html
+msgid "A better experience that builds loyalty"
+msgstr "تجربة أفضل تعزز الولاء"
+
+#: templates/pages/home.html templates/pages/show_salons.html templates/components/salon_card.html templates/components/book_again_card.html
+msgid "Where would you like to start?"
+msgstr "من أين تود أن تبدأ؟"
+
+#: templates/pages/home.html templates/pages/show_salons.html templates/components/salon_card.html templates/components/book_again_card.html
+msgid "Choose your role to get started with the right experience."
+msgstr "اختر دورك لتبدأ بالتجربة المناسبة لك."
+
+#: templates/pages/home.html templates/pages/show_salons.html templates/components/salon_card.html templates/components/book_again_card.html
+msgid "I'm a customer"
+msgstr "أنا عميل"
+
+#: templates/pages/home.html templates/pages/show_salons.html templates/components/salon_card.html templates/components/book_again_card.html
+msgid "Find and book the right salon and professional"
+msgstr "أعثر على الصالون والمختص المناسبين وأحجز"
+
+#: templates/pages/home.html templates/pages/show_salons.html templates/components/salon_card.html templates/components/book_again_card.html
+msgid "I'm a professional"
+msgstr "أنا مختص"
+
+#: templates/pages/home.html templates/pages/show_salons.html templates/components/salon_card.html templates/components/book_again_card.html
+msgid "Manage my schedule and appointments more easily"
+msgstr "أدير جدولي ومواعيدي بسهولة أكبر"
+
+#: templates/pages/home.html templates/pages/show_salons.html templates/components/salon_card.html templates/components/book_again_card.html
+msgid "I'm a salon manager"
+msgstr "أنا مدير صالون"
+
+#: templates/pages/home.html templates/pages/show_salons.html templates/components/salon_card.html templates/components/book_again_card.html
+msgid "See my team, appointments and salon performance in one place"
+msgstr "أتابع فريقي ومواعيدي وأداء الصالون في مكان واحد"
+
+#: templates/pages/home.html templates/pages/show_salons.html templates/components/salon_card.html templates/components/book_again_card.html
+msgid "How the platform works"
+msgstr "كيف تعمل المنصة"
+
+#: templates/pages/home.html templates/pages/show_salons.html templates/components/salon_card.html templates/components/book_again_card.html
+msgid "Close video"
+msgstr "إغلاق الفيديو"
+
+#: templates/pages/home.html templates/pages/show_salons.html templates/components/salon_card.html templates/components/book_again_card.html
+msgid "Your browser does not support video playback."
+msgstr "متصفحك لا يدعم تشغيل الفيديو."
+
+#: templates/pages/home.html templates/pages/show_salons.html templates/components/salon_card.html templates/components/book_again_card.html
+msgid "connects customers, professionals and salons on one smart platform, creating a better experience for everyone."
+msgstr "يربط العملاء والمختصين والصالونات عبر منصة ذكية واحدة لتقديم تجربة أفضل للجميع."
+
+#: templates/pages/home.html templates/pages/show_salons.html templates/components/salon_card.html templates/components/book_again_card.html
+msgid "Discover and book"
+msgstr "اكتشف واحجز"
+
+#: templates/pages/home.html templates/pages/show_salons.html templates/components/salon_card.html templates/components/book_again_card.html
+msgid "Find the right salon"
+msgstr "اعثر على الصالون المناسب"
+
+#: templates/pages/home.html templates/pages/show_salons.html templates/components/salon_card.html templates/components/book_again_card.html
+msgid "Start with your past experiences, or use search and service categories to find something new."
+msgstr "ابدأ من تجاربك السابقة أو استخدم البحث وفئات الخدمات لاكتشاف خيار جديد."
+
+#: templates/pages/home.html templates/pages/show_salons.html templates/components/salon_card.html templates/components/book_again_card.html
+msgid "Your previous experience"
+msgstr "تجربتك السابقة"
+
+#: templates/pages/home.html templates/pages/show_salons.html templates/components/salon_card.html templates/components/book_again_card.html
+msgid "Services you booked before, without searching again."
+msgstr "الخدمات التي حجزتها سابقًا دون الحاجة إلى البحث مجددًا."
+
+#: templates/pages/home.html templates/pages/show_salons.html templates/components/salon_card.html templates/components/book_again_card.html
+msgid "For you"
+msgstr "من أجلك"
+
+#: templates/pages/home.html templates/pages/show_salons.html templates/components/salon_card.html templates/components/book_again_card.html
+msgid "Salons you know"
+msgstr "صالونات تعرفها"
+
+#: templates/pages/home.html templates/pages/show_salons.html templates/components/salon_card.html templates/components/book_again_card.html
+msgid "Your favorites and salons you've viewed before."
+msgstr "مفضلاتك والصالونات التي شاهدتها سابقًا."
+
+#: templates/pages/home.html templates/pages/show_salons.html templates/components/salon_card.html templates/components/book_again_card.html
+msgid "Favorites"
+msgstr "المفضلة"
+
+#: templates/pages/home.html templates/pages/show_salons.html templates/components/salon_card.html templates/components/book_again_card.html
+msgid "Discover more"
+msgstr "اكتشف المزيد"
+
+#: templates/pages/home.html templates/pages/show_salons.html templates/components/salon_card.html templates/components/book_again_card.html
+msgid "Recommended salons"
+msgstr "صالونات مقترحة"
+
+#: templates/pages/home.html templates/pages/show_salons.html templates/components/salon_card.html templates/components/book_again_card.html
+msgid "A mix of popular, new, top-rated and discounted salons."
+msgstr "مجموعة من الصالونات الشهيرة والجديدة والأعلى تقييمًا والتي تقدم خصومات."
+
+#: templates/pages/home.html templates/pages/show_salons.html templates/components/salon_card.html templates/components/book_again_card.html
+msgid "All results"
+msgstr "كل النتائج"
+
+#: templates/pages/home.html templates/pages/show_salons.html templates/components/salon_card.html templates/components/book_again_card.html
+msgid "Start with a service"
+msgstr "ابدأ بخدمة"
+
+#: templates/pages/home.html templates/pages/show_salons.html templates/components/salon_card.html templates/components/book_again_card.html
+msgid "What service are you looking for?"
+msgstr "ما الخدمة التي تبحث عنها؟"
+
+#: templates/pages/home.html templates/pages/show_salons.html templates/components/salon_card.html templates/components/book_again_card.html
+msgid "No salons to show yet"
+msgstr "لا توجد صالونات لعرضها بعد"
+
+#: templates/pages/home.html templates/pages/show_salons.html templates/components/salon_card.html templates/components/book_again_card.html
+msgid "View"
+msgstr "عرض"
+
+#: templates/pages/home.html templates/pages/show_salons.html templates/components/salon_card.html templates/components/book_again_card.html
+msgid "Location not provided"
+msgstr "الموقع غير محدد"
+
+#: templates/pages/home.html templates/pages/show_salons.html templates/components/salon_card.html templates/components/book_again_card.html
+msgid "reviews"
+msgstr "تقييمات"
+
+#: templates/pages/home.html templates/pages/show_salons.html templates/components/salon_card.html templates/components/book_again_card.html
+msgid "From"
+msgstr "ابتداءً من"
+
+#: templates/pages/home.html templates/pages/show_salons.html templates/components/salon_card.html templates/components/book_again_card.html
+msgid "Toman"
+msgstr "تومان"
+
+#: templates/pages/home.html templates/pages/show_salons.html templates/components/salon_card.html templates/components/book_again_card.html
+msgid "View and book"
+msgstr "عرض وحجز"
+
+#: templates/pages/home.html templates/pages/show_salons.html templates/components/salon_card.html templates/components/book_again_card.html
+msgid "Previous booking"
+msgstr "الحجز السابق"
+
+#: templates/pages/home.html templates/pages/show_salons.html templates/components/salon_card.html templates/components/book_again_card.html
+msgid "Previous service"
+msgstr "الخدمة السابقة"
+
+#: templates/pages/home.html templates/pages/show_salons.html templates/components/salon_card.html templates/components/book_again_card.html
+msgid "Date not recorded"
+msgstr "التاريخ غير مسجل"
+
+#: templates/pages/home.html templates/pages/show_salons.html templates/components/salon_card.html templates/components/book_again_card.html
+msgid "Time not recorded"
+msgstr "الوقت غير مسجل"
+
+#: templates/pages/home.html templates/pages/show_salons.html templates/components/salon_card.html templates/components/book_again_card.html
+msgid "Professional not recorded"
+msgstr "المختص غير مسجل"
+
+#: templates/pages/home.html templates/pages/show_salons.html templates/components/salon_card.html templates/components/book_again_card.html
+msgid "Previous amount"
+msgstr "المبلغ السابق"
+
+#: templates/pages/home.html templates/pages/show_salons.html templates/components/salon_card.html templates/components/book_again_card.html
+msgid "Price not recorded"
+msgstr "السعر غير مسجل"
