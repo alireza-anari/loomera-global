@@ -314,6 +314,12 @@ jobs:
             apps.main.test_build_release_archive \
             --failfast
 
+      - name: Phase 4 public home and discovery locale guards
+        run: |
+          python manage.py test \
+            apps.main.test_phase4_public_discovery_locale \
+            --failfast
+
       - name: Phase 2 buyer-brand smoke and email layout reference audit
         run: |
           python manage.py test \
