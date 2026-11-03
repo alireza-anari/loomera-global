@@ -1,9 +1,10 @@
 {% load static %}
+{% load i18n %}
 <header class="lm-shell-mobile-header lg:hidden sticky top-0 z-40 border-b border-slate-200/70 backdrop-blur supports-[backdrop-filter]:bg-white/80">
   <div class="lm-app-container lm-shell-mobile-header__inner">
     <div class="lm-shell-mobile-header__leading">
       {% if header_back_url %}
-        <a href="{{ header_back_url }}" class="lm-icon-button" aria-label="بازگشت">
+        <a href="{{ header_back_url }}" class="lm-icon-button" aria-label="{% trans 'Back' %}">
           <i class="fa-solid fa-chevron-right"></i>
         </a>
       {% else %}
@@ -49,7 +50,7 @@
           {% include "partials/shell/customer_notification_button.html" with variant="mobile" %}
         {% endif %}
       {% else %}
-        <a href="{% url 'accounts:login' %}" class="lm-icon-button" aria-label="ورود">
+        <a href="{% url 'accounts:login' %}" class="lm-icon-button" aria-label="{% trans 'Log in' %}">
           <i class="fa-regular fa-user"></i>
         </a>
       {% endif %}

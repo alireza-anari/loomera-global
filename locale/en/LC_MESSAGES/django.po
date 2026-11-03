@@ -2456,3 +2456,39 @@ msgstr "Choose first available professional for %(service)s"
 #, python-format
 msgid "Choose %(professional)s for %(service)s"
 msgstr "Choose %(professional)s for %(service)s"
+
+#: templates/partials/shell/desktop_site_header.html templates/partials/shell/customer_mobile_nav.html
+msgid "Main navigation"
+msgstr "Main navigation"
+
+#: templates/partials/shell/desktop_site_header.html templates/partials/shell/customer_mobile_nav.html
+msgid "Home"
+msgstr "Home"
+
+#: templates/partials/shell/desktop_site_header.html templates/partials/shell/customer_mobile_nav.html
+msgid "Salons"
+msgstr "Salons"
+
+#: templates/partials/shell/desktop_site_header.html templates/partials/shell/customer_mobile_nav.html
+msgid "Search"
+msgstr "Search"
+
+#: templates/partials/shell/desktop_site_header.html templates/partials/shell/customer_mobile_nav.html
+msgid "Appointments"
+msgstr "Appointments"
+
+#: templates/partials/shell/desktop_site_header.html templates/partials/shell/customer_mobile_nav.html
+msgid "Magazine"
+msgstr "Magazine"
+
+#: templates/partials/shell/desktop_site_header.html templates/partials/shell/customer_mobile_nav.html
+msgid "My profile"
+msgstr "My profile"
+
+#: templates/partials/shell/desktop_site_header.html templates/partials/shell/customer_mobile_nav.html
+msgid "Customer app main navigation"
+msgstr "Customer app main navigation"
+
+#: templates/partials/shell/desktop_site_header.html templates/partials/shell/customer_mobile_nav.html
+msgid "Log in"
+msgstr "Log in"

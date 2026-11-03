@@ -2456,3 +2456,39 @@ msgstr "انتخاب اولین متخصص آزاد برای %(service)s"
 #, python-format
 msgid "Choose %(professional)s for %(service)s"
 msgstr "انتخاب %(professional)s برای %(service)s"
+
+#: templates/partials/shell/desktop_site_header.html templates/partials/shell/customer_mobile_nav.html
+msgid "Main navigation"
+msgstr "منوی اصلی"
+
+#: templates/partials/shell/desktop_site_header.html templates/partials/shell/customer_mobile_nav.html
+msgid "Home"
+msgstr "صفحه اصلی"
+
+#: templates/partials/shell/desktop_site_header.html templates/partials/shell/customer_mobile_nav.html
+msgid "Salons"
+msgstr "مراکز"
+
+#: templates/partials/shell/desktop_site_header.html templates/partials/shell/customer_mobile_nav.html
+msgid "Search"
+msgstr "جستجو"
+
+#: templates/partials/shell/desktop_site_header.html templates/partials/shell/customer_mobile_nav.html
+msgid "Appointments"
+msgstr "نوبت‌ها"
+
+#: templates/partials/shell/desktop_site_header.html templates/partials/shell/customer_mobile_nav.html
+msgid "Magazine"
+msgstr "مجله"
+
+#: templates/partials/shell/desktop_site_header.html templates/partials/shell/customer_mobile_nav.html
+msgid "My profile"
+msgstr "پروفایل من"
+
+#: templates/partials/shell/desktop_site_header.html templates/partials/shell/customer_mobile_nav.html
+msgid "Customer app main navigation"
+msgstr "ناوبری اصلی اپ مشتری"
+
+#: templates/partials/shell/desktop_site_header.html templates/partials/shell/customer_mobile_nav.html
+msgid "Log in"
+msgstr "ورود"
