@@ -2777,9 +2777,9 @@ msgstr "I'm a salon manager"
 msgid "See my team, appointments and salon performance in one place"
 msgstr "See my team, appointments and salon performance in one place"
 
-#: templates/pages/home.html templates/pages/show_salons.html templates/components/salon_card.html templates/components/book_again_card.html
-msgid "How the platform works"
-msgstr "How the platform works"
+#: templates/pages/home.html
+msgid "Introducing %(brand)s and how the platform works"
+msgstr "Introducing %(brand)s and how the platform works"
 
 #: templates/pages/home.html templates/pages/show_salons.html templates/components/salon_card.html templates/components/book_again_card.html
 msgid "Close video"

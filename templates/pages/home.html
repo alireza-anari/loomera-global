@@ -32,7 +32,7 @@
         </h1>
 
         <p>
-          <span class="lm-brand-secondary">{% if deployment_locale.language_code == "fa" %}{{ deployment_brand.display_name_fa }}{% else %}{{ deployment_brand.display_name }}{% endif %}</span>
+          <span class="lm-brand-secondary">{% if deployment_locale.language_code == "fa" or not deployment_locale.language_code %}{{ deployment_brand.display_name_fa }}{% else %}{{ deployment_brand.display_name }}{% endif %}</span>
           {% trans "connects customers, professionals and salons on one smart platform, creating a better experience for everyone." %}
         </p>
 
@@ -53,11 +53,11 @@
         </div>
       </div>
 
-      <div class="lm-hero-media" aria-label="{% trans 'Booking experience sample' %}">
+      <div class="lm-hero-media" aria-label="{% trans 'Booking experience sample' %} {% if deployment_locale.language_code == "fa" or not deployment_locale.language_code %}{{ deployment_brand.display_name_fa }}{% else %}{{ deployment_brand.display_name }}{% endif %}">
         <div class="lm-phone-glow"></div>
         <img
           src="{% static 'images/home/home-hero-v8.webp' %}"
-          alt="{% trans 'Booking interface preview' %}"
+          alt="{% trans 'Booking interface preview' %} {% if deployment_locale.language_code == "fa" or not deployment_locale.language_code %}{{ deployment_brand.display_name_fa }}{% else %}{{ deployment_brand.display_name }}{% endif %}"
           class="lm-hero-phone"
         >
       </div>
@@ -84,7 +84,7 @@
             <h3>{% trans "Customer" %}</h3>
             <p>{% trans "Find with ease" %}<br>{% trans "Choose with confidence" %}<br>{% trans "Book quickly" %}</p>
           </div>
-          <img src="{% static 'images/home/audience-customer.webp' %}" alt="{% trans 'Customer booking experience illustration' %}">
+          <img src="{% static 'images/home/audience-customer.webp' %}" alt="{% trans 'Customer' %} {% if deployment_locale.language_code == "fa" or not deployment_locale.language_code %}{{ deployment_brand.display_name_fa }}{% else %}{{ deployment_brand.display_name }}{% endif %}">
         </article>
 
         <article class="lm-audience-card lm-audience-stylist">
@@ -95,7 +95,7 @@
             <h3>{% trans "Stylist" %}</h3>
             <p>{% trans "See your schedule" %}<br>{% trans "Manage your clients" %}<br>{% trans "Focus on your work" %}</p>
           </div>
-          <img src="{% static 'images/home/audience-stylist.webp' %}" alt="{% trans 'Stylist experience illustration' %}">
+          <img src="{% static 'images/home/audience-stylist.webp' %}" alt="{% trans 'Stylist experience illustration' %} {% if deployment_locale.language_code == "fa" or not deployment_locale.language_code %}{{ deployment_brand.display_name_fa }}{% else %}{{ deployment_brand.display_name }}{% endif %}">
         </article>
 
         <article class="lm-audience-card lm-audience-manager">
@@ -106,7 +106,7 @@
             <h3>{% trans "Salon manager" %}</h3>
             <p>{% trans "Team, appointments and performance" %}<br>{% trans "Manage your salon from one place" %}</p>
           </div>
-          <img src="{% static 'images/home/audience-manager.webp' %}" alt="{% trans 'Salon management illustration' %}">
+          <img src="{% static 'images/home/audience-manager.webp' %}" alt="{% trans 'Salon management illustration' %} {% if deployment_locale.language_code == "fa" or not deployment_locale.language_code %}{{ deployment_brand.display_name_fa }}{% else %}{{ deployment_brand.display_name }}{% endif %}">
         </article>
 
       </div>
@@ -150,7 +150,7 @@
           <div class="lm-product-screen lm-product-screen-mobile">
             <img
               src="{% static 'images/home/customer-experience-v8.webp' %}"
-              alt="{% trans 'Customer booking experience illustration' %}"
+              alt="{% trans 'Customer booking experience illustration' %} {% if deployment_locale.language_code == "fa" or not deployment_locale.language_code %}{{ deployment_brand.display_name_fa }}{% else %}{{ deployment_brand.display_name }}{% endif %}"
             >
           </div>
         </article>
@@ -177,7 +177,7 @@
           <div class="lm-product-screen lm-product-screen-dashboard">
             <img
               src="{% static 'images/home/stylist-experience-v8.webp' %}"
-              alt="{% trans 'Stylist dashboard illustration' %}"
+              alt="{% trans 'Stylist dashboard illustration' %} {% if deployment_locale.language_code == "fa" or not deployment_locale.language_code %}{{ deployment_brand.display_name_fa }}{% else %}{{ deployment_brand.display_name }}{% endif %}"
             >
           </div>
         </article>
@@ -204,7 +204,7 @@
           <div class="lm-product-screen lm-product-screen-dashboard">
             <img
               src="{% static 'images/home/manager-experience-v8.webp' %}"
-              alt="{% trans 'Salon manager dashboard illustration' %}"
+              alt="{% trans 'Salon manager dashboard illustration' %} {% if deployment_locale.language_code == "fa" or not deployment_locale.language_code %}{{ deployment_brand.display_name_fa }}{% else %}{{ deployment_brand.display_name }}{% endif %}"
             >
           </div>
         </article>
@@ -276,7 +276,7 @@
   <section class="lm-home-section lm-home-final lm-reveal">
     <div class="lm-home-container lm-final-panel">
       <header class="lm-section-heading">
-        <h2>{% trans "Where would you like to start?" %}</h2>
+        <h2><span class="lm-brand-secondary">{% if deployment_locale.language_code == "fa" or not deployment_locale.language_code %}{{ deployment_brand.display_name_fa }}{% else %}{{ deployment_brand.display_name }}{% endif %}</span> {% trans "Where would you like to start?" %}</h2>
         <p>{% trans "Choose your role to get started with the right experience." %}</p>
       </header>
 
@@ -321,7 +321,7 @@
   <div class="lm-intro-video-shell">
 
     <h2 id="loomera-intro-video-title" class="sr-only">
-      {% trans "How the platform works" %}
+      {% if deployment_locale.language_code == "fa" or not deployment_locale.language_code %}{% blocktrans with brand=deployment_brand.display_name_fa %}Introducing {{ brand }} and how the platform works{% endblocktrans %}{% else %}{% blocktrans with brand=deployment_brand.display_name %}Introducing {{ brand }} and how the platform works{% endblocktrans %}{% endif %}
     </h2>
 
     <button

@@ -1,11 +1,10 @@
 import re
+from gettext import translation as load_gettext_catalog
 from pathlib import Path
 from types import SimpleNamespace
 
 from django.template.loader import render_to_string
 from django.test import SimpleTestCase
-from django.utils import translation
-from django.utils.translation import gettext
 
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
@@ -33,17 +32,41 @@ class Phase4PublicDiscoveryLocaleTests(SimpleTestCase):
 
                 for language in ("fa", "en", "ar"):
                     with self.subTest(template=relative_path, language=language):
-                        with translation.override(language):
-                            for message in messages:
-                                translated = gettext(message)
-                                if language == "en":
-                                    self.assertEqual(translated, message)
-                                else:
-                                    self.assertNotEqual(
-                                        translated,
-                                        message,
-                                        f"Missing {language} translation for {message!r}",
-                                    )
+                        catalog = load_gettext_catalog(
+                            "django",
+                            localedir=str(REPO_ROOT / "locale"),
+                            languages=[language],
+                        )
+                        for message in messages:
+                            self.assertIn(message, catalog._catalog)
+                            translated = catalog.gettext(message)
+                            if language == "en":
+                                self.assertEqual(translated, message)
+                            else:
+                                self.assertNotEqual(
+                                    translated,
+                                    message,
+                                    f"Missing {language} translation for {message!r}",
+                                )
+
+    def test_dynamic_brand_video_title_has_compiled_fa_en_ar_translation(self):
+        message = "Introducing %(brand)s and how the platform works"
+        expected = {
+            "fa": ("لومرا", "معرفی لومرا و نحوه کار با پلتفرم"),
+            "en": ("Loomera", "Introducing Loomera and how the platform works"),
+            "ar": ("Loomera", "تعرّف على Loomera وكيفية عمل المنصة"),
+        }
+
+        for language, (brand, expected_title) in expected.items():
+            with self.subTest(language=language):
+                catalog = load_gettext_catalog(
+                    "django",
+                    localedir=str(REPO_ROOT / "locale"),
+                    languages=[language],
+                )
+                self.assertIn(message, catalog._catalog)
+                rendered = catalog.gettext(message) % {"brand": brand}
+                self.assertEqual(rendered, expected_title)
 
     def test_public_discovery_body_has_no_untranslated_persian_literals(self):
         for relative_path in PUBLIC_DISCOVERY_TEMPLATES:

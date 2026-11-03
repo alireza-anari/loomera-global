@@ -2781,9 +2781,9 @@ msgstr "أنا مدير صالون"
 msgid "See my team, appointments and salon performance in one place"
 msgstr "أتابع فريقي ومواعيدي وأداء الصالون في مكان واحد"
 
-#: templates/pages/home.html templates/pages/show_salons.html templates/components/salon_card.html templates/components/book_again_card.html
-msgid "How the platform works"
-msgstr "كيف تعمل المنصة"
+#: templates/pages/home.html
+msgid "Introducing %(brand)s and how the platform works"
+msgstr "تعرّف على %(brand)s وكيفية عمل المنصة"
 
 #: templates/pages/home.html templates/pages/show_salons.html templates/components/salon_card.html templates/components/book_again_card.html
 msgid "Close video"
