@@ -311,7 +311,7 @@ body {
 /* Phase 02 — responsive shell split helpers */
 .lm-shell {
   min-height: 100dvh;
-  direction: rtl;
+  direction: inherit;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
 }

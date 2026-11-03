@@ -2460,3 +2460,39 @@ msgstr "اختيار أول مختص متاح لخدمة %(service)s"
 #, python-format
 msgid "Choose %(professional)s for %(service)s"
 msgstr "اختيار %(professional)s لخدمة %(service)s"
+
+#: templates/partials/shell/desktop_site_header.html templates/partials/shell/customer_mobile_nav.html
+msgid "Main navigation"
+msgstr "القائمة الرئيسية"
+
+#: templates/partials/shell/desktop_site_header.html templates/partials/shell/customer_mobile_nav.html
+msgid "Home"
+msgstr "الرئيسية"
+
+#: templates/partials/shell/desktop_site_header.html templates/partials/shell/customer_mobile_nav.html
+msgid "Salons"
+msgstr "الصالونات"
+
+#: templates/partials/shell/desktop_site_header.html templates/partials/shell/customer_mobile_nav.html
+msgid "Search"
+msgstr "بحث"
+
+#: templates/partials/shell/desktop_site_header.html templates/partials/shell/customer_mobile_nav.html
+msgid "Appointments"
+msgstr "المواعيد"
+
+#: templates/partials/shell/desktop_site_header.html templates/partials/shell/customer_mobile_nav.html
+msgid "Magazine"
+msgstr "المجلة"
+
+#: templates/partials/shell/desktop_site_header.html templates/partials/shell/customer_mobile_nav.html
+msgid "My profile"
+msgstr "ملفي الشخصي"
+
+#: templates/partials/shell/desktop_site_header.html templates/partials/shell/customer_mobile_nav.html
+msgid "Customer app main navigation"
+msgstr "القائمة الرئيسية لتطبيق العميل"
+
+#: templates/partials/shell/desktop_site_header.html templates/partials/shell/customer_mobile_nav.html
+msgid "Log in"
+msgstr "تسجيل الدخول"

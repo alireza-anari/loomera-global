@@ -1,3 +1,4 @@
+{% load i18n %}
 {% with current_namespace=request.resolver_match.namespace|default:'' current_url=request.resolver_match.url_name|default:'' %}
 <style>
   /* Loomera customer mobile navbar
@@ -150,7 +151,7 @@
 <nav
   class="lm-shell-customer-mobile-nav lg:hidden"
   data-shell-nav="customer-mobile"
-  aria-label="ناوبری اصلی اپ مشتری"
+  aria-label="{% trans 'Customer app main navigation' %}"
 >
   <div class="lm-shell-customer-mobile-nav__inner" role="list">
 
@@ -158,7 +159,7 @@
     <a
       href="{% if request.user.is_authenticated %}{% url 'accounts:customerProfile' %}{% else %}{% url 'accounts:login' %}{% endif %}"
       role="listitem"
-      aria-label="پروفایل من"
+      aria-label="{% trans 'My profile' %}"
       {% if current_namespace == 'accounts' %}aria-current="page"{% endif %}
       class="lm-shell-mobile-nav-item lm-app-touch-target {% if current_namespace == 'accounts' %}is-active{% endif %}"
     >
@@ -169,7 +170,7 @@
     <a
       href="{% url 'articles:magazine_home' %}"
       role="listitem"
-      aria-label="مجله"
+      aria-label="{% trans 'Magazine' %}"
       {% if current_namespace == 'articles' %}aria-current="page"{% endif %}
       class="lm-shell-mobile-nav-item lm-app-touch-target {% if current_namespace == 'articles' %}is-active{% endif %}"
     >
@@ -180,7 +181,7 @@
     <a
       href="{% url 'orders:appointments' %}"
       role="listitem"
-      aria-label="نوبت‌ها"
+      aria-label="{% trans 'Appointments' %}"
       {% if current_namespace == 'orders' %}aria-current="page"{% endif %}
       class="lm-shell-mobile-nav-item lm-app-touch-target {% if current_namespace == 'orders' %}is-active{% endif %}"
     >
@@ -191,7 +192,7 @@
     <a
       href="{% url 'search:search_page' %}"
       role="listitem"
-      aria-label="جستجو"
+      aria-label="{% trans 'Search' %}"
       {% if current_namespace == 'search' %}aria-current="page"{% endif %}
       class="lm-shell-mobile-nav-item lm-app-touch-target {% if current_namespace == 'search' %}is-active{% endif %}"
     >
@@ -202,7 +203,7 @@
     <a
       href="{% url 'salons:show_salons' %}"
       role="listitem"
-      aria-label="خانه"
+      aria-label="{% trans 'Home' %}"
       {% if current_namespace == 'salons' and current_url == 'show_salons' %}aria-current="page"{% endif %}
       class="lm-shell-mobile-nav-item lm-app-touch-target {% if current_namespace == 'salons' and current_url == 'show_salons' %}is-active{% endif %}"
     >

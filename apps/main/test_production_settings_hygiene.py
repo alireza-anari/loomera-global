@@ -2855,7 +2855,7 @@ class SharedHeaderFooterBrandIdentityTests(SimpleTestCase):
                 source = self._template_source(relative_path)
                 self.assertNotIn('aria-label="Loomera home"', source)
                 self.assertIn(
-                    'aria-label="{{ deployment_brand.display_name }} home"',
+                    "aria-label=\"{{ deployment_brand.display_name }} {% trans 'Home' %}\"",
                     source,
                 )
                 self.assertEqual(

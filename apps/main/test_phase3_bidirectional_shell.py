@@ -177,3 +177,40 @@ class SharedBidirectionalShellBatchTests(SimpleTestCase):
         self.assertEqual(settings.LANGUAGE_CODE, "fa")
         self.assertEqual(settings.TIME_ZONE, "Asia/Tehran")
         self.assertEqual(settings.LOOMERA_DEFAULT_CALENDAR, "jalali")
+
+    def test_public_shell_body_inherits_the_selected_root_direction(self):
+        source = self._source("static/css/loomera-brand.css")
+        self.assertIn(".lm-shell {", source)
+        shell_rule = source.split(".lm-shell {", 1)[1].split("}", 1)[0]
+        self.assertIn("direction: inherit;", shell_rule)
+        self.assertNotIn("direction: rtl;", shell_rule)
+
+    def test_customer_shell_navigation_uses_native_gettext(self):
+        desktop = self._source("templates/partials/shell/desktop_site_header.html")
+        mobile_header = self._source("templates/partials/shell/mobile_app_header.html")
+        customer_nav = self._source("templates/partials/shell/customer_mobile_nav.html")
+        for source in (desktop, mobile_header, customer_nav):
+            self.assertIn("{% load i18n %}", source)
+        for message in ("Main navigation", "Home", "Salons", "Search", "Appointments", "Services", "Magazine", "My account", "Log in"):
+            with self.subTest(message=message):
+                self.assertIn("{% trans '" + message + "' %}", desktop)
+        for message in ("Back", "Log in"):
+            with self.subTest(mobile_header_message=message):
+                self.assertIn("{% trans '" + message + "' %}", mobile_header)
+        for message in ("Customer app main navigation", "My profile", "Magazine", "Appointments", "Search", "Home"):
+            with self.subTest(customer_nav_message=message):
+                self.assertIn("{% trans '" + message + "' %}", customer_nav)
+
+    def test_shell_navigation_catalogs_translate_fa_en_and_ar(self):
+        from django.utils import translation
+        from django.utils.translation import gettext
+        expected = {
+            "fa": {"Main navigation": "منوی اصلی", "Home": "صفحه اصلی", "Salons": "مراکز", "Search": "جستجو", "Appointments": "نوبت‌ها", "Magazine": "مجله", "My profile": "پروفایل من", "Customer app main navigation": "ناوبری اصلی اپ مشتری", "Log in": "ورود"},
+            "en": {"Main navigation": "Main navigation", "Home": "Home", "Salons": "Salons", "Search": "Search", "Appointments": "Appointments", "Magazine": "Magazine", "My profile": "My profile", "Customer app main navigation": "Customer app main navigation", "Log in": "Log in"},
+            "ar": {"Main navigation": "القائمة الرئيسية", "Home": "الرئيسية", "Salons": "الصالونات", "Search": "بحث", "Appointments": "المواعيد", "Magazine": "المجلة", "My profile": "ملفي الشخصي", "Customer app main navigation": "القائمة الرئيسية لتطبيق العميل", "Log in": "تسجيل الدخول"},
+        }
+        for language, messages in expected.items():
+            with translation.override(language):
+                for source, translated in messages.items():
+                    with self.subTest(language=language, source=source):
+                        self.assertEqual(gettext(source), translated)
