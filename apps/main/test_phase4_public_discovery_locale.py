@@ -5,6 +5,7 @@ from types import SimpleNamespace
 
 from django.template.loader import render_to_string
 from django.test import SimpleTestCase
+from django.utils import translation
 
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
