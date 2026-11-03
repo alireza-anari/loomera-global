@@ -357,3 +357,25 @@ scenarios passed in run 40282514206. Nine short-height modal screenshots and
 provenance are preserved in evidence/phase3_41/. Authenticated routes,
 screen-reader sessions and true zoom remain unverified. No manual evidence or
 release authorization has been added; all five gates remain open.
+
+
+## Phase 3.42 — shared shell locale direction and navigation
+
+PR #114, `global/phase3-locale-shell-direction`, was squash-merged into
+`main`. The reviewed merge commit is `7e3e6da36746156b3464d9fa15298d6df6bf074f`;
+its Git tree exactly matches the reviewed PR head tree.
+
+The change makes the shared shell inherit the selected root direction,
+moves customer desktop/mobile navigation and logo home labels onto native
+Django gettext, and preserves the deployment brand name in accessible
+labels. The PR-head CI run (run #386, ID `41682948353`) passed both Fast
+checks and Chromium keyboard smoke. Post-merge CI on the main merge commit
+(run ID `41683457228`) also passed both jobs.
+
+This closes the shared-shell code-level direction/navigation follow-up.
+It does **not** close any manual release gate: no real authenticated browser
+journey, manual keyboard/zoom review, NVDA/VoiceOver evidence or tester
+sign-off was added. The matrix remains `BLOCKED_MANUAL_ACCEPTANCE`, all
+five manual gates remain open, and no deployment authorization is implied.
+Deployment records could not be verified through the available GitHub
+connection; no deployment was initiated as part of this work.

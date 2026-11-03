@@ -1,5 +1,6 @@
+{% load i18n %}
 <article data-salon-card class="group relative flex h-full flex-col overflow-hidden rounded-[1.75rem] border border-loomera-borderSoft bg-white shadow-lm-soft transition duration-200 hover:-translate-y-0.5 hover:border-loomera-primary/30 hover:shadow-lm-card">
-  <a href="{{ salon.get_absolute_url }}" class="block" aria-label="مشاهده {{ salon.salon_name }}">
+  <a href="{{ salon.get_absolute_url }}" class="block" aria-label="{% trans 'View' %} {{ salon.salon_name }}">
     <div class="relative h-40 overflow-hidden bg-loomera-primarySoft sm:h-44">
       {% if salon.card_image_url %}
         <img src="{{ salon.card_image_url }}" alt="{{ salon.salon_name }}" class="h-full w-full object-cover transition duration-500 group-hover:scale-105">
@@ -24,7 +25,7 @@
           {{ salon.salon_name }}
         </h3>
         <p class="mt-1 truncate text-xs font-bold text-loomera-textMuted">
-          {{ salon.card_location|default:"موقعیت ثبت نشده" }}
+          {% if salon.card_location %}{{ salon.card_location }}{% else %}{% trans "Location not provided" %}{% endif %}
         </p>
       </div>
 
@@ -36,18 +37,18 @@
 
     <div class="mt-3 flex flex-wrap items-center gap-2 text-xs font-bold text-loomera-textMuted">
       <span class="rounded-full bg-loomera-bgSubtle px-2.5 py-1">
-        {{ salon.card_reviews_count }} نظر
+        {{ salon.card_reviews_count }} {% trans "reviews" %}
       </span>
       {% if salon.min_price %}
         <span class="rounded-full bg-loomera-bgSubtle px-2.5 py-1">
-          از {{ salon.min_price|floatformat:0 }} تومان
+          {% trans "From" %} {{ salon.min_price|floatformat:0 }} {% trans "Toman" %}
         </span>
       {% endif %}
     </div>
 
     <div class="mt-4 flex gap-2 pt-1">
       <a href="{{ salon.get_absolute_url }}" class="inline-flex flex-1 items-center justify-center rounded-full bg-loomera-primary px-4 py-2.5 text-xs font-black text-white shadow-sm transition hover:bg-loomera-primaryHover">
-        مشاهده و رزرو
+        {% trans "View and book" %}
       </a>
     </div>
   </div>

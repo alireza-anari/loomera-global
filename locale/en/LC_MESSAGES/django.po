@@ -2492,3 +2492,419 @@ msgstr "Customer app main navigation"
 #: templates/partials/shell/desktop_site_header.html templates/partials/shell/customer_mobile_nav.html
 msgid "Log in"
 msgstr "Log in"
+
+#: templates/pages/home.html templates/pages/show_salons.html templates/components/salon_card.html templates/components/book_again_card.html
+msgid "An intelligent beauty and salon management platform"
+msgstr "An intelligent beauty and salon management platform"
+
+#: templates/pages/home.html templates/pages/show_salons.html templates/components/salon_card.html templates/components/book_again_card.html
+msgid "Beauty, made simpler"
+msgstr "Beauty, made simpler"
+
+#: templates/pages/home.html templates/pages/show_salons.html templates/components/salon_card.html templates/components/book_again_card.html
+msgid "when"
+msgstr "when"
+
+#: templates/pages/home.html templates/pages/show_salons.html templates/components/salon_card.html templates/components/book_again_card.html
+msgid "everything"
+msgstr "everything"
+
+#: templates/pages/home.html templates/pages/show_salons.html templates/components/salon_card.html templates/components/book_again_card.html
+msgid "is in its place"
+msgstr "is in its place"
+
+#: templates/pages/home.html templates/pages/show_salons.html templates/components/salon_card.html templates/components/book_again_card.html
+msgid "Start for free"
+msgstr "Start for free"
+
+#: templates/pages/home.html templates/pages/show_salons.html templates/components/salon_card.html templates/components/book_again_card.html
+msgid "See how it works"
+msgstr "See how it works"
+
+#: templates/pages/home.html templates/pages/show_salons.html templates/components/salon_card.html templates/components/book_again_card.html
+msgid "Booking experience sample"
+msgstr "Booking experience sample"
+
+#: templates/pages/home.html templates/pages/show_salons.html templates/components/salon_card.html templates/components/book_again_card.html
+msgid "Booking interface preview"
+msgstr "Booking interface preview"
+
+#: templates/pages/home.html templates/pages/show_salons.html templates/components/salon_card.html templates/components/book_again_card.html
+msgid "One booking. Three experiences."
+msgstr "One booking. Three experiences."
+
+#: templates/pages/home.html templates/pages/show_salons.html templates/components/salon_card.html templates/components/book_again_card.html
+msgid "One connected flow."
+msgstr "One connected flow."
+
+#: templates/pages/home.html templates/pages/show_salons.html templates/components/salon_card.html templates/components/book_again_card.html
+msgid "Customer"
+msgstr "Customer"
+
+#: templates/pages/home.html templates/pages/show_salons.html templates/components/salon_card.html templates/components/book_again_card.html
+msgid "Find with ease"
+msgstr "Find with ease"
+
+#: templates/pages/home.html templates/pages/show_salons.html templates/components/salon_card.html templates/components/book_again_card.html
+msgid "Choose with confidence"
+msgstr "Choose with confidence"
+
+#: templates/pages/home.html templates/pages/show_salons.html templates/components/salon_card.html templates/components/book_again_card.html
+msgid "Book quickly"
+msgstr "Book quickly"
+
+#: templates/pages/home.html templates/pages/show_salons.html templates/components/salon_card.html templates/components/book_again_card.html
+msgid "Stylist"
+msgstr "Stylist"
+
+#: templates/pages/home.html templates/pages/show_salons.html templates/components/salon_card.html templates/components/book_again_card.html
+msgid "See your schedule"
+msgstr "See your schedule"
+
+#: templates/pages/home.html templates/pages/show_salons.html templates/components/salon_card.html templates/components/book_again_card.html
+msgid "Manage your clients"
+msgstr "Manage your clients"
+
+#: templates/pages/home.html templates/pages/show_salons.html templates/components/salon_card.html templates/components/book_again_card.html
+msgid "Focus on your work"
+msgstr "Focus on your work"
+
+#: templates/pages/home.html templates/pages/show_salons.html templates/components/salon_card.html templates/components/book_again_card.html
+msgid "Salon manager"
+msgstr "Salon manager"
+
+#: templates/pages/home.html templates/pages/show_salons.html templates/components/salon_card.html templates/components/book_again_card.html
+msgid "Team, appointments and performance"
+msgstr "Team, appointments and performance"
+
+#: templates/pages/home.html templates/pages/show_salons.html templates/components/salon_card.html templates/components/book_again_card.html
+msgid "Manage your salon from one place"
+msgstr "Manage your salon from one place"
+
+#: templates/pages/home.html templates/pages/show_salons.html templates/components/salon_card.html templates/components/book_again_card.html
+msgid "Simple for every role"
+msgstr "Simple for every role"
+
+#: templates/pages/home.html templates/pages/show_salons.html templates/components/salon_card.html templates/components/book_again_card.html
+msgid "Everyone sees only what they need for their work"
+msgstr "Everyone sees only what they need for their work"
+
+#: templates/pages/home.html templates/pages/show_salons.html templates/components/salon_card.html templates/components/book_again_card.html
+msgid "The customer booking journey, stylist schedule and salon management are designed as clear, separate paths"
+msgstr "The customer booking journey, stylist schedule and salon management are designed as clear, separate paths"
+
+#: templates/pages/home.html templates/pages/show_salons.html templates/components/salon_card.html templates/components/book_again_card.html
+msgid "so everyday work stays simple and connected."
+msgstr "so everyday work stays simple and connected."
+
+#: templates/pages/home.html templates/pages/show_salons.html templates/components/salon_card.html templates/components/book_again_card.html
+msgid "Customer experience"
+msgstr "Customer experience"
+
+#: templates/pages/home.html templates/pages/show_salons.html templates/components/salon_card.html templates/components/book_again_card.html
+msgid "From choosing a service to booking, everything is clear"
+msgstr "From choosing a service to booking, everything is clear"
+
+#: templates/pages/home.html templates/pages/show_salons.html templates/components/salon_card.html templates/components/book_again_card.html
+msgid "Customers find the right salon and service, then choose a professional"
+msgstr "Customers find the right salon and service, then choose a professional"
+
+#: templates/pages/home.html templates/pages/show_salons.html templates/components/salon_card.html templates/components/book_again_card.html
+msgid "and see available times before completing their booking."
+msgstr "and see available times before completing their booking."
+
+#: templates/pages/home.html templates/pages/show_salons.html templates/components/salon_card.html templates/components/book_again_card.html
+msgid "Search and discover"
+msgstr "Search and discover"
+
+#: templates/pages/home.html templates/pages/show_salons.html templates/components/salon_card.html templates/components/book_again_card.html
+msgid "Complete booking"
+msgstr "Complete booking"
+
+#: templates/pages/home.html templates/pages/show_salons.html templates/components/salon_card.html templates/components/book_again_card.html
+msgid "Customer booking experience illustration"
+msgstr "Customer booking experience illustration"
+
+#: templates/pages/home.html templates/pages/show_salons.html templates/components/salon_card.html templates/components/book_again_card.html
+msgid "Stylist experience illustration"
+msgstr "Stylist experience illustration"
+
+#: templates/pages/home.html templates/pages/show_salons.html templates/components/salon_card.html templates/components/book_again_card.html
+msgid "Salon management illustration"
+msgstr "Salon management illustration"
+
+#: templates/pages/home.html templates/pages/show_salons.html templates/components/salon_card.html templates/components/book_again_card.html
+msgid "Stylist workspace"
+msgstr "Stylist workspace"
+
+#: templates/pages/home.html templates/pages/show_salons.html templates/components/salon_card.html templates/components/book_again_card.html
+msgid "An organized workday, without switching between tools"
+msgstr "An organized workday, without switching between tools"
+
+#: templates/pages/home.html templates/pages/show_salons.html templates/components/salon_card.html templates/components/book_again_card.html
+msgid "Professionals can see today's schedule and upcoming clients,"
+msgstr "Professionals can see today's schedule and upcoming clients,"
+
+#: templates/pages/home.html templates/pages/show_salons.html templates/components/salon_card.html templates/components/book_again_card.html
+msgid "along with their services and performance in one dashboard."
+msgstr "along with their services and performance in one dashboard."
+
+#: templates/pages/home.html templates/pages/show_salons.html templates/components/salon_card.html templates/components/book_again_card.html
+msgid "Today's schedule"
+msgstr "Today's schedule"
+
+#: templates/pages/home.html templates/pages/show_salons.html templates/components/salon_card.html templates/components/book_again_card.html
+msgid "Clients"
+msgstr "Clients"
+
+#: templates/pages/home.html templates/pages/show_salons.html templates/components/salon_card.html templates/components/book_again_card.html
+msgid "Performance"
+msgstr "Performance"
+
+#: templates/pages/home.html templates/pages/show_salons.html templates/components/salon_card.html templates/components/book_again_card.html
+msgid "Stylist dashboard illustration"
+msgstr "Stylist dashboard illustration"
+
+#: templates/pages/home.html templates/pages/show_salons.html templates/components/salon_card.html templates/components/book_again_card.html
+msgid "Salon manager dashboard"
+msgstr "Salon manager dashboard"
+
+#: templates/pages/home.html templates/pages/show_salons.html templates/components/salon_card.html templates/components/book_again_card.html
+msgid "Your entire salon, at a glance"
+msgstr "Your entire salon, at a glance"
+
+#: templates/pages/home.html templates/pages/show_salons.html templates/components/salon_card.html templates/components/book_again_card.html
+msgid "Managers can track appointments, revenue, professionals, services and booking channels"
+msgstr "Managers can track appointments, revenue, professionals, services and booking channels"
+
+#: templates/pages/home.html templates/pages/show_salons.html templates/components/salon_card.html templates/components/book_again_card.html
+msgid "in one organized view."
+msgstr "in one organized view."
+
+#: templates/pages/home.html templates/pages/show_salons.html templates/components/salon_card.html templates/components/book_again_card.html
+msgid "Team and professionals"
+msgstr "Team and professionals"
+
+#: templates/pages/home.html templates/pages/show_salons.html templates/components/salon_card.html templates/components/book_again_card.html
+msgid "Reports"
+msgstr "Reports"
+
+#: templates/pages/home.html templates/pages/show_salons.html templates/components/salon_card.html templates/components/book_again_card.html
+msgid "Salon manager dashboard illustration"
+msgstr "Salon manager dashboard illustration"
+
+#: templates/pages/home.html templates/pages/show_salons.html templates/components/salon_card.html templates/components/book_again_card.html
+msgid "One connected journey from the first click to the customer's return"
+msgstr "One connected journey from the first click to the customer's return"
+
+#: templates/pages/home.html templates/pages/show_salons.html templates/components/salon_card.html templates/components/book_again_card.html
+msgid "Discover"
+msgstr "Discover"
+
+#: templates/pages/home.html templates/pages/show_salons.html templates/components/salon_card.html templates/components/book_again_card.html
+msgid "Search and find the best option"
+msgstr "Search and find the best option"
+
+#: templates/pages/home.html templates/pages/show_salons.html templates/components/salon_card.html templates/components/book_again_card.html
+msgid "Choose"
+msgstr "Choose"
+
+#: templates/pages/home.html templates/pages/show_salons.html templates/components/salon_card.html templates/components/book_again_card.html
+msgid "Explore services, professionals and available times"
+msgstr "Explore services, professionals and available times"
+
+#: templates/pages/home.html templates/pages/show_salons.html templates/components/salon_card.html templates/components/book_again_card.html
+msgid "Book"
+msgstr "Book"
+
+#: templates/pages/home.html templates/pages/show_salons.html templates/components/salon_card.html templates/components/book_again_card.html
+msgid "Choose a time and confirm the appointment"
+msgstr "Choose a time and confirm the appointment"
+
+#: templates/pages/home.html templates/pages/show_salons.html templates/components/salon_card.html templates/components/book_again_card.html
+msgid "Service delivery"
+msgstr "Service delivery"
+
+#: templates/pages/home.html templates/pages/show_salons.html templates/components/salon_card.html templates/components/book_again_card.html
+msgid "Enjoy a professional experience at the salon"
+msgstr "Enjoy a professional experience at the salon"
+
+#: templates/pages/home.html templates/pages/show_salons.html templates/components/salon_card.html templates/components/book_again_card.html
+msgid "Manage"
+msgstr "Manage"
+
+#: templates/pages/home.html templates/pages/show_salons.html templates/components/salon_card.html templates/components/book_again_card.html
+msgid "Manage your team and appointments"
+msgstr "Manage your team and appointments"
+
+#: templates/pages/home.html templates/pages/show_salons.html templates/components/salon_card.html templates/components/book_again_card.html
+msgid "Return"
+msgstr "Return"
+
+#: templates/pages/home.html templates/pages/show_salons.html templates/components/salon_card.html templates/components/book_again_card.html
+msgid "A better experience that builds loyalty"
+msgstr "A better experience that builds loyalty"
+
+#: templates/pages/home.html templates/pages/show_salons.html templates/components/salon_card.html templates/components/book_again_card.html
+msgid "Where would you like to start?"
+msgstr "Where would you like to start?"
+
+#: templates/pages/home.html templates/pages/show_salons.html templates/components/salon_card.html templates/components/book_again_card.html
+msgid "Choose your role to get started with the right experience."
+msgstr "Choose your role to get started with the right experience."
+
+#: templates/pages/home.html templates/pages/show_salons.html templates/components/salon_card.html templates/components/book_again_card.html
+msgid "I'm a customer"
+msgstr "I'm a customer"
+
+#: templates/pages/home.html templates/pages/show_salons.html templates/components/salon_card.html templates/components/book_again_card.html
+msgid "Find and book the right salon and professional"
+msgstr "Find and book the right salon and professional"
+
+#: templates/pages/home.html templates/pages/show_salons.html templates/components/salon_card.html templates/components/book_again_card.html
+msgid "I'm a professional"
+msgstr "I'm a professional"
+
+#: templates/pages/home.html templates/pages/show_salons.html templates/components/salon_card.html templates/components/book_again_card.html
+msgid "Manage my schedule and appointments more easily"
+msgstr "Manage my schedule and appointments more easily"
+
+#: templates/pages/home.html templates/pages/show_salons.html templates/components/salon_card.html templates/components/book_again_card.html
+msgid "I'm a salon manager"
+msgstr "I'm a salon manager"
+
+#: templates/pages/home.html templates/pages/show_salons.html templates/components/salon_card.html templates/components/book_again_card.html
+msgid "See my team, appointments and salon performance in one place"
+msgstr "See my team, appointments and salon performance in one place"
+
+#: templates/pages/home.html
+msgid "Introducing %(brand)s and how the platform works"
+msgstr "Introducing %(brand)s and how the platform works"
+
+#: templates/pages/home.html templates/pages/show_salons.html templates/components/salon_card.html templates/components/book_again_card.html
+msgid "Close video"
+msgstr "Close video"
+
+#: templates/pages/home.html templates/pages/show_salons.html templates/components/salon_card.html templates/components/book_again_card.html
+msgid "Your browser does not support video playback."
+msgstr "Your browser does not support video playback."
+
+#: templates/pages/home.html templates/pages/show_salons.html templates/components/salon_card.html templates/components/book_again_card.html
+msgid "connects customers, professionals and salons on one smart platform, creating a better experience for everyone."
+msgstr "connects customers, professionals and salons on one smart platform, creating a better experience for everyone."
+
+#: templates/pages/home.html templates/pages/show_salons.html templates/components/salon_card.html templates/components/book_again_card.html
+msgid "Discover and book"
+msgstr "Discover and book"
+
+#: templates/pages/home.html templates/pages/show_salons.html templates/components/salon_card.html templates/components/book_again_card.html
+msgid "Find the right salon"
+msgstr "Find the right salon"
+
+#: templates/pages/home.html templates/pages/show_salons.html templates/components/salon_card.html templates/components/book_again_card.html
+msgid "Start with your past experiences, or use search and service categories to find something new."
+msgstr "Start with your past experiences, or use search and service categories to find something new."
+
+#: templates/pages/home.html templates/pages/show_salons.html templates/components/salon_card.html templates/components/book_again_card.html
+msgid "Your previous experience"
+msgstr "Your previous experience"
+
+#: templates/pages/home.html templates/pages/show_salons.html templates/components/salon_card.html templates/components/book_again_card.html
+msgid "Services you booked before, without searching again."
+msgstr "Services you booked before, without searching again."
+
+#: templates/pages/home.html templates/pages/show_salons.html templates/components/salon_card.html templates/components/book_again_card.html
+msgid "For you"
+msgstr "For you"
+
+#: templates/pages/home.html templates/pages/show_salons.html templates/components/salon_card.html templates/components/book_again_card.html
+msgid "Salons you know"
+msgstr "Salons you know"
+
+#: templates/pages/home.html templates/pages/show_salons.html templates/components/salon_card.html templates/components/book_again_card.html
+msgid "Your favorites and salons you've viewed before."
+msgstr "Your favorites and salons you've viewed before."
+
+#: templates/pages/home.html templates/pages/show_salons.html templates/components/salon_card.html templates/components/book_again_card.html
+msgid "Favorites"
+msgstr "Favorites"
+
+#: templates/pages/home.html templates/pages/show_salons.html templates/components/salon_card.html templates/components/book_again_card.html
+msgid "Discover more"
+msgstr "Discover more"
+
+#: templates/pages/home.html templates/pages/show_salons.html templates/components/salon_card.html templates/components/book_again_card.html
+msgid "Recommended salons"
+msgstr "Recommended salons"
+
+#: templates/pages/home.html templates/pages/show_salons.html templates/components/salon_card.html templates/components/book_again_card.html
+msgid "A mix of popular, new, top-rated and discounted salons."
+msgstr "A mix of popular, new, top-rated and discounted salons."
+
+#: templates/pages/home.html templates/pages/show_salons.html templates/components/salon_card.html templates/components/book_again_card.html
+msgid "All results"
+msgstr "All results"
+
+#: templates/pages/home.html templates/pages/show_salons.html templates/components/salon_card.html templates/components/book_again_card.html
+msgid "Start with a service"
+msgstr "Start with a service"
+
+#: templates/pages/home.html templates/pages/show_salons.html templates/components/salon_card.html templates/components/book_again_card.html
+msgid "What service are you looking for?"
+msgstr "What service are you looking for?"
+
+#: templates/pages/home.html templates/pages/show_salons.html templates/components/salon_card.html templates/components/book_again_card.html
+msgid "No salons to show yet"
+msgstr "No salons to show yet"
+
+#: templates/pages/home.html templates/pages/show_salons.html templates/components/salon_card.html templates/components/book_again_card.html
+msgid "View"
+msgstr "View"
+
+#: templates/pages/home.html templates/pages/show_salons.html templates/components/salon_card.html templates/components/book_again_card.html
+msgid "Location not provided"
+msgstr "Location not provided"
+
+#: templates/pages/home.html templates/pages/show_salons.html templates/components/salon_card.html templates/components/book_again_card.html
+msgid "reviews"
+msgstr "reviews"
+
+#: templates/pages/home.html templates/pages/show_salons.html templates/components/salon_card.html templates/components/book_again_card.html
+msgid "From"
+msgstr "From"
+
+#: templates/pages/home.html templates/pages/show_salons.html templates/components/salon_card.html templates/components/book_again_card.html
+msgid "Toman"
+msgstr "Toman"
+
+#: templates/pages/home.html templates/pages/show_salons.html templates/components/salon_card.html templates/components/book_again_card.html
+msgid "View and book"
+msgstr "View and book"
+
+#: templates/pages/home.html templates/pages/show_salons.html templates/components/salon_card.html templates/components/book_again_card.html
+msgid "Previous booking"
+msgstr "Previous booking"
+
+#: templates/pages/home.html templates/pages/show_salons.html templates/components/salon_card.html templates/components/book_again_card.html
+msgid "Previous service"
+msgstr "Previous service"
+
+#: templates/pages/home.html templates/pages/show_salons.html templates/components/salon_card.html templates/components/book_again_card.html
+msgid "Date not recorded"
+msgstr "Date not recorded"
+
+#: templates/pages/home.html templates/pages/show_salons.html templates/components/salon_card.html templates/components/book_again_card.html
+msgid "Time not recorded"
+msgstr "Time not recorded"
+
+#: templates/pages/home.html templates/pages/show_salons.html templates/components/salon_card.html templates/components/book_again_card.html
+msgid "Professional not recorded"
+msgstr "Professional not recorded"
+
+#: templates/pages/home.html templates/pages/show_salons.html templates/components/salon_card.html templates/components/book_again_card.html
+msgid "Previous amount"
+msgstr "Previous amount"
+
+#: templates/pages/home.html templates/pages/show_salons.html templates/components/salon_card.html templates/components/book_again_card.html
+msgid "Price not recorded"
+msgstr "Price not recorded"

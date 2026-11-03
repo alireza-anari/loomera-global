@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% load static %}
+{% load i18n %}
 
 {% block title %}{{ deployment_brand.display_name_fa }} | زیبایی، ساده‌تر{% endblock %}
 {% block body_attrs %}data-page="loomera-home"{% endblock %}
@@ -19,25 +20,25 @@
       <div class="lm-hero-copy">
         <span class="lm-kicker">
           <i class="fa-solid fa-sparkles" aria-hidden="true"></i>
-          پلتفرم هوشمند زیبایی و مدیریت سالن
+          {% trans "An intelligent beauty and salon management platform" %}
         </span>
 
         <h1>
-          زیبایی، ساده‌تر
+          {% trans "Beauty, made simpler" %}
           <br>
-          وقتی <em>همه‌چیز</em>
+          {% trans "when" %} <em>{% trans "everything" %}</em>
           <br>
-          سر جای خودش است
+          {% trans "is in its place" %}
         </h1>
 
         <p>
-          <span class="lm-brand-secondary">{{ deployment_brand.display_name_fa }}</span> مشتری‌ها، متخصص‌ها و سالن‌ها را در یک پلتفرم هوشمند
-          به هم متصل می‌کند تا تجربه‌ای بهتر برای همه بسازد.
+          <span class="lm-brand-secondary">{% if deployment_locale.language_code == "fa" or not deployment_locale.language_code %}{{ deployment_brand.display_name_fa }}{% else %}{{ deployment_brand.display_name }}{% endif %}</span>
+          {% trans "connects customers, professionals and salons on one smart platform, creating a better experience for everyone." %}
         </p>
 
         <div class="lm-hero-actions">
           <a href="{% url 'accounts:customer_signup' %}" class="lm-btn lm-btn-primary">
-            شروع رایگان
+            {% trans "Start for free" %}
           </a>
           <button
             type="button"
@@ -46,17 +47,17 @@
             aria-haspopup="dialog"
             aria-controls="loomera-intro-video-dialog"
           >
-            ببین چطور کار می‌کند
+            {% trans "See how it works" %}
             <i class="fa-regular fa-circle-play" aria-hidden="true"></i>
           </button>
         </div>
       </div>
 
-      <div class="lm-hero-media" aria-label="نمونه تجربه رزرو در {{ deployment_brand.display_name_fa }}">
+      <div class="lm-hero-media" aria-label="{% trans 'Booking experience sample' %} {% if deployment_locale.language_code == "fa" or not deployment_locale.language_code %}{{ deployment_brand.display_name_fa }}{% else %}{{ deployment_brand.display_name }}{% endif %}">
         <div class="lm-phone-glow"></div>
         <img
           src="{% static 'images/home/home-hero-v8.webp' %}"
-          alt="نمونه رابط رزرو {{ deployment_brand.display_name_fa }}"
+          alt="{% trans 'Booking interface preview' %} {% if deployment_locale.language_code == "fa" or not deployment_locale.language_code %}{{ deployment_brand.display_name_fa }}{% else %}{{ deployment_brand.display_name }}{% endif %}"
           class="lm-hero-phone"
         >
       </div>
@@ -70,7 +71,7 @@
     <div class="lm-home-container lm-section-panel">
 
       <header class="lm-section-heading">
-        <h2>یک رزرو. سه تجربه. <em>یک جریان هماهنگ.</em></h2>
+        <h2>{% trans "One booking. Three experiences." %} <em>{% trans "One connected flow." %}</em></h2>
       </header>
 
       <div class="lm-audience-grid">
@@ -80,10 +81,10 @@
             <span class="lm-audience-icon">
               <i class="fa-regular fa-user" aria-hidden="true"></i>
             </span>
-            <h3>مشتری</h3>
-            <p>راحت پیدا کن<br>مطمئن انتخاب کن<br>سریع رزرو کن</p>
+            <h3>{% trans "Customer" %}</h3>
+            <p>{% trans "Find with ease" %}<br>{% trans "Choose with confidence" %}<br>{% trans "Book quickly" %}</p>
           </div>
-          <img src="{% static 'images/home/audience-customer.webp' %}" alt="مشتری {{ deployment_brand.display_name_fa }}">
+          <img src="{% static 'images/home/audience-customer.webp' %}" alt="{% trans 'Customer' %} {% if deployment_locale.language_code == "fa" or not deployment_locale.language_code %}{{ deployment_brand.display_name_fa }}{% else %}{{ deployment_brand.display_name }}{% endif %}">
         </article>
 
         <article class="lm-audience-card lm-audience-stylist">
@@ -91,10 +92,10 @@
             <span class="lm-audience-icon">
               <i class="fa-solid fa-scissors" aria-hidden="true"></i>
             </span>
-            <h3>متخصص</h3>
-            <p>برنامه‌ات را ببین<br>مشتری‌هایت را مدیریت کن<br>روی کارت تمرکز کن</p>
+            <h3>{% trans "Stylist" %}</h3>
+            <p>{% trans "See your schedule" %}<br>{% trans "Manage your clients" %}<br>{% trans "Focus on your work" %}</p>
           </div>
-          <img src="{% static 'images/home/audience-stylist.webp' %}" alt="متخصص {{ deployment_brand.display_name_fa }}">
+          <img src="{% static 'images/home/audience-stylist.webp' %}" alt="{% trans 'Stylist experience illustration' %} {% if deployment_locale.language_code == "fa" or not deployment_locale.language_code %}{{ deployment_brand.display_name_fa }}{% else %}{{ deployment_brand.display_name }}{% endif %}">
         </article>
 
         <article class="lm-audience-card lm-audience-manager">
@@ -102,10 +103,10 @@
             <span class="lm-audience-icon">
               <i class="fa-solid fa-briefcase" aria-hidden="true"></i>
             </span>
-            <h3>مدیر سالن</h3>
-            <p>تیم، نوبت‌ها و عملکرد<br>سالن را از یکجا<br>مدیریت کن</p>
+            <h3>{% trans "Salon manager" %}</h3>
+            <p>{% trans "Team, appointments and performance" %}<br>{% trans "Manage your salon from one place" %}</p>
           </div>
-          <img src="{% static 'images/home/audience-manager.webp' %}" alt="مدیر سالن {{ deployment_brand.display_name_fa }}">
+          <img src="{% static 'images/home/audience-manager.webp' %}" alt="{% trans 'Salon management illustration' %} {% if deployment_locale.language_code == "fa" or not deployment_locale.language_code %}{{ deployment_brand.display_name_fa }}{% else %}{{ deployment_brand.display_name }}{% endif %}">
         </article>
 
       </div>
@@ -118,11 +119,11 @@
     <div class="lm-home-container">
 
       <header class="lm-section-heading lm-product-heading">
-        <span class="lm-section-eyebrow">ساده برای هر نقش</span>
-        <h2>هرکس فقط چیزی را می‌بیند که <em>برای کار خودش لازم دارد</em></h2>
+        <span class="lm-section-eyebrow">{% trans "Simple for every role" %}</span>
+        <h2>{% trans "Everyone sees only what they need for their work" %}</h2>
         <p>
-          مسیر رزرو مشتری، برنامه متخصص و مدیریت سالن جدا و روشن طراحی شده‌اند
-          تا کارهای روزمره بدون شلوغی و رفت‌وبرگشت انجام شوند.
+          {% trans "The customer booking journey, stylist schedule and salon management are designed as clear, separate paths" %}
+          {% trans "so everyday work stays simple and connected." %}
         </p>
       </header>
 
@@ -132,24 +133,24 @@
           <div class="lm-product-copy">
             <span class="lm-product-badge">
               <i class="fa-regular fa-user" aria-hidden="true"></i>
-              تجربه مشتری
+              {% trans "Customer experience" %}
             </span>
-            <h3>از انتخاب خدمت تا رزرو، همه‌چیز روشن است</h3>
+            <h3>{% trans "From choosing a service to booking, everything is clear" %}</h3>
             <p>
-              مشتری سالن و خدمت مناسب را پیدا می‌کند، متخصص را انتخاب می‌کند
-              و در همان مسیر، زمان آزاد را می‌بیند و رزرو را تکمیل می‌کند.
+              {% trans "Customers find the right salon and service, then choose a professional" %}
+              {% trans "and see available times before completing their booking." %}
             </p>
             <div class="lm-product-points">
-              <span><i class="fa-solid fa-magnifying-glass"></i> جستجو و کشف</span>
-              <span><i class="fa-solid fa-scissors"></i> انتخاب خدمت</span>
-              <span><i class="fa-regular fa-calendar-check"></i> رزرو نهایی</span>
+              <span><i class="fa-solid fa-magnifying-glass"></i> {% trans "Search and discover" %}</span>
+              <span><i class="fa-solid fa-scissors"></i> {% trans "Choose a service" %}</span>
+              <span><i class="fa-regular fa-calendar-check"></i> {% trans "Complete booking" %}</span>
             </div>
           </div>
 
           <div class="lm-product-screen lm-product-screen-mobile">
             <img
               src="{% static 'images/home/customer-experience-v8.webp' %}"
-              alt="نمای تجربه رزرو مشتری در {{ deployment_brand.display_name_fa }}"
+              alt="{% trans 'Customer booking experience illustration' %} {% if deployment_locale.language_code == "fa" or not deployment_locale.language_code %}{{ deployment_brand.display_name_fa }}{% else %}{{ deployment_brand.display_name }}{% endif %}"
             >
           </div>
         </article>
@@ -159,24 +160,24 @@
           <div class="lm-product-copy">
             <span class="lm-product-badge">
               <i class="fa-solid fa-scissors" aria-hidden="true"></i>
-              پنل متخصص
+              {% trans "Stylist workspace" %}
             </span>
-            <h3>روز کاری منظم، بدون رفت‌وآمد بین چند ابزار</h3>
+            <h3>{% trans "An organized workday, without switching between tools" %}</h3>
             <p>
-              متخصص بدون جابه‌جایی بین چند ابزار، برنامه امروز، مراجعین پیش‌رو،
-              خدمات و عملکرد خودش را از یک داشبورد می‌بیند.
+              {% trans "Professionals can see today's schedule and upcoming clients," %}
+              {% trans "along with their services and performance in one dashboard." %}
             </p>
             <div class="lm-product-points">
-              <span><i class="fa-regular fa-clock"></i> برنامه امروز</span>
-              <span><i class="fa-regular fa-user"></i> مراجعین</span>
-              <span><i class="fa-solid fa-chart-line"></i> عملکرد</span>
+              <span><i class="fa-regular fa-clock"></i> {% trans "Today's schedule" %}</span>
+              <span><i class="fa-regular fa-user"></i> {% trans "Clients" %}</span>
+              <span><i class="fa-solid fa-chart-line"></i> {% trans "Performance" %}</span>
             </div>
           </div>
 
           <div class="lm-product-screen lm-product-screen-dashboard">
             <img
               src="{% static 'images/home/stylist-experience-v8.webp' %}"
-              alt="نمای داشبورد متخصص {{ deployment_brand.display_name_fa }}"
+              alt="{% trans 'Stylist dashboard illustration' %} {% if deployment_locale.language_code == "fa" or not deployment_locale.language_code %}{{ deployment_brand.display_name_fa }}{% else %}{{ deployment_brand.display_name }}{% endif %}"
             >
           </div>
         </article>
@@ -186,24 +187,24 @@
           <div class="lm-product-copy">
             <span class="lm-product-badge">
               <i class="fa-solid fa-briefcase" aria-hidden="true"></i>
-              داشبورد مدیر سالن
+              {% trans "Salon manager dashboard" %}
             </span>
-            <h3>همه‌ی سالن، در یک نگاه</h3>
+            <h3>{% trans "Your entire salon, at a glance" %}</h3>
             <p>
-              مدیر سالن وضعیت نوبت‌ها، درآمد، متخصص‌ها، خدمات و کانال‌های رزرو
-              را در یک نمای منسجم دنبال می‌کند.
+              {% trans "Managers can track appointments, revenue, professionals, services and booking channels" %}
+              {% trans "in one organized view." %}
             </p>
             <div class="lm-product-points">
-              <span><i class="fa-solid fa-users"></i> تیم و متخصصان</span>
-              <span><i class="fa-solid fa-chart-pie"></i> گزارش‌ها</span>
-              <span><i class="fa-regular fa-calendar"></i> نوبت‌ها</span>
+              <span><i class="fa-solid fa-users"></i> {% trans "Team and professionals" %}</span>
+              <span><i class="fa-solid fa-chart-pie"></i> {% trans "Reports" %}</span>
+              <span><i class="fa-regular fa-calendar"></i> {% trans "Appointments" %}</span>
             </div>
           </div>
 
           <div class="lm-product-screen lm-product-screen-dashboard">
             <img
               src="{% static 'images/home/manager-experience-v8.webp' %}"
-              alt="نمای داشبورد مدیر سالن {{ deployment_brand.display_name_fa }}"
+              alt="{% trans 'Salon manager dashboard illustration' %} {% if deployment_locale.language_code == "fa" or not deployment_locale.language_code %}{{ deployment_brand.display_name_fa }}{% else %}{{ deployment_brand.display_name }}{% endif %}"
             >
           </div>
         </article>
@@ -217,54 +218,54 @@
   <section class="lm-home-section lm-reveal">
     <div class="lm-home-container lm-flow-panel">
       <header class="lm-section-heading">
-        <h2>یک جریان هماهنگ از اولین کلیک تا بازگشت مشتری</h2>
+        <h2>{% trans "One connected journey from the first click to the customer's return" %}</h2>
       </header>
 
       <div class="lm-flow">
         <article>
           <span><i class="fa-solid fa-magnifying-glass"></i></span>
-          <strong>کشف</strong>
-          <small>جستجو و پیدا کردن بهترین گزینه</small>
+          <strong>{% trans "Discover" %}</strong>
+          <small>{% trans "Search and find the best option" %}</small>
         </article>
 
         <i class="fa-solid fa-chevron-left lm-flow-separator"></i>
 
         <article>
           <span><i class="fa-regular fa-heart"></i></span>
-          <strong>انتخاب</strong>
-          <small>بررسی خدمات، متخصص و زمان</small>
+          <strong>{% trans "Choose" %}</strong>
+          <small>{% trans "Explore services, professionals and available times" %}</small>
         </article>
 
         <i class="fa-solid fa-chevron-left lm-flow-separator"></i>
 
         <article>
           <span><i class="fa-regular fa-calendar-check"></i></span>
-          <strong>رزرو</strong>
-          <small>انتخاب زمان و ثبت نوبت</small>
+          <strong>{% trans "Book" %}</strong>
+          <small>{% trans "Choose a time and confirm the appointment" %}</small>
         </article>
 
         <i class="fa-solid fa-chevron-left lm-flow-separator"></i>
 
         <article>
           <span><i class="fa-solid fa-scissors"></i></span>
-          <strong>ارائه خدمت</strong>
-          <small>تجربه حرفه‌ای در سالن</small>
+          <strong>{% trans "Service delivery" %}</strong>
+          <small>{% trans "Enjoy a professional experience at the salon" %}</small>
         </article>
 
         <i class="fa-solid fa-chevron-left lm-flow-separator"></i>
 
         <article>
           <span><i class="fa-solid fa-chart-simple"></i></span>
-          <strong>مدیریت</strong>
-          <small>مدیریت تیم و نوبت‌ها</small>
+          <strong>{% trans "Manage" %}</strong>
+          <small>{% trans "Manage your team and appointments" %}</small>
         </article>
 
         <i class="fa-solid fa-chevron-left lm-flow-separator"></i>
 
         <article>
           <span><i class="fa-regular fa-user"></i></span>
-          <strong>بازگشت مشتری</strong>
-          <small>تجربه بهتر و وفاداری</small>
+          <strong>{% trans "Return" %}</strong>
+          <small>{% trans "A better experience that builds loyalty" %}</small>
         </article>
       </div>
     </div>
@@ -275,16 +276,16 @@
   <section class="lm-home-section lm-home-final lm-reveal">
     <div class="lm-home-container lm-final-panel">
       <header class="lm-section-heading">
-        <h2><span class="lm-brand-secondary">{{ deployment_brand.display_name_fa }}</span> برای تو از کجا شروع می‌شود؟</h2>
-        <p>نقش خودت را انتخاب کن تا با بهترین تجربه برای همان مسیر شروع کنی.</p>
+        <h2><span class="lm-brand-secondary">{% if deployment_locale.language_code == "fa" or not deployment_locale.language_code %}{{ deployment_brand.display_name_fa }}{% else %}{{ deployment_brand.display_name }}{% endif %}</span> {% trans "Where would you like to start?" %}</h2>
+        <p>{% trans "Choose your role to get started with the right experience." %}</p>
       </header>
 
       <div class="lm-final-grid">
         <a href="{% url 'accounts:customer_signup' %}" class="lm-final-option">
           <span><i class="fa-regular fa-user"></i></span>
           <div>
-            <strong>مشتری هستم</strong>
-            <small>سالن و متخصص مناسب را پیدا و رزرو می‌کنم</small>
+            <strong>{% trans "I'm a customer" %}</strong>
+            <small>{% trans "Find and book the right salon and professional" %}</small>
           </div>
           <i class="fa-solid fa-arrow-left"></i>
         </a>
@@ -292,8 +293,8 @@
         <a href="{% url 'accounts:stylist_signup' %}" class="lm-final-option">
           <span><i class="fa-solid fa-scissors"></i></span>
           <div>
-            <strong>متخصص هستم</strong>
-            <small>برنامه و نوبت‌هایم را ساده‌تر مدیریت می‌کنم</small>
+            <strong>{% trans "I'm a professional" %}</strong>
+            <small>{% trans "Manage my schedule and appointments more easily" %}</small>
           </div>
           <i class="fa-solid fa-arrow-left"></i>
         </a>
@@ -301,8 +302,8 @@
         <a href="{% url 'accounts:register' %}" class="lm-final-option">
           <span><i class="fa-solid fa-briefcase"></i></span>
           <div>
-            <strong>مدیر سالن هستم</strong>
-            <small>تیم، نوبت‌ها و عملکرد سالن را یکجا می‌بینم</small>
+            <strong>{% trans "I'm a salon manager" %}</strong>
+            <small>{% trans "See my team, appointments and salon performance in one place" %}</small>
           </div>
           <i class="fa-solid fa-arrow-left"></i>
         </a>
@@ -320,14 +321,14 @@
   <div class="lm-intro-video-shell">
 
     <h2 id="loomera-intro-video-title" class="sr-only">
-      معرفی {{ deployment_brand.display_name_fa }} و نحوه کار با پلتفرم
+      {% if deployment_locale.language_code == "fa" or not deployment_locale.language_code %}{% blocktrans with brand=deployment_brand.display_name_fa %}Introducing {{ brand }} and how the platform works{% endblocktrans %}{% else %}{% blocktrans with brand=deployment_brand.display_name %}Introducing {{ brand }} and how the platform works{% endblocktrans %}{% endif %}
     </h2>
 
     <button
       type="button"
       class="lm-intro-video-close"
       data-lm-intro-video-close
-      aria-label="بستن ویدیو"
+      aria-label="{% trans 'Close video' %}"
     >
       <i class="fa-solid fa-xmark" aria-hidden="true"></i>
     </button>
@@ -345,7 +346,7 @@
         type="video/mp4"
       >
 
-      مرورگر شما از پخش این ویدیو پشتیبانی نمی‌کند.
+      {% trans "Your browser does not support video playback." %}
     </video>
 
   </div>

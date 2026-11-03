@@ -1,9 +1,10 @@
 {% load static %}
+{% load i18n %}
 {% load humanize %}
 {% load jalali_filters %}
 
 <article class="group flex h-full flex-col overflow-hidden rounded-[1.75rem] border border-loomera-borderSoft bg-white shadow-lm-soft transition duration-200 hover:-translate-y-0.5 hover:border-loomera-primary/30 hover:shadow-lm-card">
-  <a href="{{ item.salon.get_absolute_url }}" class="relative block h-40 overflow-hidden bg-loomera-primarySoft" aria-label="مشاهده {{ item.salon.salon_name }}">
+  <a href="{{ item.salon.get_absolute_url }}" class="relative block h-40 overflow-hidden bg-loomera-primarySoft" aria-label="{% trans 'View' %} {{ item.salon.salon_name }}">
     {% if item.salon.card_image_url %}
       <img src="{{ item.salon.card_image_url }}" alt="{{ item.salon.salon_name }}" class="h-full w-full object-cover transition duration-500 group-hover:scale-105">
     {% elif item.salon.banner_image %}
@@ -27,27 +28,27 @@
         {% elif item.salon.address %}
           {{ item.salon.address }}
         {% else %}
-          موقعیت ثبت نشده
+          {% trans "Location not provided" %}
         {% endif %}
       </p>
     </div>
 
     <span class="absolute right-3 top-3 rounded-full bg-white/95 px-3 py-1 text-[11px] font-black text-loomera-primary shadow-sm backdrop-blur">
-      رزرو قبلی
+      {% trans "Previous booking" %}
     </span>
   </a>
 
   <div class="flex flex-1 flex-col p-4">
     <div class="min-w-0">
       <p class="text-xs font-black uppercase tracking-[0.2em] text-loomera-primary">
-        خدمت قبلی
+        {% trans "Previous service" %}
       </p>
 
       <h4 class="mt-2 line-clamp-2 text-base font-black leading-7 text-loomera-textPrimary">
         {% if item.service %}
           {{ item.service.service_name }}
         {% else %}
-          خدمت ثبت نشده
+          {% trans "Service not recorded" %}
         {% endif %}
       </h4>
     </div>
@@ -59,7 +60,7 @@
           {% if item.date %}
             {{ item.date|jalali }}
           {% else %}
-            تاریخ ثبت نشده
+            {% trans "Date not recorded" %}
           {% endif %}
         </span>
       </div>
@@ -70,7 +71,7 @@
           {% if item.time %}
             {{ item.time }}
           {% else %}
-            ساعت ثبت نشده
+            {% trans "Time not recorded" %}
           {% endif %}
         </span>
       </div>
@@ -83,7 +84,7 @@
           {% elif item.stylist and item.stylist.user %}
             {{ item.stylist.user.get_fullName }}
           {% else %}
-            متخصص ثبت نشده
+            {% trans "Professional not recorded" %}
           {% endif %}
         </span>
       </div>
@@ -91,14 +92,14 @@
 
     <div class="mt-4 flex items-center justify-between gap-3">
       <div class="min-w-0">
-        <p class="text-[11px] font-bold text-loomera-textMuted">مبلغ قبلی</p>
+        <p class="text-[11px] font-bold text-loomera-textMuted">{% trans "Previous amount" %}</p>
         <p class="mt-1 truncate text-sm font-black text-loomera-textPrimary">
           {% if item.price %}
-            {{ item.price|intcomma }} تومان
+            {{ item.price|intcomma }} {% trans "Toman" %}
           {% elif item.service and item.service.price %}
-            {{ item.service.price|intcomma }} تومان
+            {{ item.service.price|intcomma }} {% trans "Toman" %}
           {% else %}
-            قیمت ثبت نشده
+            {% trans "Price not recorded" %}
           {% endif %}
         </p>
       </div>
@@ -106,13 +107,13 @@
       {% if item.order %}
         <a href="{% url 'orders:rebook' item.order.id %}"
            class="inline-flex shrink-0 items-center justify-center gap-2 rounded-full bg-loomera-primary px-4 py-2.5 text-xs font-black text-white shadow-lm-soft transition hover:bg-loomera-primaryHover">
-          <span>رزرو مجدد</span>
+          <span>{% trans "Book again" %}</span>
           <i class="fa-solid fa-arrow-left text-[10px]" aria-hidden="true"></i>
         </a>
       {% else %}
         <a href="{{ item.salon.get_absolute_url }}"
            class="inline-flex shrink-0 items-center justify-center gap-2 rounded-full bg-loomera-primary px-4 py-2.5 text-xs font-black text-white shadow-lm-soft transition hover:bg-loomera-primaryHover">
-          <span>مشاهده</span>
+          <span>{% trans "View" %}</span>
           <i class="fa-solid fa-arrow-left text-[10px]" aria-hidden="true"></i>
         </a>
       {% endif %}

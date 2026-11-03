@@ -1649,7 +1649,7 @@ class HomepagePersianBrandIdentityTests(SimpleTestCase):
 
     def test_homepage_has_exactly_twelve_persian_brand_bindings(self):
         source = self._home_source()
-        self.assertEqual(source.count("{{ deployment_brand.display_name_fa }}"), 12)
+        self.assertEqual(source.count("deployment_brand.display_name_fa"), 12)
         self.assertNotIn("لومرا", source)
         for stable_reference in (
             'data-page="loomera-home"',
