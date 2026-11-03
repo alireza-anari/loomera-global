@@ -28,7 +28,7 @@ class Phase4PublicDiscoveryLocaleTests(SimpleTestCase):
             with self.subTest(template=relative_path):
                 source = self._template_source(relative_path)
                 self.assertIn("{% load i18n %}", source)
-                messages = sorted(set(TRANS_TAG.findall(source)))
+                messages = sorted({match.group("message") for match in TRANS_TAG.finditer(source)})
                 self.assertTrue(messages)
 
                 for language in ("fa", "en", "ar"):
