@@ -2,7 +2,7 @@
 {% load i18n %}
 <header class="lm-shell-desktop-site-header hidden lg:block">
   <div class="lm-shell-desktop-site-header__inner lm-app-container">
-    <a href="{% url 'salons:home' %}" class="lm-shell-desktop-brand" aria-label="{% trans 'Home' %}">
+    <a href="{% url 'salons:home' %}" class="lm-shell-desktop-brand" aria-label="{{ deployment_brand.display_name }} {% trans 'Home' %}">
       {% include "partials/brand/logo.html" with logo_variant="header" logo_size="md" %}
     </a>
     <nav class="lm-shell-desktop-nav" aria-label="{% trans 'Main navigation' %}">
