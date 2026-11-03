@@ -5,7 +5,7 @@
   "release_gate": "BLOCKED_MANUAL_ACCEPTANCE",
   "production_deployment": "NOT_PERFORMED",
   "source_repository": "READ_ONLY",
-  "notes": "Automated CI verifies code contracts, not real browser visuals, usability, screen readers, or production readiness. Phase 3.34 adds 9 isolated Chromium keyboard/focus renderer smoke scenarios (fa/en/ar x 3 viewports). These are not real application E2E acceptance, screen-reader, browser visual sign-off or true 400% zoom tests; all manual gates remain open. Phase 3.37 adds Chromium fixture tests of production appointment-modal markup/controller across fa/en/ar and 360/768/1440 widths; this remains fixture-level evidence, not full authenticated E2E, screen-reader review or manual release acceptance. Phase 3.37 also explicitly validates the review score on form submit (a required hidden input is not browser constraint validation) and announces the localized error until a score is chosen.",
+  "notes": "Automated CI verifies code contracts, not real browser visuals, usability, screen readers, or production readiness. Phase 3.34 adds 9 isolated Chromium keyboard/focus renderer smoke scenarios (fa/en/ar x 3 viewports). These are not real application E2E acceptance, screen-reader, browser visual sign-off or true 400% zoom tests; all manual gates remain open. Phase 3.37 adds Chromium fixture tests of production appointment-modal markup/controller across fa/en/ar and 360/768/1440 widths; this remains fixture-level evidence, not full authenticated E2E, screen-reader review or manual release acceptance. Phase 3.37 also explicitly validates the review score on form submit (a required hidden input is not browser constraint validation) and announces the localized error until a score is chosen. PR #114 is now merged at main SHA 7e3e6da36746156b3464d9fa15298d6df6bf074f; exact-head CI and post-merge CI both passed. No deployment was initiated by this work, deployment records could not be verified through the available GitHub connection, and all manual gates remain open.",
   "required_locales": [
     {
       "language": "fa",
@@ -228,5 +228,27 @@
     "screen_reader_acceptance",
     "responsive_zoom",
     "release_deployment_approval"
-  ]
+  ],
+  "latest_main_sha": "7e3e6da36746156b3464d9fa15298d6df6bf074f",
+  "latest_main_tree": "281830eaf244c637a5d1682c31aa332c5938175d",
+  "latest_pr": {
+    "number": 114,
+    "state": "MERGED",
+    "head_sha": "461cf5c119aa704759ca34c3fd16f615e1b061f8",
+    "merge_commit_sha": "7e3e6da36746156b3464d9fa15298d6df6bf074f"
+  },
+  "latest_ci": {
+    "pull_request_run_id": "41682948353",
+    "pull_request_run_number": 386,
+    "pull_request_jobs": {
+      "Fast checks": "SUCCESS",
+      "Chromium keyboard smoke": "SUCCESS"
+    },
+    "post_merge_run_id": "41683457228",
+    "post_merge_jobs": {
+      "Fast checks": "SUCCESS",
+      "Chromium keyboard smoke": "SUCCESS"
+    }
+  },
+  "deployment_verification": "NOT_VERIFIED"
 }
