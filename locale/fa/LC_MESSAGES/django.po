@@ -3121,3 +3121,457 @@ msgstr "مشاهده مجموعه‌ها"
 #: templates/services/all_services.html templates/services/partials/filtered_services.html templates/services/partials/priceList.html templates/services/service_detail.html templates/pages/search.html templates/pages/salon_stylist_profile.html
 msgid "salons"
 msgstr "مجموعه"
+
+# Phase 4.3b reviewed UI messages
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Search bar"
+msgstr "نوار جستجو"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Back to previous page"
+msgstr "بازگشت به صفحه قبل"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Edit search"
+msgstr "ویرایش جستجو"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Search for a service, salon, or area"
+msgstr "جستجوی خدمت، مجموعه یا منطقه"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Show results"
+msgstr "نمایش نتایج"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Search for a salon, service, or city"
+msgstr "جستجوی مجموعه، خدمت یا شهر"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Search for a service or salon"
+msgstr "جستجوی خدمت یا مجموعه"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Active"
+msgstr "فعال"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Open filters"
+msgstr "باز کردن فیلترها"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Search results and filters"
+msgstr "نتایج و فیلترهای جستجو"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Expand or collapse results"
+msgstr "باز و بسته کردن لیست نتایج"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Sorting and quick filters"
+msgstr "مرتب‌سازی و فیلترهای سریع"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Open all filters"
+msgstr "باز کردن فیلترهای کامل"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Use current location"
+msgstr "استفاده از موقعیت فعلی"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Recommended sorting"
+msgstr "مرتب‌سازی پیشنهادی"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Recommended"
+msgstr "پیشنهادی"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Nearest sorting"
+msgstr "مرتب‌سازی نزدیک‌ترین"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Nearest"
+msgstr "نزدیک‌ترین"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Lowest price sorting"
+msgstr "مرتب‌سازی ارزان‌تر"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Lowest price"
+msgstr "ارزان‌تر"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Clear filters"
+msgstr "حذف فیلترها"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Active filters"
+msgstr "فیلترهای فعال"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Loading results"
+msgstr "در حال بارگذاری نتایج"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Found salons"
+msgstr "لیست مجموعه‌های پیدا شده"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Search results"
+msgstr "نتایج جستجو"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Map of found salons"
+msgstr "نقشه مجموعه‌های پیدا شده"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Search list and filters"
+msgstr "لیست و فیلترهای جستجو"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Search results map"
+msgstr "نقشه نتایج جستجو"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Map is currently unavailable"
+msgstr "نمای نقشه فعلاً در دسترس نیست"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "If the map SDK or key is unavailable, the salon list still works."
+msgstr "اگر SDK یا کلید نقشه آماده نباشد، لیست مجموعه‌ها همچنان فعال می‌ماند."
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Close filters"
+msgstr "بستن فیلترها"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Search filters"
+msgstr "فیلتر جستجو"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Search filter options"
+msgstr "فیلترهای جستجو"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Remove any unwanted filters to see the results again."
+msgstr "هر موردی را که نمی‌خواهی حذف کن و دوباره نتایج را ببین."
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Clear all"
+msgstr "حذف همه"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Service or salon name"
+msgstr "نام خدمت یا مجموعه"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "For example: haircut, color, or salon name"
+msgstr "مثلاً کوتاهی مو، رنگ، مجموعه موردنظر"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Service categories"
+msgstr "دسته‌بندی خدمات"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Selected category:"
+msgstr "دسته فعال:"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Services in this category"
+msgstr "خدمات همین دسته"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Remove category"
+msgstr "حذف دسته"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Location"
+msgstr "موقعیت"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "For example: neighborhood or near me"
+msgstr "مثلاً تهرانپارس، ونک یا نزدیک من"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Additional filters"
+msgstr "فیلترهای بیشتر"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Minimum price"
+msgstr "حداقل قیمت"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Maximum price"
+msgstr "حداکثر قیمت"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "For example: 200000"
+msgstr "مثلاً ۲۰۰۰۰۰"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "For example: 400000"
+msgstr "مثلاً ۴۰۰۰۰۰"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Minimum rating"
+msgstr "حداقل امتیاز"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "All ratings"
+msgstr "همه امتیازها"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "3 and up"
+msgstr "۳ به بالا"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "4 and up"
+msgstr "۴ به بالا"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "4.5 and up"
+msgstr "۴.۵ به بالا"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Discounted only"
+msgstr "فقط تخفیف‌دارها"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Verified salons only"
+msgstr "فقط مجموعه‌های تاییدشده"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Available today"
+msgstr "وقت آزاد امروز"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Available this week"
+msgstr "وقت آزاد این هفته"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Date and time"
+msgstr "تاریخ و زمان"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "For example: 1405/01/10"
+msgstr "مثلاً ۱۴۰۵/۰۱/۱۰"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Choose a date"
+msgstr "انتخاب تاریخ"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Time of day"
+msgstr "بازه روز"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Any time"
+msgstr "هر زمانی"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Noon"
+msgstr "ظهر"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Afternoon"
+msgstr "عصر"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Exact time"
+msgstr "ساعت دقیق"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Any hour"
+msgstr "هر ساعت"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "View salon"
+msgstr "مشاهده سالن"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "kilometers"
+msgstr "کیلومتر"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Rating"
+msgstr "امتیاز"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "out of 5"
+msgstr "از ۵"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Related services"
+msgstr "خدمات مرتبط"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "No results found"
+msgstr "نتیجه‌ای پیدا نشد"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Try changing the service, city, or time and search again."
+msgstr "نام خدمت، شهر یا زمان را تغییر بده و دوباره جستجو کن."
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Clear search filters"
+msgstr "پاک کردن فیلترها"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Show map"
+msgstr "نمایش نقشه"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Category"
+msgstr "دسته"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Sort by"
+msgstr "مرتب‌سازی"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Discount"
+msgstr "تخفیف"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Verified status"
+msgstr "تایید"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Availability"
+msgstr "وقت آزاد"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Today"
+msgstr "امروز"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "This week"
+msgstr "این هفته"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Discounted"
+msgstr "تخفیف‌دار"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Neighborhood"
+msgstr "محله"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Near me"
+msgstr "نزدیک من"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Use current device location"
+msgstr "استفاده از موقعیت فعلی دستگاه"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Results are updating..."
+msgstr "در حال به‌روزرسانی نتایج..."
+
+#: templates/partials/search/search_locale_messages.html
+msgid "No salons match these filters."
+msgstr "هیچ سالنی با این فیلترها پیدا نشد."
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Could not update results. Try again."
+msgstr "به‌روزرسانی نتایج انجام نشد. دوباره تلاش کنید."
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Choose a date before filtering by time."
+msgstr "برای فیلتر زمان، ابتدا تاریخ را انتخاب کنید."
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Enable location access to sort by nearest."
+msgstr "برای مرتب‌سازی نزدیک‌ترین، باید دسترسی موقعیت فعلی را فعال کنی."
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Current location is unavailable on this device."
+msgstr "دسترسی به موقعیت فعلی در این دستگاه در دسترس نیست."
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Getting current location..."
+msgstr "در حال دریافت موقعیت فعلی..."
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Current location found. Sorting by nearest."
+msgstr "موقعیت فعلی دریافت شد. نتایج بر اساس نزدیک‌ترین مرتب می‌شوند."
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Could not access current location."
+msgstr "دسترسی به موقعیت فعلی انجام نشد."
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Open salon"
+msgstr "نمایش"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "View card in list"
+msgstr "نمایش کارت در لیست"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Check the salon card to see available times."
+msgstr "برای مشاهده زمان‌ها، کارت سالن را بررسی کنید."
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Map key is not configured. The salon list remains available."
+msgstr "کلید نقشه داخلی تنظیم نشده است. لیست سالن‌ها همچنان فعال است."
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Map tiles could not load. Use the results list."
+msgstr "لود نقشه کامل نشد. می‌توانید از لیست نتایج استفاده کنید."
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Map could not start. Continue searching with the list."
+msgstr "راه‌اندازی نقشه انجام نشد. جستجو از طریق لیست ادامه پیدا می‌کند."
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Search for salons, services, or areas..."
+msgstr "جستجو سالن، خدمات یا منطقه..."
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Remove filter"
+msgstr "حذف فیلتر"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "From {price} Toman"
+msgstr "از {price} تومان"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Up to {price} Toman"
+msgstr "تا {price} تومان"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "{count} services"
+msgstr "{count} خدمت"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "{count} salons"
+msgstr "{count} سالن"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Rating {score}+"
+msgstr "امتیاز {score}+"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Results are displayed by salon"
+msgstr "نتیجه‌ها بر اساس مجموعه نمایش داده می‌شوند"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "View salons in this category"
+msgstr "مشاهده مجموعه‌های این دسته"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Result"
+msgstr "نتیجه"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Beauty salon"
+msgstr "سالن زیبایی"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Verified salons in search"
+msgstr "فقط سالن‌های تاییدشده"
