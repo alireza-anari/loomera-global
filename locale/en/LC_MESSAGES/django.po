@@ -3121,3 +3121,457 @@ msgstr "View salons"
 #: templates/services/all_services.html templates/services/partials/filtered_services.html templates/services/partials/priceList.html templates/services/service_detail.html templates/pages/search.html templates/pages/salon_stylist_profile.html
 msgid "salons"
 msgstr "salons"
+
+# Phase 4.3b reviewed UI messages
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Search bar"
+msgstr "Search bar"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Back to previous page"
+msgstr "Back to previous page"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Edit search"
+msgstr "Edit search"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Search for a service, salon, or area"
+msgstr "Search for a service, salon, or area"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Show results"
+msgstr "Show results"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Search for a salon, service, or city"
+msgstr "Search for a salon, service, or city"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Search for a service or salon"
+msgstr "Search for a service or salon"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Active"
+msgstr "Active"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Open filters"
+msgstr "Open filters"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Search results and filters"
+msgstr "Search results and filters"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Expand or collapse results"
+msgstr "Expand or collapse results"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Sorting and quick filters"
+msgstr "Sorting and quick filters"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Open all filters"
+msgstr "Open all filters"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Use current location"
+msgstr "Use current location"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Recommended sorting"
+msgstr "Recommended sorting"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Recommended"
+msgstr "Recommended"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Nearest sorting"
+msgstr "Nearest sorting"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Nearest"
+msgstr "Nearest"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Lowest price sorting"
+msgstr "Lowest price sorting"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Lowest price"
+msgstr "Lowest price"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Clear filters"
+msgstr "Clear filters"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Active filters"
+msgstr "Active filters"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Loading results"
+msgstr "Loading results"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Found salons"
+msgstr "Found salons"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Search results"
+msgstr "Search results"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Map of found salons"
+msgstr "Map of found salons"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Search list and filters"
+msgstr "Search list and filters"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Search results map"
+msgstr "Search results map"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Map is currently unavailable"
+msgstr "Map is currently unavailable"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "If the map SDK or key is unavailable, the salon list still works."
+msgstr "If the map SDK or key is unavailable, the salon list still works."
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Close filters"
+msgstr "Close filters"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Search filters"
+msgstr "Search filters"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Search filter options"
+msgstr "Search filter options"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Remove any unwanted filters to see the results again."
+msgstr "Remove any unwanted filters to see the results again."
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Clear all"
+msgstr "Clear all"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Service or salon name"
+msgstr "Service or salon name"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "For example: haircut, color, or salon name"
+msgstr "For example: haircut, color, or salon name"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Service categories"
+msgstr "Service categories"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Selected category:"
+msgstr "Selected category:"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Services in this category"
+msgstr "Services in this category"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Remove category"
+msgstr "Remove category"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Location"
+msgstr "Location"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "For example: neighborhood or near me"
+msgstr "For example: neighborhood or near me"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Additional filters"
+msgstr "Additional filters"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Minimum price"
+msgstr "Minimum price"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Maximum price"
+msgstr "Maximum price"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "For example: 200000"
+msgstr "For example: 200000"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "For example: 400000"
+msgstr "For example: 400000"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Minimum rating"
+msgstr "Minimum rating"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "All ratings"
+msgstr "All ratings"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "3 and up"
+msgstr "3 and up"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "4 and up"
+msgstr "4 and up"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "4.5 and up"
+msgstr "4.5 and up"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Discounted only"
+msgstr "Discounted only"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Verified salons only"
+msgstr "Verified salons only"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Available today"
+msgstr "Available today"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Available this week"
+msgstr "Available this week"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Date and time"
+msgstr "Date and time"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "For example: 1405/01/10"
+msgstr "For example: 1405/01/10"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Choose a date"
+msgstr "Choose a date"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Time of day"
+msgstr "Time of day"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Any time"
+msgstr "Any time"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Noon"
+msgstr "Noon"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Afternoon"
+msgstr "Afternoon"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Exact time"
+msgstr "Exact time"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Any hour"
+msgstr "Any hour"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "View salon"
+msgstr "View salon"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "kilometers"
+msgstr "kilometers"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Rating"
+msgstr "Rating"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "out of 5"
+msgstr "out of 5"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Related services"
+msgstr "Related services"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "No results found"
+msgstr "No results found"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Try changing the service, city, or time and search again."
+msgstr "Try changing the service, city, or time and search again."
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Clear search filters"
+msgstr "Clear search filters"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Show map"
+msgstr "Show map"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Category"
+msgstr "Category"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Sort by"
+msgstr "Sort by"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Discount"
+msgstr "Discount"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Verified status"
+msgstr "Verified status"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Availability"
+msgstr "Availability"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Today"
+msgstr "Today"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "This week"
+msgstr "This week"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Discounted"
+msgstr "Discounted"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Neighborhood"
+msgstr "Neighborhood"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Near me"
+msgstr "Near me"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Use current device location"
+msgstr "Use current device location"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Results are updating..."
+msgstr "Results are updating..."
+
+#: templates/partials/search/search_locale_messages.html
+msgid "No salons match these filters."
+msgstr "No salons match these filters."
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Could not update results. Try again."
+msgstr "Could not update results. Try again."
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Choose a date before filtering by time."
+msgstr "Choose a date before filtering by time."
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Enable location access to sort by nearest."
+msgstr "Enable location access to sort by nearest."
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Current location is unavailable on this device."
+msgstr "Current location is unavailable on this device."
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Getting current location..."
+msgstr "Getting current location..."
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Current location found. Sorting by nearest."
+msgstr "Current location found. Sorting by nearest."
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Could not access current location."
+msgstr "Could not access current location."
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Open salon"
+msgstr "Open salon"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "View card in list"
+msgstr "View card in list"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Check the salon card to see available times."
+msgstr "Check the salon card to see available times."
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Map key is not configured. The salon list remains available."
+msgstr "Map key is not configured. The salon list remains available."
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Map tiles could not load. Use the results list."
+msgstr "Map tiles could not load. Use the results list."
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Map could not start. Continue searching with the list."
+msgstr "Map could not start. Continue searching with the list."
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Search for salons, services, or areas..."
+msgstr "Search for salons, services, or areas..."
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Remove filter"
+msgstr "Remove filter"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "From {price} Toman"
+msgstr "From {price} Toman"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Up to {price} Toman"
+msgstr "Up to {price} Toman"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "{count} services"
+msgstr "{count} services"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "{count} salons"
+msgstr "{count} salons"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Rating {score}+"
+msgstr "Rating {score}+"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Results are displayed by salon"
+msgstr "Results are displayed by salon"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "View salons in this category"
+msgstr "View salons in this category"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Result"
+msgstr "Result"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Beauty salon"
+msgstr "Beauty salon"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Verified salons in search"
+msgstr "Verified salons in search"

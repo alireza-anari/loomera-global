@@ -3125,3 +3125,457 @@ msgstr "عرض الصالونات"
 #: templates/services/all_services.html templates/services/partials/filtered_services.html templates/services/partials/priceList.html templates/services/service_detail.html templates/pages/search.html templates/pages/salon_stylist_profile.html
 msgid "salons"
 msgstr "صالونات"
+
+# Phase 4.3b reviewed UI messages
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Search bar"
+msgstr "شريط البحث"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Back to previous page"
+msgstr "العودة إلى الصفحة السابقة"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Edit search"
+msgstr "تعديل البحث"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Search for a service, salon, or area"
+msgstr "ابحث عن خدمة أو صالون أو منطقة"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Show results"
+msgstr "عرض النتائج"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Search for a salon, service, or city"
+msgstr "البحث عن صالون أو خدمة أو مدينة"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Search for a service or salon"
+msgstr "البحث عن خدمة أو صالون"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Active"
+msgstr "نشط"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Open filters"
+msgstr "فتح عوامل التصفية"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Search results and filters"
+msgstr "نتائج البحث وعوامل التصفية"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Expand or collapse results"
+msgstr "توسيع قائمة النتائج أو طيها"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Sorting and quick filters"
+msgstr "الترتيب وعوامل التصفية السريعة"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Open all filters"
+msgstr "فتح جميع عوامل التصفية"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Use current location"
+msgstr "استخدام الموقع الحالي"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Recommended sorting"
+msgstr "الترتيب المقترح"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Recommended"
+msgstr "مقترح"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Nearest sorting"
+msgstr "الترتيب حسب الأقرب"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Nearest"
+msgstr "الأقرب"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Lowest price sorting"
+msgstr "الترتيب حسب الأقل سعراً"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Lowest price"
+msgstr "الأقل سعراً"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Clear filters"
+msgstr "مسح عوامل التصفية"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Active filters"
+msgstr "عوامل التصفية النشطة"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Loading results"
+msgstr "جارٍ تحميل النتائج"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Found salons"
+msgstr "قائمة الصالونات التي عُثر عليها"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Search results"
+msgstr "نتائج بحث لوميرا"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Map of found salons"
+msgstr "خريطة الصالونات الموجودة"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Search list and filters"
+msgstr "قائمة البحث وعوامل التصفية"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Search results map"
+msgstr "خريطة نتائج البحث"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Map is currently unavailable"
+msgstr "عرض الخريطة غير متاح حالياً"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "If the map SDK or key is unavailable, the salon list still works."
+msgstr "إذا لم تتوفر حزمة الخرائط أو المفتاح، فستظل قائمة الصالونات متاحة."
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Close filters"
+msgstr "إغلاق عوامل التصفية"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Search filters"
+msgstr "عوامل تصفية البحث"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Search filter options"
+msgstr "خيارات تصفية البحث"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Remove any unwanted filters to see the results again."
+msgstr "أزل أي عوامل تصفية لا تريدها ثم اعرض النتائج مجدداً."
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Clear all"
+msgstr "مسح الكل"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Service or salon name"
+msgstr "اسم الخدمة أو الصالون"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "For example: haircut, color, or salon name"
+msgstr "مثلاً قص الشعر أو الصبغة أو اسم الصالون"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Service categories"
+msgstr "فئات الخدمات"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Selected category:"
+msgstr "الفئة المحددة:"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Services in this category"
+msgstr "الخدمات في هذه الفئة"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Remove category"
+msgstr "إزالة الفئة"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Location"
+msgstr "الموقع"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "For example: neighborhood or near me"
+msgstr "مثلاً حيّ أو بالقرب مني"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Additional filters"
+msgstr "عوامل تصفية إضافية"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Minimum price"
+msgstr "الحد الأدنى للسعر"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Maximum price"
+msgstr "الحد الأقصى للسعر"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "For example: 200000"
+msgstr "مثلاً ٢٠٠٠٠٠"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "For example: 400000"
+msgstr "مثلاً ٤٠٠٠٠٠"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Minimum rating"
+msgstr "الحد الأدنى للتقييم"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "All ratings"
+msgstr "جميع التقييمات"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "3 and up"
+msgstr "٣ فأكثر"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "4 and up"
+msgstr "٤ فأكثر"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "4.5 and up"
+msgstr "٤٫٥ فأكثر"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Discounted only"
+msgstr "العروض المخفضة فقط"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Verified salons only"
+msgstr "الصالونات المعتمدة فقط"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Available today"
+msgstr "مواعيد متاحة اليوم"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Available this week"
+msgstr "مواعيد متاحة هذا الأسبوع"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Date and time"
+msgstr "التاريخ والوقت"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "For example: 1405/01/10"
+msgstr "مثلاً ١٤٠٥/٠١/١٠"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Choose a date"
+msgstr "اختر تاريخاً"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Time of day"
+msgstr "فترة اليوم"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Any time"
+msgstr "أي وقت"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Noon"
+msgstr "الظهر"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Afternoon"
+msgstr "المساء المبكر"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Exact time"
+msgstr "الوقت المحدد"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Any hour"
+msgstr "أي ساعة"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "View salon"
+msgstr "عرض الصالون"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "kilometers"
+msgstr "كيلومتر"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Rating"
+msgstr "التقييم"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "out of 5"
+msgstr "من ٥"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Related services"
+msgstr "خدمات ذات صلة"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "No results found"
+msgstr "لم يتم العثور على نتائج"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Try changing the service, city, or time and search again."
+msgstr "جرّب تغيير الخدمة أو المدينة أو الوقت ثم ابحث مجدداً."
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Clear search filters"
+msgstr "مسح عوامل تصفية البحث"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Show map"
+msgstr "عرض الخريطة"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Category"
+msgstr "الفئة"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Sort by"
+msgstr "الترتيب حسب"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Discount"
+msgstr "الخصم"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Verified status"
+msgstr "الاعتماد"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Availability"
+msgstr "المواعيد المتاحة"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Today"
+msgstr "اليوم"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "This week"
+msgstr "هذا الأسبوع"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Discounted"
+msgstr "مخفض"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Neighborhood"
+msgstr "الحي"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Near me"
+msgstr "بالقرب مني"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Use current device location"
+msgstr "استخدام الموقع الحالي للجهاز"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Results are updating..."
+msgstr "جارٍ تحديث النتائج..."
+
+#: templates/partials/search/search_locale_messages.html
+msgid "No salons match these filters."
+msgstr "لا توجد صالونات تطابق عوامل التصفية هذه."
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Could not update results. Try again."
+msgstr "تعذر تحديث النتائج. حاول مجدداً."
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Choose a date before filtering by time."
+msgstr "اختر تاريخاً قبل التصفية حسب الوقت."
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Enable location access to sort by nearest."
+msgstr "فعّل الوصول إلى موقعك للترتيب حسب الأقرب."
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Current location is unavailable on this device."
+msgstr "الموقع الحالي غير متاح على هذا الجهاز."
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Getting current location..."
+msgstr "جارٍ تحديد موقعك الحالي..."
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Current location found. Sorting by nearest."
+msgstr "تم تحديد موقعك. ستُرتب النتائج حسب الأقرب."
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Could not access current location."
+msgstr "تعذر الوصول إلى موقعك الحالي."
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Open salon"
+msgstr "عرض"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "View card in list"
+msgstr "عرض البطاقة في القائمة"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Check the salon card to see available times."
+msgstr "راجع بطاقة الصالون لمعرفة المواعيد المتاحة."
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Map key is not configured. The salon list remains available."
+msgstr "لم يُضبط مفتاح الخريطة. تظل قائمة الصالونات متاحة."
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Map tiles could not load. Use the results list."
+msgstr "تعذر تحميل الخريطة بالكامل. استخدم قائمة النتائج."
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Map could not start. Continue searching with the list."
+msgstr "تعذر تشغيل الخريطة. تابع البحث باستخدام القائمة."
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Search for salons, services, or areas..."
+msgstr "ابحث عن صالونات أو خدمات أو مناطق..."
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Remove filter"
+msgstr "إزالة عامل التصفية"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "From {price} Toman"
+msgstr "من {price} تومان"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Up to {price} Toman"
+msgstr "حتى {price} تومان"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "{count} services"
+msgstr "{count} خدمات"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "{count} salons"
+msgstr "{count} صالونات"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Rating {score}+"
+msgstr "التقييم {score} فأكثر"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Results are displayed by salon"
+msgstr "تُعرض النتائج حسب الصالون"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "View salons in this category"
+msgstr "عرض صالونات هذه الفئة"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Result"
+msgstr "نتيجة"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Beauty salon"
+msgstr "صالون تجميل"
+
+#: templates/partials/search/search_locale_messages.html
+msgid "Verified salons in search"
+msgstr "الصالونات المعتمدة فقط"

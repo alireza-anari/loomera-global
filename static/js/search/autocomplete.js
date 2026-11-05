@@ -1,3 +1,7 @@
+function searchText(key, fallback) {
+  return document.getElementById?.("searchLocaleMessages")?.dataset?.[key] || fallback;
+}
+
 function debounce(fn, delay = 220) {
   let timer = null;
 
@@ -17,7 +21,7 @@ function renderSuggestionItem(item, onSelect) {
   const li = document.createElement("li");
 
   const name = item.value || item.name || "";
-  const typeLabel = item.type_label || "نتیجه";
+  const typeLabel = item.type_label || searchText("result", "نتیجه");
   const meta = item.meta || "";
 
   li.className = "lm-search-suggestion-item";

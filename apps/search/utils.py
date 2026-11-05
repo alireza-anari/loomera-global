@@ -12,6 +12,7 @@ from django.core.exceptions import FieldError
 from django.db.models import Avg, Count, Exists, Min, OuterRef, Prefetch, Q
 from django.urls import reverse
 from django.utils import timezone
+from django.utils.translation import get_language, gettext as _
 
 from apps.discounts.utils import (
     active_discount_basket_prefetch,
@@ -900,10 +901,19 @@ def _apply_verified_filter(base_qs):
 def build_search_summary(
     filters: SearchFilters, selected_services: list[Services], selected_group
 ) -> str:
+    """Localize application-owned summary labels without changing search filters.
+
+    Keep the historical Persian summary verbatim; en/ar receive translations
+    from the same catalog as the interactive search UI. Merchant-entered
+    service/group names and location strings are never machine translated.
+    """
+    localized = (get_language() or "fa").split("-")[0] in {"en", "ar"}
     parts: list[str] = []
     if selected_services:
         if len(selected_services) == 1:
             parts.append(selected_services[0].service_name)
+        elif localized:
+            parts.append(_("{count} services").format(count=len(selected_services)))
         else:
             parts.append(f"{len(selected_services)} خدمت")
     elif selected_group:
@@ -912,32 +922,56 @@ def build_search_summary(
         parts.append(filters.query)
 
     if filters.location:
-        parts.append(filters.location)
+        parts.append(_("Near me") if localized and filters.location == "نزدیک من" else filters.location)
     if filters.date_input:
         parts.append(filters.date_input)
     if filters.period:
-        parts.append(PERIOD_LABELS.get(filters.period, filters.period))
+        if localized:
+            period_labels = {
+                "morning": _("Morning"),
+                "noon": _("Noon"),
+                "evening": _("Afternoon"),
+                "night": _("Night"),
+            }
+            parts.append(period_labels.get(filters.period, filters.period))
+        else:
+            parts.append(PERIOD_LABELS.get(filters.period, filters.period))
     if filters.exact_time_input:
         parts.append(filters.exact_time_input)
     if filters.min_price is not None and filters.max_price is not None:
-        parts.append(f"از {filters.min_price:,} تا {filters.max_price:,} تومان")
+        if localized:
+            parts.append(_("From {price} Toman").format(price=f"{filters.min_price:,}"))
+            parts.append(_("Up to {price} Toman").format(price=f"{filters.max_price:,}"))
+        else:
+            parts.append(f"از {filters.min_price:,} تا {filters.max_price:,} تومان")
     elif filters.min_price is not None:
-        parts.append(f"از {filters.min_price:,} تومان")
+        parts.append(
+            _("From {price} Toman").format(price=f"{filters.min_price:,}")
+            if localized else f"از {filters.min_price:,} تومان"
+        )
     elif filters.max_price is not None:
-        parts.append(f"تا {filters.max_price:,} تومان")
+        parts.append(
+            _("Up to {price} Toman").format(price=f"{filters.max_price:,}")
+            if localized else f"تا {filters.max_price:,} تومان"
+        )
     if filters.min_rating is not None:
-        parts.append(f"امتیاز از {filters.min_rating:g}")
+        parts.append(
+            _("Rating {score}+").format(score=f"{filters.min_rating:g}")
+            if localized else f"امتیاز از {filters.min_rating:g}"
+        )
     if filters.has_discount or filters.discount_only:
-        parts.append("تخفیف‌دار")
+        parts.append(_("Discounted") if localized else "تخفیف‌دار")
     if filters.verified or filters.verified_only:
-        parts.append("سالن‌های تاییدشده")
+        parts.append(_("Verified salons in search") if localized else "سالن‌های تاییدشده")
     if filters.available_today or filters.today_only:
-        parts.append("وقت آزاد امروز")
+        parts.append(_("Available today") if localized else "وقت آزاد امروز")
     elif filters.available_this_week or filters.this_week_only:
-        parts.append("وقت آزاد این هفته")
+        parts.append(_("Available this week") if localized else "وقت آزاد این هفته")
 
-    return " • ".join(parts) if parts else "جستجو سالن، خدمات یا منطقه..."
-
+    return " • ".join(parts) if parts else (
+        _("Search for salons, services, or areas...")
+        if localized else "جستجو سالن، خدمات یا منطقه..."
+    )
 
 def search_salons(filters: SearchFilters) -> dict:
     group_ids = get_descendant_group_ids(filters.group_id)

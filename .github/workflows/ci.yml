@@ -333,6 +333,14 @@ jobs:
           node --input-type=module --check < static/js/search/map.js
           node --test tests/js/phase4_search_suggestion_safety.test.cjs
 
+      - name: Phase 4.3b public search translated templates and dynamic locale safety
+        run: |
+          node --input-type=module --check < static/js/search/filters.js
+          node --input-type=module --check < static/js/search/map.js
+          node --input-type=module --check < static/js/search/autocomplete.js
+          node --test tests/js/phase4_search_locale.test.cjs
+          python manage.py test apps.main.test_phase4_search_locale --failfast
+
       - name: Phase 2 buyer-brand smoke and email layout reference audit
         run: |
           python manage.py test \

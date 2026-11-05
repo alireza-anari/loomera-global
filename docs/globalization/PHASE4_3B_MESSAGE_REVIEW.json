@@ -1,0 +1,787 @@
+{
+  "phase": "4.3b",
+  "base_sha": "bcfed06c8bc6e381f555a2335f1e56fa286c50b0",
+  "scope": "Interactive public search filters, result cards, map popup, i18n UI copy only; no backend migrations",
+  "reviewed_messages": [
+    {
+      "msgid": "Search bar",
+      "fa": "نوار جستجو",
+      "en": "Search bar",
+      "ar": "شريط البحث"
+    },
+    {
+      "msgid": "Back to previous page",
+      "fa": "بازگشت به صفحه قبل",
+      "en": "Back to previous page",
+      "ar": "العودة إلى الصفحة السابقة"
+    },
+    {
+      "msgid": "Edit search",
+      "fa": "ویرایش جستجو",
+      "en": "Edit search",
+      "ar": "تعديل البحث"
+    },
+    {
+      "msgid": "Search for a service, salon, or area",
+      "fa": "جستجوی خدمت، مجموعه یا منطقه",
+      "en": "Search for a service, salon, or area",
+      "ar": "ابحث عن خدمة أو صالون أو منطقة"
+    },
+    {
+      "msgid": "Show results",
+      "fa": "نمایش نتایج",
+      "en": "Show results",
+      "ar": "عرض النتائج"
+    },
+    {
+      "msgid": "Search for a salon, service, or city",
+      "fa": "جستجوی مجموعه، خدمت یا شهر",
+      "en": "Search for a salon, service, or city",
+      "ar": "البحث عن صالون أو خدمة أو مدينة"
+    },
+    {
+      "msgid": "Search for a service or salon",
+      "fa": "جستجوی خدمت یا مجموعه",
+      "en": "Search for a service or salon",
+      "ar": "البحث عن خدمة أو صالون"
+    },
+    {
+      "msgid": "Active",
+      "fa": "فعال",
+      "en": "Active",
+      "ar": "نشط"
+    },
+    {
+      "msgid": "Search",
+      "fa": "جستجو",
+      "en": "Search",
+      "ar": "بحث"
+    },
+    {
+      "msgid": "Open filters",
+      "fa": "باز کردن فیلترها",
+      "en": "Open filters",
+      "ar": "فتح عوامل التصفية"
+    },
+    {
+      "msgid": "Search results and filters",
+      "fa": "نتایج و فیلترهای جستجو",
+      "en": "Search results and filters",
+      "ar": "نتائج البحث وعوامل التصفية"
+    },
+    {
+      "msgid": "Expand or collapse results",
+      "fa": "باز و بسته کردن لیست نتایج",
+      "en": "Expand or collapse results",
+      "ar": "توسيع قائمة النتائج أو طيها"
+    },
+    {
+      "msgid": "Sorting and quick filters",
+      "fa": "مرتب‌سازی و فیلترهای سریع",
+      "en": "Sorting and quick filters",
+      "ar": "الترتيب وعوامل التصفية السريعة"
+    },
+    {
+      "msgid": "Open all filters",
+      "fa": "باز کردن فیلترهای کامل",
+      "en": "Open all filters",
+      "ar": "فتح جميع عوامل التصفية"
+    },
+    {
+      "msgid": "Use current location",
+      "fa": "استفاده از موقعیت فعلی",
+      "en": "Use current location",
+      "ar": "استخدام الموقع الحالي"
+    },
+    {
+      "msgid": "Recommended sorting",
+      "fa": "مرتب‌سازی پیشنهادی",
+      "en": "Recommended sorting",
+      "ar": "الترتيب المقترح"
+    },
+    {
+      "msgid": "Recommended",
+      "fa": "پیشنهادی",
+      "en": "Recommended",
+      "ar": "مقترح"
+    },
+    {
+      "msgid": "Nearest sorting",
+      "fa": "مرتب‌سازی نزدیک‌ترین",
+      "en": "Nearest sorting",
+      "ar": "الترتيب حسب الأقرب"
+    },
+    {
+      "msgid": "Nearest",
+      "fa": "نزدیک‌ترین",
+      "en": "Nearest",
+      "ar": "الأقرب"
+    },
+    {
+      "msgid": "Lowest price sorting",
+      "fa": "مرتب‌سازی ارزان‌تر",
+      "en": "Lowest price sorting",
+      "ar": "الترتيب حسب الأقل سعراً"
+    },
+    {
+      "msgid": "Lowest price",
+      "fa": "ارزان‌تر",
+      "en": "Lowest price",
+      "ar": "الأقل سعراً"
+    },
+    {
+      "msgid": "salons",
+      "fa": "مجموعه",
+      "en": "salons",
+      "ar": "صالونات"
+    },
+    {
+      "msgid": "Clear filters",
+      "fa": "حذف فیلترها",
+      "en": "Clear filters",
+      "ar": "مسح عوامل التصفية"
+    },
+    {
+      "msgid": "Active filters",
+      "fa": "فیلترهای فعال",
+      "en": "Active filters",
+      "ar": "عوامل التصفية النشطة"
+    },
+    {
+      "msgid": "Loading results",
+      "fa": "در حال بارگذاری نتایج",
+      "en": "Loading results",
+      "ar": "جارٍ تحميل النتائج"
+    },
+    {
+      "msgid": "Found salons",
+      "fa": "لیست مجموعه‌های پیدا شده",
+      "en": "Found salons",
+      "ar": "قائمة الصالونات التي عُثر عليها"
+    },
+    {
+      "msgid": "Search results",
+      "fa": "نتایج جستجو",
+      "en": "Search results",
+      "ar": "نتائج بحث لوميرا"
+    },
+    {
+      "msgid": "Map of found salons",
+      "fa": "نقشه مجموعه‌های پیدا شده",
+      "en": "Map of found salons",
+      "ar": "خريطة الصالونات الموجودة"
+    },
+    {
+      "msgid": "Search list and filters",
+      "fa": "لیست و فیلترهای جستجو",
+      "en": "Search list and filters",
+      "ar": "قائمة البحث وعوامل التصفية"
+    },
+    {
+      "msgid": "Search results map",
+      "fa": "نقشه نتایج جستجو",
+      "en": "Search results map",
+      "ar": "خريطة نتائج البحث"
+    },
+    {
+      "msgid": "Map is currently unavailable",
+      "fa": "نمای نقشه فعلاً در دسترس نیست",
+      "en": "Map is currently unavailable",
+      "ar": "عرض الخريطة غير متاح حالياً"
+    },
+    {
+      "msgid": "If the map SDK or key is unavailable, the salon list still works.",
+      "fa": "اگر SDK یا کلید نقشه آماده نباشد، لیست مجموعه‌ها همچنان فعال می‌ماند.",
+      "en": "If the map SDK or key is unavailable, the salon list still works.",
+      "ar": "إذا لم تتوفر حزمة الخرائط أو المفتاح، فستظل قائمة الصالونات متاحة."
+    },
+    {
+      "msgid": "Close filters",
+      "fa": "بستن فیلترها",
+      "en": "Close filters",
+      "ar": "إغلاق عوامل التصفية"
+    },
+    {
+      "msgid": "Search filters",
+      "fa": "فیلتر جستجو",
+      "en": "Search filters",
+      "ar": "عوامل تصفية البحث"
+    },
+    {
+      "msgid": "Search filter options",
+      "fa": "فیلترهای جستجو",
+      "en": "Search filter options",
+      "ar": "خيارات تصفية البحث"
+    },
+    {
+      "msgid": "Remove any unwanted filters to see the results again.",
+      "fa": "هر موردی را که نمی‌خواهی حذف کن و دوباره نتایج را ببین.",
+      "en": "Remove any unwanted filters to see the results again.",
+      "ar": "أزل أي عوامل تصفية لا تريدها ثم اعرض النتائج مجدداً."
+    },
+    {
+      "msgid": "Clear all",
+      "fa": "حذف همه",
+      "en": "Clear all",
+      "ar": "مسح الكل"
+    },
+    {
+      "msgid": "Service or salon name",
+      "fa": "نام خدمت یا مجموعه",
+      "en": "Service or salon name",
+      "ar": "اسم الخدمة أو الصالون"
+    },
+    {
+      "msgid": "For example: haircut, color, or salon name",
+      "fa": "مثلاً کوتاهی مو، رنگ، مجموعه موردنظر",
+      "en": "For example: haircut, color, or salon name",
+      "ar": "مثلاً قص الشعر أو الصبغة أو اسم الصالون"
+    },
+    {
+      "msgid": "Service categories",
+      "fa": "دسته‌بندی خدمات",
+      "en": "Service categories",
+      "ar": "فئات الخدمات"
+    },
+    {
+      "msgid": "Selected category:",
+      "fa": "دسته فعال:",
+      "en": "Selected category:",
+      "ar": "الفئة المحددة:"
+    },
+    {
+      "msgid": "Services in this category",
+      "fa": "خدمات همین دسته",
+      "en": "Services in this category",
+      "ar": "الخدمات في هذه الفئة"
+    },
+    {
+      "msgid": "Remove category",
+      "fa": "حذف دسته",
+      "en": "Remove category",
+      "ar": "إزالة الفئة"
+    },
+    {
+      "msgid": "Location",
+      "fa": "موقعیت",
+      "en": "Location",
+      "ar": "الموقع"
+    },
+    {
+      "msgid": "For example: neighborhood or near me",
+      "fa": "مثلاً تهرانپارس، ونک یا نزدیک من",
+      "en": "For example: neighborhood or near me",
+      "ar": "مثلاً حيّ أو بالقرب مني"
+    },
+    {
+      "msgid": "Additional filters",
+      "fa": "فیلترهای بیشتر",
+      "en": "Additional filters",
+      "ar": "عوامل تصفية إضافية"
+    },
+    {
+      "msgid": "Minimum price",
+      "fa": "حداقل قیمت",
+      "en": "Minimum price",
+      "ar": "الحد الأدنى للسعر"
+    },
+    {
+      "msgid": "Maximum price",
+      "fa": "حداکثر قیمت",
+      "en": "Maximum price",
+      "ar": "الحد الأقصى للسعر"
+    },
+    {
+      "msgid": "For example: 200000",
+      "fa": "مثلاً ۲۰۰۰۰۰",
+      "en": "For example: 200000",
+      "ar": "مثلاً ٢٠٠٠٠٠"
+    },
+    {
+      "msgid": "For example: 400000",
+      "fa": "مثلاً ۴۰۰۰۰۰",
+      "en": "For example: 400000",
+      "ar": "مثلاً ٤٠٠٠٠٠"
+    },
+    {
+      "msgid": "Minimum rating",
+      "fa": "حداقل امتیاز",
+      "en": "Minimum rating",
+      "ar": "الحد الأدنى للتقييم"
+    },
+    {
+      "msgid": "All ratings",
+      "fa": "همه امتیازها",
+      "en": "All ratings",
+      "ar": "جميع التقييمات"
+    },
+    {
+      "msgid": "3 and up",
+      "fa": "۳ به بالا",
+      "en": "3 and up",
+      "ar": "٣ فأكثر"
+    },
+    {
+      "msgid": "4 and up",
+      "fa": "۴ به بالا",
+      "en": "4 and up",
+      "ar": "٤ فأكثر"
+    },
+    {
+      "msgid": "4.5 and up",
+      "fa": "۴.۵ به بالا",
+      "en": "4.5 and up",
+      "ar": "٤٫٥ فأكثر"
+    },
+    {
+      "msgid": "Discounted only",
+      "fa": "فقط تخفیف‌دارها",
+      "en": "Discounted only",
+      "ar": "العروض المخفضة فقط"
+    },
+    {
+      "msgid": "Verified salons only",
+      "fa": "فقط مجموعه‌های تاییدشده",
+      "en": "Verified salons only",
+      "ar": "الصالونات المعتمدة فقط"
+    },
+    {
+      "msgid": "Available today",
+      "fa": "وقت آزاد امروز",
+      "en": "Available today",
+      "ar": "مواعيد متاحة اليوم"
+    },
+    {
+      "msgid": "Available this week",
+      "fa": "وقت آزاد این هفته",
+      "en": "Available this week",
+      "ar": "مواعيد متاحة هذا الأسبوع"
+    },
+    {
+      "msgid": "Date and time",
+      "fa": "تاریخ و زمان",
+      "en": "Date and time",
+      "ar": "التاريخ والوقت"
+    },
+    {
+      "msgid": "For example: 1405/01/10",
+      "fa": "مثلاً ۱۴۰۵/۰۱/۱۰",
+      "en": "For example: 1405/01/10",
+      "ar": "مثلاً ١٤٠٥/٠١/١٠"
+    },
+    {
+      "msgid": "Choose a date",
+      "fa": "انتخاب تاریخ",
+      "en": "Choose a date",
+      "ar": "اختر تاريخاً"
+    },
+    {
+      "msgid": "Time of day",
+      "fa": "بازه روز",
+      "en": "Time of day",
+      "ar": "فترة اليوم"
+    },
+    {
+      "msgid": "Any time",
+      "fa": "هر زمانی",
+      "en": "Any time",
+      "ar": "أي وقت"
+    },
+    {
+      "msgid": "Morning",
+      "fa": "صبح",
+      "en": "Morning",
+      "ar": "الصباح"
+    },
+    {
+      "msgid": "Noon",
+      "fa": "ظهر",
+      "en": "Noon",
+      "ar": "الظهر"
+    },
+    {
+      "msgid": "Afternoon",
+      "fa": "عصر",
+      "en": "Afternoon",
+      "ar": "المساء المبكر"
+    },
+    {
+      "msgid": "Night",
+      "fa": "شب",
+      "en": "Night",
+      "ar": "الليل"
+    },
+    {
+      "msgid": "Exact time",
+      "fa": "ساعت دقیق",
+      "en": "Exact time",
+      "ar": "الوقت المحدد"
+    },
+    {
+      "msgid": "Any hour",
+      "fa": "هر ساعت",
+      "en": "Any hour",
+      "ar": "أي ساعة"
+    },
+    {
+      "msgid": "View salon",
+      "fa": "مشاهده سالن",
+      "en": "View salon",
+      "ar": "عرض الصالون"
+    },
+    {
+      "msgid": "View",
+      "fa": "مشاهده",
+      "en": "View",
+      "ar": "عرض"
+    },
+    {
+      "msgid": "kilometers",
+      "fa": "کیلومتر",
+      "en": "kilometers",
+      "ar": "كيلومتر"
+    },
+    {
+      "msgid": "Rating",
+      "fa": "امتیاز",
+      "en": "Rating",
+      "ar": "التقييم"
+    },
+    {
+      "msgid": "out of 5",
+      "fa": "از ۵",
+      "en": "out of 5",
+      "ar": "من ٥"
+    },
+    {
+      "msgid": "reviews",
+      "fa": "نظر",
+      "en": "reviews",
+      "ar": "تقييمات"
+    },
+    {
+      "msgid": "From",
+      "fa": "از",
+      "en": "From",
+      "ar": "ابتداءً من"
+    },
+    {
+      "msgid": "Toman",
+      "fa": "تومان",
+      "en": "Toman",
+      "ar": "تومان"
+    },
+    {
+      "msgid": "Related services",
+      "fa": "خدمات مرتبط",
+      "en": "Related services",
+      "ar": "خدمات ذات صلة"
+    },
+    {
+      "msgid": "No results found",
+      "fa": "نتیجه‌ای پیدا نشد",
+      "en": "No results found",
+      "ar": "لم يتم العثور على نتائج"
+    },
+    {
+      "msgid": "Try changing the service, city, or time and search again.",
+      "fa": "نام خدمت، شهر یا زمان را تغییر بده و دوباره جستجو کن.",
+      "en": "Try changing the service, city, or time and search again.",
+      "ar": "جرّب تغيير الخدمة أو المدينة أو الوقت ثم ابحث مجدداً."
+    },
+    {
+      "msgid": "Clear search filters",
+      "fa": "پاک کردن فیلترها",
+      "en": "Clear search filters",
+      "ar": "مسح عوامل تصفية البحث"
+    },
+    {
+      "msgid": "Show map",
+      "fa": "نمایش نقشه",
+      "en": "Show map",
+      "ar": "عرض الخريطة"
+    },
+    {
+      "msgid": "Selected",
+      "fa": "انتخاب‌شده",
+      "en": "Selected",
+      "ar": "تم الاختيار"
+    },
+    {
+      "msgid": "Service",
+      "fa": "خدمت",
+      "en": "Service",
+      "ar": "الخدمة"
+    },
+    {
+      "msgid": "Services",
+      "fa": "خدمات",
+      "en": "Services",
+      "ar": "الخدمات"
+    },
+    {
+      "msgid": "Category",
+      "fa": "دسته",
+      "en": "Category",
+      "ar": "الفئة"
+    },
+    {
+      "msgid": "Date",
+      "fa": "تاریخ",
+      "en": "Date",
+      "ar": "التاريخ"
+    },
+    {
+      "msgid": "Time",
+      "fa": "ساعت",
+      "en": "Time",
+      "ar": "الوقت"
+    },
+    {
+      "msgid": "Sort by",
+      "fa": "مرتب‌سازی",
+      "en": "Sort by",
+      "ar": "الترتيب حسب"
+    },
+    {
+      "msgid": "Price",
+      "fa": "قیمت",
+      "en": "Price",
+      "ar": "السعر"
+    },
+    {
+      "msgid": "Discount",
+      "fa": "تخفیف",
+      "en": "Discount",
+      "ar": "الخصم"
+    },
+    {
+      "msgid": "Verified",
+      "fa": "تأییدشده",
+      "en": "Verified",
+      "ar": "موثّق"
+    },
+    {
+      "msgid": "Verified status",
+      "fa": "تایید",
+      "en": "Verified status",
+      "ar": "الاعتماد"
+    },
+    {
+      "msgid": "Availability",
+      "fa": "وقت آزاد",
+      "en": "Availability",
+      "ar": "المواعيد المتاحة"
+    },
+    {
+      "msgid": "Today",
+      "fa": "امروز",
+      "en": "Today",
+      "ar": "اليوم"
+    },
+    {
+      "msgid": "This week",
+      "fa": "این هفته",
+      "en": "This week",
+      "ar": "هذا الأسبوع"
+    },
+    {
+      "msgid": "Discounted",
+      "fa": "تخفیف‌دار",
+      "en": "Discounted",
+      "ar": "مخفض"
+    },
+    {
+      "msgid": "Salons",
+      "fa": "مراکز",
+      "en": "Salons",
+      "ar": "الصالونات"
+    },
+    {
+      "msgid": "Salon",
+      "fa": "مجموعه",
+      "en": "Salon",
+      "ar": "الصالون"
+    },
+    {
+      "msgid": "Neighborhood",
+      "fa": "محله",
+      "en": "Neighborhood",
+      "ar": "الحي"
+    },
+    {
+      "msgid": "Near me",
+      "fa": "نزدیک من",
+      "en": "Near me",
+      "ar": "بالقرب مني"
+    },
+    {
+      "msgid": "Use current device location",
+      "fa": "استفاده از موقعیت فعلی دستگاه",
+      "en": "Use current device location",
+      "ar": "استخدام الموقع الحالي للجهاز"
+    },
+    {
+      "msgid": "Results are updating...",
+      "fa": "در حال به‌روزرسانی نتایج...",
+      "en": "Results are updating...",
+      "ar": "جارٍ تحديث النتائج..."
+    },
+    {
+      "msgid": "No salons match these filters.",
+      "fa": "هیچ سالنی با این فیلترها پیدا نشد.",
+      "en": "No salons match these filters.",
+      "ar": "لا توجد صالونات تطابق عوامل التصفية هذه."
+    },
+    {
+      "msgid": "Could not update results. Try again.",
+      "fa": "به‌روزرسانی نتایج انجام نشد. دوباره تلاش کنید.",
+      "en": "Could not update results. Try again.",
+      "ar": "تعذر تحديث النتائج. حاول مجدداً."
+    },
+    {
+      "msgid": "Choose a date before filtering by time.",
+      "fa": "برای فیلتر زمان، ابتدا تاریخ را انتخاب کنید.",
+      "en": "Choose a date before filtering by time.",
+      "ar": "اختر تاريخاً قبل التصفية حسب الوقت."
+    },
+    {
+      "msgid": "Enable location access to sort by nearest.",
+      "fa": "برای مرتب‌سازی نزدیک‌ترین، باید دسترسی موقعیت فعلی را فعال کنی.",
+      "en": "Enable location access to sort by nearest.",
+      "ar": "فعّل الوصول إلى موقعك للترتيب حسب الأقرب."
+    },
+    {
+      "msgid": "Current location is unavailable on this device.",
+      "fa": "دسترسی به موقعیت فعلی در این دستگاه در دسترس نیست.",
+      "en": "Current location is unavailable on this device.",
+      "ar": "الموقع الحالي غير متاح على هذا الجهاز."
+    },
+    {
+      "msgid": "Getting current location...",
+      "fa": "در حال دریافت موقعیت فعلی...",
+      "en": "Getting current location...",
+      "ar": "جارٍ تحديد موقعك الحالي..."
+    },
+    {
+      "msgid": "Current location found. Sorting by nearest.",
+      "fa": "موقعیت فعلی دریافت شد. نتایج بر اساس نزدیک‌ترین مرتب می‌شوند.",
+      "en": "Current location found. Sorting by nearest.",
+      "ar": "تم تحديد موقعك. ستُرتب النتائج حسب الأقرب."
+    },
+    {
+      "msgid": "Could not access current location.",
+      "fa": "دسترسی به موقعیت فعلی انجام نشد.",
+      "en": "Could not access current location.",
+      "ar": "تعذر الوصول إلى موقعك الحالي."
+    },
+    {
+      "msgid": "Open salon",
+      "fa": "نمایش",
+      "en": "Open salon",
+      "ar": "عرض"
+    },
+    {
+      "msgid": "View card in list",
+      "fa": "نمایش کارت در لیست",
+      "en": "View card in list",
+      "ar": "عرض البطاقة في القائمة"
+    },
+    {
+      "msgid": "Check the salon card to see available times.",
+      "fa": "برای مشاهده زمان‌ها، کارت سالن را بررسی کنید.",
+      "en": "Check the salon card to see available times.",
+      "ar": "راجع بطاقة الصالون لمعرفة المواعيد المتاحة."
+    },
+    {
+      "msgid": "Map key is not configured. The salon list remains available.",
+      "fa": "کلید نقشه داخلی تنظیم نشده است. لیست سالن‌ها همچنان فعال است.",
+      "en": "Map key is not configured. The salon list remains available.",
+      "ar": "لم يُضبط مفتاح الخريطة. تظل قائمة الصالونات متاحة."
+    },
+    {
+      "msgid": "Map tiles could not load. Use the results list.",
+      "fa": "لود نقشه کامل نشد. می‌توانید از لیست نتایج استفاده کنید.",
+      "en": "Map tiles could not load. Use the results list.",
+      "ar": "تعذر تحميل الخريطة بالكامل. استخدم قائمة النتائج."
+    },
+    {
+      "msgid": "Map could not start. Continue searching with the list.",
+      "fa": "راه‌اندازی نقشه انجام نشد. جستجو از طریق لیست ادامه پیدا می‌کند.",
+      "en": "Map could not start. Continue searching with the list.",
+      "ar": "تعذر تشغيل الخريطة. تابع البحث باستخدام القائمة."
+    },
+    {
+      "msgid": "Search for salons, services, or areas...",
+      "fa": "جستجو سالن، خدمات یا منطقه...",
+      "en": "Search for salons, services, or areas...",
+      "ar": "ابحث عن صالونات أو خدمات أو مناطق..."
+    },
+    {
+      "msgid": "Remove filter",
+      "fa": "حذف فیلتر",
+      "en": "Remove filter",
+      "ar": "إزالة عامل التصفية"
+    },
+    {
+      "msgid": "From {price} Toman",
+      "fa": "از {price} تومان",
+      "en": "From {price} Toman",
+      "ar": "من {price} تومان"
+    },
+    {
+      "msgid": "Up to {price} Toman",
+      "fa": "تا {price} تومان",
+      "en": "Up to {price} Toman",
+      "ar": "حتى {price} تومان"
+    },
+    {
+      "msgid": "{count} services",
+      "fa": "{count} خدمت",
+      "en": "{count} services",
+      "ar": "{count} خدمات"
+    },
+    {
+      "msgid": "{count} salons",
+      "fa": "{count} سالن",
+      "en": "{count} salons",
+      "ar": "{count} صالونات"
+    },
+    {
+      "msgid": "Rating {score}+",
+      "fa": "امتیاز {score}+",
+      "en": "Rating {score}+",
+      "ar": "التقييم {score} فأكثر"
+    },
+    {
+      "msgid": "Results are displayed by salon",
+      "en": "Results are displayed by salon",
+      "fa": "نتیجه‌ها بر اساس مجموعه نمایش داده می‌شوند",
+      "ar": "تُعرض النتائج حسب الصالون"
+    },
+    {
+      "msgid": "View salons in this category",
+      "en": "View salons in this category",
+      "fa": "مشاهده مجموعه‌های این دسته",
+      "ar": "عرض صالونات هذه الفئة"
+    },
+    {
+      "msgid": "Result",
+      "en": "Result",
+      "fa": "نتیجه",
+      "ar": "نتيجة"
+    },
+    {
+      "msgid": "Beauty salon",
+      "en": "Beauty salon",
+      "fa": "سالن زیبایی",
+      "ar": "صالون تجميل"
+    },
+    {
+      "msgid": "Verified salons in search",
+      "en": "Verified salons in search",
+      "fa": "فقط سالن‌های تاییدشده",
+      "ar": "الصالونات المعتمدة فقط"
+    }
+  ]
+}
