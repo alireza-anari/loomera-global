@@ -18,7 +18,7 @@ from persiantools.jdatetime import JalaliDate
 
 LEGACY_BOOKING_TIMEZONE = "Asia/Tehran"
 _VALID_CALENDARS = frozenset(("gregorian", "jalali"))
-_DATE_PATTERN = re.compile(r"^([0-9]{4})([-/])([0-9]{1,2})\\2([0-9]{1,2})$")
+_DATE_PATTERN = re.compile(r"^([0-9]{4})([-/])([0-9]{1,2})\2([0-9]{1,2})$")
 _DIGIT_TRANSLATION = str.maketrans(
     "۰۱۲۳۴۵۶۷۸۹٠١٢٣٤٥٦٧٨٩",
     "01234567890123456789",
