@@ -1,0 +1,335 @@
+{
+  "phase": "4.2",
+  "scope": "Service directory, service detail, professional pricing and public stylist profile",
+  "source_languages": [
+    "fa",
+    "en",
+    "ar"
+  ],
+  "reviewed_messages": [
+    {
+      "msgid": "About %(duration)s minutes",
+      "fa": "حدود %(duration)s دقیقه",
+      "en": "About %(duration)s minutes",
+      "ar": "حوالي %(duration)s دقيقة"
+    },
+    {
+      "msgid": "About the professional",
+      "fa": "درباره متخصص",
+      "en": "About the professional",
+      "ar": "نبذة عن المختص"
+    },
+    {
+      "msgid": "About this service",
+      "fa": "درباره این خدمت",
+      "en": "About this service",
+      "ar": "حول هذه الخدمة"
+    },
+    {
+      "msgid": "All",
+      "fa": "همه",
+      "en": "All",
+      "ar": "كل"
+    },
+    {
+      "msgid": "All services",
+      "fa": "همه خدمات",
+      "en": "All services",
+      "ar": "جميع الخدمات"
+    },
+    {
+      "msgid": "Available services",
+      "fa": "خدمات قابل ارائه",
+      "en": "Available services",
+      "ar": "الخدمات المتاحة"
+    },
+    {
+      "msgid": "Beauty professional",
+      "fa": "متخصص زیبایی",
+      "en": "Beauty professional",
+      "ar": "مختص تجميل"
+    },
+    {
+      "msgid": "Beauty services",
+      "fa": "خدمات زیبایی",
+      "en": "Beauty services",
+      "ar": "خدمات التجميل"
+    },
+    {
+      "msgid": "Book with this professional",
+      "fa": "رزرو با این متخصص",
+      "en": "Book with this professional",
+      "ar": "احجز مع هذا المختص"
+    },
+    {
+      "msgid": "Booking",
+      "fa": "رزرو",
+      "en": "Booking",
+      "ar": "الحجز"
+    },
+    {
+      "msgid": "Choose a service and view this professional’s available times at the salon.",
+      "fa": "خدمت موردنظر را انتخاب کن و زمان‌های آزاد این متخصص را در صفحه مجموعه ببین.",
+      "en": "Choose a service and view this professional’s available times at the salon.",
+      "ar": "اختر خدمة واستعرض الأوقات المتاحة لهذا المختص في الصالون."
+    },
+    {
+      "msgid": "Choose service and time",
+      "fa": "انتخاب خدمت و زمان",
+      "en": "Choose service and time",
+      "ar": "اختر الخدمة والوقت"
+    },
+    {
+      "msgid": "Compare active options",
+      "fa": "چند گزینه فعال برای مقایسه",
+      "en": "Compare active options",
+      "ar": "قارن الخيارات المتاحة"
+    },
+    {
+      "msgid": "Completed services",
+      "fa": "خدمت تکمیل‌شده",
+      "en": "Completed services",
+      "ar": "الخدمات المكتملة"
+    },
+    {
+      "msgid": "Customer experiences",
+      "fa": "نظر مشتریان",
+      "en": "Customer experiences",
+      "ar": "تجارب العملاء"
+    },
+    {
+      "msgid": "Customer experiences at",
+      "fa": "تجربه‌های ثبت‌شده در",
+      "en": "Customer experiences at",
+      "ar": "تجارب العملاء في"
+    },
+    {
+      "msgid": "Customer reviews",
+      "fa": "نظر مشتری",
+      "en": "Customer reviews",
+      "ar": "تقييمات العملاء"
+    },
+    {
+      "msgid": "Explore other services",
+      "fa": "مشاهده خدمات دیگر",
+      "en": "Explore other services",
+      "ar": "استعرض خدمات أخرى"
+    },
+    {
+      "msgid": "Introduction",
+      "fa": "معرفی",
+      "en": "Introduction",
+      "ar": "نبذة"
+    },
+    {
+      "msgid": "Loading prices...",
+      "fa": "در حال بارگذاری...",
+      "en": "Loading prices...",
+      "ar": "جارٍ تحميل الأسعار..."
+    },
+    {
+      "msgid": "Main service groups",
+      "fa": "گروه‌های اصلی خدمات",
+      "en": "Main service groups",
+      "ar": "فئات الخدمات الرئيسية"
+    },
+    {
+      "msgid": "No active professionals for this service yet.",
+      "fa": "هنوز متخصص فعالی برای این خدمت ثبت نشده است.",
+      "en": "No active professionals for this service yet.",
+      "ar": "لا يوجد مختصون نشطون لهذه الخدمة حاليًا."
+    },
+    {
+      "msgid": "No active salons currently offer this service.",
+      "fa": "فعلاً مجموعه فعالی برای این خدمت ثبت نشده است.",
+      "en": "No active salons currently offer this service.",
+      "ar": "لا توجد صالونات نشطة تقدم هذه الخدمة حاليًا."
+    },
+    {
+      "msgid": "No public portfolio samples yet.",
+      "fa": "هنوز نمونه‌کار عمومی ثبت نشده است.",
+      "en": "No public portfolio samples yet.",
+      "ar": "لا توجد نماذج أعمال منشورة حتى الآن."
+    },
+    {
+      "msgid": "No reviews for this professional yet.",
+      "fa": "هنوز نظری برای این متخصص ثبت نشده است.",
+      "en": "No reviews for this professional yet.",
+      "ar": "لا توجد تقييمات لهذا المختص حتى الآن."
+    },
+    {
+      "msgid": "No services are currently available to book with this professional.",
+      "fa": "فعلاً خدمت فعالی برای رزرو با این متخصص وجود ندارد.",
+      "en": "No services are currently available to book with this professional.",
+      "ar": "لا توجد خدمات متاحة للحجز مع هذا المختص حاليًا."
+    },
+    {
+      "msgid": "No services found in this category",
+      "fa": "خدمتی در این دسته پیدا نشد",
+      "en": "No services found in this category",
+      "ar": "لم يتم العثور على خدمات في هذه الفئة"
+    },
+    {
+      "msgid": "Portfolio",
+      "fa": "نمونه‌کار",
+      "en": "Portfolio",
+      "ar": "معرض الأعمال"
+    },
+    {
+      "msgid": "Portfolio sample by",
+      "fa": "نمونه‌کار",
+      "en": "Portfolio sample by",
+      "ar": "نموذج عمل من"
+    },
+    {
+      "msgid": "Prices",
+      "fa": "قیمت‌ها",
+      "en": "Prices",
+      "ar": "الأسعار"
+    },
+    {
+      "msgid": "Professional at",
+      "fa": "متخصص در",
+      "en": "Professional at",
+      "ar": "مختص في"
+    },
+    {
+      "msgid": "Professional for this service",
+      "fa": "متخصص این خدمت",
+      "en": "Professional for this service",
+      "ar": "مختص بهذه الخدمة"
+    },
+    {
+      "msgid": "Professional prices",
+      "fa": "قیمت متخصص‌ها",
+      "en": "Professional prices",
+      "ar": "أسعار المختصين"
+    },
+    {
+      "msgid": "Quick booking",
+      "fa": "رزرو سریع",
+      "en": "Quick booking",
+      "ar": "حجز سريع"
+    },
+    {
+      "msgid": "Rating at this salon",
+      "fa": "امتیاز در این مجموعه",
+      "en": "Rating at this salon",
+      "ar": "التقييم في هذا الصالون"
+    },
+    {
+      "msgid": "Recent work",
+      "fa": "کارهای اخیر",
+      "en": "Recent work",
+      "ar": "أحدث الأعمال"
+    },
+    {
+      "msgid": "Salons offering this service",
+      "fa": "مجموعه‌های ارائه‌دهنده",
+      "en": "Salons offering this service",
+      "ar": "الصالونات التي تقدم هذه الخدمة"
+    },
+    {
+      "msgid": "Search salons and beauty services",
+      "fa": "جستجوی مجموعه‌ها و خدمات زیبایی",
+      "en": "Search salons and beauty services",
+      "ar": "البحث عن الصالونات وخدمات التجميل"
+    },
+    {
+      "msgid": "See salons offering this service, compare options, and book.",
+      "fa": "مجموعه‌های ارائه‌دهنده این خدمت را ببین، گزینه‌ها را مقایسه کن و برای رزرو اقدام کن.",
+      "en": "See salons offering this service, compare options, and book.",
+      "ar": "استعرض الصالونات التي تقدم هذه الخدمة، وقارن الخيارات واحجز الأنسب لك."
+    },
+    {
+      "msgid": "Select this service",
+      "fa": "انتخاب این خدمت",
+      "en": "Select this service",
+      "ar": "اختر هذه الخدمة"
+    },
+    {
+      "msgid": "Service groups",
+      "fa": "گروه‌های خدمت",
+      "en": "Service groups",
+      "ar": "مجموعات الخدمات"
+    },
+    {
+      "msgid": "Service list",
+      "fa": "لیست خدمات",
+      "en": "Service list",
+      "ar": "قائمة الخدمات"
+    },
+    {
+      "msgid": "Service subgroups",
+      "fa": "زیرگروه‌های خدمات",
+      "en": "Service subgroups",
+      "ar": "الفئات الفرعية للخدمات"
+    },
+    {
+      "msgid": "Services at",
+      "fa": "خدمات",
+      "en": "Services at",
+      "ar": "خدمات في"
+    },
+    {
+      "msgid": "This professional has not added a profile description yet.",
+      "fa": "این متخصص هنوز توضیحی برای پروفایل خود ثبت نکرده است.",
+      "en": "This professional has not added a profile description yet.",
+      "ar": "لم يضف هذا المختص وصفًا لملفه الشخصي حتى الآن."
+    },
+    {
+      "msgid": "Unable to load the price list.",
+      "fa": "دریافت لیست قیمت ممکن نیست.",
+      "en": "Unable to load the price list.",
+      "ar": "تعذّر تحميل قائمة الأسعار."
+    },
+    {
+      "msgid": "Variable price",
+      "fa": "قیمت متغیر",
+      "en": "Variable price",
+      "ar": "سعر متغير"
+    },
+    {
+      "msgid": "Verified",
+      "fa": "تأییدشده",
+      "en": "Verified",
+      "ar": "موثّق"
+    },
+    {
+      "msgid": "View all",
+      "fa": "مشاهده همه",
+      "en": "View all",
+      "ar": "عرض الكل"
+    },
+    {
+      "msgid": "View all services",
+      "fa": "مشاهده همه خدمات",
+      "en": "View all services",
+      "ar": "عرض جميع الخدمات"
+    },
+    {
+      "msgid": "View at the salon",
+      "fa": "مشاهده در صفحه مجموعه",
+      "en": "View at the salon",
+      "ar": "عرض في صفحة الصالون"
+    },
+    {
+      "msgid": "View salons",
+      "fa": "مشاهده مجموعه‌ها",
+      "en": "View salons",
+      "ar": "عرض الصالونات"
+    },
+    {
+      "msgid": "salons",
+      "fa": "مجموعه",
+      "en": "salons",
+      "ar": "صالونات"
+    }
+  ],
+  "excluded": [
+    "Human-authored business values",
+    "SEO metadata",
+    "Calendar/timezone/currency semantics",
+    "Booking and payment mutations"
+  ]
+}

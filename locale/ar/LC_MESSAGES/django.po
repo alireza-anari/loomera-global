@@ -2912,3 +2912,216 @@ msgstr "المبلغ السابق"
 #: templates/pages/home.html templates/pages/show_salons.html templates/components/salon_card.html templates/components/book_again_card.html
 msgid "Price not recorded"
 msgstr "السعر غير مسجل"
+
+#: templates/services/all_services.html templates/services/partials/filtered_services.html templates/services/partials/priceList.html templates/services/service_detail.html templates/pages/search.html templates/pages/salon_stylist_profile.html
+#, python-format
+msgid "About %(duration)s minutes"
+msgstr "حوالي %(duration)s دقيقة"
+
+#: templates/services/all_services.html templates/services/partials/filtered_services.html templates/services/partials/priceList.html templates/services/service_detail.html templates/pages/search.html templates/pages/salon_stylist_profile.html
+msgid "About the professional"
+msgstr "نبذة عن المختص"
+
+#: templates/services/all_services.html templates/services/partials/filtered_services.html templates/services/partials/priceList.html templates/services/service_detail.html templates/pages/search.html templates/pages/salon_stylist_profile.html
+msgid "About this service"
+msgstr "حول هذه الخدمة"
+
+#: templates/services/all_services.html templates/services/partials/filtered_services.html templates/services/partials/priceList.html templates/services/service_detail.html templates/pages/search.html templates/pages/salon_stylist_profile.html
+msgid "All"
+msgstr "كل"
+
+#: templates/services/all_services.html templates/services/partials/filtered_services.html templates/services/partials/priceList.html templates/services/service_detail.html templates/pages/search.html templates/pages/salon_stylist_profile.html
+msgid "All services"
+msgstr "جميع الخدمات"
+
+#: templates/services/all_services.html templates/services/partials/filtered_services.html templates/services/partials/priceList.html templates/services/service_detail.html templates/pages/search.html templates/pages/salon_stylist_profile.html
+msgid "Available services"
+msgstr "الخدمات المتاحة"
+
+#: templates/services/all_services.html templates/services/partials/filtered_services.html templates/services/partials/priceList.html templates/services/service_detail.html templates/pages/search.html templates/pages/salon_stylist_profile.html
+msgid "Beauty professional"
+msgstr "مختص تجميل"
+
+#: templates/services/all_services.html templates/services/partials/filtered_services.html templates/services/partials/priceList.html templates/services/service_detail.html templates/pages/search.html templates/pages/salon_stylist_profile.html
+msgid "Beauty services"
+msgstr "خدمات التجميل"
+
+#: templates/services/all_services.html templates/services/partials/filtered_services.html templates/services/partials/priceList.html templates/services/service_detail.html templates/pages/search.html templates/pages/salon_stylist_profile.html
+msgid "Book with this professional"
+msgstr "احجز مع هذا المختص"
+
+#: templates/services/all_services.html templates/services/partials/filtered_services.html templates/services/partials/priceList.html templates/services/service_detail.html templates/pages/search.html templates/pages/salon_stylist_profile.html
+msgid "Booking"
+msgstr "الحجز"
+
+#: templates/services/all_services.html templates/services/partials/filtered_services.html templates/services/partials/priceList.html templates/services/service_detail.html templates/pages/search.html templates/pages/salon_stylist_profile.html
+msgid "Choose a service and view this professional’s available times at the salon."
+msgstr "اختر خدمة واستعرض الأوقات المتاحة لهذا المختص في الصالون."
+
+#: templates/services/all_services.html templates/services/partials/filtered_services.html templates/services/partials/priceList.html templates/services/service_detail.html templates/pages/search.html templates/pages/salon_stylist_profile.html
+msgid "Choose service and time"
+msgstr "اختر الخدمة والوقت"
+
+#: templates/services/all_services.html templates/services/partials/filtered_services.html templates/services/partials/priceList.html templates/services/service_detail.html templates/pages/search.html templates/pages/salon_stylist_profile.html
+msgid "Compare active options"
+msgstr "قارن الخيارات المتاحة"
+
+#: templates/services/all_services.html templates/services/partials/filtered_services.html templates/services/partials/priceList.html templates/services/service_detail.html templates/pages/search.html templates/pages/salon_stylist_profile.html
+msgid "Completed services"
+msgstr "الخدمات المكتملة"
+
+#: templates/services/all_services.html templates/services/partials/filtered_services.html templates/services/partials/priceList.html templates/services/service_detail.html templates/pages/search.html templates/pages/salon_stylist_profile.html
+msgid "Customer experiences"
+msgstr "تجارب العملاء"
+
+#: templates/services/all_services.html templates/services/partials/filtered_services.html templates/services/partials/priceList.html templates/services/service_detail.html templates/pages/search.html templates/pages/salon_stylist_profile.html
+msgid "Customer experiences at"
+msgstr "تجارب العملاء في"
+
+#: templates/services/all_services.html templates/services/partials/filtered_services.html templates/services/partials/priceList.html templates/services/service_detail.html templates/pages/search.html templates/pages/salon_stylist_profile.html
+msgid "Customer reviews"
+msgstr "تقييمات العملاء"
+
+#: templates/services/all_services.html templates/services/partials/filtered_services.html templates/services/partials/priceList.html templates/services/service_detail.html templates/pages/search.html templates/pages/salon_stylist_profile.html
+msgid "Explore other services"
+msgstr "استعرض خدمات أخرى"
+
+#: templates/services/all_services.html templates/services/partials/filtered_services.html templates/services/partials/priceList.html templates/services/service_detail.html templates/pages/search.html templates/pages/salon_stylist_profile.html
+msgid "Introduction"
+msgstr "نبذة"
+
+#: templates/services/all_services.html templates/services/partials/filtered_services.html templates/services/partials/priceList.html templates/services/service_detail.html templates/pages/search.html templates/pages/salon_stylist_profile.html
+msgid "Loading prices..."
+msgstr "جارٍ تحميل الأسعار..."
+
+#: templates/services/all_services.html templates/services/partials/filtered_services.html templates/services/partials/priceList.html templates/services/service_detail.html templates/pages/search.html templates/pages/salon_stylist_profile.html
+msgid "Main service groups"
+msgstr "فئات الخدمات الرئيسية"
+
+#: templates/services/all_services.html templates/services/partials/filtered_services.html templates/services/partials/priceList.html templates/services/service_detail.html templates/pages/search.html templates/pages/salon_stylist_profile.html
+msgid "No active professionals for this service yet."
+msgstr "لا يوجد مختصون نشطون لهذه الخدمة حاليًا."
+
+#: templates/services/all_services.html templates/services/partials/filtered_services.html templates/services/partials/priceList.html templates/services/service_detail.html templates/pages/search.html templates/pages/salon_stylist_profile.html
+msgid "No active salons currently offer this service."
+msgstr "لا توجد صالونات نشطة تقدم هذه الخدمة حاليًا."
+
+#: templates/services/all_services.html templates/services/partials/filtered_services.html templates/services/partials/priceList.html templates/services/service_detail.html templates/pages/search.html templates/pages/salon_stylist_profile.html
+msgid "No public portfolio samples yet."
+msgstr "لا توجد نماذج أعمال منشورة حتى الآن."
+
+#: templates/services/all_services.html templates/services/partials/filtered_services.html templates/services/partials/priceList.html templates/services/service_detail.html templates/pages/search.html templates/pages/salon_stylist_profile.html
+msgid "No reviews for this professional yet."
+msgstr "لا توجد تقييمات لهذا المختص حتى الآن."
+
+#: templates/services/all_services.html templates/services/partials/filtered_services.html templates/services/partials/priceList.html templates/services/service_detail.html templates/pages/search.html templates/pages/salon_stylist_profile.html
+msgid "No services are currently available to book with this professional."
+msgstr "لا توجد خدمات متاحة للحجز مع هذا المختص حاليًا."
+
+#: templates/services/all_services.html templates/services/partials/filtered_services.html templates/services/partials/priceList.html templates/services/service_detail.html templates/pages/search.html templates/pages/salon_stylist_profile.html
+msgid "No services found in this category"
+msgstr "لم يتم العثور على خدمات في هذه الفئة"
+
+#: templates/services/all_services.html templates/services/partials/filtered_services.html templates/services/partials/priceList.html templates/services/service_detail.html templates/pages/search.html templates/pages/salon_stylist_profile.html
+msgid "Portfolio"
+msgstr "معرض الأعمال"
+
+#: templates/services/all_services.html templates/services/partials/filtered_services.html templates/services/partials/priceList.html templates/services/service_detail.html templates/pages/search.html templates/pages/salon_stylist_profile.html
+msgid "Portfolio sample by"
+msgstr "نموذج عمل من"
+
+#: templates/services/all_services.html templates/services/partials/filtered_services.html templates/services/partials/priceList.html templates/services/service_detail.html templates/pages/search.html templates/pages/salon_stylist_profile.html
+msgid "Prices"
+msgstr "الأسعار"
+
+#: templates/services/all_services.html templates/services/partials/filtered_services.html templates/services/partials/priceList.html templates/services/service_detail.html templates/pages/search.html templates/pages/salon_stylist_profile.html
+msgid "Professional at"
+msgstr "مختص في"
+
+#: templates/services/all_services.html templates/services/partials/filtered_services.html templates/services/partials/priceList.html templates/services/service_detail.html templates/pages/search.html templates/pages/salon_stylist_profile.html
+msgid "Professional for this service"
+msgstr "مختص بهذه الخدمة"
+
+#: templates/services/all_services.html templates/services/partials/filtered_services.html templates/services/partials/priceList.html templates/services/service_detail.html templates/pages/search.html templates/pages/salon_stylist_profile.html
+msgid "Professional prices"
+msgstr "أسعار المختصين"
+
+#: templates/services/all_services.html templates/services/partials/filtered_services.html templates/services/partials/priceList.html templates/services/service_detail.html templates/pages/search.html templates/pages/salon_stylist_profile.html
+msgid "Quick booking"
+msgstr "حجز سريع"
+
+#: templates/services/all_services.html templates/services/partials/filtered_services.html templates/services/partials/priceList.html templates/services/service_detail.html templates/pages/search.html templates/pages/salon_stylist_profile.html
+msgid "Rating at this salon"
+msgstr "التقييم في هذا الصالون"
+
+#: templates/services/all_services.html templates/services/partials/filtered_services.html templates/services/partials/priceList.html templates/services/service_detail.html templates/pages/search.html templates/pages/salon_stylist_profile.html
+msgid "Recent work"
+msgstr "أحدث الأعمال"
+
+#: templates/services/all_services.html templates/services/partials/filtered_services.html templates/services/partials/priceList.html templates/services/service_detail.html templates/pages/search.html templates/pages/salon_stylist_profile.html
+msgid "Salons offering this service"
+msgstr "الصالونات التي تقدم هذه الخدمة"
+
+#: templates/services/all_services.html templates/services/partials/filtered_services.html templates/services/partials/priceList.html templates/services/service_detail.html templates/pages/search.html templates/pages/salon_stylist_profile.html
+msgid "Search salons and beauty services"
+msgstr "البحث عن الصالونات وخدمات التجميل"
+
+#: templates/services/all_services.html templates/services/partials/filtered_services.html templates/services/partials/priceList.html templates/services/service_detail.html templates/pages/search.html templates/pages/salon_stylist_profile.html
+msgid "See salons offering this service, compare options, and book."
+msgstr "استعرض الصالونات التي تقدم هذه الخدمة، وقارن الخيارات واحجز الأنسب لك."
+
+#: templates/services/all_services.html templates/services/partials/filtered_services.html templates/services/partials/priceList.html templates/services/service_detail.html templates/pages/search.html templates/pages/salon_stylist_profile.html
+msgid "Select this service"
+msgstr "اختر هذه الخدمة"
+
+#: templates/services/all_services.html templates/services/partials/filtered_services.html templates/services/partials/priceList.html templates/services/service_detail.html templates/pages/search.html templates/pages/salon_stylist_profile.html
+msgid "Service groups"
+msgstr "مجموعات الخدمات"
+
+#: templates/services/all_services.html templates/services/partials/filtered_services.html templates/services/partials/priceList.html templates/services/service_detail.html templates/pages/search.html templates/pages/salon_stylist_profile.html
+msgid "Service list"
+msgstr "قائمة الخدمات"
+
+#: templates/services/all_services.html templates/services/partials/filtered_services.html templates/services/partials/priceList.html templates/services/service_detail.html templates/pages/search.html templates/pages/salon_stylist_profile.html
+msgid "Service subgroups"
+msgstr "الفئات الفرعية للخدمات"
+
+#: templates/services/all_services.html templates/services/partials/filtered_services.html templates/services/partials/priceList.html templates/services/service_detail.html templates/pages/search.html templates/pages/salon_stylist_profile.html
+msgid "Services at"
+msgstr "خدمات في"
+
+#: templates/services/all_services.html templates/services/partials/filtered_services.html templates/services/partials/priceList.html templates/services/service_detail.html templates/pages/search.html templates/pages/salon_stylist_profile.html
+msgid "This professional has not added a profile description yet."
+msgstr "لم يضف هذا المختص وصفًا لملفه الشخصي حتى الآن."
+
+#: templates/services/all_services.html templates/services/partials/filtered_services.html templates/services/partials/priceList.html templates/services/service_detail.html templates/pages/search.html templates/pages/salon_stylist_profile.html
+msgid "Unable to load the price list."
+msgstr "تعذّر تحميل قائمة الأسعار."
+
+#: templates/services/all_services.html templates/services/partials/filtered_services.html templates/services/partials/priceList.html templates/services/service_detail.html templates/pages/search.html templates/pages/salon_stylist_profile.html
+msgid "Variable price"
+msgstr "سعر متغير"
+
+#: templates/services/all_services.html templates/services/partials/filtered_services.html templates/services/partials/priceList.html templates/services/service_detail.html templates/pages/search.html templates/pages/salon_stylist_profile.html
+msgid "Verified"
+msgstr "موثّق"
+
+#: templates/services/all_services.html templates/services/partials/filtered_services.html templates/services/partials/priceList.html templates/services/service_detail.html templates/pages/search.html templates/pages/salon_stylist_profile.html
+msgid "View all"
+msgstr "عرض الكل"
+
+#: templates/services/all_services.html templates/services/partials/filtered_services.html templates/services/partials/priceList.html templates/services/service_detail.html templates/pages/search.html templates/pages/salon_stylist_profile.html
+msgid "View all services"
+msgstr "عرض جميع الخدمات"
+
+#: templates/services/all_services.html templates/services/partials/filtered_services.html templates/services/partials/priceList.html templates/services/service_detail.html templates/pages/search.html templates/pages/salon_stylist_profile.html
+msgid "View at the salon"
+msgstr "عرض في صفحة الصالون"
+
+#: templates/services/all_services.html templates/services/partials/filtered_services.html templates/services/partials/priceList.html templates/services/service_detail.html templates/pages/search.html templates/pages/salon_stylist_profile.html
+msgid "View salons"
+msgstr "عرض الصالونات"
+
+#: templates/services/all_services.html templates/services/partials/filtered_services.html templates/services/partials/priceList.html templates/services/service_detail.html templates/pages/search.html templates/pages/salon_stylist_profile.html
+msgid "salons"
+msgstr "صالونات"

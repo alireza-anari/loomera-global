@@ -6823,7 +6823,7 @@ class DeploymentBrandCrossSurfaceChromeBatchTests(SimpleTestCase):
         ("platform_admin/base.html", 3, 0),
         ("platform_admin/dashboard.html", 1, 0),
         ("platform_admin/infrastructure.html", 1, 0),
-        ("services/all_services.html", 1, 1),
+        ("services/all_services.html", 2, 1),
         ("accounts/remember_password_verify.html", 2, 0),
     )
 
@@ -6844,7 +6844,7 @@ class DeploymentBrandCrossSurfaceChromeBatchTests(SimpleTestCase):
             "selected_group": selected_group,
         }
         return [
-            engines["django"].from_string(row).render(context) for row in rows
+            engines["django"].from_string("{% load i18n %}\n" + row).render(context) for row in rows
         ]
 
     def test_five_templates_have_exact_brand_slots_without_fixed_site_names(self):
