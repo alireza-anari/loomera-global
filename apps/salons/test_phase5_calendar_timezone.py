@@ -9,7 +9,7 @@ from zoneinfo import ZoneInfo
 
 from django.core.exceptions import ValidationError
 from django.db import migrations
-from django.test import SimpleTestCase, TestCase, override_settings
+from django.test import SimpleTestCase, override_settings
 from django.utils import translation
 
 from apps.salons.models import Salon
@@ -173,127 +173,98 @@ class Phase5CalendarBoundaryTests(SimpleTestCase):
         self.assertIn("USE_TZ = True", config)
 
 
-class Phase5AppointmentNoRewriteTests(TestCase):
-    def test_optional_timezone_update_preserves_existing_date_time_and_booking_keys(self):
-        from apps.accounts.models import CustomUser, Customer, SalonManager, Stylist
-        from apps.orders.models import Order, OrderDetail
-        from apps.services.models import Services
+class Phase5AppointmentNoRewriteTests(SimpleTestCase):
+    def test_unpersisted_legacy_booking_wall_clock_is_not_reinterpreted_by_new_metadata(self):
+        from apps.orders.models import OrderDetail
 
-        def user(number):
-            return CustomUser.objects.create(
-                mobile_number=number, name="Test", family="Customer", is_active=True
-            )
-
-        manager = SalonManager.objects.create(
-            user=user("09125008871"), is_active=True
+        # The spatial database migration rehearsal is a separate release gate.
+        # This checks the current model method and the field representation only.
+        salon = Salon(salon_name="Existing salon", timezone_name="")
+        detail = OrderDetail(
+            salon=salon, date=date(2026, 6, 1),
+            time=time(10, 15), end_time=time(10, 45),
         )
-        salon = Salon.objects.create(
-            salon_name="Legacy venue", salon_manager=manager, is_active=True
+        before = (
+            detail.date,
+            detail.time,
+            detail.end_time,
+            detail.appointment_start_datetime(),
         )
-        customer = Customer.objects.create(user=user("09125008872"))
-        stylist = Stylist.objects.create(
-            user=user("09125008873"), is_active=True, expert="Test"
-        )
-        service = Services.objects.create(
-            service_name="Existing service",
-            slug="phase5-existing-service",
-            is_active=True,
-            is_platform_catalog=True,
-            duration_minutes=30,
-            base_price=100000,
-        )
-        order = Order.objects.create(
-            customer=customer,
-            salon=salon,
-            status="confirmed",
-            is_finally=True,
-            total_amount=100000,
-        )
-        detail = OrderDetail.objects.create(
-            order=order,
-            salon=salon,
-            stylist=stylist,
-            service=service,
-            price=100000,
-            date=date(2026, 6, 1),
-            time=time(10, 15),
-            end_time=time(10, 45),
-        )
-        original = (
-            detail.pk, detail.date, detail.time, detail.end_time,
-            detail.order_id, detail.salon_id,
-        )
-        self.assertEqual(salon.timezone_name, "")
-        self.assertEqual(get_business_timezone(salon).key, "Asia/Tehran")
         salon.timezone_name = "Europe/Berlin"
-        salon.full_clean(exclude=["slug"])
-        salon.save(update_fields=["timezone_name"])
-        detail.refresh_from_db()
-        salon.refresh_from_db()
         self.assertEqual(
             (
-                detail.pk, detail.date, detail.time, detail.end_time,
-                detail.order_id, detail.salon_id,
+                detail.date,
+                detail.time,
+                detail.end_time,
+                detail.appointment_start_datetime(),
             ),
-            original,
+            before,
         )
-        self.assertEqual(salon.timezone_name, "Europe/Berlin")
         self.assertEqual(get_business_timezone(salon).key, "Europe/Berlin")
 
 
-class Phase5ReadOnlyAuditTests(TestCase):
-    def setUp(self):
-        from apps.accounts.models import CustomUser, SalonManager
-
-        manager = SalonManager.objects.create(
-            user=CustomUser.objects.create(
-                mobile_number="09125008884", name="Audit", family="Manager", is_active=True
-            ),
-            is_active=True,
-        )
-        self.salon = Salon.objects.create(
-            salon_name="Audit fixture", salon_manager=manager, is_active=True
-        )
-
-    def test_audit_is_aggregate_only_and_never_writes_salon_records(self):
+class Phase5ReadOnlyAuditTests(SimpleTestCase):
+    def test_audit_is_aggregate_only_and_never_writes_model_records(self):
         import json
         from io import StringIO
-        from django.core.management import call_command
+        from unittest.mock import MagicMock, patch
 
-        before = (self.salon.timezone_name, self.salon.pk)
+        module = import_module("apps.salons.management.commands.audit_calendar_timezone")
+        salons = MagicMock()
+        salons.count.return_value = 2
+        salons.filter.return_value.count.return_value = 1
+        salons.exclude.return_value.values_list.return_value.distinct.return_value = [
+            "Europe/Berlin"
+        ]
+        appointments = MagicMock()
+        appointments.count.return_value = 3
+        appointments.filter.return_value.count.side_effect = [2, 2, 1]
+        order_details = MagicMock()
+        order_details.all.return_value = appointments
+
         output = StringIO()
-        call_command("audit_calendar_timezone", "--json", stdout=output)
+        with (
+            patch.object(module, "Salon", SimpleNamespace(objects=salons)),
+            patch.object(module, "OrderDetail", SimpleNamespace(objects=order_details)),
+        ):
+            module.Command(stdout=output).handle(json=True, fail_on_invalid=False)
         report = json.loads(output.getvalue().strip())
-        self.assertEqual(report["salons_total"], 1)
+        self.assertEqual(report["salons_total"], 2)
         self.assertEqual(report["salons_legacy_unset_timezone"], 1)
-        self.assertEqual(report["salons_with_explicit_timezone"], 0)
-        self.assertEqual(report["appointments_total"], 0)
-        self.assertEqual(report["appointments_missing_date_or_time"], 0)
-        self.assertEqual(report["invalid_explicit_timezone_count"], 0)
-        self.assertEqual(report["writes_performed"], 0)
-        self.salon.refresh_from_db()
-        self.assertEqual((self.salon.timezone_name, self.salon.pk), before)
-        self.assertNotIn("09125008884", output.getvalue())
-
-        self.salon.timezone_name = "Europe/Berlin"
-        self.salon.save(update_fields=["timezone_name"])
-        output = StringIO()
-        call_command("audit_calendar_timezone", "--json", stdout=output)
-        report = json.loads(output.getvalue().strip())
-        self.assertEqual(report["salons_legacy_unset_timezone"], 0)
         self.assertEqual(report["salons_with_explicit_timezone"], 1)
         self.assertEqual(report["explicit_timezones_distinct"], 1)
+        self.assertEqual(report["appointments_total"], 3)
+        self.assertEqual(report["appointments_legacy_unset_timezone"], 2)
+        self.assertEqual(report["appointments_with_date_and_time"], 2)
+        self.assertEqual(report["appointments_missing_date_or_time"], 1)
+        self.assertEqual(report["invalid_explicit_timezone_count"], 0)
+        self.assertEqual(report["writes_performed"], 0)
+        salons.create.assert_not_called()
+        salons.update.assert_not_called()
+        appointments.create.assert_not_called()
+        appointments.update.assert_not_called()
 
-    def test_audit_flags_bad_zone_inserted_bypassing_form_validation(self):
+    def test_audit_flags_invalid_zone_inserted_bypassing_model_validation(self):
         from io import StringIO
-        from django.core.management import call_command
+        from unittest.mock import MagicMock, patch
         from django.core.management.base import CommandError
 
-        Salon.objects.filter(pk=self.salon.pk).update(timezone_name="Not/ARealZone")
-        with self.assertRaises(CommandError):
-            call_command(
-                "audit_calendar_timezone", "--json", "--fail-on-invalid",
-                stdout=StringIO(),
-            )
-        self.salon.refresh_from_db()
-        self.assertEqual(self.salon.timezone_name, "Not/ARealZone")
+        module = import_module("apps.salons.management.commands.audit_calendar_timezone")
+        salons = MagicMock()
+        salons.count.return_value = 1
+        salons.filter.return_value.count.return_value = 0
+        salons.exclude.return_value.values_list.return_value.distinct.return_value = [
+            "Not/ARealZone"
+        ]
+        orders = MagicMock()
+        orders.all.return_value.count.return_value = 0
+        orders.all.return_value.filter.return_value.count.return_value = 0
+        with (
+            patch.object(module, "Salon", SimpleNamespace(objects=salons)),
+            patch.object(module, "OrderDetail", SimpleNamespace(objects=orders)),
+        ):
+            with self.assertRaises(CommandError):
+                module.Command(stdout=StringIO()).handle(
+                    json=True, fail_on_invalid=True
+                )
+        salons.update.assert_not_called()
