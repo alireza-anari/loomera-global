@@ -1,22 +1,23 @@
+{% load i18n %}
 {% load render_partial %}
 <div id="filterScreen" class="fixed inset-0 z-[1200] hidden bg-loomera-bg text-loomera-textPrimary" role="dialog" aria-modal="true" aria-labelledby="filterScreenTitle">
   <header class="sticky top-0 z-10 flex items-center justify-between border-b border-loomera-borderSoft bg-white/95 px-4 py-3 shadow-lm-soft backdrop-blur">
-    <button id="filterBackBtn" type="button" class="inline-flex h-10 w-10 items-center justify-center rounded-full border border-loomera-borderSoft bg-white text-loomera-textPrimary" aria-label="بستن فیلترها">
+    <button id="filterBackBtn" type="button" class="inline-flex h-10 w-10 items-center justify-center rounded-full border border-loomera-borderSoft bg-white text-loomera-textPrimary" aria-label="{% trans 'Close filters' %}">
       <i class="fa-solid fa-chevron-right text-sm"></i>
     </button>
-    <h1 id="filterScreenTitle" class="text-sm font-black text-loomera-textPrimary">فیلتر جستجو</h1>
+    <h1 id="filterScreenTitle" class="text-sm font-black text-loomera-textPrimary">{% trans 'Search filters' %}</h1>
     <span class="w-10"></span>
   </header>
 
   <div class="h-[calc(100dvh-64px)] overflow-y-auto pb-32">
-    <section class="space-y-3 px-4 pt-4 text-sm lg:mx-auto lg:max-w-3xl" aria-label="فیلترهای جستجو">
-      <div id="activeFiltersBarScreen" class="hidden rounded-[28px] border border-loomera-borderSoft bg-white p-4 shadow-lm-card" aria-label="فیلترهای فعال">
+    <section class="space-y-3 px-4 pt-4 text-sm lg:mx-auto lg:max-w-3xl" aria-label="{% trans 'Search filter options' %}">
+      <div id="activeFiltersBarScreen" class="hidden rounded-[28px] border border-loomera-borderSoft bg-white p-4 shadow-lm-card" aria-label="{% trans 'Active filters' %}">
         <div class="mb-3 flex items-center justify-between gap-3">
           <div>
-            <p class="text-xs font-black text-loomera-primary">فیلترهای فعال</p>
-            <p class="mt-1 text-[11px] leading-5 text-loomera-textMuted">هر موردی را که نمی‌خواهی حذف کن و دوباره نتایج را ببین.</p>
+            <p class="text-xs font-black text-loomera-primary">{% trans 'Active filters' %}</p>
+            <p class="mt-1 text-[11px] leading-5 text-loomera-textMuted">{% trans 'Remove any unwanted filters to see the results again.' %}</p>
           </div>
-          <button type="button" data-clear-active-filters class="shrink-0 rounded-full bg-rose-50 px-3 py-2 text-[11px] font-black text-rose-600">حذف همه</button>
+          <button type="button" data-clear-active-filters class="shrink-0 rounded-full bg-rose-50 px-3 py-2 text-[11px] font-black text-rose-600">{% trans 'Clear all' %}</button>
         </div>
         <div id="activeFiltersChipsScreen" class="flex flex-wrap gap-2"></div>
       </div>
@@ -24,14 +25,14 @@
       <div class="rounded-[28px] border border-loomera-borderSoft bg-white p-4 shadow-lm-card">
         <label for="serviceSearchInput" class="mb-2 flex items-center gap-2 text-xs font-black text-loomera-textMuted">
           <i class="fa-solid fa-magnifying-glass text-loomera-primary"></i>
-          <span>نام خدمت یا مجموعه</span>
+          <span>{% trans 'Service or salon name' %}</span>
         </label>
         <input
           id="serviceSearchInput"
           type="text"
           name="q"
           value="{{ request.GET.q|default:'' }}"
-          placeholder="مثلاً کوتاهی مو، رنگ، مجموعه موردنظر"
+          placeholder="{% trans 'For example: haircut, color, or salon name' %}"
           class="w-full rounded-2xl border border-loomera-borderSoft bg-loomera-bgSubtle px-3 py-3 text-sm text-loomera-textPrimary placeholder:text-loomera-textMuted transition focus:border-loomera-primary focus:bg-white focus:outline-none focus:ring-4 focus:ring-loomera-primary/10"
           autocomplete="off"
         />
@@ -47,20 +48,20 @@
       <div class="rounded-[28px] border border-loomera-borderSoft bg-white p-4 shadow-lm-card">
         <div class="mb-3 flex items-center gap-2 text-xs font-black text-loomera-textMuted">
           <i class="fa-solid fa-layer-group text-loomera-primary"></i>
-          <span>دسته‌بندی خدمات</span>
+          <span>{% trans 'Service categories' %}</span>
         </div>
         {% if selected_group %}
           <div class="mb-3 rounded-2xl border border-loomera-primary/20 bg-loomera-primarySoft px-3 py-2 text-xs text-loomera-primary">
-            دسته فعال: <span class="font-black" data-selected-group-title>{{ selected_group.group_title }}</span>
+            {% trans 'Selected category:' %} <span class="font-black" data-selected-group-title>{{ selected_group.group_title }}</span>
           </div>
         {% endif %}
         {% render_partial "services:categories" %}
         {% if group_services %}
           <div class="mt-4 rounded-[24px] border border-dashed border-loomera-borderSoft bg-loomera-bgSubtle p-3">
             <div class="mb-2 flex items-center justify-between gap-3">
-              <p class="text-xs font-black text-loomera-textPrimary">خدمات همین دسته</p>
+              <p class="text-xs font-black text-loomera-textPrimary">{% trans 'Services in this category' %}</p>
               {% if selected_group %}
-                <a href="{% url 'search:search_page' %}" data-clear-group class="text-xs font-bold text-loomera-primary">حذف دسته</a>
+                <a href="{% url 'search:search_page' %}" data-clear-group class="text-xs font-bold text-loomera-primary">{% trans 'Remove category' %}</a>
               {% endif %}
             </div>
             <div class="flex flex-wrap gap-2">
@@ -82,7 +83,7 @@
       <div class="rounded-[28px] border border-loomera-borderSoft bg-white p-4 shadow-lm-card">
         <div class="mb-2 flex items-center gap-2 text-xs font-black text-loomera-textMuted">
           <i class="fa-solid fa-location-dot text-loomera-primary"></i>
-          <span>موقعیت</span>
+          <span>{% trans 'Location' %}</span>
         </div>
         <div class="relative">
           <input
@@ -90,7 +91,7 @@
             type="text"
             name="location"
             value="{{ request.GET.location|default:'' }}"
-            placeholder="مثلاً تهرانپارس، ونک یا نزدیک من"
+            placeholder="{% trans 'For example: neighborhood or near me' %}"
             class="w-full rounded-2xl border border-loomera-borderSoft bg-loomera-bgSubtle px-3 py-3 text-sm text-loomera-textPrimary placeholder:text-loomera-textMuted transition focus:border-loomera-primary focus:bg-white focus:outline-none focus:ring-4 focus:ring-loomera-primary/10"
             autocomplete="off"
           />
@@ -98,42 +99,42 @@
         </div>
         <button id="useCurrentLocationBtn" type="button" class="mt-3 inline-flex items-center gap-2 rounded-full bg-loomera-primarySoft px-3 py-2 text-xs font-black text-loomera-primary">
           <i class="fa-solid fa-location-crosshairs text-[10px]"></i>
-          <span>استفاده از موقعیت فعلی</span>
+          <span>{% trans 'Use current location' %}</span>
         </button>
       </div>
 
       <div class="rounded-[28px] border border-loomera-borderSoft bg-white p-4 shadow-lm-card">
-        <div class="rounded-[24px] border border-loomera-borderSoft bg-loomera-bgSubtle p-3" aria-label="فیلترهای بیشتر">
-          <p class="mb-3 text-xs font-black text-loomera-textMuted">فیلترهای بیشتر</p>
+        <div class="rounded-[24px] border border-loomera-borderSoft bg-loomera-bgSubtle p-3" aria-label="{% trans 'Additional filters' %}">
+          <p class="mb-3 text-xs font-black text-loomera-textMuted">{% trans 'Additional filters' %}</p>
           <div class="grid gap-3 sm:grid-cols-2">
             <label class="block text-xs font-black text-loomera-textMuted">
-              حداقل قیمت
-              <input id="filterMinPriceInput" type="text" inputmode="numeric" value="{% firstof request.GET.min_price request.GET.price_min '' %}" placeholder="مثلاً ۲۰۰۰۰۰" class="mt-2 w-full rounded-2xl border border-loomera-borderSoft bg-white px-3 py-3 text-sm text-loomera-textPrimary placeholder:text-loomera-textMuted transition focus:border-loomera-primary focus:outline-none focus:ring-4 focus:ring-loomera-primary/10" />
+              {% trans 'Minimum price' %}
+              <input id="filterMinPriceInput" type="text" inputmode="numeric" value="{% firstof request.GET.min_price request.GET.price_min '' %}" placeholder="{% trans 'For example: 200000' %}" class="mt-2 w-full rounded-2xl border border-loomera-borderSoft bg-white px-3 py-3 text-sm text-loomera-textPrimary placeholder:text-loomera-textMuted transition focus:border-loomera-primary focus:outline-none focus:ring-4 focus:ring-loomera-primary/10" />
             </label>
             <label class="block text-xs font-black text-loomera-textMuted">
-              حداکثر قیمت
-              <input id="filterMaxPriceInput" type="text" inputmode="numeric" value="{% firstof request.GET.max_price request.GET.price_max '' %}" placeholder="مثلاً ۴۰۰۰۰۰" class="mt-2 w-full rounded-2xl border border-loomera-borderSoft bg-white px-3 py-3 text-sm text-loomera-textPrimary placeholder:text-loomera-textMuted transition focus:border-loomera-primary focus:outline-none focus:ring-4 focus:ring-loomera-primary/10" />
+              {% trans 'Maximum price' %}
+              <input id="filterMaxPriceInput" type="text" inputmode="numeric" value="{% firstof request.GET.max_price request.GET.price_max '' %}" placeholder="{% trans 'For example: 400000' %}" class="mt-2 w-full rounded-2xl border border-loomera-borderSoft bg-white px-3 py-3 text-sm text-loomera-textPrimary placeholder:text-loomera-textMuted transition focus:border-loomera-primary focus:outline-none focus:ring-4 focus:ring-loomera-primary/10" />
             </label>
             <label class="block text-xs font-black text-loomera-textMuted sm:col-span-2">
-              حداقل امتیاز
+              {% trans 'Minimum rating' %}
               <select id="filterMinRatingInput" class="mt-2 w-full rounded-2xl border border-loomera-borderSoft bg-white px-3 py-3 text-sm text-loomera-textPrimary transition focus:border-loomera-primary focus:outline-none focus:ring-4 focus:ring-loomera-primary/10">
-                <option value="">همه امتیازها</option>
-                <option value="3" {% if request.GET.min_rating == '3' or request.GET.rating_min == '3' %}selected{% endif %}>۳ به بالا</option>
-                <option value="4" {% if request.GET.min_rating == '4' or request.GET.rating_min == '4' %}selected{% endif %}>۴ به بالا</option>
-                <option value="4.5" {% if request.GET.min_rating == '4.5' or request.GET.rating_min == '4.5' %}selected{% endif %}>۴.۵ به بالا</option>
+                <option value="">{% trans 'All ratings' %}</option>
+                <option value="3" {% if request.GET.min_rating == '3' or request.GET.rating_min == '3' %}selected{% endif %}>{% trans '3 and up' %}</option>
+                <option value="4" {% if request.GET.min_rating == '4' or request.GET.rating_min == '4' %}selected{% endif %}>{% trans '4 and up' %}</option>
+                <option value="4.5" {% if request.GET.min_rating == '4.5' or request.GET.rating_min == '4.5' %}selected{% endif %}>{% trans '4.5 and up' %}</option>
               </select>
             </label>
           </div>
           <div class="mt-4 flex flex-wrap gap-2">
-            <button type="button" class="filter-toggle-chip rounded-full border border-loomera-borderSoft bg-white px-3 py-2 text-xs font-black text-loomera-textSecondary transition hover:border-loomera-primary/30 hover:bg-loomera-primarySoft hover:text-loomera-primary" data-filter-toggle="discounted">فقط تخفیف‌دارها</button>
-            <button type="button" class="filter-toggle-chip rounded-full border border-loomera-borderSoft bg-white px-3 py-2 text-xs font-black text-loomera-textSecondary transition hover:border-loomera-primary/30 hover:bg-loomera-primarySoft hover:text-loomera-primary" data-filter-toggle="verified">فقط مجموعه‌های تاییدشده</button>
-            <button type="button" class="availability-chip rounded-full border border-loomera-borderSoft bg-white px-3 py-2 text-xs font-black text-loomera-textSecondary transition hover:border-loomera-primary/30 hover:bg-loomera-primarySoft hover:text-loomera-primary" data-availability="today">وقت آزاد امروز</button>
-            <button type="button" class="availability-chip rounded-full border border-loomera-borderSoft bg-white px-3 py-2 text-xs font-black text-loomera-textSecondary transition hover:border-loomera-primary/30 hover:bg-loomera-primarySoft hover:text-loomera-primary" data-availability="this_week">وقت آزاد این هفته</button>
+            <button type="button" class="filter-toggle-chip rounded-full border border-loomera-borderSoft bg-white px-3 py-2 text-xs font-black text-loomera-textSecondary transition hover:border-loomera-primary/30 hover:bg-loomera-primarySoft hover:text-loomera-primary" data-filter-toggle="discounted">{% trans 'Discounted only' %}</button>
+            <button type="button" class="filter-toggle-chip rounded-full border border-loomera-borderSoft bg-white px-3 py-2 text-xs font-black text-loomera-textSecondary transition hover:border-loomera-primary/30 hover:bg-loomera-primarySoft hover:text-loomera-primary" data-filter-toggle="verified">{% trans 'Verified salons only' %}</button>
+            <button type="button" class="availability-chip rounded-full border border-loomera-borderSoft bg-white px-3 py-2 text-xs font-black text-loomera-textSecondary transition hover:border-loomera-primary/30 hover:bg-loomera-primarySoft hover:text-loomera-primary" data-availability="today">{% trans 'Available today' %}</button>
+            <button type="button" class="availability-chip rounded-full border border-loomera-borderSoft bg-white px-3 py-2 text-xs font-black text-loomera-textSecondary transition hover:border-loomera-primary/30 hover:bg-loomera-primarySoft hover:text-loomera-primary" data-availability="this_week">{% trans 'Available this week' %}</button>
           </div>
         </div>
 
         <div class="mt-4">
-          <p class="mb-2 text-xs font-black text-loomera-textMuted">تاریخ و زمان</p>
+          <p class="mb-2 text-xs font-black text-loomera-textMuted">{% trans 'Date and time' %}</p>
           <p id="filterValidationMessage" class="mb-2 hidden rounded-2xl border border-amber-200 bg-amber-50 px-3 py-2 text-xs font-bold text-amber-700"></p>
           <div class="mb-3 grid gap-2 sm:grid-cols-[minmax(0,1fr)_auto]">
             <input
@@ -143,31 +144,31 @@
               data-jdp
               data-jdp-only-date="true"
               data-jalali-date
-              placeholder="مثلاً ۱۴۰۵/۰۱/۱۰"
+              placeholder="{% trans 'For example: 1405/01/10' %}"
               class="w-full rounded-2xl border border-loomera-borderSoft bg-loomera-bgSubtle px-3 py-3 text-sm text-loomera-textPrimary placeholder:text-loomera-textMuted transition focus:border-loomera-primary focus:bg-white focus:outline-none focus:ring-4 focus:ring-loomera-primary/10"
               autocomplete="off"
               inputmode="numeric"
             />
             <button type="button" data-open-search-date-picker class="inline-flex min-h-12 items-center justify-center gap-2 rounded-2xl border border-loomera-borderSoft bg-white px-4 py-3 text-xs font-black text-loomera-primary shadow-sm transition hover:bg-loomera-primarySoft">
               <i class="fa-regular fa-calendar" aria-hidden="true"></i>
-              انتخاب تاریخ
+              {% trans 'Choose a date' %}
             </button>
           </div>
 
           <div class="space-y-2">
-            <p class="text-xs font-black text-loomera-textMuted">بازه روز</p>
+            <p class="text-xs font-black text-loomera-textMuted">{% trans 'Time of day' %}</p>
             <div class="grid grid-cols-2 gap-2 text-xs sm:grid-cols-4">
-              <button type="button" class="time-chip rounded-full border border-loomera-borderSoft bg-white px-3 py-2 font-bold text-loomera-textSecondary" data-period="">هر زمانی</button>
-              <button type="button" class="time-chip rounded-full border border-loomera-borderSoft bg-white px-3 py-2 font-bold text-loomera-textSecondary" data-period="morning">صبح</button>
-              <button type="button" class="time-chip rounded-full border border-loomera-borderSoft bg-white px-3 py-2 font-bold text-loomera-textSecondary" data-period="noon">ظهر</button>
-              <button type="button" class="time-chip rounded-full border border-loomera-borderSoft bg-white px-3 py-2 font-bold text-loomera-textSecondary" data-period="evening">عصر</button>
-              <button type="button" class="time-chip col-span-2 rounded-full border border-loomera-borderSoft bg-white px-3 py-2 font-bold text-loomera-textSecondary sm:col-span-4" data-period="night">شب</button>
+              <button type="button" class="time-chip rounded-full border border-loomera-borderSoft bg-white px-3 py-2 font-bold text-loomera-textSecondary" data-period="">{% trans 'Any time' %}</button>
+              <button type="button" class="time-chip rounded-full border border-loomera-borderSoft bg-white px-3 py-2 font-bold text-loomera-textSecondary" data-period="morning">{% trans 'Morning' %}</button>
+              <button type="button" class="time-chip rounded-full border border-loomera-borderSoft bg-white px-3 py-2 font-bold text-loomera-textSecondary" data-period="noon">{% trans 'Noon' %}</button>
+              <button type="button" class="time-chip rounded-full border border-loomera-borderSoft bg-white px-3 py-2 font-bold text-loomera-textSecondary" data-period="evening">{% trans 'Afternoon' %}</button>
+              <button type="button" class="time-chip col-span-2 rounded-full border border-loomera-borderSoft bg-white px-3 py-2 font-bold text-loomera-textSecondary sm:col-span-4" data-period="night">{% trans 'Night' %}</button>
             </div>
 
             <label class="mt-2 block text-xs font-black text-loomera-textMuted">
-              ساعت دقیق
+              {% trans 'Exact time' %}
               <select id="filterTimeInput" class="mt-2 w-full rounded-2xl border border-loomera-borderSoft bg-loomera-bgSubtle px-3 py-3 text-sm text-loomera-textPrimary focus:border-loomera-primary focus:bg-white focus:outline-none focus:ring-4 focus:ring-loomera-primary/10">
-                <option value="">هر ساعت</option>
+                <option value="">{% trans 'Any hour' %}</option>
                 <option value="08:00" {% if request.GET.time == '08:00' %}selected{% endif %}>۰۸:۰۰</option>
                 <option value="08:30" {% if request.GET.time == '08:30' %}selected{% endif %}>۰۸:۳۰</option>
                 <option value="09:00" {% if request.GET.time == '09:00' %}selected{% endif %}>۰۹:۰۰</option>
@@ -205,8 +206,8 @@
 
   <div class="fixed inset-x-0 bottom-0 border-t border-loomera-borderSoft bg-white/95 px-4 py-3 shadow-lm-floating backdrop-blur">
     <div class="mx-auto flex max-w-3xl items-center gap-3 text-sm">
-      <button id="clearFiltersFullScreen" type="button" class="flex-1 rounded-full border border-loomera-borderSoft bg-white py-3 font-black text-loomera-textSecondary">حذف فیلترها</button>
-      <button id="filterApplyBtn" type="button" class="flex-1 rounded-full bg-loomera-primary py-3 font-black text-white shadow-lm-soft">نمایش نتایج</button>
+      <button id="clearFiltersFullScreen" type="button" class="flex-1 rounded-full border border-loomera-borderSoft bg-white py-3 font-black text-loomera-textSecondary">{% trans 'Clear filters' %}</button>
+      <button id="filterApplyBtn" type="button" class="flex-1 rounded-full bg-loomera-primary py-3 font-black text-white shadow-lm-soft">{% trans 'Show results' %}</button>
     </div>
   </div>
 </div>

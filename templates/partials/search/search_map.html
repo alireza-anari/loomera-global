@@ -1,4 +1,5 @@
-<div id="search-map" aria-label="نقشه نتایج جستجو"></div>
+{% load i18n %}
+<div id="search-map" aria-label="{% trans 'Search results map' %}"></div>
 
 <div
   id="mapFallback"
@@ -11,9 +12,9 @@
       <i class="fa-solid fa-map-location-dot text-sm" aria-hidden="true"></i>
     </div>
     <div class="min-w-0 flex-1">
-      <p class="text-sm font-black text-loomera-textPrimary">نمای نقشه فعلاً در دسترس نیست</p>
+      <p class="text-sm font-black text-loomera-textPrimary">{% trans 'Map is currently unavailable' %}</p>
       <p class="mt-1 text-xs leading-6 text-loomera-textMuted">
-        اگر SDK یا کلید نقشه آماده نباشد، لیست مجموعه‌ها همچنان فعال می‌ماند.
+        {% trans 'If the map SDK or key is unavailable, the salon list still works.' %}
       </p>
     </div>
   </div>

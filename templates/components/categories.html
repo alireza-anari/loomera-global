@@ -1,8 +1,9 @@
+{% load i18n %}
 {% load static %}
 <section class="mt-6 px-4">
   <div class="mb-4 flex items-center justify-between gap-4">
-    <h3 class="text-lg font-bold text-slate-950">دسته‌بندی خدمات</h3>
-    <span class="text-xs text-slate-500">نتیجه‌ها بر اساس مجموعه نمایش داده می‌شوند</span>
+    <h3 class="text-lg font-bold text-slate-950">{% trans 'Service categories' %}</h3>
+    <span class="text-xs text-slate-500">{% trans 'Results are displayed by salon' %}</span>
   </div>
 
   <div class="grid grid-cols-2 gap-4">
@@ -14,7 +15,7 @@
           <p class="line-clamp-2 text-sm font-bold leading-snug text-slate-900">
             {{ group.group_title }}
           </p>
-          <p class="mt-2 text-[11px] leading-5 text-slate-500">مشاهده مجموعه‌های این دسته</p>
+          <p class="mt-2 text-[11px] leading-5 text-slate-500">{% trans 'View salons in this category' %}</p>
         </div>
 
         <div class="flex h-full w-24 flex-shrink-0 items-center justify-center bg-loomera-primarySoft/60">

@@ -1,3 +1,4 @@
+{% load i18n %}
 {% load humanize %}
 
 {% if salons %}
@@ -18,7 +19,7 @@
       data-image-url="{% if salon.banner_image %}{{ salon.banner_image.url }}{% endif %}"
     >
       <div class="grid grid-cols-[112px_minmax(0,1fr)] gap-3 sm:grid-cols-[128px_minmax(0,1fr)]">
-        <a href="{{ salon.get_absolute_url }}" class="relative block h-full min-h-[122px] overflow-hidden rounded-[24px] bg-loomera-bgSubtle" aria-label="مشاهده {{ salon.salon_name }}">
+        <a href="{{ salon.get_absolute_url }}" class="relative block h-full min-h-[122px] overflow-hidden rounded-[24px] bg-loomera-bgSubtle" aria-label="{% trans 'View' %} {{ salon.salon_name }}">
           {% if salon.banner_image %}
             <img src="{{ salon.banner_image.url }}" alt="{{ salon.salon_name }}" class="h-full w-full object-cover" />
           {% else %}
@@ -38,7 +39,7 @@
             </a>
             {% if salon.search_show_distance and salon.search_distance_km %}
               <span class="shrink-0 rounded-full border border-loomera-borderSoft bg-loomera-bgSubtle px-2 py-1 text-[10px] font-bold text-loomera-textMuted">
-                {{ salon.search_distance_km|floatformat:1 }} کیلومتر
+                {{ salon.search_distance_km|floatformat:1 }} {% trans 'kilometers' %}
               </span>
             {% endif %}
           </div>
@@ -48,20 +49,20 @@
           </p>
 
           <div class="mt-3 flex flex-wrap items-center gap-2 text-[11px] text-loomera-textMuted">
-            <span class="inline-flex items-center gap-1" aria-label="امتیاز {{ salon.avg_score|default:0|floatformat:1 }} از ۵">
+            <span class="inline-flex items-center gap-1" aria-label="{% trans 'Rating' %} {{ salon.avg_score|default:0|floatformat:1 }} {% trans 'out of 5' %}">
               <i class="fa-solid fa-star text-xs text-yellow-400" aria-hidden="true"></i>
               <span class="font-black text-loomera-textPrimary">{{ salon.avg_score|default:0|floatformat:1 }}</span>
-              <span>({{ salon.total_reviews|default:0 }} نظر)</span>
+              <span>({{ salon.total_reviews|default:0 }} {% trans 'reviews' %})</span>
             </span>
             {% if salon.search_primary_price %}
               <span class="rounded-full bg-loomera-primarySoft px-2 py-1 font-bold text-loomera-primary">
-                از {{ salon.search_primary_price|intcomma }} تومان
+                {% trans 'From' %} {{ salon.search_primary_price|intcomma }} {% trans 'Toman' %}
               </span>
             {% endif %}
           </div>
 
           {% if salon.search_matched_services %}
-            <div class="mt-3 flex flex-wrap gap-2" aria-label="خدمات مرتبط">
+            <div class="mt-3 flex flex-wrap gap-2" aria-label="{% trans 'Related services' %}">
               {% for service_name in salon.search_matched_services|slice:":3" %}
                 <span class="rounded-full border border-loomera-borderSoft bg-loomera-bgSubtle px-2.5 py-1 text-[10px] font-bold text-loomera-textSecondary">
                   {{ service_name }}
@@ -77,7 +78,7 @@
               <span class="flex-1" aria-hidden="true"></span>
             {% endif %}
 
-            <a href="{{ salon.get_absolute_url }}" class="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-loomera-primary text-white shadow-lm-soft transition hover:bg-loomera-primaryHover focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-loomera-focusRing/40" aria-label="مشاهده {{ salon.salon_name }}">
+            <a href="{{ salon.get_absolute_url }}" class="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-loomera-primary text-white shadow-lm-soft transition hover:bg-loomera-primaryHover focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-loomera-focusRing/40" aria-label="{% trans 'View' %} {{ salon.salon_name }}">
 
               <i class="fa-solid fa-arrow-left text-xs" aria-hidden="true"></i>
             </a>
@@ -88,13 +89,14 @@
   {% endfor %}
 {% else %}
   <section class="rounded-[28px] border border-dashed border-loomera-border bg-white p-5 text-center shadow-lm-soft" role="status" aria-live="polite">
-    {% include "partials/brand/empty_state_illustration.html" with state="no-results" alt_text="نتیجه‌ای پیدا نشد" class_name="mx-auto h-24 w-24" %}
-    <h3 class="mt-4 text-sm font-black text-loomera-textPrimary">نتیجه‌ای پیدا نشد</h3>
+    {% trans 'No results found' as no_results_alt %}
+    {% include "partials/brand/empty_state_illustration.html" with state="no-results" alt_text=no_results_alt class_name="mx-auto h-24 w-24" %}
+    <h3 class="mt-4 text-sm font-black text-loomera-textPrimary">{% trans 'No results found' %}</h3>
     <p class="mx-auto mt-2 max-w-xs text-xs leading-6 text-loomera-textMuted">
-      نام خدمت، شهر یا زمان را تغییر بده و دوباره جستجو کن.
+      {% trans 'Try changing the service, city, or time and search again.' %}
     </p>
     <button type="button" data-clear-search class="mt-4 inline-flex items-center gap-2 rounded-full border border-loomera-borderSoft bg-white px-4 py-2 text-xs font-black text-loomera-textSecondary transition hover:bg-loomera-bgSubtle">
-      <span>پاک کردن فیلترها</span>
+      <span>{% trans 'Clear search filters' %}</span>
       <i class="fa-solid fa-rotate-left text-[10px]" aria-hidden="true"></i>
     </button>
   </section>
