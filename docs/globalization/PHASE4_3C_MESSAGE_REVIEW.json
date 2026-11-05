@@ -1,0 +1,37 @@
+{
+  "phase": "4.3c",
+  "base_sha": "cfe3f3d5b04e65b8064e72179c9b071ea8ab252a",
+  "scope": "Search results availability status labels and public search SEO metadata only; preserve domain values and dates",
+  "reviewed_messages": [
+    {
+      "msgid": "First available on %(date)s at %(time)s",
+      "fa": "اولین زمان آزاد %(date)s ساعت %(time)s",
+      "en": "First available on %(date)s at %(time)s",
+      "ar": "أول موعد متاح يوم %(date)s الساعة %(time)s"
+    },
+    {
+      "msgid": "First available at %(time)s",
+      "fa": "اولین زمان آزاد %(time)s",
+      "en": "First available at %(time)s",
+      "ar": "أول موعد متاح الساعة %(time)s"
+    },
+    {
+      "msgid": "Appointments available",
+      "fa": "دارای وقت آزاد",
+      "en": "Appointments available",
+      "ar": "تتوفر مواعيد للحجز"
+    },
+    {
+      "msgid": "Available appointment",
+      "fa": "نوبت آزاد",
+      "en": "Available appointment",
+      "ar": "موعد متاح"
+    },
+    {
+      "msgid": "Explore salons, services and beauty professionals at %(brand)s. Filter by price, ratings, discounts and available appointments.",
+      "fa": "جستجوی مجموعه‌ها، خدمات و متخصصان زیبایی در %(brand)s با فیلتر قیمت، امتیاز، تخفیف و زمان آزاد.",
+      "en": "Explore salons, services and beauty professionals at %(brand)s. Filter by price, ratings, discounts and available appointments.",
+      "ar": "استكشف الصالونات والخدمات ومتخصصي التجميل على %(brand)s. صفِّ النتائج حسب السعر والتقييمات والخصومات والمواعيد المتاحة."
+    }
+  ]
+}
