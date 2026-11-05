@@ -24,6 +24,15 @@ function escapeHtml(value = "") {
     .replaceAll("'", "&#039;");
 }
 
+// HTML escaping alone cannot make an unsafe href/src scheme safe.
+function safeSearchPopupUrl(value, fallback = "") {
+  const url = String(value ?? "").trim();
+  if (!url || /[\u0000-\u001F\u007F\\]/.test(url)) return fallback;
+  if (/^\/(?!\/)/.test(url)) return url;
+  if (/^https?:\/\/[a-z0-9.-]+(?::[0-9]+)?(?:[/?#]|$)/i.test(url)) return url;
+  return fallback;
+}
+
 function formatPrice(value) {
   const number = Number(value || 0);
   if (!number) return "";
@@ -42,8 +51,8 @@ function buildPopupContent(salon = {}) {
   const rating = salon.rating || salon.avg_score || salon.score || "";
   const reviews = salon.reviews || salon.total_reviews || salon.num_scores || "";
   const price = formatPrice(salon.price || salon.search_primary_price);
-  const detailUrl = escapeHtml(salon.detail_url || salon.url || "#");
-  const imageUrl = escapeHtml(salon.image_url || salon.banner_image || salon.banner_image_url || salon.cover_image_url || "");
+  const detailUrl = escapeHtml(safeSearchPopupUrl(salon.detail_url || salon.url, "#"));
+  const imageUrl = escapeHtml(safeSearchPopupUrl(salon.image_url || salon.banner_image || salon.banner_image_url || salon.cover_image_url));
 
   return `
     <article dir="rtl" class="overflow-hidden text-right">

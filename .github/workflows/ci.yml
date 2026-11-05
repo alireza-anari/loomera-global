@@ -326,6 +326,13 @@ jobs:
             apps.main.test_phase4_services_discovery_locale \
             --failfast
 
+      - name: Phase 4 search suggestion text and popup URL safety
+        run: |
+          node --input-type=module --check < static/js/search/filters.js
+          node --input-type=module --check < static/js/search/autocomplete.js
+          node --input-type=module --check < static/js/search/map.js
+          node --test tests/js/phase4_search_suggestion_safety.test.cjs
+
       - name: Phase 2 buyer-brand smoke and email layout reference audit
         run: |
           python manage.py test \

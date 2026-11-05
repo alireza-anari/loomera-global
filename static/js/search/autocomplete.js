@@ -21,13 +21,20 @@ function renderSuggestionItem(item, onSelect) {
   const meta = item.meta || "";
 
   li.className = "lm-search-suggestion-item";
-  li.innerHTML = `
-    <div class="lm-search-suggestion-item__main">
-      <strong>${name}</strong>
-      <span>${typeLabel}</span>
-    </div>
-    ${meta ? `<small>${meta}</small>` : ""}
-  `;
+  const main = document.createElement("div");
+  main.className = "lm-search-suggestion-item__main";
+  const strong = document.createElement("strong");
+  strong.textContent = String(name);
+  const type = document.createElement("span");
+  type.textContent = String(typeLabel);
+  main.appendChild(strong);
+  main.appendChild(type);
+  li.appendChild(main);
+  if (meta) {
+    const detail = document.createElement("small");
+    detail.textContent = String(meta);
+    li.appendChild(detail);
+  }
 
   li.addEventListener("click", () => onSelect(item));
 
