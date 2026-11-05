@@ -1,0 +1,58 @@
+{
+  "phase": "4.3d",
+  "base_sha": "95fe315e5f29b3dc390591e1180c28aebdd283ba",
+  "scope": "Shared fallback SEO meta description/OG and Twitter descriptions, homepage title, public salon-directory title, public service-directory fallback metadata, magazine title/description, professional profile description. Excludes merchant-authored SEO, help/legal articles and release/deployment.",
+  "reviewed_messages": [
+    {
+      "msgid": "%(brand)s, a platform for discovering and booking beauty services, aesthetic treatments, massage and wellness with a calm, precise and trusted experience.",
+      "fa": "%(brand)s، پلتفرم انتخاب و رزرو خدمات زیبایی، aesthetic treatments، ماساژ و wellness با تجربه‌ای آرام، دقیق و قابل‌اعتماد.",
+      "en": "%(brand)s, a platform for discovering and booking beauty services, aesthetic treatments, massage and wellness with a calm, precise and trusted experience.",
+      "ar": "%(brand)s، منصة لاكتشاف وحجز خدمات التجميل والعناية الجمالية والتدليك والرفاهية بتجربة هادئة ودقيقة وموثوقة."
+    },
+    {
+      "msgid": "Choose beauty and wellness services with greater clarity and book with ease.",
+      "fa": "انتخاب روشن‌تر و رزرو آرام‌تر خدمات زیبایی و تندرستی.",
+      "en": "Choose beauty and wellness services with greater clarity and book with ease.",
+      "ar": "اختر خدمات التجميل والعافية بوضوح أكبر واحجز بسهولة."
+    },
+    {
+      "msgid": "Discover salons",
+      "fa": "کشف مجموعه‌ها",
+      "en": "Discover salons",
+      "ar": "اكتشف الصالونات"
+    },
+    {
+      "msgid": "All beauty services",
+      "fa": "همه خدمات زیبایی",
+      "en": "All beauty services",
+      "ar": "جميع خدمات التجميل"
+    },
+    {
+      "msgid": "Browse beauty services and choose what suits you.",
+      "fa": "مشاهده خدمات زیبایی و انتخاب خدمات مورد نیاز.",
+      "en": "Browse beauty services and choose what suits you.",
+      "ar": "تصفح خدمات التجميل واختر ما يناسب احتياجاتك."
+    },
+    {
+      "msgid": "%(brand)s Magazine | Beauty guides, expert articles and salon stories",
+      "fa": "مجله %(brand)s | آموزش زیبایی، مقالات متخصصان و استوری مجموعه‌ها",
+      "en": "%(brand)s Magazine | Beauty guides, expert articles and salon stories",
+      "ar": "مجلة %(brand)s | إرشادات الجمال ومقالات الخبراء وقصص الصالونات"
+    },
+    {
+      "msgid": "%(brand)s magazine: specialist beauty tutorials, service guides, expert articles and updates from your favorite salons",
+      "fa": "مجله %(brand)s؛ آموزش‌های تخصصی زیبایی، راهنمای انتخاب خدمات، مقاله‌های متخصصان و محتوای تازه مجموعه‌های مورد علاقه شما",
+      "en": "%(brand)s magazine: specialist beauty tutorials, service guides, expert articles and updates from your favorite salons",
+      "ar": "مجلة %(brand)s: دروس تجميل متخصصة وأدلة للخدمات ومقالات الخبراء وآخر أخبار صالوناتك المفضلة"
+    },
+    {
+      "msgid": "Profile of %(professional)s at %(salon)s: bookable services, portfolio and customer reviews.",
+      "fa": "پروفایل %(professional)s در %(salon)s؛ خدمات قابل رزرو، نمونه‌کارها و نظر مشتریان.",
+      "en": "Profile of %(professional)s at %(salon)s: bookable services, portfolio and customer reviews.",
+      "ar": "ملف %(professional)s في %(salon)s: الخدمات القابلة للحجز ومعرض الأعمال وآراء العملاء."
+    }
+  ],
+  "reviewed_reused": [
+    "Beauty, made simpler"
+  ]
+}
