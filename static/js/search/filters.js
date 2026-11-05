@@ -33,6 +33,15 @@ function formatPriceLabel(value) {
   return Number(normalized).toLocaleString("fa-IR");
 }
 
+// Merchant and API labels are text, never markup.
+function appendSearchLabel(parent, value, className, tagName = "div") {
+  const label = document.createElement(tagName);
+  label.className = className;
+  label.textContent = String(value ?? "");
+  parent.appendChild(label);
+  return label;
+}
+
 export function setupFiltersUI() {
   if (document.body.getAttribute("data-page") !== "search") return;
 
@@ -333,7 +342,11 @@ export function setupFiltersUI() {
         const button = document.createElement("button");
         button.type = "button";
         button.className = "inline-flex shrink-0 items-center gap-1.5 rounded-full border border-loomera-primary/20 bg-loomera-primarySoft px-2.5 py-1.5 text-[10px] font-black text-loomera-primary transition hover:border-rose-200 hover:bg-rose-50 hover:text-rose-600";
-        button.innerHTML = `<span class="opacity-70">${item.label}:</span><span>${item.value}</span><i class="fa-solid fa-xmark text-[10px]"></i>`;
+        appendSearchLabel(button, `${item.label}:`, "opacity-70", "span");
+        appendSearchLabel(button, item.value, "", "span");
+        const icon = document.createElement("i");
+        icon.className = "fa-solid fa-xmark text-[10px]";
+        button.appendChild(icon);
         button.setAttribute("aria-label", `حذف فیلتر ${item.label}`);
         button.addEventListener("click", () => removeActiveFilter(item.key));
         container.appendChild(button);
@@ -411,7 +424,10 @@ export function setupFiltersUI() {
         const button = document.createElement("button");
         button.type = "button";
         button.className = "inline-flex items-center gap-2 rounded-full border border-loomera-borderSoft bg-white px-3 py-1.5 text-[11px] font-bold text-loomera-textSecondary transition hover:bg-loomera-primarySoft hover:text-loomera-primary";
-        button.innerHTML = `<span>${chip?.dataset.serviceName || state.serviceNames[serviceId] || "خدمت"}</span><i class="fa-solid fa-xmark text-[10px]"></i>`;
+        appendSearchLabel(button, chip?.dataset.serviceName || state.serviceNames[serviceId] || "خدمت", "", "span");
+        const icon = document.createElement("i");
+        icon.className = "fa-solid fa-xmark text-[10px]";
+        button.appendChild(icon);
         button.addEventListener("click", () => {
           state.services = state.services.filter((value) => value !== String(serviceId));
           syncInputs();
@@ -616,10 +632,8 @@ export function setupFiltersUI() {
 
         const row = document.createElement("li");
         row.className = "cursor-pointer px-3 py-2 transition hover:bg-loomera-primarySoft";
-        row.innerHTML = `
-          <div class="font-black text-loomera-textPrimary">${value}</div>
-          <div class="mt-1 text-[10px] text-loomera-textMuted">${item.meta || item.type_label || "محله"}</div>
-        `;
+        appendSearchLabel(row, value, "font-black text-loomera-textPrimary");
+        appendSearchLabel(row, item.meta || item.type_label || "محله", "mt-1 text-[10px] text-loomera-textMuted");
 
         row.addEventListener("click", () => {
           state.location = value;
@@ -669,7 +683,8 @@ export function setupFiltersUI() {
         const serviceId = String(service.id || service.pk || "");
         const serviceName = service.service_name || service.name || "خدمت";
         item.className = "cursor-pointer px-3 py-2 transition hover:bg-loomera-primarySoft";
-        item.innerHTML = `<div class="font-black text-loomera-textPrimary">${serviceName}</div><div class="mt-1 text-[10px] text-loomera-textMuted">خدمت</div>`;
+        appendSearchLabel(item, serviceName, "font-black text-loomera-textPrimary");
+        appendSearchLabel(item, "خدمت", "mt-1 text-[10px] text-loomera-textMuted");
         item.addEventListener("click", () => {
           if (serviceId && !state.services.includes(serviceId)) {
             state.services.push(serviceId);
@@ -693,7 +708,8 @@ export function setupFiltersUI() {
         const salonMeta = [salon.neighborhood, salon.address].filter(Boolean).join(" • ");
         const item = document.createElement("li");
         item.className = "cursor-pointer px-3 py-2 transition hover:bg-loomera-primarySoft";
-        item.innerHTML = `<div class="font-black text-loomera-textPrimary">${salonName}</div><div class="mt-1 text-[10px] text-loomera-textMuted">${salonMeta || "سالن"}</div>`;
+        appendSearchLabel(item, salonName, "font-black text-loomera-textPrimary");
+        appendSearchLabel(item, salonMeta || "سالن", "mt-1 text-[10px] text-loomera-textMuted");
         item.addEventListener("click", () => {
           state.q = salonName;
           serviceSearchInput.value = salonName;
