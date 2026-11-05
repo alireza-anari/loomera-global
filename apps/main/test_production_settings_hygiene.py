@@ -6844,7 +6844,7 @@ class DeploymentBrandCrossSurfaceChromeBatchTests(SimpleTestCase):
             "selected_group": selected_group,
         }
         return [
-            engines["django"].from_string(row).render(context) for row in rows
+            engines["django"].from_string("{% load i18n %}\n" + row).render(context) for row in rows
         ]
 
     def test_five_templates_have_exact_brand_slots_without_fixed_site_names(self):
