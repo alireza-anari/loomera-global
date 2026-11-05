@@ -6823,7 +6823,7 @@ class DeploymentBrandCrossSurfaceChromeBatchTests(SimpleTestCase):
         ("platform_admin/base.html", 3, 0),
         ("platform_admin/dashboard.html", 1, 0),
         ("platform_admin/infrastructure.html", 1, 0),
-        ("services/all_services.html", 1, 1),
+        ("services/all_services.html", 2, 1),
         ("accounts/remember_password_verify.html", 2, 0),
     )
 
