@@ -26,7 +26,7 @@ class FakeElement {
 function load(path) {
   const document = { createElement: (tag) => new FakeElement(tag) };
   const context = vm.createContext({ document });
-  const source = fs.readFileSync(path, "utf8").replace(/\bexport\s+(?=function\s)/g, "");
+  const source = fs.readFileSync(path, "utf8").replace(/\bexport\s+(?=(?:async\s+)?function\s)/g, "");
   vm.runInContext(source, context, { filename: path });
   return { source, context };
 }
