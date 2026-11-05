@@ -161,7 +161,7 @@
     },
     {
       "msgid": "Search results",
-      "fa": "نتایج جستجوی Loomera",
+      "fa": "نتایج جستجو",
       "en": "Search results",
       "ar": "نتائج بحث لوميرا"
     },
@@ -457,13 +457,13 @@
       "msgid": "reviews",
       "fa": "نظر",
       "en": "reviews",
-      "ar": "مراجعات"
+      "ar": "تقييمات"
     },
     {
       "msgid": "From",
       "fa": "از",
       "en": "From",
-      "ar": "من"
+      "ar": "ابتداءً من"
     },
     {
       "msgid": "Toman",
@@ -505,19 +505,19 @@
       "msgid": "Selected",
       "fa": "انتخاب‌شده",
       "en": "Selected",
-      "ar": "محدد"
+      "ar": "تم الاختيار"
     },
     {
       "msgid": "Service",
       "fa": "خدمت",
       "en": "Service",
-      "ar": "خدمة"
+      "ar": "الخدمة"
     },
     {
       "msgid": "Services",
       "fa": "خدمات",
       "en": "Services",
-      "ar": "خدمات"
+      "ar": "الخدمات"
     },
     {
       "msgid": "Category",
@@ -557,9 +557,9 @@
     },
     {
       "msgid": "Verified",
-      "fa": "تاییدشده",
+      "fa": "تأییدشده",
       "en": "Verified",
-      "ar": "معتمد"
+      "ar": "موثّق"
     },
     {
       "msgid": "Verified status",
@@ -593,15 +593,15 @@
     },
     {
       "msgid": "Salons",
-      "fa": "سالن‌ها",
+      "fa": "مراکز",
       "en": "Salons",
       "ar": "الصالونات"
     },
     {
       "msgid": "Salon",
-      "fa": "سالن",
+      "fa": "مجموعه",
       "en": "Salon",
-      "ar": "صالون"
+      "ar": "الصالون"
     },
     {
       "msgid": "Neighborhood",
@@ -752,6 +752,24 @@
       "fa": "امتیاز {score}+",
       "en": "Rating {score}+",
       "ar": "التقييم {score} فأكثر"
+    },
+    {
+      "msgid": "Results are displayed by salon",
+      "en": "Results are displayed by salon",
+      "fa": "نتیجه‌ها بر اساس مجموعه نمایش داده می‌شوند",
+      "ar": "تُعرض النتائج حسب الصالون"
+    },
+    {
+      "msgid": "View salons in this category",
+      "en": "View salons in this category",
+      "fa": "مشاهده مجموعه‌های این دسته",
+      "ar": "عرض صالونات هذه الفئة"
+    },
+    {
+      "msgid": "Result",
+      "en": "Result",
+      "fa": "نتیجه",
+      "ar": "نتيجة"
     }
   ]
 }
