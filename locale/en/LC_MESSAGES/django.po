@@ -3575,3 +3575,30 @@ msgstr "Beauty salon"
 #: templates/partials/search/search_locale_messages.html
 msgid "Verified salons in search"
 msgstr "Verified salons in search"
+
+# Phase 4.3c — public search availability and branded SEO.
+
+#: apps/search/utils.py templates/pages/search.html
+#, python-format
+msgid "First available on %(date)s at %(time)s"
+msgstr "First available on %(date)s at %(time)s"
+
+#: apps/search/utils.py templates/pages/search.html
+#, python-format
+msgid "First available at %(time)s"
+msgstr "First available at %(time)s"
+
+#: apps/search/utils.py templates/pages/search.html
+#, python-format
+msgid "Appointments available"
+msgstr "Appointments available"
+
+#: apps/search/utils.py templates/pages/search.html
+#, python-format
+msgid "Available appointment"
+msgstr "Available appointment"
+
+#: apps/search/utils.py templates/pages/search.html
+#, python-format
+msgid "Explore salons, services and beauty professionals at %(brand)s. Filter by price, ratings, discounts and available appointments."
+msgstr "Explore salons, services and beauty professionals at %(brand)s. Filter by price, ratings, discounts and available appointments."

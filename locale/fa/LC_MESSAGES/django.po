@@ -3575,3 +3575,30 @@ msgstr "سالن زیبایی"
 #: templates/partials/search/search_locale_messages.html
 msgid "Verified salons in search"
 msgstr "فقط سالن‌های تاییدشده"
+
+# Phase 4.3c — public search availability and branded SEO.
+
+#: apps/search/utils.py templates/pages/search.html
+#, python-format
+msgid "First available on %(date)s at %(time)s"
+msgstr "اولین زمان آزاد %(date)s ساعت %(time)s"
+
+#: apps/search/utils.py templates/pages/search.html
+#, python-format
+msgid "First available at %(time)s"
+msgstr "اولین زمان آزاد %(time)s"
+
+#: apps/search/utils.py templates/pages/search.html
+#, python-format
+msgid "Appointments available"
+msgstr "دارای وقت آزاد"
+
+#: apps/search/utils.py templates/pages/search.html
+#, python-format
+msgid "Available appointment"
+msgstr "نوبت آزاد"
+
+#: apps/search/utils.py templates/pages/search.html
+#, python-format
+msgid "Explore salons, services and beauty professionals at %(brand)s. Filter by price, ratings, discounts and available appointments."
+msgstr "جستجوی مجموعه‌ها، خدمات و متخصصان زیبایی در %(brand)s با فیلتر قیمت، امتیاز، تخفیف و زمان آزاد."
