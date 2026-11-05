@@ -27,3 +27,9 @@ test("popup preserves escaped merchant names and follows English direction", () 
   assert.match(html, /Toman/);
   assert.match(html, /href="\/salons\/1\/"/);
 });
+
+test("translated geolocation copy never enters suggestion innerHTML", () => {
+  const source = fs.readFileSync("static/js/search/filters.js", "utf8");
+  assert.doesNotMatch(source, /nearMeRow\.innerHTML\s*=/);
+  assert.match(source, /appendSearchLabel\(nearMeTitle,/);
+});
