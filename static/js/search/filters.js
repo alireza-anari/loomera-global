@@ -30,7 +30,7 @@ function normalizePriceInput(value) {
 function formatPriceLabel(value) {
   const normalized = normalizePriceInput(value);
   if (!normalized) return "";
-  return Number(normalized).toLocaleString("fa-IR");
+  return Number(normalized).toLocaleString(searchNumberLocale());
 }
 
 // Merchant and API labels are text, never markup.
@@ -40,6 +40,21 @@ function appendSearchLabel(parent, value, className, tagName = "div") {
   label.textContent = String(value ?? "");
   parent.appendChild(label);
   return label;
+}
+
+// The text catalog is rendered by Django for the active request locale.
+function searchText(key, fallback) {
+  return document.getElementById?.("searchLocaleMessages")?.dataset?.[key] || fallback;
+}
+function searchFormat(key, fallback, replacements) {
+  const template = searchText(key, fallback);
+  return template.replace(/\{([a-z]+)\}/g, (match, name) =>
+    Object.prototype.hasOwnProperty.call(replacements, name) ? String(replacements[name]) : match
+  );
+}
+function searchNumberLocale() {
+  const lang = document.documentElement?.lang?.toLowerCase() || "fa";
+  return lang.startsWith("en") ? "en-US" : lang.startsWith("ar") ? "ar" : "fa-IR";
 }
 
 export function setupFiltersUI() {
@@ -129,7 +144,7 @@ export function setupFiltersUI() {
     if (!openFilterBtn || !openFilterIcon) return;
 
     openFilterBtn.setAttribute("aria-expanded", String(isSheetOpen));
-    openFilterBtn.setAttribute("aria-label", isSheetOpen ? "نمایش نقشه" : "نمایش نتایج");
+    openFilterBtn.setAttribute("aria-label", isSheetOpen ? searchText("showMap", "نمایش نقشه") : searchText("showResults", "نمایش نتایج"));
 
     openFilterIcon.classList.remove("fa-map-location-dot", "fa-sliders", "fa-magnifying-glass");
     openFilterIcon.classList.add(isSheetOpen ? "fa-map-location-dot" : "fa-sliders");
@@ -141,7 +156,7 @@ export function setupFiltersUI() {
   function syncDesktopResultsIcon() {
     if (!desktopResultsToggleBtn || !desktopResultsToggleIcon) return;
 
-    desktopResultsToggleBtn.setAttribute("aria-label", "باز کردن فیلترها");
+    desktopResultsToggleBtn.setAttribute("aria-label", searchText("openFilters", "باز کردن فیلترها"));
     desktopResultsToggleBtn.setAttribute("aria-controls", "filterScreen");
     desktopResultsToggleBtn.setAttribute("aria-haspopup", "dialog");
     desktopResultsToggleBtn.removeAttribute("aria-expanded");
@@ -228,31 +243,31 @@ export function setupFiltersUI() {
   }
 
   function buildSummary(summary) {
-    if (summary) return summary;
+    if (summary && (document.documentElement?.lang || "fa").startsWith("fa")) return summary;
     const parts = [];
     if (state.services.length === 1) {
       const chip = serviceOptionChips.find((item) => item.dataset.serviceId === state.services[0]);
       parts.push(chip?.dataset.serviceName || serviceSearchInput?.value?.trim() || "");
     } else if (state.services.length > 1) {
-      parts.push(`${state.services.length} خدمت`);
+      parts.push(searchFormat("serviceCount", "{count} خدمت", { count: state.services.length }));
     } else if (state.q) {
       parts.push(state.q);
     }
-    if (state.location) parts.push(state.location);
+    if (state.location) parts.push(state.location === "نزدیک من" ? searchText("nearMe", "نزدیک من") : state.location);
     if (state.date) parts.push(state.date);
     if (state.period) {
       const chip = timeChips.find((item) => item.dataset.period === state.period);
       parts.push(chip?.textContent?.trim() || state.period);
     }
     if (state.time) parts.push(state.time);
-    if (state.min_price) parts.push(`از ${formatPriceLabel(state.min_price)} تومان`);
-    if (state.max_price) parts.push(`تا ${formatPriceLabel(state.max_price)} تومان`);
-    if (state.min_rating) parts.push(`امتیاز ${state.min_rating}+`);
-    if (state.discounted) parts.push("تخفیف‌دار");
-    if (state.verified) parts.push("تاییدشده");
-    if (state.availability === "today") parts.push("وقت آزاد امروز");
-    if (state.availability === "this_week") parts.push("وقت آزاد این هفته");
-    return parts.filter(Boolean).join(" • ") || "جستجو سالن، خدمات یا منطقه...";
+    if (state.min_price) parts.push(searchFormat("fromPrice", "از {price} تومان", {price: formatPriceLabel(state.min_price)}));
+    if (state.max_price) parts.push(searchFormat("upToPrice", "تا {price} تومان", {price: formatPriceLabel(state.max_price)}));
+    if (state.min_rating) parts.push(searchFormat("ratingMin", "امتیاز {score}+", {score: state.min_rating}));
+    if (state.discounted) parts.push(searchText("discounted", "تخفیف‌دار"));
+    if (state.verified) parts.push(searchText("verified", "تاییدشده"));
+    if (state.availability === "today") parts.push(searchText("availableToday", "وقت آزاد امروز"));
+    if (state.availability === "this_week") parts.push(searchText("availableThisWeek", "وقت آزاد این هفته"));
+    return parts.filter(Boolean).join(" • ") || searchText("searchHint", "جستجو سالن، خدمات یا منطقه...");
   }
 
   function updateUrl() {
@@ -279,30 +294,30 @@ export function setupFiltersUI() {
 
   function activeFilterItems() {
     const items = [];
-    if (state.q) items.push({ key: "q", label: "جستجو", value: state.q });
-    if (state.location) items.push({ key: "location", label: "موقعیت", value: state.location });
-    if (state.group) items.push({ key: "group", label: "دسته", value: selectedGroupTitle?.textContent?.trim() || "انتخاب‌شده" });
+    if (state.q) items.push({ key: "q", label: searchText("search", "جستجو"), value: state.q });
+    if (state.location) items.push({ key: "location", label: searchText("location", "موقعیت"), value: state.location === "نزدیک من" ? searchText("nearMe", "نزدیک من") : state.location });
+    if (state.group) items.push({ key: "group", label: searchText("category", "دسته"), value: selectedGroupTitle?.textContent?.trim() || searchText("selected", "انتخاب‌شده") });
     state.services.forEach((serviceId) => {
       const chip = serviceOptionChips.find((item) => String(item.dataset.serviceId) === String(serviceId));
-      items.push({ key: `service:${serviceId}`, label: "خدمت", value: chip?.dataset.serviceName || state.serviceNames[serviceId] || "خدمت" });
+      items.push({ key: `service:${serviceId}`, label: searchText("service", "خدمت"), value: chip?.dataset.serviceName || state.serviceNames[serviceId] || searchText("service", "خدمت") });
     });
-    if (state.date) items.push({ key: "date", label: "تاریخ", value: state.date });
+    if (state.date) items.push({ key: "date", label: searchText("date", "تاریخ"), value: state.date });
     if (state.period) {
       const chip = timeChips.find((item) => item.dataset.period === state.period);
-      items.push({ key: "period", label: "بازه روز", value: chip?.textContent?.trim() || state.period });
+      items.push({ key: "period", label: searchText("timeOfDay", "بازه روز"), value: chip?.textContent?.trim() || state.period });
     }
-    if (state.time) items.push({ key: "time", label: "ساعت", value: state.time });
+    if (state.time) items.push({ key: "time", label: searchText("time", "ساعت"), value: state.time });
     if (state.sort && state.sort !== "recommended") {
       const chip = sortChips.find((item) => item.dataset.sort === state.sort);
-      items.push({ key: "sort", label: "مرتب‌سازی", value: chip?.textContent?.trim() || state.sort });
+      items.push({ key: "sort", label: searchText("sortBy", "مرتب‌سازی"), value: chip?.textContent?.trim() || state.sort });
     }
-    if (state.min_price) items.push({ key: "min_price", label: "قیمت", value: `از ${formatPriceLabel(state.min_price)} تومان` });
-    if (state.max_price) items.push({ key: "max_price", label: "قیمت", value: `تا ${formatPriceLabel(state.max_price)} تومان` });
+    if (state.min_price) items.push({ key: "min_price", label: searchText("price", "قیمت"), value: searchFormat("fromPrice", "از {price} تومان", {price: formatPriceLabel(state.min_price)}) });
+    if (state.max_price) items.push({ key: "max_price", label: searchText("price", "قیمت"), value: searchFormat("upToPrice", "تا {price} تومان", {price: formatPriceLabel(state.max_price)}) });
     if (state.min_rating) items.push({ key: "min_rating", label: "امتیاز", value: `${state.min_rating}+` });
-    if (state.discounted) items.push({ key: "discounted", label: "تخفیف", value: "فقط تخفیف‌دارها" });
-    if (state.verified) items.push({ key: "verified", label: "تایید", value: "فقط سالن‌های تاییدشده" });
-    if (state.availability === "today") items.push({ key: "availability", label: "وقت آزاد", value: "امروز" });
-    if (state.availability === "this_week") items.push({ key: "availability", label: "وقت آزاد", value: "این هفته" });
+    if (state.discounted) items.push({ key: "discounted", label: searchText("discount", "تخفیف"), value: searchText("discountedOnly", "فقط تخفیف‌دارها") });
+    if (state.verified) items.push({ key: "verified", label: searchText("verifiedStatus", "تایید"), value: "فقط سالن‌های تاییدشده" });
+    if (state.availability === "today") items.push({ key: "availability", label: searchText("availability", "وقت آزاد"), value: searchText("today", "امروز") });
+    if (state.availability === "this_week") items.push({ key: "availability", label: searchText("availability", "وقت آزاد"), value: searchText("thisWeek", "این هفته") });
     return items;
   }
 
@@ -347,7 +362,7 @@ export function setupFiltersUI() {
         const icon = document.createElement("i");
         icon.className = "fa-solid fa-xmark text-[10px]";
         button.appendChild(icon);
-        button.setAttribute("aria-label", `حذف فیلتر ${item.label}`);
+        button.setAttribute("aria-label", `${searchText("removeFilter", "حذف فیلتر")} ${item.label}`);
         button.addEventListener("click", () => removeActiveFilter(item.key));
         container.appendChild(button);
       });
@@ -358,7 +373,7 @@ export function setupFiltersUI() {
     if (serviceSearchInput && document.activeElement !== serviceSearchInput) {
       serviceSearchInput.value = state.q;
     }
-    if (locationInput) locationInput.value = state.location;
+    if (locationInput) locationInput.value = state.location === "نزدیک من" ? searchText("nearMe", "نزدیک من") : state.location;
     if (dateInput) dateInput.value = state.date;
     if (timeInput) timeInput.value = state.time;
     if (minPriceInput) minPriceInput.value = state.min_price;
@@ -424,7 +439,7 @@ export function setupFiltersUI() {
         const button = document.createElement("button");
         button.type = "button";
         button.className = "inline-flex items-center gap-2 rounded-full border border-loomera-borderSoft bg-white px-3 py-1.5 text-[11px] font-bold text-loomera-textSecondary transition hover:bg-loomera-primarySoft hover:text-loomera-primary";
-        appendSearchLabel(button, chip?.dataset.serviceName || state.serviceNames[serviceId] || "خدمت", "", "span");
+        appendSearchLabel(button, chip?.dataset.serviceName || state.serviceNames[serviceId] || searchText("service", "خدمت"), "", "span");
         const icon = document.createElement("i");
         icon.className = "fa-solid fa-xmark text-[10px]";
         button.appendChild(icon);
@@ -463,7 +478,7 @@ export function setupFiltersUI() {
   async function applySearch() {
     if (isFetching) return;
     if ((state.period || state.time) && !state.date) {
-      const validationMessage = "برای فیلتر زمان، ابتدا تاریخ را انتخاب کنید.";
+      const validationMessage = searchText("chooseDateFirst", "برای فیلتر زمان، ابتدا تاریخ را انتخاب کنید.");
       setStatus(validationMessage);
       setFilterValidation(validationMessage);
       dateInput?.focus();
@@ -472,7 +487,7 @@ export function setupFiltersUI() {
     setFilterValidation("");
     isFetching = true;
     showLoading(true);
-    setStatus("در حال به‌روزرسانی نتایج...");
+    setStatus(searchText("updating", "در حال به‌روزرسانی نتایج..."));
 
     try {
       const response = await fetch(`${searchEndpoint}?${buildParams().toString()}`, {
@@ -481,9 +496,9 @@ export function setupFiltersUI() {
       if (!response.ok) throw new Error(`status ${response.status}`);
       const payload = await response.json();
       salonList.innerHTML = payload.html || "";
-      if (resultsCountEl) resultsCountEl.textContent = `${payload.count || 0} سالن`;
+      if (resultsCountEl) resultsCountEl.textContent = searchFormat("salonCount", "{count} سالن", { count: payload.count || 0 });
       if (searchBarText) searchBarText.textContent = buildSummary(payload.summary || "");
-      setStatus(payload.count ? "" : "هیچ سالنی با این فیلترها پیدا نشد.");
+      setStatus(payload.count ? "" : searchText("noMatches", "هیچ سالنی با این فیلترها پیدا نشد."));
       updateUrl();
       if (window.searchMapController?.setSalons) {
         window.searchMapController.setSalons(payload.salons || []);
@@ -495,7 +510,7 @@ export function setupFiltersUI() {
       clearButton?.addEventListener("click", resetFilters);
     } catch (error) {
       console.error("[search] applySearch error", error);
-      setStatus("به‌روزرسانی نتایج انجام نشد. دوباره تلاش کنید.");
+      setStatus(searchText("updateFailed", "به‌روزرسانی نتایج انجام نشد. دوباره تلاش کنید."));
     } finally {
       showLoading(false);
       isFetching = false;
@@ -536,7 +551,7 @@ export function setupFiltersUI() {
       if (!ok) {
         state.sort = "recommended";
         syncInputs();
-        setStatus("برای مرتب‌سازی نزدیک‌ترین، باید دسترسی موقعیت فعلی را فعال کنی.");
+        setStatus(searchText("sortNeedsLocation", "برای مرتب‌سازی نزدیک‌ترین، باید دسترسی موقعیت فعلی را فعال کنی."));
         return;
       }
     }
@@ -551,12 +566,12 @@ export function setupFiltersUI() {
 
     return new Promise((resolve) => {
       if (!navigator.geolocation) {
-        if (!silent) setStatus("دسترسی به موقعیت فعلی در این دستگاه در دسترس نیست.");
+        if (!silent) setStatus(searchText("locationUnavailable", "دسترسی به موقعیت فعلی در این دستگاه در دسترس نیست."));
         resolve(false);
         return;
       }
 
-      if (!silent) setStatus("در حال دریافت موقعیت فعلی...");
+      if (!silent) setStatus(searchText("gettingLocation", "در حال دریافت موقعیت فعلی..."));
 
       navigator.geolocation.getCurrentPosition(
         (position) => {
@@ -574,13 +589,13 @@ export function setupFiltersUI() {
           if (applyAfterSuccess) {
             applySearch();
           } else if (!silent) {
-            setStatus("موقعیت فعلی دریافت شد. نتایج بر اساس نزدیک‌ترین مرتب می‌شوند.");
+            setStatus(searchText("locationFound", "موقعیت فعلی دریافت شد. نتایج بر اساس نزدیک‌ترین مرتب می‌شوند."));
           }
 
           resolve(true);
         },
         () => {
-          if (!silent) setStatus("دسترسی به موقعیت فعلی انجام نشد.");
+          if (!silent) setStatus(searchText("locationFailed", "دسترسی به موقعیت فعلی انجام نشد."));
           resolve(false);
         },
         {
@@ -616,9 +631,9 @@ export function setupFiltersUI() {
       nearMeRow.innerHTML = `
         <div class="flex items-center gap-2 font-black text-loomera-textPrimary">
           <i class="fa-solid fa-location-crosshairs text-loomera-primary" aria-hidden="true"></i>
-          <span>نزدیک من</span>
+          <span>${searchText("nearMe", "نزدیک من")}</span>
         </div>
-        <div class="mt-1 text-[10px] text-loomera-textMuted">استفاده از موقعیت فعلی دستگاه</div>
+        <div class="mt-1 text-[10px] text-loomera-textMuted">${searchText("useDeviceLocation", "استفاده از موقعیت فعلی دستگاه")}</div>
       `;
       nearMeRow.addEventListener("click", async () => {
         locationSuggestions.classList.add("hidden");
@@ -633,7 +648,7 @@ export function setupFiltersUI() {
         const row = document.createElement("li");
         row.className = "cursor-pointer px-3 py-2 transition hover:bg-loomera-primarySoft";
         appendSearchLabel(row, value, "font-black text-loomera-textPrimary");
-        appendSearchLabel(row, item.meta || item.type_label || "محله", "mt-1 text-[10px] text-loomera-textMuted");
+        appendSearchLabel(row, item.meta || item.type_label || searchText("neighborhood", "محله"), "mt-1 text-[10px] text-loomera-textMuted");
 
         row.addEventListener("click", () => {
           state.location = value;
@@ -676,15 +691,15 @@ export function setupFiltersUI() {
       };
 
       if (services.length) {
-        appendSectionTitle("خدمات");
+        appendSectionTitle(searchText("services", "خدمات"));
       }
       services.slice(0, 8).forEach((service) => {
         const item = document.createElement("li");
         const serviceId = String(service.id || service.pk || "");
-        const serviceName = service.service_name || service.name || "خدمت";
+        const serviceName = service.service_name || service.name || searchText("service", "خدمت");
         item.className = "cursor-pointer px-3 py-2 transition hover:bg-loomera-primarySoft";
         appendSearchLabel(item, serviceName, "font-black text-loomera-textPrimary");
-        appendSearchLabel(item, "خدمت", "mt-1 text-[10px] text-loomera-textMuted");
+        appendSearchLabel(item, searchText("service", "خدمت"), "mt-1 text-[10px] text-loomera-textMuted");
         item.addEventListener("click", () => {
           if (serviceId && !state.services.includes(serviceId)) {
             state.services.push(serviceId);
@@ -701,15 +716,15 @@ export function setupFiltersUI() {
       });
 
       if (salons.length) {
-        appendSectionTitle("سالن‌ها");
+        appendSectionTitle(searchText("salons", "سالن‌ها"));
       }
       salons.slice(0, 6).forEach((salon) => {
-        const salonName = salon.salon_name || salon.name || "سالن";
+        const salonName = salon.salon_name || salon.name || searchText("salon", "سالن");
         const salonMeta = [salon.neighborhood, salon.address].filter(Boolean).join(" • ");
         const item = document.createElement("li");
         item.className = "cursor-pointer px-3 py-2 transition hover:bg-loomera-primarySoft";
         appendSearchLabel(item, salonName, "font-black text-loomera-textPrimary");
-        appendSearchLabel(item, salonMeta || "سالن", "mt-1 text-[10px] text-loomera-textMuted");
+        appendSearchLabel(item, salonMeta || searchText("salon", "سالن"), "mt-1 text-[10px] text-loomera-textMuted");
         item.addEventListener("click", () => {
           state.q = salonName;
           serviceSearchInput.value = salonName;
