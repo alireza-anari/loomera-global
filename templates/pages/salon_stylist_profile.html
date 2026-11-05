@@ -2,7 +2,7 @@
 {% load messaging_connect %}
 {% load i18n %}
 {% block title %}{{ stylist.professional_display_name }} | {{ salon.salon_name }}{% endblock %}
-{% block meta_description %}پروفایل {{ stylist.professional_display_name }} در {{ salon.salon_name }}؛ خدمات قابل رزرو، نمونه‌کارها و نظر مشتریان.{% endblock %}
+{% block meta_description %}{% blocktrans with professional=stylist.professional_display_name salon=salon.salon_name %}Profile of {{ professional }} at {{ salon }}: bookable services, portfolio and customer reviews.{% endblocktrans %}{% endblock %}
 {% block head %}{{ block.super }}{% if canonical_url %}<link rel="canonical" href="{{ canonical_url }}">{% endif %}{% if robots_noindex %}<meta name="robots" content="noindex,follow">{% endif %}{% endblock %}
 {% block content %}
 {% trans 'Beauty professional' as beauty_professional_fallback %}

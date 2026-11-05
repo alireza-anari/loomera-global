@@ -3,8 +3,8 @@
 {% load humanize %}
 {% load i18n %}
 
-{% block title %}{% if selected_group %}{{ selected_group.effective_seo_title }}{% else %}همه خدمات زیبایی | {{ deployment_brand.display_name }}{% endif %}{% endblock %}
-{% block meta_description %}{% if selected_group %}{{ selected_group.effective_seo_description }}{% else %}مشاهده خدمات زیبایی و انتخاب خدمات مورد نیاز.{% endif %}{% endblock %}
+{% block title %}{% if selected_group %}{{ selected_group.effective_seo_title }}{% else %}{% trans "All beauty services" %} | {{ deployment_brand.display_name }}{% endif %}{% endblock %}
+{% block meta_description %}{% if selected_group %}{{ selected_group.effective_seo_description }}{% else %}{% trans "Browse beauty services and choose what suits you." %}{% endif %}{% endblock %}
 {% block main_class %}bg-loomera-bg text-loomera-textPrimary{% endblock %}
 {% block body_attrs %}data-page="services"{% endblock %}
 

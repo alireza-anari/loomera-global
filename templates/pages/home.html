@@ -2,7 +2,7 @@
 {% load static %}
 {% load i18n %}
 
-{% block title %}{{ deployment_brand.display_name_fa }} | زیبایی، ساده‌تر{% endblock %}
+{% block title %}{% if deployment_locale.language_code == "fa" or not deployment_locale.language_code %}{{ deployment_brand.display_name_fa }}{% else %}{{ deployment_brand.display_name }}{% endif %} | {% trans "Beauty, made simpler" %}{% endblock %}
 {% block body_attrs %}data-page="loomera-home"{% endblock %}
 
 {% block head %}
