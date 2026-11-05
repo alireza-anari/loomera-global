@@ -32,6 +32,12 @@
       "fa": "جستجوی مجموعه‌ها، خدمات و متخصصان زیبایی در %(brand)s با فیلتر قیمت، امتیاز، تخفیف و زمان آزاد.",
       "en": "Explore salons, services and beauty professionals at %(brand)s. Filter by price, ratings, discounts and available appointments.",
       "ar": "استكشف الصالونات والخدمات ومتخصصي التجميل على %(brand)s. صفِّ النتائج حسب السعر والتقييمات والخصومات والمواعيد المتاحة."
+    },
+    {
+      "msgid": "Search for salons and beauty services",
+      "fa": "جستجوی مجموعه و خدمات زیبایی",
+      "en": "Search for salons and beauty services",
+      "ar": "البحث عن صالونات وخدمات التجميل"
     }
   ]
 }

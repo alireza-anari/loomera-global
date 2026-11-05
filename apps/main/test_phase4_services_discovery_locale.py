@@ -51,7 +51,7 @@ class Phase4ServicesDiscoveryLocaleTests(SimpleTestCase):
             with self.subTest(language=language):
                 compiled = (ROOT / "locale" / language / "LC_MESSAGES" / "django.mo").read_bytes()
                 self.assertEqual(struct.unpack_from("<I", compiled)[0], 0x950412de)
-                self.assertEqual(struct.unpack_from("<I", compiled, 8)[0], 895)
+                self.assertEqual(struct.unpack_from("<I", compiled, 8)[0], 896)
                 for msgid in messages:
                     self.assertIn(msgid, catalog._catalog)
                     if language == "en":

@@ -8,7 +8,7 @@
 - Preserve date selection, Jalali display, HH:MM, slot filtering, service identity, price, merchant-provided names, booking URL and search API schema.
 - Use the same translated `salon.search_available_label` on result cards and as `available_label` in map JSON. Map popup keeps escaping labels as untrusted content.
 - Localize the **search page** browser title and meta description using native gettext; resolve brand from `deployment_brand.display_name` without embedding hardcoded brand names.
-- Five reviewed message IDs are recorded in `PHASE4_3C_MESSAGE_REVIEW.json`, with fa/en/ar translations. The previously compiled 890-entry catalogs grow to 895, keeping all existing entries and values.
+- Six reviewed message IDs are recorded in `PHASE4_3C_MESSAGE_REVIEW.json`, with fa/en/ar translations. The previously compiled 890-entry catalogs grow to 896, keeping all existing entries and values.
 - Add tests for single/multiple-date status, brand substitution and HTML-escaping, map payload propagation, catalog integrity, and existing release gates.
 
 ## Explicit exclusions

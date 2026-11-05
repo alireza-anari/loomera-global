@@ -92,7 +92,7 @@ class Phase4SearchAvailabilityLocaleTests(SimpleTestCase):
                 rendered_title = Template("{% load i18n %}" + title).render(context)
                 rendered_meta = Template("{% load i18n %}" + meta).render(context)
                 translated_title = translation.gettext(
-                    "Search salons and beauty services"
+                    "Search for salons and beauty services"
                 )
                 translated_meta = translation.gettext(SEO_MESSAGE)
                 self.assertEqual(
@@ -108,7 +108,7 @@ class Phase4SearchAvailabilityLocaleTests(SimpleTestCase):
         ledger = json.loads(
             (ROOT / "docs/globalization/PHASE4_3C_MESSAGE_REVIEW.json").read_text()
         )["reviewed_messages"]
-        self.assertEqual(len(ledger), 5)
+        self.assertEqual(len(ledger), 6)
         self.assertEqual(len(set(x["msgid"] for x in ledger)), 5)
         for lang in ("fa", "en", "ar"):
             with self.subTest(lang=lang):

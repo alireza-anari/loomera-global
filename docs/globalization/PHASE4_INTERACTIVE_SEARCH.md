@@ -10,4 +10,4 @@ Preserved: all selected filter IDs, query parameters, booking links, price amoun
 
 Phase 4.3c follows up on the search-only SEO title/description and backend-authored availability status labels, with no change to booking eligibility. SEO across other public pages remains a separate scope. No Production deployment or source-repository change. Phase 3 remains BLOCKED_MANUAL_ACCEPTANCE, with manual screen-reader, zoom, keyboard and visual evidence still outstanding.
 
-**Phase 4.3c gate:** five additional reviewed messages and 895-entry catalogs per locale, application-owned availability label tests, brand-safe translated search SEO, exact-head CI, and independent diff review. Manual release gate remains separate.
+**Phase 4.3c gate:** six additional reviewed messages and 896-entry catalogs per locale, application-owned availability label tests, brand-safe translated search SEO, exact-head CI, and independent diff review. Manual release gate remains separate.

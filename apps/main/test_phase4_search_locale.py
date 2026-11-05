@@ -29,7 +29,7 @@ class Phase4SearchLocaleTests(SimpleTestCase):
         for lang in ("fa", "en", "ar"):
             po = (ROOT / "locale" / lang / "LC_MESSAGES/django.po").read_text(encoding="utf-8")
             data = (ROOT / "locale" / lang / "LC_MESSAGES/django.mo").read_bytes()
-            self.assertEqual(struct.unpack_from("<I", data, 8)[0], 895)
+            self.assertEqual(struct.unpack_from("<I", data, 8)[0], 896)
             catalog = translation("django", localedir=str(ROOT / "locale"), languages=[lang])
             for row in ledger["reviewed_messages"]:
                 self.assertIn("msgid " + json.dumps(row["msgid"], ensure_ascii=False), po)
