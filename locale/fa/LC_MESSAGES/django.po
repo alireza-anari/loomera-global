@@ -3606,3 +3606,41 @@ msgstr "جستجوی مجموعه‌ها، خدمات و متخصصان زیبا
 #: templates/pages/search.html
 msgid "Search for salons and beauty services"
 msgstr "جستجوی مجموعه و خدمات زیبایی"
+
+# Phase 4.3d — public SEO metadata with brand-safe placeholders.
+
+#: templates/base.html templates/pages/home.html templates/pages/show_salons.html templates/services/all_services.html templates/articles/magazine_home.html templates/pages/salon_stylist_profile.html
+#, python-format
+msgid "%(brand)s, a platform for discovering and booking beauty services, aesthetic treatments, massage and wellness with a calm, precise and trusted experience."
+msgstr "%(brand)s، پلتفرم انتخاب و رزرو خدمات زیبایی، aesthetic treatments، ماساژ و wellness با تجربه‌ای آرام، دقیق و قابل‌اعتماد."
+
+#: templates/base.html templates/pages/home.html templates/pages/show_salons.html templates/services/all_services.html templates/articles/magazine_home.html templates/pages/salon_stylist_profile.html
+msgid "Choose beauty and wellness services with greater clarity and book with ease."
+msgstr "انتخاب روشن‌تر و رزرو آرام‌تر خدمات زیبایی و تندرستی."
+
+#: templates/base.html templates/pages/home.html templates/pages/show_salons.html templates/services/all_services.html templates/articles/magazine_home.html templates/pages/salon_stylist_profile.html
+msgid "Discover salons"
+msgstr "کشف مجموعه‌ها"
+
+#: templates/base.html templates/pages/home.html templates/pages/show_salons.html templates/services/all_services.html templates/articles/magazine_home.html templates/pages/salon_stylist_profile.html
+msgid "All beauty services"
+msgstr "همه خدمات زیبایی"
+
+#: templates/base.html templates/pages/home.html templates/pages/show_salons.html templates/services/all_services.html templates/articles/magazine_home.html templates/pages/salon_stylist_profile.html
+msgid "Browse beauty services and choose what suits you."
+msgstr "مشاهده خدمات زیبایی و انتخاب خدمات مورد نیاز."
+
+#: templates/base.html templates/pages/home.html templates/pages/show_salons.html templates/services/all_services.html templates/articles/magazine_home.html templates/pages/salon_stylist_profile.html
+#, python-format
+msgid "%(brand)s Magazine | Beauty guides, expert articles and salon stories"
+msgstr "مجله %(brand)s | آموزش زیبایی، مقالات متخصصان و استوری مجموعه‌ها"
+
+#: templates/base.html templates/pages/home.html templates/pages/show_salons.html templates/services/all_services.html templates/articles/magazine_home.html templates/pages/salon_stylist_profile.html
+#, python-format
+msgid "%(brand)s magazine: specialist beauty tutorials, service guides, expert articles and updates from your favorite salons"
+msgstr "مجله %(brand)s؛ آموزش‌های تخصصی زیبایی، راهنمای انتخاب خدمات، مقاله‌های متخصصان و محتوای تازه مجموعه‌های مورد علاقه شما"
+
+#: templates/base.html templates/pages/home.html templates/pages/show_salons.html templates/services/all_services.html templates/articles/magazine_home.html templates/pages/salon_stylist_profile.html
+#, python-format
+msgid "Profile of %(professional)s at %(salon)s: bookable services, portfolio and customer reviews."
+msgstr "پروفایل %(professional)s در %(salon)s؛ خدمات قابل رزرو، نمونه‌کارها و نظر مشتریان."

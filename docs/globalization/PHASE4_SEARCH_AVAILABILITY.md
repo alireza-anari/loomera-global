@@ -1,6 +1,6 @@
 # Phase 4.3c — Search Availability Copy and SEO Metadata
 
-**Status:** implementation candidate; cannot merge until exact-head Fast checks and Chromium fixture smoke pass. Phase 3 manual exit is still BLOCKED_MANUAL_ACCEPTANCE.
+**Status:** Phase 4.3c merged as PR #119 at main SHA 95fe315e5f29b3dc390591e1180c28aebdd283ba; branch and post-merge CI passed. This is not a Production release. Phase 3 manual exit remains BLOCKED_MANUAL_ACCEPTANCE.
 
 ## Scope
 - Translate first available appointment status with and without a date, and the available appointment fallback, at the **server presentation boundary** using request-active Django gettext.

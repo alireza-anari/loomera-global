@@ -1,9 +1,10 @@
 {% extends "base.html" %}
 {% load static %}
 {% load articles_extras %}
+{% load i18n %}
 
-{% block title %}مجله {{ deployment_brand.display_name_fa }} | آموزش زیبایی، مقالات متخصصان و استوری مجموعه‌ها{% endblock %}
-{% block meta_description %}مجله {{ deployment_brand.display_name_fa }}؛ آموزش‌های تخصصی زیبایی، راهنمای انتخاب خدمات، مقاله‌های متخصصان و محتوای تازه مجموعه‌های مورد علاقه شما{% endblock %}
+{% block title %}{% if deployment_locale.language_code == "fa" or not deployment_locale.language_code %}{% blocktrans with brand=deployment_brand.display_name_fa %}{{ brand }} Magazine | Beauty guides, expert articles and salon stories{% endblocktrans %}{% else %}{% blocktrans with brand=deployment_brand.display_name %}{{ brand }} Magazine | Beauty guides, expert articles and salon stories{% endblocktrans %}{% endif %}{% endblock %}
+{% block meta_description %}{% if deployment_locale.language_code == "fa" or not deployment_locale.language_code %}{% blocktrans with brand=deployment_brand.display_name_fa %}{{ brand }} magazine: specialist beauty tutorials, service guides, expert articles and updates from your favorite salons{% endblocktrans %}{% else %}{% blocktrans with brand=deployment_brand.display_name %}{{ brand }} magazine: specialist beauty tutorials, service guides, expert articles and updates from your favorite salons{% endblocktrans %}{% endif %}{% endblock %}
 {% block main_class %}bg-loomera-bg text-loomera-textPrimary{% endblock %}
 {% block body_attrs %}data-page="magazine"{% endblock %}
 

@@ -346,6 +346,10 @@ jobs:
           node --test tests/js/phase4_search_availability_locale.test.cjs
           python manage.py test apps.search.test_phase4_search_availability_locale --failfast
 
+      - name: Phase 4.3d public SEO and brand metadata native locale guards
+        run: |
+          python manage.py test apps.main.test_phase4_public_seo_locale --failfast
+
       - name: Phase 2 buyer-brand smoke and email layout reference audit
         run: |
           python manage.py test \

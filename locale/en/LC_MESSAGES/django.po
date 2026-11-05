@@ -3606,3 +3606,41 @@ msgstr "Explore salons, services and beauty professionals at %(brand)s. Filter b
 #: templates/pages/search.html
 msgid "Search for salons and beauty services"
 msgstr "Search for salons and beauty services"
+
+# Phase 4.3d — public SEO metadata with brand-safe placeholders.
+
+#: templates/base.html templates/pages/home.html templates/pages/show_salons.html templates/services/all_services.html templates/articles/magazine_home.html templates/pages/salon_stylist_profile.html
+#, python-format
+msgid "%(brand)s, a platform for discovering and booking beauty services, aesthetic treatments, massage and wellness with a calm, precise and trusted experience."
+msgstr "%(brand)s, a platform for discovering and booking beauty services, aesthetic treatments, massage and wellness with a calm, precise and trusted experience."
+
+#: templates/base.html templates/pages/home.html templates/pages/show_salons.html templates/services/all_services.html templates/articles/magazine_home.html templates/pages/salon_stylist_profile.html
+msgid "Choose beauty and wellness services with greater clarity and book with ease."
+msgstr "Choose beauty and wellness services with greater clarity and book with ease."
+
+#: templates/base.html templates/pages/home.html templates/pages/show_salons.html templates/services/all_services.html templates/articles/magazine_home.html templates/pages/salon_stylist_profile.html
+msgid "Discover salons"
+msgstr "Discover salons"
+
+#: templates/base.html templates/pages/home.html templates/pages/show_salons.html templates/services/all_services.html templates/articles/magazine_home.html templates/pages/salon_stylist_profile.html
+msgid "All beauty services"
+msgstr "All beauty services"
+
+#: templates/base.html templates/pages/home.html templates/pages/show_salons.html templates/services/all_services.html templates/articles/magazine_home.html templates/pages/salon_stylist_profile.html
+msgid "Browse beauty services and choose what suits you."
+msgstr "Browse beauty services and choose what suits you."
+
+#: templates/base.html templates/pages/home.html templates/pages/show_salons.html templates/services/all_services.html templates/articles/magazine_home.html templates/pages/salon_stylist_profile.html
+#, python-format
+msgid "%(brand)s Magazine | Beauty guides, expert articles and salon stories"
+msgstr "%(brand)s Magazine | Beauty guides, expert articles and salon stories"
+
+#: templates/base.html templates/pages/home.html templates/pages/show_salons.html templates/services/all_services.html templates/articles/magazine_home.html templates/pages/salon_stylist_profile.html
+#, python-format
+msgid "%(brand)s magazine: specialist beauty tutorials, service guides, expert articles and updates from your favorite salons"
+msgstr "%(brand)s magazine: specialist beauty tutorials, service guides, expert articles and updates from your favorite salons"
+
+#: templates/base.html templates/pages/home.html templates/pages/show_salons.html templates/services/all_services.html templates/articles/magazine_home.html templates/pages/salon_stylist_profile.html
+#, python-format
+msgid "Profile of %(professional)s at %(salon)s: bookable services, portfolio and customer reviews."
+msgstr "Profile of %(professional)s at %(salon)s: bookable services, portfolio and customer reviews."

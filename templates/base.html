@@ -1,20 +1,21 @@
 <!DOCTYPE html>
 <html lang="{{ deployment_locale.language_code|default:'fa' }}" dir="{{ deployment_locale.direction|default:'rtl' }}">
 {% load static %}
+{% load i18n %}
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport"
           content="width=device-width, initial-scale=1, viewport-fit=cover">
     <title>{% block title %}{{ deployment_brand.display_name }}{% endblock %}</title>
-    <meta name="description" content="{% block meta_description %}{{ deployment_brand.display_name }}، پلتفرم انتخاب و رزرو خدمات زیبایی، aesthetic treatments، ماساژ و wellness با تجربه‌ای آرام، دقیق و قابل‌اعتماد.{% endblock %}">
+    <meta name="description" content="{% block meta_description %}{% blocktrans with brand=deployment_brand.display_name %}{{ brand }}, a platform for discovering and booking beauty services, aesthetic treatments, massage and wellness with a calm, precise and trusted experience.{% endblocktrans %}{% endblock %}">
     <meta property="og:title" content="{% block og_title %}{{ deployment_brand.display_name }}{% endblock %}">
-    <meta property="og:description" content="{% block og_description %}انتخاب روشن‌تر و رزرو آرام‌تر خدمات زیبایی و تندرستی.{% endblock %}">
+    <meta property="og:description" content="{% block og_description %}{% trans "Choose beauty and wellness services with greater clarity and book with ease." %}{% endblock %}">
     <meta name="twitter:title" content="{% block twitter_title %}{{ deployment_brand.display_name }}{% endblock %}">
     <script>
     document.documentElement.setAttribute("data-theme", "light");
     </script>
-    <meta name="twitter:description" content="{% block twitter_description %}انتخاب روشن‌تر و رزرو آرام‌تر خدمات زیبایی و تندرستی.{% endblock %}">
+    <meta name="twitter:description" content="{% block twitter_description %}{% trans "Choose beauty and wellness services with greater clarity and book with ease." %}{% endblock %}">
     {% include "partials/brand/head_assets.html" %}
     <link rel="stylesheet" href="{% static 'css/output.css' %}">
     <link rel="stylesheet" href="{% static 'css/loomera-brand.css' %}">
