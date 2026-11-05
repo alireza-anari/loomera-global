@@ -313,9 +313,9 @@ export function setupFiltersUI() {
     }
     if (state.min_price) items.push({ key: "min_price", label: searchText("price", "قیمت"), value: searchFormat("fromPrice", "از {price} تومان", {price: formatPriceLabel(state.min_price)}) });
     if (state.max_price) items.push({ key: "max_price", label: searchText("price", "قیمت"), value: searchFormat("upToPrice", "تا {price} تومان", {price: formatPriceLabel(state.max_price)}) });
-    if (state.min_rating) items.push({ key: "min_rating", label: "امتیاز", value: `${state.min_rating}+` });
+    if (state.min_rating) items.push({ key: "min_rating", label: searchText("rating", "امتیاز"), value: `${state.min_rating}+` });
     if (state.discounted) items.push({ key: "discounted", label: searchText("discount", "تخفیف"), value: searchText("discountedOnly", "فقط تخفیف‌دارها") });
-    if (state.verified) items.push({ key: "verified", label: searchText("verifiedStatus", "تایید"), value: "فقط سالن‌های تاییدشده" });
+    if (state.verified) items.push({ key: "verified", label: searchText("verifiedStatus", "تایید"), value: searchText("verifiedSalons", "فقط سالن‌های تاییدشده") });
     if (state.availability === "today") items.push({ key: "availability", label: searchText("availability", "وقت آزاد"), value: searchText("today", "امروز") });
     if (state.availability === "this_week") items.push({ key: "availability", label: searchText("availability", "وقت آزاد"), value: searchText("thisWeek", "این هفته") });
     return items;

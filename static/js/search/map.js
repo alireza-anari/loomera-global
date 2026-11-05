@@ -1,3 +1,13 @@
+// Django renders the active locale into the public search message attributes.
+function searchText(key, fallback) {
+  return document.getElementById?.("searchLocaleMessages")?.dataset?.[key] || fallback;
+}
+function searchNumberLocale() {
+  const language = document.documentElement?.lang?.toLowerCase() || "fa";
+  return language.startsWith("en") ? "en-US" : language.startsWith("ar") ? "ar" : "fa-IR";
+}
+function mapText(key, fallback) { return escapeHtml(searchText(key, fallback)); }
+
 function showMapFallback(message) {
   const fallback = document.getElementById("mapFallback");
   if (!fallback) return;
@@ -37,15 +47,15 @@ function formatPrice(value) {
   const number = Number(value || 0);
   if (!number) return "";
   try {
-    return `${number.toLocaleString("fa-IR")} تومان`;
+    return `${number.toLocaleString(searchNumberLocale())} ${searchText("toman", "تومان")}`;
   } catch (error) {
-    return `${number} تومان`;
+    return `${number} ${searchText("toman", "تومان")}`;
   }
 }
 
 function buildPopupContent(salon = {}) {
   const salonId = salon.id || "";
-  const name = escapeHtml(salon.salon_name || salon.name || "سالن زیبایی");
+  const name = escapeHtml(salon.salon_name || salon.name || searchText("beautySalon", "سالن زیبایی"));
   const location = escapeHtml(salon.neighborhood || salon.address || salon.search_location_label || "");
   const available = escapeHtml(salon.available_label || salon.search_available_label || "");
   const rating = salon.rating || salon.avg_score || salon.score || "";
@@ -55,9 +65,9 @@ function buildPopupContent(salon = {}) {
   const imageUrl = escapeHtml(safeSearchPopupUrl(salon.image_url || salon.banner_image || salon.banner_image_url || salon.cover_image_url));
 
   return `
-    <article dir="rtl" class="overflow-hidden text-right">
+    <article dir="${document.documentElement?.dir === "ltr" ? "ltr" : "rtl"}" class="overflow-hidden" style="text-align:start">
       ${imageUrl ? `
-        <a href="${detailUrl}" class="block h-28 overflow-hidden bg-loomera-bgSubtle" aria-label="مشاهده ${name}">
+        <a href="${detailUrl}" class="block h-28 overflow-hidden bg-loomera-bgSubtle" aria-label="${mapText("view", "مشاهده")} ${name}">
           <img src="${imageUrl}" alt="${name}" class="h-full w-full object-cover" loading="lazy">
         </a>
       ` : ""}
@@ -76,18 +86,18 @@ function buildPopupContent(salon = {}) {
       <div class="space-y-3 px-4 py-3">
         <div class="flex flex-wrap items-center gap-2 text-[11px]">
           ${rating ? `<span class="inline-flex items-center gap-1 rounded-full bg-amber-50 px-2.5 py-1 font-black text-amber-700"><i class="fa-solid fa-star text-[10px]" aria-hidden="true"></i>${escapeHtml(rating)}</span>` : ""}
-          ${reviews ? `<span class="rounded-full bg-loomera-bgSubtle px-2.5 py-1 font-bold text-loomera-textMuted">${escapeHtml(reviews)} نظر</span>` : ""}
-          ${price ? `<span class="rounded-full bg-loomera-primarySoft px-2.5 py-1 font-black text-loomera-primary">از ${escapeHtml(price)}</span>` : ""}
+          ${reviews ? `<span class="rounded-full bg-loomera-bgSubtle px-2.5 py-1 font-bold text-loomera-textMuted">${escapeHtml(reviews)} ${mapText("reviews", "نظر")}</span>` : ""}
+          ${price ? `<span class="rounded-full bg-loomera-primarySoft px-2.5 py-1 font-black text-loomera-primary">${mapText("from", "از")} ${escapeHtml(price)}</span>` : ""}
         </div>
 
-        ${available ? `<p class="rounded-2xl border border-emerald-100 bg-emerald-50 px-3 py-2 text-[11px] font-black leading-5 text-emerald-700">${available}</p>` : `<p class="rounded-2xl border border-loomera-borderSoft bg-loomera-bgSubtle px-3 py-2 text-[11px] font-bold leading-5 text-loomera-textMuted">برای مشاهده زمان‌ها، کارت سالن را بررسی کنید.</p>`}
+        ${available ? `<p class="rounded-2xl border border-emerald-100 bg-emerald-50 px-3 py-2 text-[11px] font-black leading-5 text-emerald-700">${available}</p>` : `<p class="rounded-2xl border border-loomera-borderSoft bg-loomera-bgSubtle px-3 py-2 text-[11px] font-bold leading-5 text-loomera-textMuted">${mapText("noTimes", "برای مشاهده زمان‌ها، کارت سالن را بررسی کنید.")}</p>`}
 
         <div class="grid grid-cols-[1fr_auto] gap-2">
           <a href="${detailUrl}" class="inline-flex items-center justify-center gap-2 rounded-full bg-loomera-primary px-4 py-2.5 text-xs font-black text-white shadow-lm-soft transition hover:bg-loomera-primaryHover">
-            <span>مشاهده سالن</span>
+            <span>${mapText("viewSalon", "مشاهده سالن")}</span>
             <i class="fa-solid fa-arrow-left text-[10px]" aria-hidden="true"></i>
           </a>
-          <button type="button" data-popup-focus-card="${escapeHtml(salonId)}" class="inline-flex h-10 w-10 items-center justify-center rounded-full border border-loomera-borderSoft bg-white text-loomera-primary shadow-sm transition hover:bg-loomera-primarySoft" aria-label="نمایش کارت در لیست">
+          <button type="button" data-popup-focus-card="${escapeHtml(salonId)}" class="inline-flex h-10 w-10 items-center justify-center rounded-full border border-loomera-borderSoft bg-white text-loomera-primary shadow-sm transition hover:bg-loomera-primarySoft" aria-label="${mapText("viewCard", "نمایش کارت در لیست")}">
             <i class="fa-solid fa-list" aria-hidden="true"></i>
           </button>
         </div>
@@ -199,7 +209,7 @@ function bindMarkerInteractions(marker, salon, mapInstance) {
     el.style.touchAction = "manipulation";
     el.setAttribute("tabindex", "0");
     el.setAttribute("role", "button");
-    el.setAttribute("aria-label", `نمایش ${salon.salon_name || salon.name || "سالن"}`);
+    el.setAttribute("aria-label", `${searchText("view", "مشاهده")} ${salon.salon_name || salon.name || searchText("salon", "سالن")}`);
 
     const activateTouch = (event) => {
       if (isDesktop()) return;
@@ -296,7 +306,7 @@ export async function initMap() {
   if (!mapRoot) return;
   const mapEnabled = String(document.body.dataset.mapEnabled || "").toLowerCase() === "true";
   if (!mapEnabled) {
-    showMapFallback("کلید نقشه داخلی تنظیم نشده است. لیست سالن‌ها همچنان فعال است.");
+    showMapFallback(searchText("mapNoKey", "کلید نقشه داخلی تنظیم نشده است. لیست سالن‌ها همچنان فعال است."));
     return;
   }
 
@@ -323,7 +333,7 @@ export async function initMap() {
     let tileErrors = 0;
     tileLayer.on("tileerror", () => {
       tileErrors += 1;
-      if (tileErrors >= 3) showMapFallback("لود نقشه کامل نشد. می‌توانید از لیست نتایج استفاده کنید.");
+      if (tileErrors >= 3) showMapFallback(searchText("mapTilesFailed", "لود نقشه کامل نشد. می‌توانید از لیست نتایج استفاده کنید."));
     });
     tileLayer.addTo(mapInstance);
     hideMapFallback();
@@ -368,6 +378,6 @@ export async function initMap() {
     }, 250);
   } catch (error) {
     console.error("[map] init failed", error);
-    showMapFallback("راه‌اندازی نقشه انجام نشد. جستجو از طریق لیست ادامه پیدا می‌کند.");
+    showMapFallback(searchText("mapStartFailed", "راه‌اندازی نقشه انجام نشد. جستجو از طریق لیست ادامه پیدا می‌کند."));
   }
 }
