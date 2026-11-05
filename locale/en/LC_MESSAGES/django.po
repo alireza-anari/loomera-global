@@ -3602,3 +3602,7 @@ msgstr "Available appointment"
 #, python-format
 msgid "Explore salons, services and beauty professionals at %(brand)s. Filter by price, ratings, discounts and available appointments."
 msgstr "Explore salons, services and beauty professionals at %(brand)s. Filter by price, ratings, discounts and available appointments."
+
+#: templates/pages/search.html
+msgid "Search for salons and beauty services"
+msgstr "Search for salons and beauty services"

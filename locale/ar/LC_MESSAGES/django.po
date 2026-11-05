@@ -3606,3 +3606,7 @@ msgstr "موعد متاح"
 #, python-format
 msgid "Explore salons, services and beauty professionals at %(brand)s. Filter by price, ratings, discounts and available appointments."
 msgstr "استكشف الصالونات والخدمات ومتخصصي التجميل على %(brand)s. صفِّ النتائج حسب السعر والتقييمات والخصومات والمواعيد المتاحة."
+
+#: templates/pages/search.html
+msgid "Search for salons and beauty services"
+msgstr "البحث عن صالونات وخدمات التجميل"

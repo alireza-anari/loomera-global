@@ -3602,3 +3602,7 @@ msgstr "نوبت آزاد"
 #, python-format
 msgid "Explore salons, services and beauty professionals at %(brand)s. Filter by price, ratings, discounts and available appointments."
 msgstr "جستجوی مجموعه‌ها، خدمات و متخصصان زیبایی در %(brand)s با فیلتر قیمت، امتیاز، تخفیف و زمان آزاد."
+
+#: templates/pages/search.html
+msgid "Search for salons and beauty services"
+msgstr "جستجوی مجموعه و خدمات زیبایی"
