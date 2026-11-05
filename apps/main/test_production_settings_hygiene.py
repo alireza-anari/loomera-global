@@ -4220,7 +4220,8 @@ class MagazineHomeDeploymentBrandTests(SimpleTestCase):
         from django.urls import reverse
 
         source = self._source()
-        self.assertEqual(source.count("{{ deployment_brand.display_name_fa }}"), 4)
+        self.assertEqual(source.count("{{ deployment_brand.display_name_fa }}"), 2)
+        self.assertEqual(source.count("blocktrans with brand=deployment_brand.display_name_fa"), 2)
         self.assertNotIn("لومرا", source)
         self.assertNotIn("get_deployment_brand_config", source)
         self.assertNotIn("BRAND_DISPLAY_NAME_FA", source)
