@@ -1859,11 +1859,11 @@ class SharedBrandTemplateContextTests(SimpleTestCase):
             rendered,
         )
         self.assertIn(
-            "{{ deployment_brand.display_name }}، پلتفرم انتخاب و رزرو خدمات زیبایی",
+            "{% blocktrans with brand=deployment_brand.display_name %}",
             base_source,
         )
         self.assertEqual(
-            base_source.count("انتخاب روشن‌تر و رزرو آرام‌تر خدمات زیبایی و تندرستی."),
+            base_source.count('{% trans "Choose beauty and wellness services with greater clarity and book with ease." %}'),
             2,
         )
         for value in ("#FCFBFE", "#16131F", "#735CBE"):
