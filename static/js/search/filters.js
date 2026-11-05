@@ -243,7 +243,7 @@ export function setupFiltersUI() {
   }
 
   function buildSummary(summary) {
-    if (summary && (document.documentElement?.lang || "fa").startsWith("fa")) return summary;
+    if (summary) return summary;
     const parts = [];
     if (state.services.length === 1) {
       const chip = serviceOptionChips.find((item) => item.dataset.serviceId === state.services[0]);
