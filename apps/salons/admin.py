@@ -27,6 +27,7 @@ class SalonAdmin(admin.GISModelAdmin):
         "slug",
         "is_active",
         "verification_status",
+        "timezone_name",
         "zone",
         "salon_manager",
         "show_salon_service",

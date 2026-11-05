@@ -350,6 +350,10 @@ jobs:
         run: |
           python manage.py test apps.main.test_phase4_public_seo_locale --failfast
 
+      - name: Phase 5.1 canonical calendar and business IANA timezone migration guards
+        run: |
+          python manage.py test apps.salons.test_phase5_calendar_timezone --failfast
+
       - name: Phase 2 buyer-brand smoke and email layout reference audit
         run: |
           python manage.py test \

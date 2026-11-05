@@ -9,6 +9,7 @@ from django.urls import reverse
 from django.utils.text import slugify
 from middlewares.middlewares import RequestMiddleware
 from utils import File_Uploader
+from loomera.globalization.calendar_time import validate_iana_timezone_name
 
 from apps.accounts.models import Customer, CustomUser
 from apps.locations.models import Neighborhood
@@ -78,6 +79,17 @@ class Salon(models.Model):
     zone = models.PositiveIntegerField(verbose_name="منطقه ", null=True, blank=True)
     city = models.CharField(max_length=100, blank=True, default="", db_index=True, verbose_name="شهر")
     zone_label = models.CharField(max_length=100, blank=True, default="", verbose_name="منطقه / ناحیه")
+    timezone_name = models.CharField(
+        max_length=64,
+        blank=True,
+        default="",
+        validators=[validate_iana_timezone_name],
+        verbose_name="منطقه زمانی مجموعه (IANA)",
+        help_text=(
+            "خالی یعنی رفتار زمانی قدیمی تهران؛ مقدار صریح مانند Europe/Berlin "
+            "فعلاً فقط به عنوان داده ثبت می‌شود و زمان نوبت‌های قبلی را تغییر نمی‌دهد."
+        ),
+    )
     location = gis_models.PointField(geography=True, verbose_name="موقعیت جغرافیایی", null=True)
     neighborhood = models.ForeignKey(
         Neighborhood,
