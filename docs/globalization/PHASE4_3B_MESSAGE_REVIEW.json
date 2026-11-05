@@ -770,6 +770,18 @@
       "en": "Result",
       "fa": "نتیجه",
       "ar": "نتيجة"
+    },
+    {
+      "msgid": "Beauty salon",
+      "en": "Beauty salon",
+      "fa": "سالن زیبایی",
+      "ar": "صالون تجميل"
+    },
+    {
+      "msgid": "Verified salons in search",
+      "en": "Verified salons in search",
+      "fa": "فقط سالن‌های تاییدشده",
+      "ar": "الصالونات المعتمدة فقط"
     }
   ]
 }
