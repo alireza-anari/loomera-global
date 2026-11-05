@@ -1,0 +1,119 @@
+{
+  "schema_version": 1,
+  "phase": "5.1",
+  "status": "additive-foundation_only",
+  "cutover_authorized": false,
+  "legacy_timezone": "Asia/Tehran",
+  "persisted_fields": [
+    {
+      "model": "orders.OrderDetail",
+      "field": "date",
+      "storage": "DateField",
+      "meaning": "canonical Gregorian calendar day; nullable; paired with local time"
+    },
+    {
+      "model": "orders.OrderDetail",
+      "field": "time",
+      "storage": "TimeField",
+      "meaning": "appointment wall clock with historical deployment-local interpretation"
+    },
+    {
+      "model": "orders.OrderDetail",
+      "field": "end_time",
+      "storage": "TimeField",
+      "meaning": "local end wall clock without standalone timezone or date rollover semantics"
+    },
+    {
+      "model": "orders.OrderDetail",
+      "field": "occupied_until",
+      "storage": "TimeField",
+      "meaning": "local occupancy wall clock, currently no explicit zone"
+    },
+    {
+      "model": "orders.Order",
+      "field": "reminder_due_at",
+      "storage": "DateTimeField",
+      "meaning": "timezone-aware instant, filter against timezone.now"
+    },
+    {
+      "model": "orders.OrderDetail",
+      "field": "no_show_dispute_until",
+      "storage": "DateTimeField",
+      "meaning": "timezone-aware instant for review cutoff"
+    },
+    {
+      "model": "salons.Salon",
+      "field": "timezone_name",
+      "storage": "CharField(64)",
+      "meaning": "explicit IANA zone, empty string = pinned legacy Asia/Tehran until reconciled"
+    },
+    {
+      "model": "salons.SalonOpeningHours",
+      "field": "day_of_week",
+      "storage": "PositiveSmallIntegerField",
+      "meaning": "persisted legacy Saturday=1 through Friday=7; Phase 6 owns mapping"
+    },
+    {
+      "model": "salons.SalonOpeningHours",
+      "field": "open_time",
+      "storage": "TimeField",
+      "meaning": "business wall clock"
+    },
+    {
+      "model": "salons.SalonOpeningHours",
+      "field": "close_time",
+      "storage": "TimeField",
+      "meaning": "business wall clock"
+    }
+  ],
+  "scheduled_operations": [
+    {
+      "entrypoint": "apps.main.infrastructure.run_scheduled_tasks",
+      "semantics": "deployment-local",
+      "evidence": "daily metrics date uses timezone.localdate(); cron trigger may be external; no automatic business-zone inference"
+    },
+    {
+      "entrypoint": "apps.orders.lifecycle.dispatch_due_order_reminders",
+      "semantics": "UTC-instant",
+      "evidence": "reminder_due_at <= timezone.now()"
+    },
+    {
+      "entrypoint": "apps.orders.management.commands.confirm_no_show_after_window",
+      "semantics": "UTC-instant",
+      "evidence": "no_show_dispute_until <= timezone.now()"
+    },
+    {
+      "entrypoint": "apps.articles.management.commands.expire_salon_stories",
+      "semantics": "UTC-instant",
+      "evidence": "expires_at < timezone.now()"
+    },
+    {
+      "entrypoint": "apps.payments.management.commands.expire_abandoned_online_checkouts",
+      "semantics": "UTC-instant",
+      "evidence": "cutoff = timezone.now() - timedelta"
+    },
+    {
+      "entrypoint": "apps.main.management.commands.cleanup_operational_data",
+      "semantics": "UTC-instant",
+      "evidence": "cutoff = timezone.now() - timedelta"
+    },
+    {
+      "entrypoint": "loomera.settings.base.CELERY_TIMEZONE",
+      "semantics": "deployment-local",
+      "evidence": "fixed TIME_ZONE = Asia/Tehran; not business-local"
+    },
+    {
+      "entrypoint": "apps.salons.models.SalonOpeningHours",
+      "semantics": "business-wall-clock_legacy",
+      "evidence": "legacy Saturday 1..Friday 7, local open/close TimeField; requires Phase 6 weekday mapping"
+    }
+  ],
+  "risk_gates": {
+    "requires_legacy_data_profile": true,
+    "requires_real_migration_rehearsal": true,
+    "requires_booking_and_reminder_cutover_review": true,
+    "requires_dst_ambiguity_policy": true,
+    "prohibits_silent_weekday_renumbering": true,
+    "production_deployment": false
+  }
+}
