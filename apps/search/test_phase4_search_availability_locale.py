@@ -109,7 +109,7 @@ class Phase4SearchAvailabilityLocaleTests(SimpleTestCase):
             (ROOT / "docs/globalization/PHASE4_3C_MESSAGE_REVIEW.json").read_text()
         )["reviewed_messages"]
         self.assertEqual(len(ledger), 6)
-        self.assertEqual(len(set(x["msgid"] for x in ledger)), 5)
+        self.assertEqual(len(set(x["msgid"] for x in ledger)), 6)
         for lang in ("fa", "en", "ar"):
             with self.subTest(lang=lang):
                 po = (ROOT / f"locale/{lang}/LC_MESSAGES/django.po").read_text()
