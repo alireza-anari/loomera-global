@@ -115,7 +115,7 @@ class Phase4SearchAvailabilityLocaleTests(SimpleTestCase):
                 po = (ROOT / f"locale/{lang}/LC_MESSAGES/django.po").read_text()
                 data = (ROOT / f"locale/{lang}/LC_MESSAGES/django.mo").read_bytes()
                 self.assertEqual(struct.unpack_from("<I", data, 0)[0], 0x950412de)
-                self.assertEqual(struct.unpack_from("<I", data, 8)[0], 895)
+                self.assertEqual(struct.unpack_from("<I", data, 8)[0], 896)
                 catalog = load_catalog("django", localedir=str(ROOT / "locale"), languages=[lang])
                 for msg in ledger:
                     self.assertIn("msgid " + json.dumps(msg["msgid"]), po)
