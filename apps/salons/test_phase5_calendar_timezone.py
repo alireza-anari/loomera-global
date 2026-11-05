@@ -239,3 +239,61 @@ class Phase5AppointmentNoRewriteTests(TestCase):
         )
         self.assertEqual(salon.timezone_name, "Europe/Berlin")
         self.assertEqual(get_business_timezone(salon).key, "Europe/Berlin")
+
+
+class Phase5ReadOnlyAuditTests(TestCase):
+    def setUp(self):
+        from apps.accounts.models import CustomUser, SalonManager
+
+        manager = SalonManager.objects.create(
+            user=CustomUser.objects.create(
+                mobile_number="09125008884", name="Audit", family="Manager", is_active=True
+            ),
+            is_active=True,
+        )
+        self.salon = Salon.objects.create(
+            salon_name="Audit fixture", salon_manager=manager, is_active=True
+        )
+
+    def test_audit_is_aggregate_only_and_never_writes_salon_records(self):
+        import json
+        from io import StringIO
+        from django.core.management import call_command
+
+        before = (self.salon.timezone_name, self.salon.pk)
+        output = StringIO()
+        call_command("audit_calendar_timezone", "--json", stdout=output)
+        report = json.loads(output.getvalue().strip())
+        self.assertEqual(report["salons_total"], 1)
+        self.assertEqual(report["salons_legacy_unset_timezone"], 1)
+        self.assertEqual(report["salons_with_explicit_timezone"], 0)
+        self.assertEqual(report["appointments_total"], 0)
+        self.assertEqual(report["appointments_missing_date_or_time"], 0)
+        self.assertEqual(report["invalid_explicit_timezone_count"], 0)
+        self.assertEqual(report["writes_performed"], 0)
+        self.salon.refresh_from_db()
+        self.assertEqual((self.salon.timezone_name, self.salon.pk), before)
+        self.assertNotIn("09125008884", output.getvalue())
+
+        self.salon.timezone_name = "Europe/Berlin"
+        self.salon.save(update_fields=["timezone_name"])
+        output = StringIO()
+        call_command("audit_calendar_timezone", "--json", stdout=output)
+        report = json.loads(output.getvalue().strip())
+        self.assertEqual(report["salons_legacy_unset_timezone"], 0)
+        self.assertEqual(report["salons_with_explicit_timezone"], 1)
+        self.assertEqual(report["explicit_timezones_distinct"], 1)
+
+    def test_audit_flags_bad_zone_inserted_bypassing_form_validation(self):
+        from io import StringIO
+        from django.core.management import call_command
+        from django.core.management.base import CommandError
+
+        Salon.objects.filter(pk=self.salon.pk).update(timezone_name="Not/ARealZone")
+        with self.assertRaises(CommandError):
+            call_command(
+                "audit_calendar_timezone", "--json", "--fail-on-invalid",
+                stdout=StringIO(),
+            )
+        self.salon.refresh_from_db()
+        self.assertEqual(self.salon.timezone_name, "Not/ARealZone")
