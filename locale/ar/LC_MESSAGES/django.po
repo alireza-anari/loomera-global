@@ -3579,3 +3579,34 @@ msgstr "صالون تجميل"
 #: templates/partials/search/search_locale_messages.html
 msgid "Verified salons in search"
 msgstr "الصالونات المعتمدة فقط"
+
+# Phase 4.3c — public search availability and branded SEO.
+
+#: apps/search/utils.py templates/pages/search.html
+#, python-format
+msgid "First available on %(date)s at %(time)s"
+msgstr "أول موعد متاح يوم %(date)s الساعة %(time)s"
+
+#: apps/search/utils.py templates/pages/search.html
+#, python-format
+msgid "First available at %(time)s"
+msgstr "أول موعد متاح الساعة %(time)s"
+
+#: apps/search/utils.py templates/pages/search.html
+#, python-format
+msgid "Appointments available"
+msgstr "تتوفر مواعيد للحجز"
+
+#: apps/search/utils.py templates/pages/search.html
+#, python-format
+msgid "Available appointment"
+msgstr "موعد متاح"
+
+#: apps/search/utils.py templates/pages/search.html
+#, python-format
+msgid "Explore salons, services and beauty professionals at %(brand)s. Filter by price, ratings, discounts and available appointments."
+msgstr "استكشف الصالونات والخدمات ومتخصصي التجميل على %(brand)s. صفِّ النتائج حسب السعر والتقييمات والخصومات والمواعيد المتاحة."
+
+#: templates/pages/search.html
+msgid "Search for salons and beauty services"
+msgstr "البحث عن صالونات وخدمات التجميل"

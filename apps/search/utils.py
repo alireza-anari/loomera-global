@@ -683,6 +683,22 @@ def _find_service_slot(
     return None
 
 
+def build_search_availability_label(first_slot: str, date_label: str = "") -> str:
+    """Request-localized availability copy; preserve date/time and search semantics.
+
+    Date labels are Jalali when supported, and slot strings remain HH:MM.
+    This presentation-only helper never determines whether a slot is bookable.
+    """
+    if not first_slot:
+        return _("Appointments available")
+    if date_label:
+        return _("First available on %(date)s at %(time)s") % {
+            "date": date_label,
+            "time": first_slot,
+        }
+    return _("First available at %(time)s") % {"time": first_slot}
+
+
 def _find_any_slot(
     salon_id: int,
     schedules_by_salon: dict[int, dict[int, list[StylistSchedule]]],
@@ -727,7 +743,7 @@ def _find_any_slot(
                     "service_name": (
                         schedule.service.service_name
                         if schedule.service_id
-                        else "نوبت آزاد"
+                        else _("Available appointment")
                     ),
                     "stylist_id": stylist_id,
                     "slot": _minutes_to_hhmm(start_minutes),
@@ -1471,16 +1487,14 @@ def search_salons(filters: SearchFilters) -> dict:
 
                 salon.search_matched_services = matched_service_names
 
-                if first_slot:
-                    if len(availability_dates) > 1:
-                        date_label = _format_search_date_label(current_date)
-                        salon.search_available_label = (
-                            f"اولین زمان آزاد {date_label} ساعت {first_slot}"
-                        )
-                    else:
-                        salon.search_available_label = f"اولین زمان آزاد {first_slot}"
-                else:
-                    salon.search_available_label = "دارای وقت آزاد"
+                date_label = (
+                    _format_search_date_label(current_date)
+                    if first_slot and len(availability_dates) > 1
+                    else ""
+                )
+                salon.search_available_label = build_search_availability_label(
+                    first_slot, date_label=date_label
+                )
 
                 filtered_by_availability[salon.id] = salon
 
