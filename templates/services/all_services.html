@@ -20,7 +20,7 @@
     <div class="mx-auto w-full max-w-7xl px-4 py-5 sm:px-6 sm:py-7 xl:px-0">
       <div class="flex items-center justify-between gap-4">
         <div class="min-w-0">
-          <p class="text-xs font-black text-loomera-primary">{% trans 'Services at' %} {{ deployment_brand.display_name }}</p>
+          <p class="text-xs font-black text-loomera-primary">{% trans 'Services at' %} {% if deployment_locale.language_code == "fa" or not deployment_locale.language_code %}{{ deployment_brand.display_name_fa }}{% else %}{{ deployment_brand.display_name }}{% endif %}</p>
           <h1 class="mt-1 truncate text-2xl font-black text-loomera-textPrimary sm:text-3xl">
             {% if selected_group %}{{ selected_group.group_title }}{% else %}{% trans 'Beauty services' %}{% endif %}
           </h1>
