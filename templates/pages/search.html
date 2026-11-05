@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% load static %}
+{% load i18n %}
 
 {% block title %}جستجوی مجموعه و خدمات زیبایی | {{ deployment_brand.display_name }}{% endblock %}
 {% block meta_description %}جستجوی مجموعه‌ها، خدمات و متخصصان زیبایی در {{ deployment_brand.display_name }} با فیلتر قیمت، امتیاز، تخفیف و زمان آزاد.{% endblock %}
@@ -163,7 +164,7 @@
 {% endblock %}
 
 {% block content %}
-  <section class="relative h-[calc(100dvh-5rem)] w-full overflow-hidden lg:h-full bg-loomera-bg text-loomera-textPrimary" aria-label="جستجوی مجموعه‌ها و خدمات زیبایی">
+  <section class="relative h-[calc(100dvh-5rem)] w-full overflow-hidden lg:h-full bg-loomera-bg text-loomera-textPrimary" aria-label="{% trans 'Search salons and beauty services' %}">
     {% include "partials/search/search_page_shell.html" %}
   </section>
 {% endblock %}

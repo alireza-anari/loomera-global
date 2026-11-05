@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 {% load static %}
 {% load humanize %}
+{% load i18n %}
 
 {% block title %}{% if selected_group %}{{ selected_group.effective_seo_title }}{% else %}همه خدمات زیبایی | {{ deployment_brand.display_name }}{% endif %}{% endblock %}
 {% block meta_description %}{% if selected_group %}{{ selected_group.effective_seo_description }}{% else %}مشاهده خدمات زیبایی و انتخاب خدمات مورد نیاز.{% endif %}{% endblock %}
@@ -19,9 +20,9 @@
     <div class="mx-auto w-full max-w-7xl px-4 py-5 sm:px-6 sm:py-7 xl:px-0">
       <div class="flex items-center justify-between gap-4">
         <div class="min-w-0">
-          <p class="text-xs font-black text-loomera-primary">خدمات {{ deployment_brand.display_name_fa }}</p>
+          <p class="text-xs font-black text-loomera-primary">{% trans 'Services at' %} {{ deployment_brand.display_name }}</p>
           <h1 class="mt-1 truncate text-2xl font-black text-loomera-textPrimary sm:text-3xl">
-            {% if selected_group %}{{ selected_group.group_title }}{% else %}خدمات زیبایی{% endif %}
+            {% if selected_group %}{{ selected_group.group_title }}{% else %}{% trans 'Beauty services' %}{% endif %}
           </h1>
         </div>
 
@@ -30,7 +31,7 @@
           class="inline-flex min-h-11 shrink-0 items-center justify-center gap-2 rounded-full border border-loomera-borderSoft bg-white px-4 text-xs font-black text-loomera-primary transition hover:border-loomera-primary/30"
         >
           <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
-          <span class="hidden sm:inline">جستجو</span>
+          <span class="hidden sm:inline">{% trans 'Search' %}</span>
         </a>
       </div>
     </div>
@@ -43,10 +44,10 @@
     >
       <div class="mx-auto w-full max-w-7xl">
 
-        {# ردیف اول: فقط گروه‌های اصلی؛ view مقدار groups را با group_parent=None می‌سازد. #}
+        {# Main groups only; the view supplies groups with group_parent=None. #}
         <nav
           class="flex items-center gap-2 overflow-x-auto px-4 py-3 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden sm:px-6 xl:px-0"
-          aria-label="گروه‌های اصلی خدمات"
+          aria-label="{% trans 'Main service groups' %}"
           data-service-tabs-row
         >
           <a
@@ -54,7 +55,7 @@
             class="shrink-0 rounded-full border px-4 py-2.5 text-xs font-black transition {% if not selected_group %}border-loomera-primary bg-loomera-primary text-white{% else %}border-loomera-borderSoft bg-white text-loomera-textSecondary hover:border-loomera-primary/30 hover:text-loomera-primary{% endif %}"
             {% if not selected_group %}aria-current="page" data-active-service-tab{% endif %}
           >
-            همه خدمات
+            {% trans 'All services' %}
           </a>
 
           {% for group in groups %}
@@ -68,11 +69,11 @@
           {% endfor %}
         </nav>
 
-        {# ردیف دوم: زیرگروه‌های مرتبط با گروه اصلی فعال. #}
+        {# Subgroups of the active main group. #}
         {% if selected_group and subgroups %}
           <nav
             class="flex items-center gap-2 overflow-x-auto border-t border-loomera-borderSoft bg-loomera-bgSubtle px-4 py-2.5 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden sm:px-6 xl:px-0"
-            aria-label="زیرگروه‌های خدمات"
+            aria-label="{% trans 'Service subgroups' %}"
             data-service-tabs-row
           >
             {% if selected_group.group_parent_id %}
@@ -82,7 +83,7 @@
                     href="{{ group.get_absolute_url }}"
                     class="shrink-0 rounded-full border border-transparent bg-white px-3.5 py-2 text-[11px] font-black text-loomera-textSecondary transition hover:border-loomera-primary/20 hover:text-loomera-primary"
                   >
-                    همه {{ group.group_title }}
+                    {% trans 'All' %} {{ group.group_title }}
                   </a>
                 {% endif %}
               {% endfor %}
@@ -93,7 +94,7 @@
                 aria-current="page"
                 data-active-service-tab
               >
-                همه {{ selected_group.group_title }}
+                {% trans 'All' %} {{ selected_group.group_title }}
               </a>
             {% endif %}
 
@@ -120,6 +121,8 @@
 
   <div
     id="priceListModal"
+    data-price-loading-text="{% trans 'Loading prices...' %}"
+    data-price-error-text="{% trans 'Unable to load the price list.' %}"
     class="fixed inset-0 z-[1200] hidden overflow-y-auto overscroll-contain bg-black/50 px-0 py-0 backdrop-blur-sm sm:px-4 sm:py-6"
     aria-hidden="true"
     role="dialog"
@@ -134,14 +137,14 @@
       >
         <div class="flex shrink-0 items-center justify-between gap-3 border-b border-loomera-borderSoft px-4 py-4 sm:px-5">
           <h2 id="priceListModalTitle" class="min-w-0">
-            <span class="block text-base font-black text-loomera-textPrimary">قیمت متخصص‌ها</span>
+            <span class="block text-base font-black text-loomera-textPrimary">{% trans 'Professional prices' %}</span>
             <span data-price-modal-service-name class="mt-0.5 block truncate text-xs font-bold text-loomera-primary"></span>
           </h2>
 
           <button
             type="button"
             data-price-modal-close
-            aria-label="بستن"
+            aria-label="{% trans 'Close' %}"
             class="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-loomera-borderSoft text-loomera-textMuted transition hover:text-loomera-primary"
           >
             <i class="fa-solid fa-xmark" aria-hidden="true"></i>
@@ -152,7 +155,7 @@
           data-price-modal-body
           class="min-h-0 flex-1 overflow-y-auto overscroll-contain p-4 pb-[calc(1rem+env(safe-area-inset-bottom))] sm:p-5 [scrollbar-gutter:stable]"
         >
-          در حال بارگذاری...
+          {% trans 'Loading prices...' %}
         </div>
       </div>
     </div>
@@ -214,7 +217,8 @@
           modalServiceName.textContent = trigger.dataset.serviceName || "";
         }
 
-        modalBody.innerHTML = '<div class="rounded-2xl border border-dashed border-loomera-borderSoft bg-loomera-bgSubtle p-6 text-center text-sm font-bold text-loomera-textMuted">در حال بارگذاری...</div>';
+        modalBody.innerHTML = '<div class="rounded-2xl border border-dashed border-loomera-borderSoft bg-loomera-bgSubtle p-6 text-center text-sm font-bold text-loomera-textMuted"></div>';
+        modalBody.firstElementChild.textContent = modal.dataset.priceLoadingText || "";
         openPriceModal();
 
         try {
@@ -225,7 +229,8 @@
           if (!response.ok) throw new Error("request failed");
           modalBody.innerHTML = await response.text();
         } catch (error) {
-          modalBody.innerHTML = '<div class="rounded-2xl border border-red-100 bg-red-50 p-6 text-center text-sm font-black text-red-600">دریافت لیست قیمت ممکن نیست.</div>';
+          modalBody.innerHTML = '<div class="rounded-2xl border border-red-100 bg-red-50 p-6 text-center text-sm font-black text-red-600"></div>';
+          modalBody.firstElementChild.textContent = modal.dataset.priceErrorText || "";
         }
       });
 
