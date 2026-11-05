@@ -124,7 +124,7 @@ class Phase4SearchAvailabilityLocaleTests(SimpleTestCase):
     def test_previous_behavior_and_manual_release_gate_remain_intact(self):
         source = (ROOT / "apps/search/utils.py").read_text(encoding="utf-8")
         self.assertIn("_slot_is_past(current_date, start_minutes)", source)
-        self.assertIn("if len(availability_dates) > 1", source)
+        self.assertIn("if first_slot and len(availability_dates) > 1", source)
         self.assertIn("return _(\"Appointments available\")", source)
         matrix = json.loads(
             (ROOT / "docs/globalization/PHASE3_EXIT_MATRIX.json").read_text()
