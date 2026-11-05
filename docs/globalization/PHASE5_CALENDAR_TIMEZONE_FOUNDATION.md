@@ -18,7 +18,7 @@ Pinned starting target `main`: `4681d747c05be4d98fc716c233b466dd0ddae3bc`.
 2. `Salon.timezone_name` is an optional `CharField(max_length=64, blank=True, default="")` with a validator against Python `zoneinfo` IANA identifiers. A migration adds only this column (no data copying or `RunPython`); the Django admin shows it for review. Existing rows remain blank and preserve their historical Tehran meaning, independently of `LOOMERA_DEFAULT_TIMEZONE`. A non-empty invalid value raises an error rather than silently falling back. Explicit timezone metadata **does not yet alter booking rules**.
 3. Read-only strict `get_business_timezone`, `business_local_to_utc`, and `utc_to_business_local` make IANA interpretation explicit. DST gaps and overlaps fail closed: business-local times that map to zero or multiple UTC instants are rejected. This is a boundary for future gated integration, not an active booking flow change.
 4. `python manage.py audit_calendar_timezone --json` reports aggregate counts of legacy/explicit/invalid zones and appointment-date/time coverage without writing data or exposing business IDs. `--fail-on-invalid` fails on invalid explicit IANA zone values. Run it on authorized data snapshots before any cutover.
-5. Django tests cover Gregorian/Jalali round trips, locale-independent calendar selection, IANA validation, winter/summer offsets, DST gaps/folds, original appointment field equality when the salon timezone metadata changes, migration shape and read-only audit behavior.
+5. Django tests cover Gregorian/Jalali round trips, locale-independent calendar selection, IANA validation, winter/summer offsets, DST gaps/folds, **in-memory model wall-clock invariants** when salon timezone metadata changes, schema-only migration shape, and read-only audit behavior with isolated mocked querysets. These tests do **not** claim to migrate a live spatial database.
 
 ## Scheduled work classifications
 
@@ -30,13 +30,13 @@ Pinned starting target `main`: `4681d747c05be4d98fc716c233b466dd0ddae3bc`.
 
 This PR **must not** set the new timezone field for existing salons automatically, recalculate date/time columns, change `TIME_ZONE` or `CELERY_TIMEZONE`, change booking cancellation/reminder formulas, mutate persisted weekdays, or presume a DST resolution policy. A timezone field value is metadata, not proof of a converted booking timeline.
 
-Before a future Phase 5.2 active booking integration or production migration, require an authorized full-data profile (including missing dates/times, out-of-hours/overnight bookings and DST gaps/folds), paired before/after fixtures and UTC-instant reconciliation, explicit onboarding/default-timezone policy, reversal/runbook, reminder/no-show/ICS acceptance, and human review for ambiguous wall-clock records. Automatic zone assignment from language, address or map provider is forbidden.
+The default GitHub CI uses non-spatial SQLite; creating a live GeoDjango test database fails with `DatabaseOperations has no attribute geo_db_type`. Therefore a **real before/after spatial migration rehearsal remains blocked**, and Phase 5 exit criteria are not met by this PR. Do not claim that PostgreSQL/PostGIS migration execution was tested. Before a future Phase 5.2 active booking integration or production migration, require an authorized full-data profile (including missing dates/times, out-of-hours/overnight bookings and DST gaps/folds), paired before/after fixtures and UTC-instant reconciliation, explicit onboarding/default-timezone policy, reversal/runbook, reminder/no-show/ICS acceptance, and human review for ambiguous wall-clock records. Automatic zone assignment from language, address or map provider is forbidden.
 
 Phase 3 manual browser/true 400% zoom, keyboard and screen-reader gates remain **BLOCKED_MANUAL_ACCEPTANCE**; Production deployment remains **NOT_PERFORMED**.
 
 ## Merge gates
 
-- `makemigrations --check --dry-run` and migration-system tests must pass.
+- `makemigrations --check --dry-run` and AddField-only static migration contract tests must pass. A future PostGIS rehearsal is explicitly outstanding.
 - Phase 5.1 Django boundary, audit and persisted-order tests pass in GitHub CI.
 - Existing financial, authorization, booking and Chromium smoke regressions stay green.
 - Review exact changed-file list; confirm the migration is a single `AddField` and no existing time fields or business logic changed.
