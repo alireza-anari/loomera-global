@@ -628,13 +628,15 @@ export function setupFiltersUI() {
 
       const nearMeRow = document.createElement("li");
       nearMeRow.className = "cursor-pointer px-3 py-2 transition hover:bg-loomera-primarySoft";
-      nearMeRow.innerHTML = `
-        <div class="flex items-center gap-2 font-black text-loomera-textPrimary">
-          <i class="fa-solid fa-location-crosshairs text-loomera-primary" aria-hidden="true"></i>
-          <span>${searchText("nearMe", "نزدیک من")}</span>
-        </div>
-        <div class="mt-1 text-[10px] text-loomera-textMuted">${searchText("useDeviceLocation", "استفاده از موقعیت فعلی دستگاه")}</div>
-      `;
+      const nearMeTitle = document.createElement("div");
+      nearMeTitle.className = "flex items-center gap-2 font-black text-loomera-textPrimary";
+      const nearMeIcon = document.createElement("i");
+      nearMeIcon.className = "fa-solid fa-location-crosshairs text-loomera-primary";
+      nearMeIcon.setAttribute("aria-hidden", "true");
+      nearMeTitle.appendChild(nearMeIcon);
+      appendSearchLabel(nearMeTitle, searchText("nearMe", "نزدیک من"), "", "span");
+      nearMeRow.appendChild(nearMeTitle);
+      appendSearchLabel(nearMeRow, searchText("useDeviceLocation", "استفاده از موقعیت فعلی دستگاه"), "mt-1 text-[10px] text-loomera-textMuted");
       nearMeRow.addEventListener("click", async () => {
         locationSuggestions.classList.add("hidden");
         await requestCurrentLocationForSearch({ applyAfterSuccess: false });
