@@ -366,6 +366,11 @@ jobs:
         run: |
           python manage.py test apps.salons.test_phase6_weekday_boundary --failfast
 
+      - name: Phase 6.2 dashboard weekday API and JavaScript form contract parity
+        run: |
+          python manage.py test apps.dashboards.test_phase6_weekday_interfaces --failfast
+          node --test tests/js/phase6_weekday_contract.test.cjs
+
       - name: Phase 2 buyer-brand smoke and email layout reference audit
         run: |
           python manage.py test \

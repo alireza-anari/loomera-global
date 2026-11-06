@@ -38,6 +38,10 @@ from apps.dashboards.forms import (
     StylistSelfTimeOffForm,
 )
 from apps.dashboards.layout import build_dashboard_context
+from loomera.globalization.weekdays import (
+    legacy_opening_day_from_date,
+    saturday_first_form_index_from_date,
+)
 from apps.dashboards.jalali_utils import (
     format_jalali_numeric,
     format_jalali_with_weekday,
@@ -8340,7 +8344,7 @@ class EditStylistDayScheduleView(
             return None
 
     def _get_salon_hours_for_day(self, salon, date_obj):
-        day_of_week_for_model = ((date_obj.weekday() + 2) % 7) + 1
+        day_of_week_for_model = legacy_opening_day_from_date(date_obj)
         return SalonOpeningHours.objects.filter(
             salon=salon,
             day_of_week=day_of_week_for_model,
@@ -9124,7 +9128,7 @@ class SetRegularShiftsView(SalonManagerOnboardingGuardMixin, LoginRequiredMixin,
             ).select_related("service")
             conflicting_bookings = []
             for booking in future_bookings:
-                weekday_index = (booking.date.weekday() + 2) % 7
+                weekday_index = saturday_first_form_index_from_date(booking.date)
                 proposed_windows = daily_shifts_data.get(weekday_index, [])
                 booking_end = booking.occupied_until or booking.end_time
                 contained = any(
@@ -9160,7 +9164,7 @@ class SetRegularShiftsView(SalonManagerOnboardingGuardMixin, LoginRequiredMixin,
                 current_date = start_date
 
                 while current_date <= end_date:
-                    persian_weekday_index = (current_date.weekday() + 2) % 7
+                    persian_weekday_index = saturday_first_form_index_from_date(current_date)
                     if persian_weekday_index in daily_shifts_data:
                         for shift in daily_shifts_data[persian_weekday_index]:
                             schedules_to_create.append(
@@ -9238,7 +9242,7 @@ class AddTimeOffView(SalonManagerOnboardingGuardMixin, LoginRequiredMixin, View)
 
     def _get_time_options(self, date_obj, salon):
         time_options = []
-        day_of_week_for_model = ((date_obj.weekday() + 2) % 7) + 1
+        day_of_week_for_model = legacy_opening_day_from_date(date_obj)
 
         salon_hours = SalonOpeningHours.objects.filter(
             salon=salon,
@@ -9256,7 +9260,7 @@ class AddTimeOffView(SalonManagerOnboardingGuardMixin, LoginRequiredMixin, View)
         return time_options
 
     def _get_salon_hours_for_day(self, date_obj, salon):
-        day_of_week_for_model = ((date_obj.weekday() + 2) % 7) + 1
+        day_of_week_for_model = legacy_opening_day_from_date(date_obj)
         return SalonOpeningHours.objects.filter(
             salon=salon,
             day_of_week=day_of_week_for_model,
@@ -10125,7 +10129,7 @@ def get_calendar_data(request, salon_id):
         salon_manager__user=request.user,
     )
 
-    day_of_week_model = JALALI_WEEKDAY_MAP.get(selected_date.weekday())
+    day_of_week_model = legacy_opening_day_from_date(selected_date)
     opening_hours = SalonOpeningHours.objects.filter(
         salon=salon,
         day_of_week=day_of_week_model,

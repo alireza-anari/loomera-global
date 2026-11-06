@@ -1,0 +1,17 @@
+{
+  "schema_version": 1,
+  "phase": "6.2",
+  "source_main_sha": "b891b981289150ef878ca754c49001f1abba6021",
+  "baseline_ci": "VERIFIED_POST_MERGE_SUCCESS_42189229126",
+  "persisted_weekday_contract": "SATURDAY_1_FRIDAY_7_UNCHANGED",
+  "weekly_shift_form_contract": "SATURDAY_0_FRIDAY_6_UNCHANGED",
+  "manager_calendar_api": "PARITY_TESTS_ADDED",
+  "manager_schedule_timeoff_filters": "SEVEN_DAY_PARITY_TESTS_ADDED",
+  "onboarding_and_javascript_wires": "CONTRACT_TESTS_ADDED",
+  "targeted_source_inventory": "DOCUMENTED_OTHER_DYNAMIC_CONSUMERS_NOT_FULLY_AUDITED",
+  "migration": "NOT_PERFORMED",
+  "sanitized_real_data": "NOT_PROVIDED",
+  "manual_accessibility": "BLOCKED_MANUAL_ACCEPTANCE",
+  "production_deployment": "NOT_PERFORMED",
+  "release_gate": "BLOCKED_REAL_DATA_RECONCILIATION_WEEKDAY_MIGRATION_AND_MANUAL_ACCEPTANCE"
+}
