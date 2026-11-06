@@ -1,21 +1,21 @@
 # Phase 7.3 — Canonical E.164 shadow storage, uniqueness and concurrency contract
 
 **Status: future schema specification + synthetic in-memory rehearsal only.**
-Pinned starting §fefa8b357da914b198512a1991aaab171fe95848§
+Pinned starting `fefa8b357da914b198512a1991aaab171fe95848`
 and independently successful Phase 7.2 post-merge CI run
-§42221139759§. **No database field/index/migration, account
+`42221139759`. **No database field/index/migration, account
 write, login or OTP change, deployment, or approval to use live data.**
 
 The machine-readable **proposed** contract is
-§docs/globalization/PHASE7_3_STORAGE_CONTRACT.json§.
+`docs/globalization/PHASE7_3_STORAGE_CONTRACT.json`.
 The pre-existing 11-character unique
-§CustomUser.mobile_number§ remains the sole legacy
-§USERNAME_FIELD§, and SMS.ir / public API authentication
+`CustomUser.mobile_number` remains the sole legacy
+`USERNAME_FIELD`, and SMS.ir / public API authentication
 continue to use their historical Iranian mobile representation.
 
 ## Why a shadow field, not an in-place conversion
 
-Current legacy §09xxxxxxxxx§ is 11 characters; E.164 may
+Current legacy `09xxxxxxxxx` is 11 characters; E.164 may
 use a plus sign and 15 digits (16 chars). An in-place rewrite can truncate
 values, make the old username unresolvable, invalidate OTP challenges,
 and accidentally connect an inactive or previously deleted account.
@@ -24,18 +24,18 @@ A possible future approved **expand-only** Django model would introduce:
 
 | Attribute | Proposed representation, NOT present in the model |
 | --- | --- |
-| Canonical shadow | nullable §CharField(max_length=16)§ |
-| Source of truth during expand | existing §mobile_number§ unchanged |
+| Canonical shadow | nullable `CharField(max_length=16)` |
+| Source of truth during expand | existing `mobile_number` unchanged |
 | Format | validated E.164 candidate; carrier/country plan check is separate |
 | Uniqueness | database-verified unique **non-null** canonical values |
 | Inactive users | same uniqueness scope, no partial index on active only |
 | Deleted/anonymized placeholders | owner-reviewed state; never auto-claim or recycle |
-| Concurrency revision | monotonic nonnegative §phone_identity_revision§ |
+| Concurrency revision | monotonic nonnegative `phone_identity_revision` |
 | Rollback | nullable shadow can be cleared with version check, not rekeyed |
 
 The exact future Django constraint/index syntax, deployed PostgreSQL
 version, online index creation strategy, locking and null semantics
-must be reviewed separately. An application-side §.exists()§
+must be reviewed separately. An application-side `.exists()`
 check **alone** is not a uniqueness guarantee; an actual database
 UNIQUE index is mandatory before accepting parallel writes. Null may
 remain unclaimed during the expand phase; until cutover a missing shadow
@@ -48,11 +48,11 @@ validated for national allocation, ownership or SMS reachability.
 ## What Phase 7.3 implements and proves
 
 New pure module:
-§loomera/globalization/phone_shadow_reservation.py§.
+`loomera/globalization/phone_shadow_reservation.py`.
 
-§OfflinePhoneShadowReservation§ loads only explicitly
+`OfflinePhoneShadowReservation` loads only explicitly
 supplied finite legacy rows with exact fields:
-§account_id, mobile_number, is_active§. It refuses
+`account_id, mobile_number, is_active`. It refuses
 duplicate account IDs, duplicate canonical identities, invalid/placeholder
 or non-ASCII legacy usernames and malformed active states. Every
 shadow claim requires an exact existing account ID, literal legacy
@@ -61,16 +61,16 @@ candidate matching the *same* source account.
 
 The synthetic simulator provides:
 
-- §claim_one§ and §claim_batch§: a
+- `claim_one` and `claim_batch`: a
   compare-and-swap rehearsal protected by one in-memory lock. It validates
   **all** rows before any batch changes and rejects a stale version,
   wrong account, invalid E.164, reused candidate or attempted change in
   legacy username / active state.
-- §rollback_one§: clears only the simulated shadow on
+- `rollback_one`: clears only the simulated shadow on
   an exact version match, then increments the revision. It never changes
   the legacy login value or status. It is **not** a real DB rollback.
-- §audit§: only aggregate counts and explicit
-  §false§ release/uniqueness flags; it contains no phone, account ID,
+- `audit`: only aggregate counts and explicit
+  `false` release/uniqueness flags; it contains no phone, account ID,
   hash, authorization reference, or raw source row.
 
 Dedicated synthetic tests cover a 3-account roster including an inactive
@@ -79,7 +79,7 @@ all-or-nothing multi-row batches, stale version conflicts, reversible
 shadow changes, and simultaneous threads attempting overlapping claims.
 Phase 7.2 source-to-shadow verification is also cross-checked.
 
-**Crucial limitation:** an in-memory §RLock§ proves
+**Crucial limitation:** an in-memory `RLock` proves
 atomic behavior **only inside one Python process in the test**.
 It cannot prove multi-worker, database transaction, stale read,
 distributed cache, crash or concurrent signup behavior. Even passing
