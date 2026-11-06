@@ -399,6 +399,10 @@ jobs:
         run: |
           python manage.py test apps.accounts.test_phase7_otp_transition --failfast
 
+      - name: Phase 7.8 Django-Redis serialized OTP wire and release guards
+        run: |
+          python manage.py test apps.accounts.test_phase7_cache_wire_contract --failfast
+
       - name: Phase 7.7 experimental Redis OTP isolation and live-auth no-wiring guards
         run: |
           python manage.py test apps.accounts.test_phase7_redis_atomic_contract --failfast
@@ -446,11 +450,17 @@ jobs:
           # Loomera's package __init__ loads its Celery app on import.
           # No Django server, task worker, or real cache is started.
           python -m pip install --disable-pip-version-check \
-            redis==5.2.1 celery==5.4.0 Django==5.2.17
+            redis==5.2.1 django-redis==5.4.0 celery==5.4.0 Django==5.2.17
 
       - name: Verify Redis synthetic EVAL atomic consumption across worker processes
         run: |
           python -m unittest discover -s tests -p 'phase7_redis_atomic_test.py' -v
+
+      - name: Phase 7.8 verify Django-Redis legacy serialized wire and race
+        env:
+          LOOMERA_PHASE78_TEST_REDIS: "1"
+        run: |
+          python -m unittest discover -s tests -p 'phase7_legacy_wire_test.py' -v
 
   browser-smoke:
     name: Chromium keyboard smoke (booking and post-booking fixtures)

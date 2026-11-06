@@ -1,0 +1,21 @@
+{
+  "schema_version": 1,
+  "phase": "7.8",
+  "baseline_main_sha": "23c23cccf0192f39b1746e1dccd4632025cbd3cc",
+  "baseline_phase77_postmerge_ci": "VERIFIED_ALL_FOUR_SUCCESS_42254247483",
+  "scope": "SYNTHETIC_DJANGO_REDIS_5_4_STRING_WIRE_INSPECTION_DB15",
+  "live_django_redis_record_format": "PICKLED_DICT_IN_REDIS_STRING",
+  "phase77_redis_record_format": "HASH_NOT_WIRE_COMPATIBLE",
+  "real_redis_tests": 11,
+  "fast_contract_tests": 4,
+  "legacy_two_worker_read_compare_delete_race": "SYNTHETIC_REPRODUCED_WITH_TWO_TRUE_COMPARISONS",
+  "delete_false_return": "SYNTHETIC_ONE_WORKER_DELETE_FALSE",
+  "realtime_legacy_to_hash_transition": "NOT_PROPOSED",
+  "production_runtime_wired": false,
+  "production_cache_serialization_migrated": false,
+  "legacy_race_fixed": false,
+  "production_cutover_authorized": false,
+  "real_accounts_read": false,
+  "deployment_performed": false,
+  "release_gate": "BLOCKED_IN_FLIGHT_OTP_DRAIN_ATOMIC_LIVE_VERIFICATION_RATE_LIMIT_SESSION_AND_OWNER_SECURITY_REVIEW"
+}
