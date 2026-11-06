@@ -395,6 +395,10 @@ jobs:
         run: |
           python manage.py test apps.accounts.test_phase7_phone_shadow_reservation --failfast
 
+      - name: Phase 7.6 historical OTP and session continuity and drain review
+        run: |
+          python manage.py test apps.accounts.test_phase7_otp_transition --failfast
+
       - name: Phase 2 buyer-brand smoke and email layout reference audit
         run: |
           python manage.py test \
