@@ -138,6 +138,16 @@ class OfflineWeekdayShadowTests(SimpleTestCase):
         after[6]["open_time"] = "09:00"  # closed Friday with stale time
         self.assertFalse(compare(before, after)["structural_parity_verified"])
 
+    def test_cross_day_timezone_conflicts_block_even_if_shadow_matches(self):
+        before, after = synthetic_rows()
+        before[1]["timezone_name"] = "Europe/Berlin"
+        after[1]["timezone_name"] = "Europe/Berlin"
+        report = compare(before, after)
+        self.assertEqual(report["modified_legacy_field_rows"], 0)
+        self.assertEqual(report["source_issues"]["inconsistent_salon_timezones"], 1)
+        self.assertEqual(report["shadow_issues"]["inconsistent_salon_timezones"], 1)
+        self.assertFalse(report["structural_parity_verified"])
+
     def test_missing_days_and_wrong_count_never_pass(self):
         before, after = synthetic_rows()
         before.pop()
