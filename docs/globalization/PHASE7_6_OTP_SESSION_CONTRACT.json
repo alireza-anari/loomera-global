@@ -1,0 +1,138 @@
+{
+  "schema_version": 1,
+  "phase": "7.6",
+  "baseline_main_sha": "62a45aebf4deb9fcd67c7583aaacb57827daff85",
+  "baseline_postmerge_ci": "VERIFIED_ALL_THREE_SUCCESS_42239809779",
+  "description": "Offline OTP/session drain and compatibility evidence only; no runtime auth changes.",
+  "legacy_contract": {
+    "web_signup_purpose": "signup",
+    "web_password_reset_purpose": "password_reset",
+    "api_login_purpose": "app_login",
+    "web_session_key": "user_session",
+    "web_challenge_key": "mobile_number",
+    "web_plain_code_persisted_in_session": true,
+    "web_password_reset_grant_field": "password_reset_authorized_until",
+    "api_challenge_hash_bound_to_purpose_and_legacy_mobile": true,
+    "api_cache_record_resend_hour_rate_namespaces": "historical legacy mobile",
+    "api_user_lookup": "mobile_number AND is_active=True",
+    "canonical_e164_shadow_is_not_auth_identifier": true
+  },
+  "offline_review": {
+    "module": "loomera.globalization.otp_session_transition_audit",
+    "function": "review_legacy_otp_transition",
+    "inputs": "synthetic or independently authorized protected offline metadata; never codes, hashes, sessions, IP, email",
+    "maximum_challenge_records": 100000,
+    "account_scope_source": "strict stored 09... legacy identifiers",
+    "allowed_challenge_namespace": [
+      "web_signup",
+      "web_password_reset",
+      "api_app_login"
+    ],
+    "summary_only": true,
+    "strict_source_ownership_matching": true,
+    "expired_unconsumed_requires_cleanup": true,
+    "active_password_reset_grants_block": true,
+    "inactive_user_challenges_block": true,
+    "api_consumed_without_deletion_proof_blocks": true,
+    "clock_integrity_required": true,
+    "cache_integrity_claim_not_independent_proof": true,
+    "session_store_scope_claim_not_independent_proof": true
+  },
+  "source_anchors": [
+    {
+      "path": "apps/accounts/views.py",
+      "anchor": "USER_SESSION_KEY = \"user_session\""
+    },
+    {
+      "path": "apps/accounts/views.py",
+      "anchor": "OTP_PURPOSE_SIGNUP = \"signup\""
+    },
+    {
+      "path": "apps/accounts/views.py",
+      "anchor": "OTP_PURPOSE_PASSWORD_RESET = \"password_reset\""
+    },
+    {
+      "path": "apps/accounts/views.py",
+      "anchor": "\"active_code\": str(code),"
+    },
+    {
+      "path": "apps/accounts/views.py",
+      "anchor": "\"password_reset_authorized_until\": None,"
+    },
+    {
+      "path": "apps/accounts/views.py",
+      "anchor": "request.session.pop(USER_SESSION_KEY, None)"
+    },
+    {
+      "path": "apps/accounts/views.py",
+      "anchor": "CustomUser.objects.get(mobile_number=user_session[\"mobile_number\"])"
+    },
+    {
+      "path": "apps/accounts/views.py",
+      "anchor": "def _otp_cooldown_cache_key(*, purpose, mobile_number):"
+    },
+    {
+      "path": "apps/api/v1/auth_otp.py",
+      "anchor": "API_AUTH_OTP_PURPOSE_LOGIN = \"app_login\""
+    },
+    {
+      "path": "apps/api/v1/auth_otp.py",
+      "anchor": "def hash_otp_code(*, mobile_number: str, code: str, purpose: str) -> str:"
+    },
+    {
+      "path": "apps/api/v1/auth_otp.py",
+      "anchor": "def otp_record_cache_key(*, purpose: str, mobile_number: str) -> str:"
+    },
+    {
+      "path": "apps/api/v1/auth_otp.py",
+      "anchor": "def otp_resend_cache_key(*, purpose: str, mobile_number: str) -> str:"
+    },
+    {
+      "path": "apps/api/v1/auth_otp.py",
+      "anchor": "def _cache_delete("
+    },
+    {
+      "path": "apps/api/v1/auth_otp.py",
+      "anchor": "def verify_api_otp_code("
+    },
+    {
+      "path": "apps/api/v1/auth_views.py",
+      "anchor": "verify_api_otp_code("
+    },
+    {
+      "path": "apps/api/v1/auth_views.py",
+      "anchor": "mobile_number=mobile_number,"
+    },
+    {
+      "path": "apps/api/v1/auth_views.py",
+      "anchor": "login(_django_request(request), user)"
+    },
+    {
+      "path": "apps/api/v1/auth_serializers.py",
+      "anchor": "def validate_mobile_for_auth("
+    }
+  ],
+  "evidence": {
+    "synthetic_offline_review_tests": "ADDED",
+    "real_web_api_function_behavior_tests": "ADDED_MOCKED",
+    "atomic_multiworker_api_challenge_consume": false,
+    "cache_delete_false_return_proves_consumption": false,
+    "web_plaintext_session_code_migrated": false,
+    "old_session_ttl_coverage_proven": false,
+    "password_reset_grant_atomic_transition_proven": false,
+    "all_external_mobile_clients_inventory_complete": false,
+    "actual_data_owner_authorization": false,
+    "real_otp_snapshot_used": false,
+    "global_phone_carrier_verified": false,
+    "manual_accessibility_approved": false,
+    "production_cutover_approved": false
+  },
+  "authorization": {
+    "canonical_login_cutover": false,
+    "dual_cache_key_bridge": false,
+    "new_sms_delivery_provider": false,
+    "real_account_migration": false,
+    "production_deployment": false
+  },
+  "release_gate": "BLOCKED_REAL_DATA_CONSENT_OTP_ATOMIC_REPLAY_SESSION_BRIDGE_OLD_CLIENTS_SECURITY_SIGNOFF"
+}
