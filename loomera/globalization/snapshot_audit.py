@@ -8,11 +8,11 @@ from __future__ import annotations
 
 from collections import Counter
 
-from apps.salons.management.commands.audit_phase5_timezone_cutover import (
+from loomera.globalization.timezone_rehearsal import (
     BLOCKERS,
     CLASSIFICATIONS,
+    inspect_appointment_wall_clock,
 )
-from loomera.globalization.timezone_rehearsal import inspect_appointment_wall_clock
 
 
 class SnapshotAuditIntegrityError(ValueError):
