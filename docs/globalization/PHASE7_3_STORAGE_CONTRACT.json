@@ -1,0 +1,118 @@
+{
+  "schema_version": 1,
+  "phase": "7.3",
+  "baseline_main_sha": "fefa8b357da914b198512a1991aaab171fe95848",
+  "baseline_post_merge_ci": "VERIFIED_SUCCESS_ALL_THREE_42221139759",
+  "mode": "PROPOSAL_AND_OFFLINE_SIMULATION_ONLY",
+  "current_legacy_storage": {
+    "model": "apps.accounts.models.CustomUser",
+    "field": "mobile_number",
+    "max_length": 11,
+    "username_field": true,
+    "unique": true,
+    "write_behavior": "UNCHANGED",
+    "otp_key_behavior": "UNCHANGED"
+  },
+  "storage_proposal": {
+    "canonical_field_name": "canonical_mobile_e164",
+    "canonical_field_type": "CharField",
+    "canonical_field_max_length": 16,
+    "canonical_format": "E.164 plus sign followed by 8-15 ASCII digits; exact candidate country validity pending",
+    "nullable_until_cutover": true,
+    "nulls_have_no_identity_claim": true,
+    "unique_across_inactive": true,
+    "unique_across_active": true,
+    "deletion_placeholders": "REQUIRE_OWNER_POLICY_NO_AUTOMATIC_REUSE_OR_REKEY",
+    "unique_index_scope": "UNIQUE for every non-null canonical value, irrespective of is_active or roles",
+    "shadow_row_version_field": "phone_identity_revision",
+    "shadow_row_version_type": "nonnegative integer",
+    "existing_mobile_number_field": "must remain unchanged throughout expansion",
+    "schema_status": "NO_FIELD_OR_INDEX_ADDED"
+  },
+  "write_protocol": {
+    "expected_row_version_required": true,
+    "transactional_all_or_nothing": true,
+    "database_unique_index_required": true,
+    "scope": "FUTURE_ONLY_NOT_WIRED",
+    "operation_types": [
+      "validate_source",
+      "claim_shadow",
+      "rollback_shadow_during_pre_cutover_rehearsal"
+    ],
+    "source_row_identity": "immutable account pk, literal legacy 09 number, is_active; no alias fallback",
+    "preconditions": [
+      "source rows are independently authorized",
+      "no duplicate account IDs or canonical targets",
+      "canonical proposal matches strict source candidate",
+      "current row version matches request",
+      "active status and legacy mobile unchanged",
+      "database unique index covers all non-null canonical identities"
+    ],
+    "atomic_db_requirement": "select_for_update row lock or equivalent CAS and DB unique constraint within one transaction; catch conflicts and fail closed",
+    "conflict_behavior": "return constant reason, no account takeover, partial batch or implicit retry",
+    "rollback_behavior": "preserve legacy field and active state, clear only shadow when version matches, increment revision; actual database backup and retention approved separately",
+    "batch_strategy": "bounded deterministic id order, one ACID transaction per approved chunk; abort whole chunk on any stale/collision",
+    "idempotency": "repeated old-version claim must not write; same claim at latest version reports already claimed",
+    "no_live_executable_implementation": true
+  },
+  "offline_simulation": {
+    "module": "loomera.globalization.phone_shadow_reservation",
+    "class": "OfflinePhoneShadowReservation",
+    "scope": "single-process in-memory lock protecting synthetic fixtures; not database concurrency proof",
+    "report": "counts, statuses and constant reason codes only",
+    "database_access": false,
+    "file_writes": false,
+    "auth_or_sms_hooks": false
+  },
+  "legacy_source_anchors": [
+    {
+      "path": "apps/accounts/models.py",
+      "anchor": "max_length=11, unique=True"
+    },
+    {
+      "path": "apps/accounts/models.py",
+      "anchor": "USERNAME_FIELD = \"mobile_number\""
+    },
+    {
+      "path": "apps/accounts/forms.py",
+      "anchor": "not existing_user.is_active"
+    },
+    {
+      "path": "apps/accounts/views.py",
+      "anchor": "def _make_deleted_mobile(user):"
+    },
+    {
+      "path": "apps/api/v1/auth_otp.py",
+      "anchor": "def otp_record_cache_key("
+    },
+    {
+      "path": "apps/api/v1/auth_serializers.py",
+      "anchor": "def validate_mobile_for_auth("
+    },
+    {
+      "path": "apps/accounts/services/sms.py",
+      "anchor": "def format_smsir_mobile("
+    }
+  ],
+  "stop_conditions": [
+    "unknown or stale account row version",
+    "changed legacy username, activation state or assigned roles",
+    "invalid canonical E.164 candidate or ambiguous foreign national input",
+    "any canonical collision including inactive and deleted identities",
+    "duplicate IDs, invalid stored identities or deleted placeholders",
+    "missing OTP key/session replay continuity and rate-limit proof",
+    "database unique index/transaction proof absent",
+    "unreviewed dynamic clients and security acceptance absent"
+  ],
+  "evidence": {
+    "offline_simulated_single_process_race_tests": true,
+    "database_unique_index_applied": false,
+    "multi_process_race_verified": false,
+    "real_data_collision_evidence": false,
+    "authorized_phone_snapshot_received": false,
+    "otp_session_bridge_verified": false,
+    "schema_migration_approved": false,
+    "production_cutover_authorized": false,
+    "manual_accessibility_accepted": false
+  }
+}

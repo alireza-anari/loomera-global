@@ -391,6 +391,10 @@ jobs:
           python manage.py test apps.accounts.test_phase7_auth_transition --failfast
           python manage.py audit_phase7_phone_shadow --help > /dev/null
 
+      - name: Phase 7.3 atomic phone shadow reservation and CAS concurrency
+        run: |
+          python manage.py test apps.accounts.test_phase7_phone_shadow_reservation --failfast
+
       - name: Phase 2 buyer-brand smoke and email layout reference audit
         run: |
           python manage.py test \

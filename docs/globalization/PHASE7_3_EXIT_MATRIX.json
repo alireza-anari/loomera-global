@@ -1,0 +1,18 @@
+{
+  "schema_version": 1,
+  "phase": "7.3",
+  "baseline_main_sha": "fefa8b357da914b198512a1991aaab171fe95848",
+  "baseline_post_merge_ci": "VERIFIED_ALL_THREE_42221139759",
+  "legacy_username": "UNCHANGED_MAX11",
+  "canonical_shadow": "PROPOSED_NULLABLE_CHAR16_NOT_MIGRATED",
+  "versioned_writes": "IN_MEMORY_CAS_SIMULATION_ONLY",
+  "uniqueness": "PROPOSED_DATABASE_UNIQUE_FOR_ALL_NON_NULL_CANONICAL",
+  "rollback": "PURE_SIMULATION_ONLY",
+  "multi_process_database_races": "NOT_PROVEN",
+  "database_schema_migrations": "NONE",
+  "otp_login_sessions": "UNCHANGED",
+  "account_changes": "NONE",
+  "real_data": "NOT_ACCESSED",
+  "deployment": "NOT_PERFORMED",
+  "release_gate": "BLOCKED_DATA_APPROVAL_CONCURRENCY_DB_INDEX_OTP_BRIDGE_MANUAL_ACCEPTANCE"
+}
