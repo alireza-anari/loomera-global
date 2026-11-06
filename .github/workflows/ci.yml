@@ -381,6 +381,11 @@ jobs:
           python manage.py test apps.salons.test_phase6_weekday_cutover --failfast
           python manage.py audit_weekday_cutover_files --help > /dev/null
 
+      - name: Phase 7.1 E.164 candidate identity and offline collision preflight
+        run: |
+          python manage.py test apps.accounts.test_phase7_phone_foundation --failfast
+          python manage.py audit_phase7_phone_identity --help > /dev/null
+
       - name: Phase 2 buyer-brand smoke and email layout reference audit
         run: |
           python manage.py test \
