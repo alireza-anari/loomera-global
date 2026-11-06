@@ -17,5 +17,7 @@
   "production_cutover_authorized": false,
   "real_accounts_read": false,
   "deployment_performed": false,
-  "release_gate": "BLOCKED_IN_FLIGHT_OTP_DRAIN_ATOMIC_LIVE_VERIFICATION_RATE_LIMIT_SESSION_AND_OWNER_SECURITY_REVIEW"
+  "release_gate": "BLOCKED_IN_FLIGHT_OTP_DRAIN_ATOMIC_LIVE_VERIFICATION_RATE_LIMIT_SESSION_AND_OWNER_SECURITY_REVIEW",
+  "legacy_hmac_digest": "DJANGO_SALTED_HMAC_DEFAULT_SHA1_40_HEX",
+  "phase77_test_digest": "SYNTHETIC_SHA256_64_HEX"
 }

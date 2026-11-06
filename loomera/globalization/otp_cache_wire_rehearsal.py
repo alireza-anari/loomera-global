@@ -14,7 +14,8 @@ from typing import Any
 PREFIX = "loomera:phase78:synthetic-only:"
 _FIXTURE = re.compile(r"[0-9a-f]{32}\Z")
 _LOGICAL = re.compile(r"record:app_login:09[0-9]{9}\Z")
-_HASH = re.compile(r"[0-9a-f]{64}\Z")
+# Django salted_hmac defaults to SHA-1 (40 lowercase hex), not Phase 7.7 SHA-256.
+_HASH = re.compile(r"[0-9a-f]{40}\Z")
 
 
 @dataclass(frozen=True, slots=True)

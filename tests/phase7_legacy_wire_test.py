@@ -91,6 +91,7 @@ class Phase78DjangoRedisWireTests(unittest.TestCase):
         self.assertEqual(self.client.type(key), b"string")
         self.assertGreater(self.client.pttl(key), 0)
         self.assertEqual(self.cache.get(LOGICAL), synthetic_record())
+        self.assertEqual(len(self.cache.get(LOGICAL)["code_hash"]), 40)
         self.assertEqual(self._inspect().status, "legacy_string_pending_drain")
         self.assertFalse(self._inspect().hash_compatible)
         with self.assertRaises(redis.exceptions.ResponseError):

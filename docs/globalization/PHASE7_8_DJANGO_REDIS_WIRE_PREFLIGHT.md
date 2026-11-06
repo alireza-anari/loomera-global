@@ -11,7 +11,11 @@ The live API OTP helper builds a `dict` with `purpose`, `mobile_number`,
 verification flag and delivery metadata. Django-Redis 5.4 serializes that
 record into a **Redis STRING** under a versioned/prefixed physical cache key.
 Phase 7.7 EVAL expects a **Redis HASH** with a different key, field set,
-digest and expiry. Running the Phase 7.7 script directly on a legacy STRING
+digest and expiry. The current Django `salted_hmac` call defaults to
+SHA-1 (40 hex characters), while the Phase 7.7 test uses an independent
+synthetic SHA-256 digest (64 hex characters). This is a further reason
+not to reinterpret legacy OTP records as native HASH challenges.
+Running the Phase 7.7 script directly on a legacy STRING
 raises WRONGTYPE; neither its test-only adapter nor an unreviewed alias can
 safely consume the legacy record.
 
