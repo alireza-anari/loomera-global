@@ -281,13 +281,14 @@ class RedisAtomicOtpRehearsalTests(unittest.TestCase):
             True,
         ):
             class ScriptResponse:
-                connection_pool = self.client.connection_pool
+                def __init__(self, real):
+                    self.connection_pool = real.connection_pool
 
                 def eval(self, *args):
                     return fake
 
             v = SyntheticRedisOtpRehearsal(
-                ScriptResponse(), key=self.key,
+                ScriptResponse(self.client), key=self.key,
             ).consume(
                 purpose=PURPOSE, legacy_mobile=MOBILE,
                 code_digest=digest(), now_ts=1050,
@@ -297,13 +298,14 @@ class RedisAtomicOtpRehearsalTests(unittest.TestCase):
 
     def test_unknown_network_failure_is_always_fail_closed(self):
         class NetworkFailure:
-            connection_pool = self.client.connection_pool
+            def __init__(self, real):
+                self.connection_pool = real.connection_pool
 
             def eval(self, *args):
                 raise redis.exceptions.ConnectionError("synthetic unavailable")
 
         d = SyntheticRedisOtpRehearsal(
-            NetworkFailure(), key=self.key,
+            NetworkFailure(self.client), key=self.key,
         ).consume(
             purpose=PURPOSE, legacy_mobile=MOBILE,
             code_digest=digest(), now_ts=1050,
