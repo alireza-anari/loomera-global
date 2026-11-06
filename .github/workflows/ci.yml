@@ -386,6 +386,11 @@ jobs:
           python manage.py test apps.accounts.test_phase7_phone_foundation --failfast
           python manage.py audit_phase7_phone_identity --help > /dev/null
 
+      - name: Phase 7.2 web API OTP continuity and offline identity shadow
+        run: |
+          python manage.py test apps.accounts.test_phase7_auth_transition --failfast
+          python manage.py audit_phase7_phone_shadow --help > /dev/null
+
       - name: Phase 2 buyer-brand smoke and email layout reference audit
         run: |
           python manage.py test \
