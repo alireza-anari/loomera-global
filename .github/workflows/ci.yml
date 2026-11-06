@@ -354,6 +354,10 @@ jobs:
         run: |
           python manage.py test apps.salons.test_phase5_calendar_timezone --failfast
 
+      - name: Phase 5.2 read-only timezone cutover risk and DST classifier
+        run: |
+          python manage.py test apps.salons.test_phase5_timezone_cutover --failfast
+
       - name: Phase 2 buyer-brand smoke and email layout reference audit
         run: |
           python manage.py test \
@@ -402,3 +406,60 @@ jobs:
           path: artifacts/phase3-browser/
           if-no-files-found: ignore
           retention-days: 7
+
+  postgis-phase5-rehearsal:
+    name: PostGIS Phase 5.2 migration rehearsal (synthetic data)
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    services:
+      postgis:
+        image: postgis/postgis:16-3.4
+        env:
+          POSTGRES_DB: loomera_phase5
+          POSTGRES_USER: loomera_ci
+          POSTGRES_PASSWORD: loomera_ci_only
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U loomera_ci -d loomera_phase5"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 10
+    env:
+      SECRET_KEY: ci-only-secret-key-not-for-runtime
+      DATABASE_URL: postgis://loomera_ci:loomera_ci_only@127.0.0.1:5432/loomera_phase5
+      DEBUG: "False"
+      ALLOWED_HOSTS: localhost,127.0.0.1
+      CSRF_TRUSTED_ORIGINS: http://localhost,http://127.0.0.1
+      ONLINE_PAYMENT_ENABLED: "False"
+      MESSAGING_ENABLED: "False"
+      MESSAGING_OUTBOUND_ENABLED: "False"
+      BALE_BOT_ENABLED: "False"
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Configure Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+          cache: pip
+
+      - name: Install PostGIS Python/GDAL dependencies
+        run: |
+          if [ -f /etc/apt/apt-mirrors.txt ]; then
+            printf '%s\n' 'https://archive.ubuntu.com/ubuntu/' | sudo tee /etc/apt/apt-mirrors.txt
+          fi
+          sudo apt-get update
+          sudo apt-get install --yes gdal-bin libgdal-dev libgeos-dev libpq-dev
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Verify PostGIS environment
+        run: |
+          python manage.py check
+          python manage.py makemigrations --check --dry-run
+
+      - name: Rehearse spatial migration with synthetic appointments and rollback
+        run: |
+          python manage.py test apps.salons.test_phase5_postgis_migration --failfast --noinput

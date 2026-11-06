@@ -1,0 +1,15 @@
+{
+  "schema_version": 1,
+  "phase": "5.2",
+  "target_base_sha": "45ac12a1dcd1a7c40aef9f3001c2e5ca5c260f74",
+  "execution_scope": "ephemeral_postgis_synthetic_only",
+  "postgis_synthetic_ci": "PENDING_CI",
+  "read_only_cutover_audit_unit_tests": "PENDING_CI",
+  "real_data_audit": "BLOCKED_NO_AUTHORIZED_DATASET",
+  "representative_postgis_snapshot_rehearsal": "BLOCKED_NO_AUTHORIZED_DATASET",
+  "production_migration": "NOT_PERFORMED",
+  "timezone_booking_cutover": "NOT_PERFORMED",
+  "legacy_weekday_migration": "NOT_PERFORMED",
+  "manual_acceptance": "BLOCKED_MANUAL_ACCEPTANCE",
+  "release_gate": "BLOCKED_REAL_DATA_AND_MANUAL_ACCEPTANCE"
+}
