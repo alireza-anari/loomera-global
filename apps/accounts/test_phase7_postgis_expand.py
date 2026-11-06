@@ -345,6 +345,19 @@ class Phase75ReversiblePhoneShadowMigration(TransactionTestCase):
             sum(row[3] is None and row[4] == 0 for row in self._shadow_snapshot()),
             3,
         )
+        # AddField(default=0) backfills existing rows, but migration
+        # SchemaEditor does not promise a persistent SQL DEFAULT for raw
+        # inserts. A future writer must supply revision explicitly.
+        with connection.cursor() as cursor:
+            cursor.execute(
+                """SELECT column_default
+                     FROM information_schema.columns
+                    WHERE table_schema = 'public'
+                      AND table_name = %s
+                      AND column_name = 'phone_identity_revision'""",
+                [TABLE],
+            )
+            self.assertIsNone(cursor.fetchone()[0])
         with connection.cursor() as cursor:
             cursor.execute(
                 "SELECT COUNT(*) FROM django_migrations WHERE app = %s",
@@ -421,9 +434,10 @@ class Phase75ReversiblePhoneShadowMigration(TransactionTestCase):
         self._expand()
         with connection.cursor() as cursor:
             cursor.execute(f'''
-                INSERT INTO "{TABLE}" (account_id, mobile_number, is_active)
-                VALUES (%s, %s, %s)
-            ''', [404, "09123456782", False])
+                INSERT INTO "{TABLE}"
+                    (account_id, mobile_number, is_active, phone_identity_revision)
+                VALUES (%s, %s, %s, %s)
+            ''', [404, "09123456782", False, 0])
         before = self._shadow_snapshot()
         with self.assertRaisesRegex(
             OfflineRehearsalBlocked, "^incomplete_fixture_scope$"
