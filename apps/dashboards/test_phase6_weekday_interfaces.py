@@ -77,7 +77,11 @@ class Phase6DashboardWeekdayInterfaces(SimpleTestCase):
         handler = inspect.unwrap(views.get_calendar_data)
         request = RequestFactory().get("/dashboards/api/calendar-data/salon/17/",
                                        {"date": "2026-11-07;DROP"})
-        with patch.object(views.SalonOpeningHours.objects, "filter") as lookup:
+        with (
+            patch.object(views, "_redirect_to_required_onboarding",
+                         return_value=None),
+            patch.object(views.SalonOpeningHours.objects, "filter") as lookup,
+        ):
             response = handler(request, salon_id=17)
         self.assertEqual(response.status_code, 400)
         self.assertIn("error", json.loads(response.content))
