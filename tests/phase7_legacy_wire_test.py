@@ -151,7 +151,7 @@ class Phase78DjangoRedisWireTests(unittest.TestCase):
         self.assertEqual(evidence.status, "backend_unavailable")
         self.assertFalse(evidence.authenticated)
 
-    def test_two_workers_can_both_compare_before_one_delete(self):
+    def test_two_independent_cache_clients_can_compare_before_one_delete(self):
         """Demonstrates legacy GET/compare/DELETE race; never logs anyone in."""
         self._write()
         barrier = Barrier(2, timeout=20)
@@ -200,6 +200,15 @@ class Phase78DjangoRedisWireTests(unittest.TestCase):
         with patch.dict(os.environ, {"LOOMERA_PHASE78_TEST_REDIS": "0"}):
             with self.assertRaises(RuntimeError):
                 self._inspect()
+        remote_cache = RedisCache("redis://example.invalid:6379/15", {
+            "KEY_PREFIX": PREFIX + self.fixture_id, "VERSION": 1,
+            "OPTIONS": {"CLIENT_CLASS": "django_redis.client.DefaultClient"},
+        })
+        with self.assertRaises(RuntimeError):
+            inspect_synthetic_legacy_wire(
+                remote_cache, self.client,
+                fixture_id=self.fixture_id, logical_key=LOGICAL,
+            )
         remote = redis.Redis.from_url("redis://127.0.0.1:6379/14")
         with self.assertRaises(RuntimeError):
             inspect_synthetic_legacy_wire(

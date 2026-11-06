@@ -31,6 +31,7 @@ class Phase78WireContractTests(SimpleTestCase):
         source = inspect.getsource(wire)
         self.assertIn('LOOMERA_PHASE78_TEST_REDIS', source)
         self.assertIn("db != 15", source)
+        self.assertIn('getattr(cache, "_server", None)', source)
         self.assertIn("cache.get(logical_key)", source)
         for forbidden in (
             "cache.set(", "cache.delete(", "redis_client.set(",

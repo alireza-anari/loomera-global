@@ -39,6 +39,13 @@ def _verify_isolation(cache: Any, redis_client: Any, fixture_id: str, logical_ke
     prefix = PREFIX + fixture_id
     if getattr(cache, "key_prefix", None) != prefix or getattr(cache, "version", None) != 1:
         raise RuntimeError("unverifiable isolated Django cache prefix")
+    # Checking only the independent raw client is insufficient: a supplied
+    # Django-Redis cache object could otherwise point at a remote backend.
+    server = getattr(cache, "_server", None)
+    if type(server) is not str or server not in {
+        "redis://127.0.0.1:6379/15", "redis://localhost:6379/15",
+    }:
+        raise RuntimeError("Django-Redis fixture backend must be local DB15")
     try:
         conn = redis_client.connection_pool.connection_kwargs
         host, port, db = conn.get("host"), conn.get("port", 6379), conn.get("db")

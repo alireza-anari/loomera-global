@@ -33,7 +33,8 @@ was authenticated twice.
 `loomera/globalization/otp_cache_wire_rehearsal.py` only inspects
 the caller-created Django-Redis synthetic fixture. It validates the
 explicit environment grant `LOOMERA_PHASE78_TEST_REDIS=1`, localhost
-port 6379, DB 15, a random UUID-shaped fixture identifier, a dedicated
+port 6379, DB 15 for both the raw client and Django-Redis backend,
+a random UUID-shaped fixture identifier, a dedicated
 `loomera:phase78:synthetic-only:` key prefix, version 1 and the
 legacy logical record key pattern. It reads the raw Redis type and TTL,
 then Django-Redis's decoded payload only if the stored value is a STRING;
