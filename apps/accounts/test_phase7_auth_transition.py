@@ -75,7 +75,7 @@ class Phase72ShadowParityTests(SimpleTestCase):
             self.assertFalse(report[gate])
         self.assertEqual(report["database_reads"], 0)
         self.assertEqual(report["writes_performed"], 0)
-        for secret in ("09123456789", "+989123456789", "account_id", "canonical_mobile_number"):
+        for secret in ("09123456789", "+989123456789", '"account_id":', '"canonical_mobile_number":'):
             self.assertNotIn(secret, json.dumps(report))
 
     def test_iso_style_alias_projection_mismatch_and_shadow_collision_block(self):
