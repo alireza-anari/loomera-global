@@ -29,6 +29,10 @@ real account tables.
 3. `AddField` adds a nullable unique `canonical_mobile_e164` (16 chars,
    including the leading `+`), followed by
    `phone_identity_revision` (positive integer, initially zero).
+   **Django's field default backfills existing rows, but is not a
+   permanent PostgreSQL DEFAULT here.** Direct SQL inserts after expansion
+   must explicitly supply revision `0`; future ORM and other writers need
+   an independently reviewed common revision-initialization contract.
    A reversible SQL CHECK constrains ASCII E.164 *syntax*.
 4. A **complete preflight** rejects any missing/extra account, malformed
    or non-ASCII legacy stored identifier or candidate collision before
