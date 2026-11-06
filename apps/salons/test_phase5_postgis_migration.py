@@ -182,9 +182,15 @@ class Phase5PostGISMigrationRehearsal(TransactionTestCase):
             self.assertNotIn("Ephemeral PostGIS salon", audit_output.getvalue())
             self.assertNotIn("09128887711", audit_output.getvalue())
             for query in read_log:
+                sql = query["sql"].lstrip().upper()
+                # Django's PostgreSQL iterator uses server-side cursors:
+                # DECLARE .. FOR SELECT, FETCH and CLOSE are read-only.
                 self.assertTrue(
-                    query["sql"].lstrip().upper().startswith("SELECT"),
-                    query["sql"][:100],
+                    sql.startswith("SELECT")
+                    or (sql.startswith("DECLARE ") and " FOR SELECT " in sql)
+                    or sql.startswith("FETCH ")
+                    or sql.startswith("CLOSE "),
+                    query["sql"][:140],
                 )
         finally:
             # Keep the ephemeral test DB on the latest migration even if an
