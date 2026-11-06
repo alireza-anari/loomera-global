@@ -216,6 +216,7 @@ class Phase74PostGISPhoneShadowRehearsal(TransactionTestCase):
                     self._claim(
                         101, candidate,
                         legacy="09123456789", active=True,
+                        version=self._snapshot()[0][4],
                     ), "applied",
                 )
                 self.assertEqual(
