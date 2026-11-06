@@ -395,5 +395,9 @@ class Phase74PostGISPhoneShadowRehearsal(TransactionTestCase):
         # The test-only SQL is constrained to the dedicated fixture table.
         from inspect import getsource
         module_text = getsource(type(self))
-        self.assertNotIn("UPDATE A_", module_text)
-        self.assertNotIn("ALTER TABLE A_", module_text)
+        protected_table = CustomUser._meta.db_table.upper()
+        for verb in ("UPDATE", "ALTER TABLE", "DELETE FROM", "INSERT INTO"):
+            self.assertNotIn(
+                verb + ' "' + protected_table + '"',
+                module_text.upper(),
+            )
