@@ -23,7 +23,7 @@ from .jalali_utils import (
     relative_jalali_label,
     to_persian_digits,
 )
-from .layout import WEEKDAY_TO_OPENING_DAY
+from loomera.globalization.weekdays import legacy_opening_day_from_date
 from apps.main.models import DisputeCase
 
 TAB_DEFINITIONS = [
@@ -978,7 +978,7 @@ def _build_schedule_board(salon, filtered_qs, focus_date, calendar_stylists=None
         if busiest_column is None or column["count"] > busiest_column["count"]:
             busiest_column = column
 
-    day_of_week = WEEKDAY_TO_OPENING_DAY[focus_date.weekday()]
+    day_of_week = legacy_opening_day_from_date(focus_date)
     opening_hours = SalonOpeningHours.objects.filter(
         salon=salon, day_of_week=day_of_week
     ).first()

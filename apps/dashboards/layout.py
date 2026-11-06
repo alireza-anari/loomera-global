@@ -21,6 +21,7 @@ from apps.salons.models import (
 from apps.services.models import Services
 from apps.accounts.models import Stylist
 from apps.accounts.services.workspaces import available_workspaces
+from loomera.globalization.weekdays import legacy_opening_day_from_date
 from apps.stylists.models import JobDetails, StylistSchedule, StylistTimeOff
 
 from .jalali_utils import (
@@ -1249,7 +1250,7 @@ def get_today_hours_label(salon):
     if not opening_hours:
         return "ساعت کاری ثبت نشده"
 
-    today_opening_day = WEEKDAY_TO_OPENING_DAY[timezone.localdate().weekday()]
+    today_opening_day = legacy_opening_day_from_date(timezone.localdate())
     today_hours = next(
         (item for item in opening_hours if item.day_of_week == today_opening_day),
         None,

@@ -15,6 +15,7 @@ from apps.services.models import ServicePrice, Services
 from apps.stylists.models import StaffLeaveRequest, StylistSchedule
 
 from .models import OrderDetail
+from loomera.globalization.weekdays import legacy_opening_day_from_date
 
 BLOCKING_STATUSES = ["pending", "confirmed", "paid", "completed"]
 DEFAULT_SLOT_STEP = 15
@@ -422,7 +423,7 @@ def get_price_for_stylist_service(stylist: Stylist, service: Services) -> int:
 
 def _salon_day_key(date_value: date) -> int:
     # SalonOpeningHours uses 1=Saturday ... 7=Friday; Python weekday is Monday=0.
-    return ((date_value.weekday() + 2) % 7) + 1
+    return legacy_opening_day_from_date(date_value)
 
 
 def _get_salon_opening_windows(
