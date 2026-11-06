@@ -316,7 +316,7 @@ class Phase76ExistingApiOtpTests(SimpleTestCase):
         cache = FakeOtpCache()
         with (patch.object(auth_otp, "cache", cache),
               patch.object(auth_otp, "generate_numeric_otp", return_value="123456"),
-              patch.object(auth_otp, "api_otp_now_ts", return_value=1000)) as time_mock:
+              patch.object(auth_otp, "api_otp_now_ts", return_value=1000) as time_mock):
             auth_otp.create_api_otp_request(mobile_number=MOBILE)
             time_mock.return_value = 1121
             with self.assertRaises(auth_otp.ApiOtpExpired):
@@ -357,10 +357,55 @@ class Phase76ExistingApiOtpTests(SimpleTestCase):
             self.assertEqual(exc.exception.scope, "mobile_resend")
 
 
+class Phase76ExistingApiViewTests(SimpleTestCase):
+    def _post(self, *, mobile=MOBILE, code="123456", user=None, failure=None):
+        request = SimpleNamespace()
+        with (patch.object(auth_views.ApiOtpVerifyAPIView, "_load_payload",
+                           return_value={"mobile_number": mobile, "code": code}),
+              patch.object(auth_views, "verify_api_otp_code",
+                           side_effect=failure) as verify,
+              patch.object(auth_views.ApiOtpVerifyAPIView,
+                           "_get_active_user_by_mobile", return_value=user) as lookup,
+              patch.object(auth_views, "login") as login,
+              patch.object(auth_views, "serialize_auth_user",
+                           return_value={"id": 101})):
+            result = auth_views.ApiOtpVerifyAPIView().post(request)
+        return result, verify, lookup, login
+
+    def test_success_finds_exact_legacy_active_account_only_after_verify(self):
+        user = SimpleNamespace(pk=101, mobile_number=MOBILE, is_active=True)
+        response, verify, lookup, login = self._post(mobile=E164, user=user)
+        self.assertEqual(response.status_code, 200)
+        verify.assert_called_once_with(mobile_number=MOBILE, code="123456")
+        lookup.assert_called_once_with(MOBILE)
+        self.assertEqual(login.call_args.args[1], user)
+        self.assertEqual(response.data["data"]["user"]["id"], 101)
+
+    def test_missing_account_after_valid_code_never_establishes_session(self):
+        response, verify, lookup, login = self._post(user=None)
+        self.assertEqual(response.status_code, 404)
+        verify.assert_called_once()
+        lookup.assert_called_once_with(MOBILE)
+        login.assert_not_called()
+
+    def test_cache_delete_failure_blocks_lookup_and_session_creation(self):
+        response, verify, lookup, login = self._post(
+            user=SimpleNamespace(pk=101),
+            failure=auth_otp.ApiOtpRateLimitUnavailable(),
+        )
+        self.assertEqual(response.status_code, 503)
+        verify.assert_called_once()
+        lookup.assert_not_called()
+        login.assert_not_called()
+
+
 class Phase76ExistingWebSessionTests(SimpleTestCase):
     def _request(self, session, code):
+        class MemorySession(dict):
+            modified = False
+
         request = RequestFactory().post("/accounts/verify/", {"active_code": code})
-        request.session = {views.USER_SESSION_KEY: session}
+        request.session = MemorySession({views.USER_SESSION_KEY: session})
         request.user = SimpleNamespace(is_authenticated=False)
         return request
 
