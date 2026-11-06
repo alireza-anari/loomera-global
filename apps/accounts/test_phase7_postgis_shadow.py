@@ -57,7 +57,16 @@ class Phase74PostGISPhoneShadowRehearsal(TransactionTestCase):
                     CONSTRAINT phase74_e164_syntax
                         CHECK (
                             canonical_mobile_e164 IS NULL
-                            OR canonical_mobile_e164 ~ '^[+][1-9][0-9]{7,14}$'
+                            OR (
+                                char_length(canonical_mobile_e164) BETWEEN 9 AND 16
+                                AND left(canonical_mobile_e164, 1) = '+'
+                                AND substring(canonical_mobile_e164, 2, 1)
+                                    BETWEEN '1' AND '9'
+                                AND translate(
+                                    substring(canonical_mobile_e164 FROM 2),
+                                    '0123456789', ''
+                                ) = ''
+                            )
                         )
                 )
             ''')
@@ -197,6 +206,27 @@ class Phase74PostGISPhoneShadowRehearsal(TransactionTestCase):
         self.assertEqual(after[1][3], "+989123456780")
         self.assertEqual(after[1][4], 1)
         self.assertFalse(after[1][2])
+
+    def test_database_e164_syntax_contract_accepts_valid_ir_and_foreign_shapes(self):
+        # Direct DB predicate proof, independent of any Python normalizer.
+        before = self._snapshot()
+        for candidate in ("+989123456789", "+4915123456789", "+447911123456"):
+            with self.subTest(candidate_length=len(candidate)):
+                self.assertEqual(
+                    self._claim(
+                        101, candidate,
+                        legacy="09123456789", active=True,
+                    ), "applied",
+                )
+                self.assertEqual(
+                    self._rollback(
+                        101, legacy="09123456789", active=True,
+                        version=self._snapshot()[0][4],
+                    ), "applied",
+                )
+        after = self._snapshot()
+        self.assertEqual(after[0][1:4], before[0][1:4])
+        self.assertEqual(after[0][4], 6)
 
     def test_constraint_rejects_invalid_syntax_and_negative_revision(self):
         initial = self._snapshot()
