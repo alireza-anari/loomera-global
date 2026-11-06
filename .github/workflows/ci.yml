@@ -399,6 +399,10 @@ jobs:
         run: |
           python manage.py test apps.accounts.test_phase7_otp_transition --failfast
 
+      - name: Phase 7.7 experimental Redis OTP isolation and live-auth no-wiring guards
+        run: |
+          python manage.py test apps.accounts.test_phase7_redis_atomic_contract --failfast
+
       - name: Phase 2 buyer-brand smoke and email layout reference audit
         run: |
           python manage.py test \
@@ -409,6 +413,41 @@ jobs:
           python manage.py test \
             apps.main.test_phase3_locale_shell \
             --failfast
+
+
+  redis-phase7-7-rehearsal:
+    name: Redis Phase 7.7 atomic OTP consume (synthetic isolated)
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    services:
+      redis:
+        image: redis:7.4-alpine
+        ports:
+          - 6379:6379
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 12
+    env:
+      LOOMERA_PHASE77_TEST_REDIS: "1"
+      PYTHONDONTWRITEBYTECODE: "1"
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Configure Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: Install isolated Redis client only
+        run: |
+          python -m pip install --disable-pip-version-check redis==5.2.1
+
+      - name: Verify Redis synthetic EVAL atomic consumption across worker processes
+        run: |
+          python -m unittest discover -s tests -p 'phase7_redis_atomic_test.py' -v
 
   browser-smoke:
     name: Chromium keyboard smoke (booking and post-booking fixtures)
