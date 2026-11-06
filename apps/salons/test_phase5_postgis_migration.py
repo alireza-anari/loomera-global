@@ -196,3 +196,93 @@ class Phase5PostGISMigrationRehearsal(TransactionTestCase):
             # Keep the ephemeral test DB on the latest migration even if an
             # assertion above fails; never hide the original failure.
             MigrationExecutor(connection).migrate([NEW])
+
+    def test_authorized_snapshot_audit_is_consistent_and_read_only_on_postgis(self):
+        from unittest.mock import patch
+
+        from apps.salons.management.commands.audit_phase5_snapshot import (
+            SNAPSHOT_MARKER,
+            SNAPSHOT_MARKER_VALUE,
+        )
+
+        salon, order, detail, _ = self._fixture()
+        before = self._snapshot(detail.pk)
+        before_reminder = Order.objects.get(pk=order.pk).reminder_due_at
+
+        def run(*, limit=10, fail_on_risk=False):
+            output = StringIO()
+            with patch.dict(
+                "os.environ", {SNAPSHOT_MARKER: SNAPSHOT_MARKER_VALUE}
+            ):
+                with CaptureQueriesContext(connection) as statements:
+                    arguments = [
+                        "audit_phase5_snapshot",
+                        "--json",
+                        "--acknowledge-isolated-sanitized-copy",
+                        "--max-appointments", str(limit),
+                        "--batch-size", "1",
+                    ]
+                    if fail_on_risk:
+                        arguments.append("--fail-on-incomplete-or-risk")
+                    call_command(*arguments, stdout=output)
+            sqls = [query["sql"].lstrip().upper() for query in statements]
+            self.assertTrue(any(
+                "SET TRANSACTION ISOLATION LEVEL REPEATABLE READ READ ONLY" in s
+                for s in sqls
+            ))
+            for sql in sqls:
+                self.assertFalse(
+                    sql.startswith(("INSERT", "UPDATE", "DELETE", "ALTER", "DROP")),
+                    sql[:140],
+                )
+            return json.loads(output.getvalue())
+
+        clean = run()
+        self.assertTrue(clean["scan_complete"])
+        self.assertEqual(clean["total_appointments_in_snapshot"], 1)
+        self.assertEqual(clean["appointments_examined"], 1)
+        self.assertEqual(clean["classifications"]["legacy_tehran"], 1)
+        self.assertEqual(clean["blocking_appointment_count"], 0)
+        self.assertEqual(clean["transaction_isolation"], "repeatable_read_read_only")
+        self.assertTrue(clean["human_review_required"])
+        self.assertFalse(clean["cutover_authorized"])
+        self.assertFalse(clean["production_migration_authorized"])
+        self.assertEqual(clean["writes_performed"], 0)
+        self.assertEqual(self._snapshot(detail.pk), before)
+        self.assertEqual(
+            Order.objects.get(pk=order.pk).reminder_due_at, before_reminder
+        )
+
+        # Auditing a changed salon zone flags a possible shift, never applies it.
+        salon.timezone_name = "Europe/Berlin"
+        salon.save(update_fields=["timezone_name"])
+        shift = run()
+        self.assertEqual(shift["classifications"]["explicit_zone_shift"], 1)
+        self.assertGreater(shift["potential_review_risks_count"], 0)
+        self.assertEqual(self._snapshot(detail.pk), before)
+        with patch.dict("os.environ", {SNAPSHOT_MARKER: SNAPSHOT_MARKER_VALUE}):
+            from django.core.management.base import CommandError
+            with self.assertRaises(CommandError):
+                call_command(
+                    "audit_phase5_snapshot",
+                    "--json", "--acknowledge-isolated-sanitized-copy",
+                    "--max-appointments", "10",
+                    "--fail-on-incomplete-or-risk",
+                    stdout=StringIO(),
+                )
+        self.assertEqual(self._snapshot(detail.pk), before)
+
+        OrderDetail.objects.create(
+            order=order, salon=salon, stylist=detail.stylist,
+            service=detail.service, price=100000,
+            date=date(2026, 7, 16), time=time(12), end_time=time(13),
+        )
+        complete = run()
+        self.assertTrue(complete["scan_complete"])
+        self.assertEqual(complete["appointments_examined"], 2)
+        capped = run(limit=1)
+        self.assertFalse(capped["scan_complete"])
+        self.assertEqual(capped["total_appointments_in_snapshot"], 2)
+        self.assertEqual(capped["appointments_examined"], 1)
+        self.assertIn("scan_incomplete", capped["review_reasons"])
+        self.assertFalse(capped["cutover_authorized"])
