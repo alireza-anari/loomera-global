@@ -1,0 +1,172 @@
+{
+  "schema_version": 1,
+  "phase": "7.2",
+  "baseline_main_sha": "986a6a03aa0eed3923a482c3a4bd8e2510e69026",
+  "legacy_login": "CustomUser.mobile_number unique max11 USERNAME_FIELD",
+  "source_scope": "CI-anchored source review, not exhaustive dynamic or external client inventory",
+  "reviewed": [
+    {
+      "path": "apps/accounts/models.py",
+      "kind": "schema",
+      "anchor": "max_length=11, unique=True"
+    },
+    {
+      "path": "apps/accounts/models.py",
+      "kind": "auth",
+      "anchor": "USERNAME_FIELD = \"mobile_number\""
+    },
+    {
+      "path": "apps/accounts/models.py",
+      "kind": "creation",
+      "anchor": "def create_user("
+    },
+    {
+      "path": "apps/accounts/forms.py",
+      "kind": "signup_form",
+      "anchor": "def clean_mobile_number(self):"
+    },
+    {
+      "path": "apps/accounts/forms.py",
+      "kind": "reuse_guard",
+      "anchor": "not existing_user.is_active"
+    },
+    {
+      "path": "apps/accounts/forms.py",
+      "kind": "admin_reuse_guard",
+      "anchor": "not existing_user.is_admin"
+    },
+    {
+      "path": "apps/accounts/forms.py",
+      "kind": "manager_customer_add",
+      "anchor": "class AddCustomerForm(forms.Form):"
+    },
+    {
+      "path": "apps/accounts/views.py",
+      "kind": "password_login",
+      "anchor": "username=cleaned_data[\"mobile_number\"]"
+    },
+    {
+      "path": "apps/accounts/views.py",
+      "kind": "password_reset",
+      "anchor": "CustomUser.objects.get(mobile_number=data[\"mobile_number\"])"
+    },
+    {
+      "path": "apps/accounts/views.py",
+      "kind": "web_otp_session",
+      "anchor": "\"otp_purpose\": ("
+    },
+    {
+      "path": "apps/accounts/views.py",
+      "kind": "web_otp_session",
+      "anchor": "utils.normalize_mobile_number(mobile_number)"
+    },
+    {
+      "path": "apps/accounts/views.py",
+      "kind": "web_cooldown",
+      "anchor": "def _otp_cooldown_cache_key(*, purpose, mobile_number):"
+    },
+    {
+      "path": "apps/accounts/views.py",
+      "kind": "web_verify",
+      "anchor": "CustomUser.objects.get(mobile_number=user_session[\"mobile_number\"])"
+    },
+    {
+      "path": "apps/accounts/views.py",
+      "kind": "account_deletion",
+      "anchor": "def _make_deleted_mobile(user):"
+    },
+    {
+      "path": "apps/accounts/views.py",
+      "kind": "account_deletion",
+      "anchor": "original_mobile_number=user.mobile_number or \"\""
+    },
+    {
+      "path": "apps/accounts/views.py",
+      "kind": "account_deletion",
+      "anchor": "user.set_unusable_password()"
+    },
+    {
+      "path": "apps/accounts/admin.py",
+      "kind": "admin_edit",
+      "anchor": "\"mobile_number\", \"password\""
+    },
+    {
+      "path": "apps/accounts/services/sms.py",
+      "kind": "smsir_provider",
+      "anchor": "def format_smsir_mobile("
+    },
+    {
+      "path": "apps/accounts/services/sms.py",
+      "kind": "provider_mask",
+      "anchor": "def mask_mobile_number("
+    },
+    {
+      "path": "apps/api/v1/auth_serializers.py",
+      "kind": "api_validator",
+      "anchor": "def validate_mobile_for_auth("
+    },
+    {
+      "path": "apps/api/v1/auth_views.py",
+      "kind": "api_active_only",
+      "anchor": "is_active=True,"
+    },
+    {
+      "path": "apps/api/v1/auth_otp.py",
+      "kind": "api_hmac",
+      "anchor": "f\"{purpose}:{mobile_number}:{code}\""
+    },
+    {
+      "path": "apps/api/v1/auth_otp.py",
+      "kind": "api_challenge_cache",
+      "anchor": "def otp_record_cache_key("
+    },
+    {
+      "path": "apps/api/v1/auth_otp.py",
+      "kind": "api_resend_cache",
+      "anchor": "def otp_resend_cache_key("
+    },
+    {
+      "path": "apps/api/v1/auth_otp.py",
+      "kind": "api_rate_limit",
+      "anchor": "def otp_hour_rate_cache_key("
+    },
+    {
+      "path": "apps/api/v1/auth_views.py",
+      "kind": "api_request_validation",
+      "anchor": "validate_mobile_for_auth(mobile_number)"
+    },
+    {
+      "path": "apps/accounts/services/role_intents.py",
+      "kind": "role_reuse",
+      "anchor": "def set_role_intent("
+    },
+    {
+      "path": "apps/accounts/services/workspaces.py",
+      "kind": "role_workspace",
+      "anchor": "def available_workspaces("
+    },
+    {
+      "path": "apps/api/v1/auth_serializers.py",
+      "kind": "public_phone_policy",
+      "anchor": "\"phone_region\":"
+    },
+    {
+      "path": "loomera/globalization/phone_identity.py",
+      "kind": "future_adapter",
+      "anchor": "def to_candidate_e164("
+    }
+  ],
+  "hard_stops": [
+    "Existing inactive-account reuse cannot be silently widened to canonical alias matches",
+    "Deleted/anonymized pseudo-numbers and retained deletion audit references need explicit owner policy",
+    "Web and API OTP hash/cache/session keys must not be switched without replay and rate-limit proof",
+    "API OTP verifier resolves active accounts by legacy username after a challenge",
+    "Foreign E.164 syntax is not proof of numbering plan, carrier or SMS reachability",
+    "Stored non-ASCII, placeholder or malformed legacy identifiers must be reconciled, not rewritten automatically",
+    "Any account ID, activation state or legacy login key drift blocks migration",
+    "Canonical uniqueness and old/dual-auth rollback require separate approval"
+  ],
+  "completed": "ANCHORED_STATIC_AND_SELECTED_RUNTIME_MOCKED_AUTH_CONTRACT_TESTS",
+  "dynamic_completeness": false,
+  "cutover_authorized": false
+}
