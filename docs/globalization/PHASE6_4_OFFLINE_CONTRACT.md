@@ -104,7 +104,7 @@ digests and syntax, not the truth of the authorization reference, whether
 the export was actually sanitized, or the truth of timezone provenance.
 If not independently verified, use `unverified`, which blocks parity
 status. The maximum sample horizon is 1,461 dates, at least 7 dates, with
-at most 100,000 date×salon probes. For a clean preview, sample at least
+at most 2,500,000 date×salon probes. For a clean preview, sample at least
 366 days (year boundary); choose dates that include DST transitions for
 businesses in relevant zones. Timezone *instant* parity still requires
 Phase 5 evidence and cannot be inferred from weekday labels.
