@@ -16,7 +16,7 @@ from loomera.globalization.weekdays import (
 )
 
 MAX_ROWS = 10000
-MAX_CALENDAR_PROBES = 100000
+MAX_CALENDAR_PROBES = 2500000
 SOURCE_FIELDS = frozenset((
     "row_id", "salon_id", "day_of_week", "is_closed",
     "open_time", "close_time", "timezone_name",
@@ -58,6 +58,7 @@ def _inspect(rows, *, shadow):
     day_map = {}
     iso_map = {}
     salons = set()
+    zones_by_salon = {}
     counts = {
         "invalid_identifiers": 0,
         "invalid_legacy_days": 0,
@@ -67,6 +68,7 @@ def _inspect(rows, *, shadow):
         "duplicate_salon_legacy_days": 0,
         "duplicate_salon_iso_days": 0,
         "invalid_or_mismatched_iso_days": 0,
+        "inconsistent_salon_timezones": 0,
     }
     for row in rows:
         if type(row) is not dict or frozenset(row) != (
@@ -110,6 +112,11 @@ def _inspect(rows, *, shadow):
         if not valid_identity:
             continue
         salons.add(salon_id)
+        if salon_id in zones_by_salon:
+            if zones_by_salon[salon_id] != row["timezone_name"]:
+                counts["inconsistent_salon_timezones"] += 1
+        else:
+            zones_by_salon[salon_id] = row["timezone_name"]
         if row_id in ids:
             counts["duplicate_row_ids"] += 1
         else:
