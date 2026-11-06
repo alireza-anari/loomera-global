@@ -1,0 +1,85 @@
+{
+  "schema_version": 1,
+  "phase": "7.7",
+  "baseline_main_sha": "7be5cb8b04ea88d003e93bff2aa5db8411a99924",
+  "baseline_phase76_main_ci": "VERIFIED_SUCCESS_ALL_THREE_42248490290",
+  "mode": "EPHEMERAL_LOCAL_REDIS_DB15_SYNTHETIC_EXPERIMENT_NOT_LIVE_AUTH",
+  "implementation": {
+    "module": "loomera.globalization.otp_atomic_redis_rehearsal",
+    "class": "SyntheticRedisOtpRehearsal",
+    "redis_server": "redis:7.4-alpine CI service",
+    "python_client": "redis==5.2.1",
+    "data_model": "dedicated Redis HASH with legacy_mobile, purpose, digest, expiry, attempt counters",
+    "key_prefix": "loomera:phase77:synthetic-only:",
+    "key_identifier": "random 32-character hexadecimal (never phone or account)",
+    "test_redis_database": 15,
+    "host": "localhost or 127.0.0.1 only",
+    "authorization_environment": "LOOMERA_PHASE77_TEST_REDIS=1",
+    "production_login_integration": false,
+    "production_otp_record_compatibility": false,
+    "atomicity_primitive": "single Redis EVAL / HGET plus digest compare plus attempts update plus DEL",
+    "success_condition": "only when single EVAL script executes DEL and confirms return == 1",
+    "ambiguous_post_commit_reply": "fail closed, no inference or retry-based auth",
+    "expired_and_exhausted": "atomic deletion before denying",
+    "wrong_code": "atomic increment of attempts and no TTL extension",
+    "resend": "new seed refuses overwrite and does not reset attempt budget",
+    "digest_secret": "test-only fixed synthetic HMAC (NOT production compatible)",
+    "rate_ip_mobile_and_cooldown": "not migrated; existing live Django cache continues unchanged",
+    "network_failures": "unavailable / no login",
+    "web_signup_and_password_reset": "not connected",
+    "script_constant_time_digest_compare_proven": false
+  },
+  "tests": {
+    "real_redis_ci_job": true,
+    "separate_clients": true,
+    "spawned_separate_workers": true,
+    "concurrent_wrong_attempts": true,
+    "missing_and_replay": true,
+    "expired_and_exhausted": true,
+    "wrong_mobile_or_purpose": true,
+    "duplicate_seed_no_ttl_or_attempt_reset": true,
+    "partial_network_failure_after_commit": true,
+    "unexpected_response_fail_closed": true,
+    "explicit_local_db_guard": true
+  },
+  "unverified": {
+    "real_legacy_django_redis_pickle_serialization": true,
+    "real_request_response_and_authenticated_session": true,
+    "cross_redis_cluster_atomicity": true,
+    "real_distributed_outages_and_failover": true,
+    "atomic_live_OTP_rate_limit_checks": true,
+    "web_password_reset_and_login_bridge": true,
+    "external_clients": true,
+    "formal_constant_time_digest_check": true,
+    "owner_approved_otp_session_snapshot": true,
+    "production_security_approval": true,
+    "production_cutover_approved": true
+  },
+  "source_anchors": [
+    {
+      "path": "apps/api/v1/auth_otp.py",
+      "anchor": "def _cache_delete("
+    },
+    {
+      "path": "apps/api/v1/auth_otp.py",
+      "anchor": "def verify_api_otp_code("
+    },
+    {
+      "path": "apps/api/v1/auth_otp.py",
+      "anchor": "cache.delete(key)"
+    },
+    {
+      "path": "apps/api/v1/auth_otp.py",
+      "anchor": "secrets.compare_digest(expected_hash, submitted_hash)"
+    },
+    {
+      "path": "apps/api/v1/auth_views.py",
+      "anchor": "login(_django_request(request), user)"
+    },
+    {
+      "path": "apps/accounts/views.py",
+      "anchor": "USER_SESSION_KEY = \"user_session\""
+    }
+  ],
+  "release_gate": "BLOCKED_LIVE_REDIS_SERIALIZATION_MULTI_WORKER_INTEGRATION_RATE_LIMIT_SESSIONS_PRIVACY_OWNER_REVIEW"
+}

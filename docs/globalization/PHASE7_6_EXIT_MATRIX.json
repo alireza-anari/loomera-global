@@ -21,5 +21,6 @@
   "provider": "NO_SMS_DELIVERY",
   "production_deployment": "NOT_PERFORMED",
   "phase3_manual_acceptance": "PENDING",
-  "security_release_gate": "BLOCKED_CROSSWORKER_REPLAY_OLD_SESSION_DRAIN_OWNER_APPROVAL"
+  "security_release_gate": "BLOCKED_CROSSWORKER_REPLAY_OLD_SESSION_DRAIN_OWNER_APPROVAL",
+  "phase7_6_postmerge_ci": "VERIFIED_SUCCESS_ALL_THREE_42248490290"
 }
