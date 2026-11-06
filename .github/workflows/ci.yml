@@ -358,6 +358,10 @@ jobs:
         run: |
           python manage.py test apps.salons.test_phase5_timezone_cutover --failfast
 
+      - name: Phase 5.3 isolated snapshot audit authorization and completeness guards
+        run: |
+          python manage.py test apps.salons.test_phase5_snapshot_audit --failfast
+
       - name: Phase 2 buyer-brand smoke and email layout reference audit
         run: |
           python manage.py test \

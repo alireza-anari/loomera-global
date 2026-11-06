@@ -19,6 +19,29 @@ from loomera.globalization.calendar_time import (
 )
 
 
+# Fixed, non-PII risk taxonomy shared by all offline/DB cutover audits.
+CLASSIFICATIONS = (
+    "missing_start",
+    "legacy_dst_gap",
+    "legacy_dst_overlap",
+    "legacy_tehran",
+    "invalid_iana_zone",
+    "candidate_dst_gap",
+    "candidate_dst_overlap",
+    "explicit_zone_shift",
+    "explicit_zone_same_instant",
+)
+BLOCKERS = frozenset((
+    "missing_start",
+    "legacy_dst_gap",
+    "legacy_dst_overlap",
+    "invalid_iana_zone",
+    "candidate_dst_gap",
+    "candidate_dst_overlap",
+    "explicit_zone_shift",
+))
+
+
 @dataclass(frozen=True, slots=True)
 class CutoverRisk:
     classification: str

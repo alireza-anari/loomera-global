@@ -7,31 +7,9 @@ import json
 from django.core.management.base import BaseCommand, CommandError
 
 from apps.orders.models import OrderDetail
-from loomera.globalization.timezone_rehearsal import inspect_appointment_wall_clock
+from loomera.globalization.timezone_rehearsal import (BLOCKERS, CLASSIFICATIONS, inspect_appointment_wall_clock)
 
 
-CLASSIFICATIONS = (
-    "missing_start",
-    "legacy_dst_gap",
-    "legacy_dst_overlap",
-    "legacy_tehran",
-    "invalid_iana_zone",
-    "candidate_dst_gap",
-    "candidate_dst_overlap",
-    "explicit_zone_shift",
-    "explicit_zone_same_instant",
-)
-BLOCKERS = frozenset(
-    (
-        "missing_start",
-        "legacy_dst_gap",
-        "legacy_dst_overlap",
-        "invalid_iana_zone",
-        "candidate_dst_gap",
-        "candidate_dst_overlap",
-        "explicit_zone_shift",
-    )
-)
 
 
 def audit_appointments(records, *, max_appointments: int) -> dict:

@@ -1,6 +1,6 @@
 # Phase 5.2 — PostGIS Rehearsal and Timezone Cutover Risk Audit
 
-**Status:** implementation candidate; exact-head CI and independent review required. This step prepares an **ephemeral synthetic-data rehearsal**, not a migration of real Loomera appointments. PostGIS CI success does **not** authorize timezone cutover or Production deployment.
+**Status:** merged PR #122 at `f51515384ba42dca55cf7ce16fa48e03589223de`. Exact-head and post-merge CI run `42178943567` passed all three jobs. This step prepares an **ephemeral synthetic-data rehearsal**, not a migration of real Loomera appointments. PostGIS CI success does **not** authorize timezone cutover or Production deployment.
 
 ## Base and boundaries
 
@@ -43,9 +43,9 @@ This is a **current-state inventory**. If business timezone metadata was entered
 
 | Gate | Evidence in Phase 5.2 | State |
 |---|---|---|
-| GIS-backed schema reverse/forward | Ephemeral PostGIS GitHub CI | CI verification pending |
-| Synthetic appointment and reminder integrity | Exact before/after synthetic snapshots | CI verification pending |
-| Bounded read-only audit and fail-closed behavior | Python unit tests + GitHub CI | CI verification pending |
+| GIS-backed schema reverse/forward | Ephemeral PostGIS GitHub CI | **Verified on synthetic data: CI 42178943567** |
+| Synthetic appointment and reminder integrity | Exact before/after synthetic snapshots | **Verified on synthetic data: CI 42178943567** |
+| Bounded read-only audit and fail-closed behavior | Python unit tests + GitHub CI | **Verified: CI 42178943567** |
 | Real authorized legacy dataset scan and signed-off completeness | No real dataset connected | **BLOCKED** |
 | Night/overnight, DST gap/fold and stored instant reconciliation on a sanitized copy | Only synthetic DST/unit fixtures | **BLOCKED** |
 | Pre-rollback backup of `Salon.timezone_name` after any explicit assignment | Required; reversing `0006` drops this column | **BLOCKED** |
