@@ -44,6 +44,16 @@ def legacy_opening_day_from_date(value: date) -> int:
     return iso_to_legacy_weekday(value.isoweekday())
 
 
+def saturday_first_form_index_from_date(value: date) -> int:
+    """Zero-based Saturday=0..Friday=6 for the legacy weekly-shift POST.
+
+    Unlike SalonOpeningHours.day_of_week (Saturday=1..Friday=7), the manager
+    `day-{index}-shifts` form and its JavaScript consume exactly these indices.
+    Keep the storage and form contracts distinct.
+    """
+    return legacy_opening_day_from_date(value) - 1
+
+
 def ordered_iso_weekdays(*, first_day_iso: int = 1) -> tuple[int, ...]:
     """Presentation-only weekday ordering; never changes storage identity."""
     first = _checked_weekday(first_day_iso, representation="ISO")
