@@ -260,8 +260,11 @@ class Phase76ExistingApiOtpTests(SimpleTestCase):
                 purpose=PURPOSE, mobile_number=MOBILE
             )
             self.assertIn(legacy_key, cache.data)
-            self.assertNotIn("123456", json.dumps(cache.data))
-            self.assertEqual(cache.data[legacy_key]["mobile_number"], MOBILE)
+            record = cache.data[legacy_key]
+            self.assertNotIn("code", record)
+            self.assertEqual(len(record["code_hash"]), 40)
+            self.assertNotEqual(record["code_hash"], "123456")
+            self.assertEqual(record["mobile_number"], MOBILE)
             result = auth_otp.verify_api_otp_code(
                 mobile_number=MOBILE, code="123456"
             )
