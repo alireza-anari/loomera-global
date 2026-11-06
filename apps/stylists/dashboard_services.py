@@ -38,6 +38,7 @@ from apps.notifications.models import (
     NotificationPriority,
 )
 from apps.notifications.services import create_notification
+from loomera.globalization.weekdays import legacy_opening_day_from_date
 
 ACTIVE_APPOINTMENT_ORDER_STATUSES = [
     "pending",
@@ -60,7 +61,7 @@ ACTIVE_DETAIL_LIFECYCLE_STATUSES = [
 def _salon_day_number(date_value):
     # Python weekday: Monday=0
     # Loomera model: Saturday=1 ... Friday=7
-    return ((date_value.weekday() + 2) % 7) + 1
+    return legacy_opening_day_from_date(date_value)
 
 
 def _format_time_for_message(value):

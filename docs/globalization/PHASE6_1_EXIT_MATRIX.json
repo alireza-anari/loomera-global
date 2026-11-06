@@ -1,0 +1,16 @@
+{
+  "schema_version": 1,
+  "phase": "6.1",
+  "source_main_sha": "2c255fa6cc376518600f4abd3a5b9927dc2f1a9c",
+  "baseline_ci": "VERIFIED_SUCCESS_42181717757",
+  "legacy_stored_weekday": "SATURDAY_1_FRIDAY_7_UNCHANGED",
+  "iso_mapping": "ADDITIVE_COMPATIBILITY_BOUNDARY",
+  "primary_consumers": "EQUIVALENCE_TESTS_ADDED",
+  "manual_endpoint_inventory": "PARTIAL_OTHER_CONSUMERS_PENDING",
+  "weekday_schema_migration": "NOT_PERFORMED",
+  "timezone_booking_cutover": "NOT_PERFORMED",
+  "phase5_authorized_real_data": "BLOCKED_NO_AUTHORIZED_DATASET",
+  "phase3_manual_acceptance": "BLOCKED_MANUAL_ACCEPTANCE",
+  "production_deployment": "NOT_PERFORMED",
+  "release_gate": "BLOCKED_WEEKDAY_MIGRATION_DATA_RECONCILIATION_AND_MANUAL_ACCEPTANCE"
+}

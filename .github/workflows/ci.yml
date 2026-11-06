@@ -362,6 +362,10 @@ jobs:
         run: |
           python manage.py test apps.salons.test_phase5_snapshot_audit --failfast
 
+      - name: Phase 6.1 legacy weekday compatibility and live consumer parity
+        run: |
+          python manage.py test apps.salons.test_phase6_weekday_boundary --failfast
+
       - name: Phase 2 buyer-brand smoke and email layout reference audit
         run: |
           python manage.py test \
