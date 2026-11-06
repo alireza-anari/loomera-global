@@ -49,6 +49,9 @@ class Phase6DashboardWeekdayInterfaces(SimpleTestCase):
             request = request_factory.get(
                 "/dashboards/api/calendar-data/salon/17/", {"date": day.isoformat()}
             )
+            # Bypass auth decorators only for this read-only handler unit test;
+            # Django's RequestFactory does not attach AuthenticationMiddleware.
+            request.user = SimpleNamespace(is_authenticated=True)
             with (
                 patch.object(views, "_redirect_to_required_onboarding",
                              return_value=None),
