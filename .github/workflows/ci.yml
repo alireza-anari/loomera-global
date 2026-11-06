@@ -500,3 +500,7 @@ jobs:
       - name: Rehearse spatial migration with synthetic appointments and rollback
         run: |
           python manage.py test apps.salons.test_phase5_postgis_migration --failfast --noinput
+
+      - name: Phase 7.4 PostgreSQL shadow UNIQUE CAS and transaction rollback rehearsal
+        run: |
+          python manage.py test apps.accounts.test_phase7_postgis_shadow --failfast --noinput
