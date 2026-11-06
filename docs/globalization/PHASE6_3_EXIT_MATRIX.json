@@ -1,0 +1,19 @@
+{
+  "schema_version": 1,
+  "phase": "6.3",
+  "source_main_sha": "80b52653c06e062a1f2ae2a3eea39c7bc162374b",
+  "baseline_post_merge_ci": "VERIFIED_SUCCESS_42198333630",
+  "persisted_weekday": "LEGACY_SATURDAY_1_FRIDAY_7_UNCHANGED",
+  "iso_canonical_design": "PROPOSED_NOT_APPROVED",
+  "source_inventory": "ANCHORED_REVIEW_PLUS_READ_ONLY_CANDIDATE_SCAN",
+  "source_semantic_completeness": "PARTIAL_DYNAMIC_CONSUMERS_PENDING",
+  "date_week_start": "SATURDAY_DISPLAY_ONLY_PARITY_TESTS_ADDED",
+  "aggregate_snapshot_preview": "PURE_NO_DATABASE_ACCESS",
+  "duplication_guard": "DETECTS_DUPLICATES_NO_AUTO_RECONCILIATION",
+  "legacy_unique_constraint": "NOT_DEFINED_REQUIRES_DATA_PROFILING",
+  "database_migrations": "NOT_PERFORMED",
+  "real_data_access": "NOT_PROVIDED",
+  "deployment": "NOT_PERFORMED",
+  "manual_accessibility": "BLOCKED",
+  "release_gate": "BLOCKED_OWNER_APPROVAL_REAL_DATA_PHASE5_PHASE3"
+}

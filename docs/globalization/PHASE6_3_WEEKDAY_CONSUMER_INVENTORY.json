@@ -1,0 +1,200 @@
+{
+  "schema_version": 1,
+  "phase": "6.3",
+  "baseline_main_sha": "80b52653c06e062a1f2ae2a3eea39c7bc162374b",
+  "scan_policy": {
+    "roots": [
+      "apps/",
+      "loomera/",
+      "static/js/",
+      "templates/"
+    ],
+    "excluded": [
+      "tests",
+      "migrations",
+      "test_*"
+    ],
+    "signals": [
+      "day_of_week",
+      ".weekday()",
+      ".isoweekday()",
+      ".getDay()",
+      "firstDayOfWeek",
+      "week_start",
+      "day-{{",
+      "day-${"
+    ],
+    "meaning": "Candidates require human review; grep alone cannot prove semantic completeness."
+  },
+  "weekday_contracts": {
+    "persisted": "Saturday=1..Friday=7, unchanged",
+    "weekly_shift_form": "Saturday=0..Friday=6, unchanged",
+    "iso_proposal": "Monday=1..Sunday=7, NOT APPROVED",
+    "javascript": "Sunday=0..Saturday=6 (labels/visual only)",
+    "jalali_display": "Saturday=0..Friday=6, never persisted"
+  },
+  "reviewed_anchors": [
+    {
+      "path": "apps/salons/models.py",
+      "classification": "stored",
+      "anchor": "day_of_week = models.PositiveSmallIntegerField"
+    },
+    {
+      "path": "apps/salons/forms.py",
+      "classification": "stored_form",
+      "anchor": "day_7_active = forms.BooleanField"
+    },
+    {
+      "path": "apps/salons/views.py",
+      "classification": "stored_display",
+      "anchor": "SalonOpeningHours.objects.order_by(\"day_of_week\")"
+    },
+    {
+      "path": "apps/orders/booking_utils.py",
+      "classification": "availability",
+      "anchor": "day_of_week=_salon_day_key(date_value)"
+    },
+    {
+      "path": "apps/stylists/dashboard_services.py",
+      "classification": "schedule",
+      "anchor": "day_of_week=_salon_day_number(date_value)"
+    },
+    {
+      "path": "apps/dashboards/layout.py",
+      "classification": "dashboard",
+      "anchor": "today_opening_day = legacy_opening_day_from_date"
+    },
+    {
+      "path": "apps/dashboards/appointment_management.py",
+      "classification": "dashboard",
+      "anchor": "day_of_week = legacy_opening_day_from_date(focus_date)"
+    },
+    {
+      "path": "apps/dashboards/appointment_management.py",
+      "classification": "presentation",
+      "anchor": "start_of_display_week(value, first_day_iso=6)"
+    },
+    {
+      "path": "apps/dashboards/appointment_management.py",
+      "classification": "presentation",
+      "anchor": "PERSIAN_WEEKDAY_LABELS.get(day.weekday()"
+    },
+    {
+      "path": "apps/dashboards/jalali_utils.py",
+      "classification": "presentation",
+      "anchor": "PERSIAN_WEEKDAY_NAMES[gregorian.weekday()]"
+    },
+    {
+      "path": "apps/dashboards/views.py",
+      "classification": "api",
+      "anchor": "day_of_week_model = legacy_opening_day_from_date(selected_date)"
+    },
+    {
+      "path": "apps/dashboards/views.py",
+      "classification": "schedule",
+      "anchor": "day_of_week_for_model = legacy_opening_day_from_date(date_obj)"
+    },
+    {
+      "path": "apps/dashboards/views.py",
+      "classification": "request_index",
+      "anchor": "saturday_first_form_index_from_date(booking.date)"
+    },
+    {
+      "path": "apps/dashboards/views.py",
+      "classification": "request_index",
+      "anchor": "request.POST.get(f\"day-{i}-shifts\")"
+    },
+    {
+      "path": "apps/dashboards/views.py",
+      "classification": "stored_form",
+      "anchor": "day_of_week=day_num,"
+    },
+    {
+      "path": "apps/dashboards/views.py",
+      "classification": "presentation",
+      "anchor": "today_jalali - timedelta(days=today_jalali.weekday())"
+    },
+    {
+      "path": "apps/dashboards/views.py",
+      "classification": "stored_form",
+      "anchor": "item.day_of_week - 1: item"
+    },
+    {
+      "path": "apps/orders/views.py",
+      "classification": "presentation",
+      "anchor": "format_jalali_with_weekday(item.date)"
+    },
+    {
+      "path": "apps/main/management/commands/seed_local_demo_data.py",
+      "classification": "synthetic_fixture",
+      "anchor": "day_of_week=day,"
+    },
+    {
+      "path": "static/js/select_datetime.js",
+      "classification": "presentation",
+      "anchor": "const isHoliday = gregorian.getDay() === 5;"
+    },
+    {
+      "path": "static/js/pages/manual_booking.js",
+      "classification": "presentation",
+      "anchor": "weekdays[date.getDay()]"
+    },
+    {
+      "path": "static/js/jalali.js",
+      "classification": "presentation",
+      "anchor": "days[gDate.getDay()]"
+    },
+    {
+      "path": "static/js/jalali_date.js",
+      "classification": "presentation",
+      "anchor": "days[gDate.getDay()]"
+    },
+    {
+      "path": "static/js/pages/set_regular_shifts.js",
+      "classification": "request_index",
+      "anchor": "hiddenInput.value = values.join(\",\");"
+    },
+    {
+      "path": "static/js/pages/edit_day_schedule.js",
+      "classification": "presentation",
+      "anchor": "new Intl.DateTimeFormat(\"fa-IR-u-ca-persian\""
+    },
+    {
+      "path": "templates/dashboards/set_regular_shifts.html",
+      "classification": "request_index",
+      "anchor": "name=\"day-{{ day.index }}-shifts\""
+    },
+    {
+      "path": "templates/dashboards/salon_profile_creator_step3.html",
+      "classification": "stored_form",
+      "anchor": "day_num=7 day_name=\"جمعه\""
+    },
+    {
+      "path": "templates/dashboards/partials/onboarding_working_day.html",
+      "classification": "stored_form",
+      "anchor": "data-day=\"{{ day_num }}\""
+    },
+    {
+      "path": "templates/pages/detail_salon.html",
+      "classification": "stored_display",
+      "anchor": "salon.ordered_opening_hours"
+    },
+    {
+      "path": "loomera/globalization/weekdays.py",
+      "classification": "adapter",
+      "anchor": "legacy_to_iso_weekday"
+    },
+    {
+      "path": "loomera/globalization/calendar_time.py",
+      "classification": "calendar_not_weekday",
+      "anchor": "calendar_date_parts"
+    }
+  ],
+  "open_review_items": [
+    "Full dynamic/template/third-party calendar behavior is not proved by a source regex inventory",
+    "Friday holiday styling is a legacy presentation convention, not a business closure rule",
+    "Representative authorized, sanitized weekday distribution and duplicate check absent",
+    "Cross-service versioning, dual-read/write strategy and rollback signoff not approved",
+    "Phase 3 manual accessibility acceptance and Phase 5 timezone provenance remain blocked"
+  ]
+}

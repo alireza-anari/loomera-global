@@ -23,7 +23,10 @@ from .jalali_utils import (
     relative_jalali_label,
     to_persian_digits,
 )
-from loomera.globalization.weekdays import legacy_opening_day_from_date
+from loomera.globalization.weekdays import (
+    legacy_opening_day_from_date,
+    start_of_display_week,
+)
 from apps.main.models import DisputeCase
 
 TAB_DEFINITIONS = [
@@ -146,7 +149,7 @@ CALENDAR_HALF_HOUR_PX = 32
 
 def _calendar_week_start(value):
     """Return Saturday for the week containing ``value``."""
-    return value - timedelta(days=(value.weekday() + 2) % 7)
+    return start_of_display_week(value, first_day_iso=6)
 
 def _normalize_hex_color(value):
     raw = str(value or "").strip()
