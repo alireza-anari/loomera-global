@@ -220,20 +220,17 @@ class Phase76OfflineDrainTests(SimpleTestCase):
             {"session_store_scope_confirmed": "yes"},
             {"expected_challenges": True},
         ):
+            kwargs = {
+                "expected_accounts": 2,
+                "expected_challenges": 0,
+                "now_ts": 1050,
+                "cache_integrity_confirmed": True,
+                "session_store_scope_confirmed": True,
+            }
+            kwargs.update(param)
             with self.subTest(param=param):
                 with self.assertRaises(PhoneIdentityInputError):
-                    review_legacy_otp_transition(
-                        roster(), [], expected_accounts=2,
-                        expected_challenges=0, now_ts=1050, **param
-                    ) if "now_ts" not in param and "expected_challenges" not in param else (
-                        review_legacy_otp_transition(
-                            roster(), [], expected_accounts=2,
-                            expected_challenges=param.get("expected_challenges", 0),
-                            now_ts=param.get("now_ts", 1050),
-                            cache_integrity_confirmed=True,
-                            session_store_scope_confirmed=True,
-                        )
-                    )
+                    review_legacy_otp_transition(roster(), [], **kwargs)
 
     def test_pure_audit_no_orm_cache_sessions_or_sms(self):
         from loomera.globalization import otp_session_transition_audit
