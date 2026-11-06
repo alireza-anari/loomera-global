@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "phase": "6.4",
+  "baseline_main_sha": "53638f29dc3ce0df5d7a8dbb6b389baecd04de50",
+  "baseline_post_merge_ci": "VERIFIED_ALL_THREE_SUCCESS_42200663139",
+  "offline_contract": "STRICT_VERSIONED_JSON_WITH_OPERATOR_CLAIMS",
+  "offline_file_acknowledgment": "REQUIRED_BEFORE_ANY_READ",
+  "sha256_validation": "ENFORCED_ON_SOURCE_AND_SHADOW",
+  "sensitive_data_policy": "ONLY_WHITELISTED_FIELDS_NO_IDENTIFIERS_IN_REPORT",
+  "row_identity_and_uniqueness": "STRICT_PARITY_BLOCKERS",
+  "legacy_open_closed_time_semantics": "STRICT_SHADOW_PARITY_BLOCKERS",
+  "timezone_provenance": "OPERATOR_DECLARED_NOT_INDEPENDENTLY_VERIFIED",
+  "year_boundary_and_dst": "DATE_PROBES_ONLY_NO_TIMEZONE_INSTANT_PARITY",
+  "read_only": "NO_ORM_NO_SQL_NO_FILE_WRITES",
+  "iso_migration": "NOT_CREATED_OR_APPROVED",
+  "rollback": "DOCUMENTED_OPERATOR_RUNBOOK_NOT_EXECUTABLE",
+  "source_inventory": "DYNAMIC_CONSUMERS_PENDING",
+  "phase3_manual_accessibility": "BLOCKED",
+  "phase5_real_snapshot": "NOT_PROVIDED",
+  "production_deployment": "NOT_PERFORMED",
+  "release_gate": "BLOCKED_PROVENANCE_OWNER_APPROVAL_E2E_PHASE5_PHASE3"
+}

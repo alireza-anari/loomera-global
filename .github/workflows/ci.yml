@@ -376,6 +376,11 @@ jobs:
           python manage.py test apps.salons.test_phase6_weekday_rehearsal --failfast
           python manage.py audit_weekday_source --json
 
+      - name: Phase 6.4 offline shadow parity and fail-closed file gates
+        run: |
+          python manage.py test apps.salons.test_phase6_weekday_cutover --failfast
+          python manage.py audit_weekday_cutover_files --help > /dev/null
+
       - name: Phase 2 buyer-brand smoke and email layout reference audit
         run: |
           python manage.py test \
