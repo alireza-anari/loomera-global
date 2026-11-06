@@ -1,0 +1,18 @@
+{
+  "schema_version": 1,
+  "phase": "7.1",
+  "baseline_main_sha": "1c93cb13bdba14f02953425929f08ff27fe25d83",
+  "baseline_post_merge_ci": "SUCCESS_42213767290",
+  "legacy_username_field": "UNCHANGED_MAX11_UNIQUE_09",
+  "proposed_phone_adapter": "PURE_SYNTAX_ONLY_NOT_AUTH_WIRED",
+  "default_iran_legacy_aliases": "SUPPORTED_IN_NEW_ADAPTER_ONLY",
+  "other_countries": "EXPLICIT_PLUS_E164_SYNTAX_NO_NATIONAL_GUESS",
+  "collision_preview": "PURE_AGGREGATE_NO_IDENTIFIERS",
+  "offline_cli": "DUAL_OPERATOR_ACK_SHA256_BOUNDED_FILES",
+  "pii_classification": "RAW_PHONE_VALUES_REMAIN_PERSONAL_DATA",
+  "sms_otp_login_paths": "UNCHANGED",
+  "migration": "NOT_PERFORMED",
+  "real_data": "NOT_ACCESSED",
+  "production": "NOT_DEPLOYED",
+  "release_gate": "BLOCKED_REAL_DATA_APPROVAL_COLLISION_RECONCILIATION_CLIENTS_NUMPLAN_PHASE3"
+}
