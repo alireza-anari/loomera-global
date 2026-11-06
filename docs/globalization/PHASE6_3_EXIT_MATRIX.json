@@ -15,5 +15,6 @@
   "real_data_access": "NOT_PROVIDED",
   "deployment": "NOT_PERFORMED",
   "manual_accessibility": "BLOCKED",
-  "release_gate": "BLOCKED_OWNER_APPROVAL_REAL_DATA_PHASE5_PHASE3"
+  "release_gate": "BLOCKED_OWNER_APPROVAL_REAL_DATA_PHASE5_PHASE3",
+  "phase6_3_post_merge_ci": "VERIFIED_ALL_THREE_SUCCESS_42200663139"
 }
