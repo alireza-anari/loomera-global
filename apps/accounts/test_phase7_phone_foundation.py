@@ -63,7 +63,10 @@ class Phase71PhoneIdentityTests(SimpleTestCase):
             with self.subTest(value=value):
                 with self.assertRaises(PhoneIdentityInputError) as ctx:
                     to_candidate_e164(value)
-                self.assertNotIn(value, str(ctx.exception))
+                if value:
+                    self.assertNotIn(value, str(ctx.exception))
+                else:
+                    self.assertEqual(str(ctx.exception), "invalid phone identity")
         for country in (None, "IRAN", "I1", "🇮🇷", True):
             with self.subTest(country=country):
                 with self.assertRaises(PhoneIdentityInputError):
