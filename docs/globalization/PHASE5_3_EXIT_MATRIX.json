@@ -1,0 +1,19 @@
+{
+  "schema_version": 1,
+  "phase": "5.3",
+  "source_main_sha": "f51515384ba42dca55cf7ce16fa48e03589223de",
+  "postgis_synthetic_migration_rehearsal": "VERIFIED_CI_42178943567",
+  "phase5_3_snapshot_guard_tests": "PENDING_EXACT_HEAD_CI",
+  "phase5_3_postgis_read_only_transaction_test": "PENDING_EXACT_HEAD_CI",
+  "authorized_sanitized_snapshot_access": "NOT_PROVIDED",
+  "representative_actual_records_examined": "ZERO",
+  "authorized_real_data_completeness": "BLOCKED_NO_AUTHORIZED_DATASET",
+  "historical_booking_timezone_provenance": "BLOCKED_RECONCILIATION",
+  "owner_migration_signoff": "NOT_GRANTED",
+  "immutable_timezone_provenance_for_new_bookings": "NOT_IMPLEMENTED",
+  "active_booking_timezone_cutover": "NOT_PERFORMED",
+  "legacy_weekday_migration": "NOT_PERFORMED",
+  "phase3_manual_acceptance": "BLOCKED_MANUAL_ACCEPTANCE",
+  "production_deployment": "NOT_PERFORMED",
+  "release_gate": "BLOCKED_REAL_DATA_RECONCILIATION_AND_MANUAL_ACCEPTANCE"
+}
