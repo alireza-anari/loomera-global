@@ -351,8 +351,8 @@ class Phase711RecoveryRedisTests(unittest.TestCase):
     def test_unknown_or_missing_reason_is_corrupt(self):
         self.seed()
         self.client.hset(self.key, "reason", "unknown")
-        # Invalid reason will be filtered at the Python reply decoder.
-        self.assertEqual(self.gate.inspect().status, "backend_unavailable")
+        # The read-only Lua audit rejects an unknown reason as corrupt.
+        self.assertEqual(self.gate.inspect().status, "corrupt")
         self.client.hset(self.key, "reason", "none")
         self.gate.quarantine(expected_generation=1, reason="redis_timeout")
         self.client.hset(self.key, "reason", "none")
