@@ -407,6 +407,10 @@ jobs:
         run: |
           python manage.py test apps.accounts.test_phase7_otp_versioned_plan --failfast
 
+      - name: Phase 7.10 OTP session-handoff policy and no-live-wiring guards
+        run: |
+          python manage.py test apps.accounts.test_phase7_otp_handoff_policy --failfast
+
       - name: Phase 7.7 experimental Redis OTP isolation and live-auth no-wiring guards
         run: |
           python manage.py test apps.accounts.test_phase7_redis_atomic_contract --failfast
@@ -471,6 +475,12 @@ jobs:
           LOOMERA_PHASE79_TEST_REDIS: "1"
         run: |
           python -m unittest discover -s tests -p 'phase7_versioned_gate_test.py' -v
+
+      - name: Phase 7.10 synthetic v2 issue, consume, session claim and halt races
+        env:
+          LOOMERA_PHASE710_TEST_REDIS: "1"
+        run: |
+          python -m unittest discover -s tests -p 'phase7_v2_handoff_test.py' -v
 
   browser-smoke:
     name: Chromium keyboard smoke (booking and post-booking fixtures)

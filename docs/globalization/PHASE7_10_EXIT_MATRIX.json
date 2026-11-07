@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "phase": "7.10",
+  "baseline_main_sha": "62a4dc26ca96949afd0f82e86ccaa18bdd2c23c9",
+  "baseline_phase79_postmerge_ci": "VERIFIED_ALL_FOUR_SUCCESS_42367367376",
+  "scope": "SYNTHETIC_SINGLE_KEY_REDIS_V2_ISSUE_CONSUME_HANDOFF_AND_OFFLINE_POLICY",
+  "fast_tests": 18,
+  "redis_tests": 22,
+  "service": "redis:7.4-alpine unauthenticated localhost 6379 DB15",
+  "grant": "LOOMERA_PHASE710_TEST_REDIS=1",
+  "fixture_namespace": "loomera:phase710:synthetic-only:",
+  "digest": "TEST_ONLY_UNSAFE_FOR_PRODUCTION_SHA256_STYLE_HEX",
+  "gate_ttl": "TEN_MINUTES_FOR_SYNTHETIC_CI_ONLY_NOT_DURABLE",
+  "redis_states": [
+    "observe",
+    "v2_simulated",
+    "halted"
+  ],
+  "challenge_states": [
+    "none",
+    "issued",
+    "consumed",
+    "expired",
+    "exhausted"
+  ],
+  "simulation_results": [
+    "consumed",
+    "would_admit"
+  ],
+  "redis_atomic_scope": "STANDALONE_SINGLE_KEY_EVAL_ONLY",
+  "session_fencing": "SIMULATED_WOULD_ADMIT_ONLY_NO_DJANGO_SESSION",
+  "active_account": "CALLER_SUPPLIED_SYNTHETIC_FLAG_NOT_DATABASE_VERIFIED",
+  "post_commit_timeout": "BACKEND_UNAVAILABLE_NO_LOGIN_OR_IMPLICIT_RETRY",
+  "legacy_format": "DJANGO_REDIS_SERIALIZED_STRING_SHA1_40_HEX_UNMODIFIED",
+  "live_api_otp_modified": false,
+  "live_session_created": false,
+  "real_otp_verified": false,
+  "real_account_accessed": false,
+  "legacy_replay_race_fixed": false,
+  "prod_version_gate_durable": false,
+  "production_cutover_authorized": false,
+  "deployed": false,
+  "release_gate": "BLOCKED_REAL_OWNER_INVENTORY_SECURITY_APPROVAL_ATOMIC_LIVE_VERIFY_DURABLE_ROUTING_RATE_LIMITS_SESSION_ROLLBACK"
+}
