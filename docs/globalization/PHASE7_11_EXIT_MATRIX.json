@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "phase": "7.11",
+  "baseline_main_sha": "919f6a5a8f50592543cc961587662f50da3e3ea3",
+  "baseline_phase710_postmerge_ci": "VERIFIED_ALL_FOUR_SUCCESS_42378631455",
+  "scope": "OFFLINE_CROSS_STORE_UNCERTAINTY_DECISIONS_AND_DISPOSABLE_REDIS_QUARANTINE",
+  "fast_tests": 22,
+  "redis_tests": 25,
+  "fixture_namespace": "loomera:phase711:synthetic-only:",
+  "guard_flag": "LOOMERA_PHASE711_TEST_REDIS=1",
+  "service": "redis:7.4-alpine standalone localhost DB15",
+  "snapshot_inputs": "ONLY_TYPED_SYNTHETIC_STATES_AND_CALLER_SUPPLIED_FLAGS",
+  "redis_mode_states": [
+    "observing",
+    "quarantined",
+    "halted"
+  ],
+  "redis_challenge_states": [
+    "none",
+    "consumed"
+  ],
+  "quarantine_reasons": [
+    "redis_timeout",
+    "post_commit_timeout",
+    "session_store_timeout",
+    "session_claim_ambiguous",
+    "account_deactivated",
+    "generation_mismatch",
+    "operator_stop"
+  ],
+  "quarantine_cas": "SINGLE_KEY_EVAL_MONOTONE_ONE_WAY_NO_RESUME",
+  "phase710_session_claim": "NOT_A_REAL_DJANGO_SESSION",
+  "expiry": "TEN_MINUTE_CI_FIXTURE_NOT_DURABLE",
+  "postcommit_timeout": "BACKEND_UNAVAILABLE_NO_IMPLICIT_RETRY",
+  "cross_store_reconciliation": "OFFLINE_UNTRUSTED_INPUTS_NOT_ATOMIC_PROOF",
+  "live_auth_wired": false,
+  "real_session_created": false,
+  "real_account_accessed": false,
+  "cross_store_atomicity_proven": false,
+  "redis_failover_verified": false,
+  "legacy_replay_race_fixed": false,
+  "production_recovery_authorized": false,
+  "legacy_fallback_authorized": false,
+  "deployed": false,
+  "release_gate": "BLOCKED_ACCOUNT_AND_SESSION_OWNER_SECURITY_APPROVAL_DURABLE_GENERATIONS_ATOMIC_LIVE_VERIFY_CROSS_STORE_HANDOFF_FAILOVER_TESTS"
+}
