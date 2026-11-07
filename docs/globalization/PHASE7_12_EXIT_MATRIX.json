@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "phase": "7.12",
+  "baseline_main_sha": "b491b3c0bdf895475c8e191248ed908375695205",
+  "baseline_phase711_postmerge_ci": "VERIFIED_ALL_FOUR_SUCCESS_42385191044",
+  "scope": "OFFLINE_RESTART_EVIDENCE_AND_SYNTHETIC_TWO_KEY_REDIS_MARKER_DIVERGENCE",
+  "fast_tests": 27,
+  "redis_tests": 37,
+  "service": "Redis 7.4 standalone unauthenticated localhost 6379 DB15",
+  "flag": "LOOMERA_PHASE712_TEST_REDIS=1",
+  "namespace": "loomera:phase712:synthetic-only:",
+  "markers": [
+    "reference",
+    "volatile"
+  ],
+  "marker_storage": "TWO_KEYS_SAME_VOLATILE_REDIS_NOT_INDEPENDENT_DURABILITY",
+  "fixture_ttl": "TEN_MINUTES_TEST_ONLY",
+  "tested_reconnect": "SECOND_CLIENT_SAME_SERVER_ONLY",
+  "tested_failover": "INJECTED_GENERATION_AND_MARKER_DIVERGENCE_NOT_REAL_PROMOTION",
+  "gate_modes": [
+    "observing",
+    "quarantined",
+    "halted"
+  ],
+  "mutation_atomicity": "TWO_KEY_STANDALONE_EVAL_TEST_ONLY",
+  "missing_marker_policy": "NO_AUTOMATIC_BOOTSTRAP_ON_ATTACH",
+  "both_missing_policy": "DENY_RECOVERY_REQUIRES_EXPLICIT_NEW_DISPOSABLE_TEST_FIXTURE",
+  "tests_did_not_perform_real_redis_restart": true,
+  "real_redis_restart_tested": false,
+  "real_redis_failover_tested": false,
+  "independent_durable_anchor_verified": false,
+  "live_auth_wired": false,
+  "real_sessions_accessed": false,
+  "real_accounts_accessed": false,
+  "production_cutover_authorized": false,
+  "legacy_replay_race_fixed": false,
+  "legacy_fallback_authorized": false,
+  "deployed": false,
+  "release_gate": "BLOCKED_DURABLE_INDEPENDENT_MARKER_REAL_FAILOVER_FENCING_ATOMIC_LIVE_OTP_VERIFY_CROSS_STORE_SESSION_SECURITY_APPROVAL"
+}

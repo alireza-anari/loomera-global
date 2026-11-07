@@ -415,6 +415,10 @@ jobs:
         run: |
           python manage.py test apps.accounts.test_phase7_otp_cross_store_recovery --failfast
 
+      - name: Phase 7.12 synthetic restart evidence and no-live-wiring safeguards
+        run: |
+          python manage.py test apps.accounts.test_phase7_otp_restart_evidence --failfast
+
       - name: Phase 7.7 experimental Redis OTP isolation and live-auth no-wiring guards
         run: |
           python manage.py test apps.accounts.test_phase7_redis_atomic_contract --failfast
@@ -491,6 +495,12 @@ jobs:
           LOOMERA_PHASE711_TEST_REDIS: "1"
         run: |
           python -m unittest discover -s tests -p 'phase7_otp_recovery_quarantine_test.py' -v
+
+      - name: Phase 7.12 two-key Redis marker reattach and divergence rehearsal
+        env:
+          LOOMERA_PHASE712_TEST_REDIS: "1"
+        run: |
+          python -m unittest discover -s tests -p 'phase7_restart_marker_test.py' -v
 
   browser-smoke:
     name: Chromium keyboard smoke (booking and post-booking fixtures)
