@@ -67,7 +67,7 @@ docker run -d --name "$new" \
   --publish 127.0.0.1:6396:6379 \
   redis:7.4-alpine redis-server \
     --protected-mode no --appendonly yes --appendfsync always \
-    --replica-read-only yes --save "" >/dev/null
+    --replica-read-only yes --repl-ping-replica-period 2 --repl-timeout 8 --save "" >/dev/null
 
 # Replication takes place ONLY via the detachable second bridge.
 docker network connect --alias p715-source "$replication_net" "$old"
@@ -159,7 +159,32 @@ ready "$old" 6395
 ready "$new" 6396
 assert_role "$old" master
 assert_role "$new" slave
+
+# Closing a *pre-existing* replication TCP socket is necessary because
+# removing its bridge interface does not immediately force Redis INFO to
+# report the old connection as down. The detached bridge prevents reconnection.
+# CLIENT KILL TYPE MASTER affects only this isolated fixture's upstream link.
+docker exec "$new" redis-cli CLIENT KILL TYPE MASTER >/dev/null
 assert_link "$new" down
+
+# Confirm an actual NEW write after partition does NOT reach the replica.
+# Redis INFO's master_link_status by itself is not sufficient evidence.
+python - <<'PY'
+from uuid import uuid4
+import redis
+old = redis.Redis(host="127.0.0.1", port=6395, db=15, socket_timeout=4)
+new = redis.Redis(host="127.0.0.1", port=6396, db=15, socket_timeout=4)
+key = "loomera:phase715:synthetic-partition-only:link-probe:" + uuid4().hex
+try:
+    assert old.set(key, "test-only-not-replicated", ex=60) is True
+    ack = old.wait(1, 1500)
+    assert ack == 0, ("partitioned replica still acknowledged fresh write", ack)
+    assert new.get(key) is None, "fresh write leaked across partition"
+finally:
+    old.close()
+    new.close()
+print("Phase 7.15: new source write was NOT replicated after bridge disconnect")
+PY
 
 # Manual promotion DURING the live network partition: TWO raw Redis masters.
 docker exec "$new" redis-cli REPLICAOF NO ONE | grep -q '^OK'

@@ -7,6 +7,7 @@ Every decision denies authentication and automatic OTP/session retry.
 from __future__ import annotations
 
 from dataclasses import dataclass
+from contextlib import closing
 import os
 from pathlib import Path
 import re
@@ -66,7 +67,7 @@ class SyntheticLocalPartitionWitness:
         if os.environ.get("LOOMERA_PHASE715_ALLOW_TEST_SEED") != "1":
             raise RuntimeError("explicit prepare-only witness seed required")
         try:
-            with self._connect(create=True) as db:
+            with closing(self._connect(create=True)) as db:
                 db.execute("BEGIN IMMEDIATE")
                 db.execute(
                     "CREATE TABLE IF NOT EXISTS witness("
@@ -107,7 +108,7 @@ class SyntheticLocalPartitionWitness:
 
     def inspect(self) -> SyntheticWitnessState:
         try:
-            with self._connect(create=False) as db:
+            with closing(self._connect(create=False)) as db:
                 row = db.execute(
                     "SELECT mode, generation, reason FROM witness WHERE id=1"
                 ).fetchone()
@@ -121,7 +122,7 @@ class SyntheticLocalPartitionWitness:
         if type(reason) is not str or reason not in _REASONS:
             raise ValueError("fixed synthetic partition incident required")
         try:
-            with self._connect(create=False) as db:
+            with closing(self._connect(create=False)) as db:
                 db.execute("BEGIN IMMEDIATE")
                 row = db.execute(
                     "SELECT mode, generation, reason FROM witness WHERE id=1"
