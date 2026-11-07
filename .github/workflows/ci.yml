@@ -431,6 +431,10 @@ jobs:
         run: |
           python manage.py test apps.accounts.test_phase7_otp_partition --failfast
 
+      - name: Phase 7.16 synthetic epoch and fencing token policy and no-live-wiring
+        run: |
+          python manage.py test apps.accounts.test_phase7_otp_epoch_fence --failfast
+
       - name: Phase 7.7 experimental Redis OTP isolation and live-auth no-wiring guards
         run: |
           python manage.py test apps.accounts.test_phase7_redis_atomic_contract --failfast
@@ -532,6 +536,13 @@ jobs:
           LOOMERA_PHASE715_WITNESS_TEST: "1"
         run: |
           bash tests/phase7_redis_network_partition_ci.sh
+
+      - name: Phase 7.16 isolated Redis stale-token split-brain and witness epoch CAS drill
+        env:
+          LOOMERA_PHASE716_TEST_REDIS: "1"
+          LOOMERA_PHASE716_TEST_WITNESS: "1"
+        run: |
+          bash tests/phase7_redis_epoch_fencing_ci.sh
 
   browser-smoke:
     name: Chromium keyboard smoke (booking and post-booking fixtures)
