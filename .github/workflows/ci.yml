@@ -435,6 +435,10 @@ jobs:
         run: |
           python manage.py test apps.accounts.test_phase7_otp_epoch_fence --failfast
 
+      - name: Phase 7.17 three-voter quorum and no-live-wiring security policy
+        run: |
+          python manage.py test apps.accounts.test_phase7_otp_quorum_evidence --failfast
+
       - name: Phase 7.7 experimental Redis OTP isolation and live-auth no-wiring guards
         run: |
           python manage.py test apps.accounts.test_phase7_redis_atomic_contract --failfast
@@ -543,6 +547,12 @@ jobs:
           LOOMERA_PHASE716_TEST_WITNESS: "1"
         run: |
           bash tests/phase7_redis_epoch_fencing_ci.sh
+
+      - name: Phase 7.17 five-node Redis synthetic majority and raw old-master bypass
+        env:
+          LOOMERA_PHASE717_TEST_REDIS: "1"
+        run: |
+          bash tests/phase7_redis_quorum_ci.sh
 
   browser-smoke:
     name: Chromium keyboard smoke (booking and post-booking fixtures)
