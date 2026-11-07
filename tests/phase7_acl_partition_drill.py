@@ -83,10 +83,10 @@ def install_acl(c, stale_enabled):
     c.execute_command("ACL", "SETUSER", USERS["stale"], "reset",
                       "on" if stale_enabled else "off", "resetpass",
                       ">" + os.environ["LOOMERA_PHASE718_STALE_PASS"],
-                      "~" + prefix, "+ping", "+eval", "+hset", "+hgetall")
+                      "~" + prefix, "+select", "+ping", "+eval", "+hset", "+hgetall")
     c.execute_command("ACL", "SETUSER", USERS["read"], "reset", "on", "resetpass",
                       ">" + os.environ["LOOMERA_PHASE718_READ_PASS"],
-                      "~" + prefix, "+ping", "+hgetall")
+                      "~" + prefix, "+select", "+ping", "+hgetall")
     # Last anonymous bootstrap command. Redis ACL modifications do not
     # replicate to the other master across the physical bridge outage.
     c.execute_command("ACL", "SETUSER", "default", "off")
