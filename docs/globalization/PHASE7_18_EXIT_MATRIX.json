@@ -1,0 +1,32 @@
+{
+  "schema_version": 1,
+  "phase": "7.18",
+  "baseline_main_sha": "83a3b36cceb53a61b9f78dbe553fef4f0c8f5c5c",
+  "baseline_phase717_postmerge_ci": "VERIFIED_ALL_FOUR_SUCCESS_42404645311",
+  "scope": "ISOLATED_TWO_REDIS74_REAL_PARTITION_AND_NODE_LOCAL_ACL_REVOCATION",
+  "data_endpoints": [
+    "127.0.0.1:6408 DB15",
+    "127.0.0.1:6409 DB15"
+  ],
+  "existing_ci_redis": "6379 UNTOUCHED",
+  "synthetic_key_prefix": "loomera:phase718:synthetic-acl-only:",
+  "initial_wait_one_and_snapshot_verified": true,
+  "replication_bridge_physically_detached": true,
+  "wait_zero_after_disconnect": true,
+  "both_nodes_writable_masters": true,
+  "default_user_disabled_on_both": true,
+  "read_only_writer_denied": true,
+  "promoted_stale_user_disabled": true,
+  "old_stale_credentials_raw_eval_succeeds_after_promoted_revoke": true,
+  "manual_old_acl_revoke_denies_fresh_stale_connections": true,
+  "single_runner_can_reach_old_node_admin": true,
+  "durable_multihost_consensus": false,
+  "global_stale_writer_fencing": false,
+  "remote_old_node_revocation_proven": false,
+  "production_auth_changed": false,
+  "real_user_data_accessed": false,
+  "legacy_otp_replay_race_fixed": false,
+  "deployment_authorized": false,
+  "deployed": false,
+  "release_gate": "BLOCKED_NO_CROSS_PARTITION_ACL_REPLICATION_NO_TRUSTED_EXTERNAL_REVOCATION_NO_ATOMIC_LIVE_OTP_NO_ACCOUNT_SESSION_AUTHORIZATION"
+}
