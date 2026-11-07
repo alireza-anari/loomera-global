@@ -394,7 +394,7 @@ class Phase710RealRedisHandoff(unittest.TestCase):
                 with self.assertRaises(ValueError):
                     self.unit.issue(expected_generation=2, purpose=PURPOSE,
                                     subject=SUBJECT, synthetic_digest=bad)
-        for bad in (True, "True", None):
+        for bad in (1, "True", None):
             with self.subTest(bad=bad):
                 with self.assertRaises(ValueError):
                     self.unit.would_admit(
