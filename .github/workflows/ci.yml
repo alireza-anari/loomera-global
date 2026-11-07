@@ -419,6 +419,10 @@ jobs:
         run: |
           python manage.py test apps.accounts.test_phase7_otp_restart_evidence --failfast
 
+      - name: Phase 7.13 offline AOF restart security and no-live-wiring gates
+        run: |
+          python manage.py test apps.accounts.test_phase7_otp_aof_restart_safety --failfast
+
       - name: Phase 7.7 experimental Redis OTP isolation and live-auth no-wiring guards
         run: |
           python manage.py test apps.accounts.test_phase7_redis_atomic_contract --failfast
@@ -501,6 +505,12 @@ jobs:
           LOOMERA_PHASE712_TEST_REDIS: "1"
         run: |
           python -m unittest discover -s tests -p 'phase7_restart_marker_test.py' -v
+
+      - name: Phase 7.13 real isolated Redis AOF graceful and SIGKILL process restart
+        env:
+          LOOMERA_PHASE713_TEST_REDIS: "1"
+        run: |
+          bash tests/phase7_redis_process_restart_ci.sh
 
   browser-smoke:
     name: Chromium keyboard smoke (booking and post-booking fixtures)
