@@ -1,0 +1,53 @@
+{
+  "schema_version": 1,
+  "phase": "7.16",
+  "baseline_main_sha": "9263d8057dba1c3296dd031c68cfeecc2fb74676",
+  "baseline_phase715_postmerge_ci": "VERIFIED_ALL_FOUR_SUCCESS_42394108914",
+  "scope": "SYNTHETIC_SINGLE_HOST_SQLITE_WITNESS_EPOCH_TOKEN_ROTATION_REDIS_STANDALONE_LUA_CAS_TWO_MASTER_PARTITION",
+  "fast_tests": 29,
+  "isolated_sqlite_witness_tests": 24,
+  "isolated_redis_epoch_tests": 22,
+  "integration_stages": [
+    "real_two_node_replication_initial_epoch1_owner_original_tokenA_sync_wait",
+    "physical_replication_bridge_partition_wait0_absent_fresh_probe",
+    "promote_replica_and_rotate_test_only_local_sqlite_witness_epoch2_tokenB",
+    "stale_original_adapter_denied_but_RAW_OLD_REDIS_WRITE_ACCEPTED",
+    "promoted_instance_atomic_local_adoption_and_epoch2_tokenB_write",
+    "terminal_witness_halt_epoch3_then_old_primary_readonly_rejoin",
+    "lost_witness_does_not_automatically_reseed_or_grant"
+  ],
+  "dedicated_ports": [
+    "127.0.0.1:6397 DB15",
+    "127.0.0.1:6398 DB15"
+  ],
+  "redis_version": "redis:7.4-alpine",
+  "existing_service": "127.0.0.1:6379 UNTOUCHED",
+  "redis_fixture_prefix": "loomera:phase716:synthetic-epoch-only:",
+  "witness_path": "/tmp/loomera-phase716-synthetic-<32hex>.sqlite3",
+  "redis_key_ttl": "TEN_MINUTES_CI_ONLY",
+  "test_grants": [
+    "LOOMERA_PHASE716_TEST_REDIS=1",
+    "LOOMERA_PHASE716_TEST_WITNESS=1",
+    "LOOMERA_PHASE716_ALLOW_SEED=1_PREPARE_ONLY",
+    "LOOMERA_PHASE716_ALLOW_TEST_WRITE=1_EXPLICIT_TEST_STAGES_ONLY",
+    "LOOMERA_PHASE716_ALLOW_TEST_ADOPT=1_PROMOTION_DRILL_ONLY"
+  ],
+  "local_witness": "SQLITE_SINGLE_HOST_BEGIN_IMMEDIATE_MONOTONE_EPOCH_NOT_CONSENSUS",
+  "redis_write": "LOCAL_ONE_NODE_LUA_CAS_EPOCH_OWNER_TOKEN_AND_EXPECTED_SEQUENCE",
+  "known_toc_tou": "SQLITE_READ_THEN_REDIS_EVAL_NOT_ATOMIC_ACROSS_BACKENDS",
+  "known_stale_master_bypass": "RAW_OLD_REDIS_WRITES_STILL_ACCEPTED_AFTER_SQLITE_TOKEN_ROTATION",
+  "actual_partition_tested": true,
+  "test_only_epoch_token_cas_tested": true,
+  "real_cluster_sentinel_failover_tested": false,
+  "multi_host_consensus_fencing_verified": false,
+  "cross_store_atomic_fencing_verified": false,
+  "old_primary_raw_writes_blocked": false,
+  "real_session_atomicity_verified": false,
+  "live_auth_wired": false,
+  "real_user_data_accessed": false,
+  "real_session_created": false,
+  "legacy_replay_race_fixed": false,
+  "production_cutover_authorized": false,
+  "deployed": false,
+  "release_gate": "BLOCKED_REAL_DURABLE_MULTIHOST_QUORUM_WITH_WRITE_SIDE_ENFORCEMENT_STALE_RAW_WRITER_FENCE_LIVE_PRODUCTION_FORMAT_ATOMIC_OTP_VERIFY_DB_SESSION_TRANSACTION_OWNER_SECURITY_APPROVAL"
+}
