@@ -170,26 +170,39 @@ assert_link "$new" down
 # Confirm an actual NEW write after partition does NOT reach the replica.
 # Redis INFO's master_link_status by itself is not sufficient evidence.
 python - <<'PY'
-from uuid import uuid4
-import redis
+import os, redis
 old = redis.Redis(host="127.0.0.1", port=6395, db=15, socket_timeout=4)
-new = redis.Redis(host="127.0.0.1", port=6396, db=15, socket_timeout=4)
-key = "loomera:phase715:synthetic-partition-only:link-probe:" + uuid4().hex
+key = ("loomera:phase715:synthetic-partition-only:" +
+       os.environ["LOOMERA_PHASE715_OBSERVING_ID"] + ":link-probe")
 try:
     assert old.set(key, "test-only-not-replicated", ex=60) is True
     ack = old.wait(1, 1500)
     assert ack == 0, ("partitioned replica still acknowledged fresh write", ack)
-    assert new.get(key) is None, "fresh write leaked across partition"
 finally:
     old.close()
-    new.close()
-print("Phase 7.15: new source write was NOT replicated after bridge disconnect")
+print("Phase 7.15: WAIT=0 for source write while replication link is down")
 PY
 
 # Manual promotion DURING the live network partition: TWO raw Redis masters.
 docker exec "$new" redis-cli REPLICAOF NO ONE | grep -q '^OK'
 assert_role "$new" master
 assert_role "$old" master
+
+# A disconnected replica may stall while attempting to reconnect. Check the
+# absence of the source's fresh write only AFTER it is promoted and responding.
+python - <<'PY'
+import os, redis
+promoted = redis.Redis(host="127.0.0.1", port=6396, db=15,
+                       socket_timeout=5, socket_connect_timeout=5)
+key = ("loomera:phase715:synthetic-partition-only:" +
+       os.environ["LOOMERA_PHASE715_OBSERVING_ID"] + ":link-probe")
+try:
+    assert promoted.ping() is True
+    assert promoted.get(key) is None, "fresh source write crossed partition"
+finally:
+    promoted.close()
+print("Phase 7.15: promoted replica has NO post-disconnect source write")
+PY
 echo "Phase 7.15: two simultaneously running Redis masters now reachable"
 python tests/phase7_partition_dualmaster_drill.py during-partition
 
