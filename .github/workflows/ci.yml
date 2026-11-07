@@ -403,6 +403,10 @@ jobs:
         run: |
           python manage.py test apps.accounts.test_phase7_cache_wire_contract --failfast
 
+      - name: Phase 7.9 offline OTP drain and versioned gate safety invariants
+        run: |
+          python manage.py test apps.accounts.test_phase7_otp_versioned_plan --failfast
+
       - name: Phase 7.7 experimental Redis OTP isolation and live-auth no-wiring guards
         run: |
           python manage.py test apps.accounts.test_phase7_redis_atomic_contract --failfast
@@ -461,6 +465,12 @@ jobs:
           LOOMERA_PHASE78_TEST_REDIS: "1"
         run: |
           python -m unittest discover -s tests -p 'phase7_legacy_wire_test.py' -v
+
+      - name: Phase 7.9 isolated Redis OTP version gate CAS and halt rehearsal
+        env:
+          LOOMERA_PHASE79_TEST_REDIS: "1"
+        run: |
+          python -m unittest discover -s tests -p 'phase7_versioned_gate_test.py' -v
 
   browser-smoke:
     name: Chromium keyboard smoke (booking and post-booking fixtures)
