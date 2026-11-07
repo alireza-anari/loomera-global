@@ -173,7 +173,7 @@ python - <<'PY'
 import os, redis
 old = redis.Redis(host="127.0.0.1", port=6397, db=15, socket_timeout=4)
 key = ("loomera:phase716:synthetic-epoch-only:" +
-       os.environ["LOOMERA_PHASE716_OBSERVING_ID"] + ":link-probe")
+       os.environ["LOOMERA_PHASE716_FIXTURE_ID"] + ":link-probe")
 try:
     assert old.set(key, "test-only-not-replicated", ex=60) is True
     ack = old.wait(1, 1500)
@@ -195,7 +195,7 @@ import os, redis
 promoted = redis.Redis(host="127.0.0.1", port=6398, db=15,
                        socket_timeout=5, socket_connect_timeout=5)
 key = ("loomera:phase716:synthetic-epoch-only:" +
-       os.environ["LOOMERA_PHASE716_OBSERVING_ID"] + ":link-probe")
+       os.environ["LOOMERA_PHASE716_FIXTURE_ID"] + ":link-probe")
 try:
     assert promoted.ping() is True
     assert promoted.get(key) is None, "fresh source write crossed partition"
