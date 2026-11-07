@@ -69,6 +69,21 @@ ready "$new"
 docker exec "$new" redis-cli REPLICAOF p718-old 6379 | grep -q '^OK'
 role "$old" master
 role "$new" slave
+# REPLICAOF returning OK and role=slave do not prove link readiness.
+# Require the actual upstream connection before seeding / WAIT 1.
+link_ok=0
+for ((attempt=0; attempt<80; attempt++)); do
+  if docker exec "$new" redis-cli INFO replication 2>/dev/null |
+     grep -q '^master_link_status:up'; then
+    link_ok=1
+    break
+  fi
+  sleep 0.35
+done
+if ((link_ok != 1)); then
+  echo "Phase 7.18 replica link never became ready" >&2
+  exit 1
+fi
 mapfile -t secrets < <(python - <<'PY'
 from uuid import uuid4
 for _ in range(4):
