@@ -423,6 +423,10 @@ jobs:
         run: |
           python manage.py test apps.accounts.test_phase7_otp_aof_restart_safety --failfast
 
+      - name: Phase 7.14 offline replica promotion safety and no-live-wiring gates
+        run: |
+          python manage.py test apps.accounts.test_phase7_otp_replica_promotion --failfast
+
       - name: Phase 7.7 experimental Redis OTP isolation and live-auth no-wiring guards
         run: |
           python manage.py test apps.accounts.test_phase7_redis_atomic_contract --failfast
@@ -511,6 +515,12 @@ jobs:
           LOOMERA_PHASE713_TEST_REDIS: "1"
         run: |
           bash tests/phase7_redis_process_restart_ci.sh
+
+      - name: Phase 7.14 two-node Redis replica promotion and old-primary read-only rejoin
+        env:
+          LOOMERA_PHASE714_TEST_REDIS: "1"
+        run: |
+          bash tests/phase7_redis_replica_promotion_ci.sh
 
   browser-smoke:
     name: Chromium keyboard smoke (booking and post-booking fixtures)
