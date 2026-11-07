@@ -1,0 +1,32 @@
+{
+  "schema_version": 1,
+  "phase": "7.19",
+  "baseline_main_sha": "e721094a72416e167de45ec4ec088147045fa0fc",
+  "baseline_phase718_postmerge_ci": "VERIFIED_ALL_FOUR_SUCCESS_42407228524",
+  "scope": "TWO_REAL_REDIS74_AOF_DATA_MASTERS_PHYSICAL_REPLICATION_AND_CLIENT_NETWORK_DISCONNECT_WITH_ALTERNATE_BYPASS",
+  "redis_image": "redis:7.4-alpine",
+  "fixed_data_endpoints": [
+    "127.0.0.1:6410 DB15",
+    "127.0.0.1:6411 DB15"
+  ],
+  "synthetic_prefix": "loomera:phase719:synthetic-network-only:",
+  "existing_redis_service": "127.0.0.1:6379 UNTOUCHED",
+  "initial_wait_one_and_snapshot_verified": true,
+  "replication_bridge_detached_wait_zero_verified": true,
+  "manual_promote_then_two_masters": true,
+  "client_bridge_raw_writer_accepted_before_fence": true,
+  "client_bridge_old_dns_and_previous_ip_denied_after_fence": true,
+  "promoted_client_bridge_still_accepts_synthetic_writes": true,
+  "host_bypass_raw_eval_to_old_master_still_succeeds": true,
+  "unprivileged_client_side_route_only_fenced": true,
+  "globally_fenced_old_master": false,
+  "all_ingress_paths_closed": false,
+  "existing_long_lived_connections_proven_revoked": false,
+  "durable_multihost_consensus": false,
+  "real_user_data_accessed": false,
+  "production_auth_changed": false,
+  "legacy_otp_replay_race_fixed": false,
+  "production_deployment_authorized": false,
+  "deployed": false,
+  "release_gate": "BLOCKED_CLIENT_BRIDGE_ISOLATION_NOT_GLOBAL_FENCING_HOST_ALTERNATE_PATH_WRITABLE_NO_ATOMIC_REAL_OTP_OR_ACCOUNT_SESSION_OR_OWNER_SECURITY_APPROVAL"
+}
