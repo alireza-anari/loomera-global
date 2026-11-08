@@ -1,0 +1,53 @@
+{
+  "schema_version": 1,
+  "phase": "7.21",
+  "baseline_main_sha": "2e6f2b9933479c53d94b5fffaeddbabdbd95771b",
+  "baseline_phase720_postmerge_ci": "VERIFIED_ALL_FOUR_SUCCESS_42411929288",
+  "scope": "SYNTHETIC_DJANGO_REDIS54_PICKLED_STRING_PER_RECORD_WATCH_MULTI_CAS_CORRECT_WRONG_EXHAUSTION",
+  "redis_image": "redis:7.4-alpine",
+  "redis_endpoint": "127.0.0.1:6413 DB15; isolated Docker bridge and AOF volume",
+  "django_redis_version": "5.4.0",
+  "redis_py_version": "5.2.1",
+  "legacy_wire": "Django-Redis serialized dict in STRING with 40hex salted_hmac SHA1",
+  "test_only_atomic_outcomes": [
+    "SYNTHETIC_SINGLE_WINNER_DEL_EXEC_ONE",
+    "SYNTHETIC_INVALID_ATTEMPT_SET_XX_KEEPTTL_EXEC_TRUE",
+    "SYNTHETIC_EXHAUSTED_DEL_EXEC_ONE",
+    "CONCURRENT_MODIFICATION_CONFLICT",
+    "BACKEND_UNAVAILABLE_NO_GRANT"
+  ],
+  "actual_two_worker_same_snapshot_trials": [
+    "CORRECT_CORRECT_ONE_CONSUMER",
+    "WRONG_WRONG_ONE_ATTEMPT_COUNTER_UPDATE",
+    "CORRECT_WRONG_ONLY_ONE_TRANSITION",
+    "LAST_WRONG_CORRECT_ONLY_ONE_TERMINAL_TRANSITION"
+  ],
+  "generation_races": [
+    "SAME_BYTES_ABA_OLD_TRANSACTION_ABORT",
+    "ROTATED_DIGEST_OLD_TRANSACTION_ABORT"
+  ],
+  "ambiguity_model": "EXEC_REPLY_LOSS_RETURNS_BACKEND_UNAVAILABLE_NO_AUTH_GRANT",
+  "serialization_check": "Django-Redis encode/decode roundtrip on modified attempts; no Redis HASH migration",
+  "ttl_update_policy": "SET_XX_KEEPTTL; no extension on wrong attempts",
+  "real_otp_atomicity_fixed": false,
+  "real_otp_attempts_fixed": false,
+  "real_otp_issuance_and_rates_fixed": false,
+  "live_auth_or_sessions_rewired": false,
+  "legacy_sessions_drain_completed": false,
+  "old_master_globally_fenced": false,
+  "multihost_consensus_proven": false,
+  "cross_store_account_session_atomicity_proven": false,
+  "real_user_data_accessed": false,
+  "owner_security_signoff": false,
+  "production_deployment_authorized": false,
+  "deployed": false,
+  "release_gate": "BLOCKED_SYNTHETIC_SINGLE_NODE_RECORD_CAS_NOT_LIVE_AUTH_NO_ATOMIC_ISSUANCE_RATE_LIMITS_NO_LEGACY_SESSION_DRAIN_NO_GLOBAL_FENCING_NO_CROSS_STORE_CONSENSUS_OR_SECURITY_SIGNOFF",
+  "future_required": [
+    "Security/owner review of production-ready serializer, OTP create/consume/write-side authentication and failure model",
+    "Atomic request and resend cooldown and per-mobile/IP budget",
+    "Failover/rejoin fencing of all raw and privileged writers, including host bypass",
+    "Session/account lookup transactional consistency and active account binding",
+    "Historical OTP/web signup/password reset and session drain plus versioned reversible migration",
+    "Production rollout controls, observability, threat modeling, privacy, rollback and explicit authorization"
+  ]
+}

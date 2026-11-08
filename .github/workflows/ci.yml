@@ -451,6 +451,10 @@ jobs:
         run: |
           python manage.py test apps.accounts.test_phase7_otp_legacy_watch_candidate --failfast
 
+      - name: Phase 7.21 legacy serialized OTP per-record state machine and no-live guards
+        run: |
+          python manage.py test apps.accounts.test_phase7_otp_legacy_state_machine --failfast
+
       - name: Phase 7.7 experimental Redis OTP isolation and live-auth no-wiring guards
         run: |
           python manage.py test apps.accounts.test_phase7_redis_atomic_contract --failfast
@@ -583,6 +587,12 @@ jobs:
           LOOMERA_PHASE720_TEST_REDIS: "1"
         run: |
           bash tests/phase7_redis_legacy_watch_ci.sh
+
+      - name: Phase 7.21 real Redis legacy OTP correct wrong exhaustion and ABA CAS
+        env:
+          LOOMERA_PHASE721_TEST_REDIS: "1"
+        run: |
+          bash tests/phase7_redis_legacy_state_machine_ci.sh
 
   browser-smoke:
     name: Chromium keyboard smoke (booking and post-booking fixtures)
