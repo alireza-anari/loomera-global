@@ -170,7 +170,7 @@ class Phase727PostGISRedisIngressProof(TransactionTestCase):
                 validate_disposable_redis(anonymous, self.fixture),
                 self.prefix,
             )
-            with self.assertRaises(redis.exceptions.ResponseError):
+            with self.assertRaises(redis.exceptions.RedisError):
                 anonymous.ping()
             with self.assertRaises(redis.exceptions.ResponseError):
                 self.old.eval(SCRIPT, 1, "phase727:outside-prefix", "bad")
@@ -259,7 +259,7 @@ class Phase727PostGISRedisIngressProof(TransactionTestCase):
             socket_timeout=3,
         )
         try:
-            with self.assertRaises(redis.exceptions.ResponseError):
+            with self.assertRaises(redis.exceptions.AuthenticationError):
                 self.raw_write(fresh, "must-not-reach-redis")
         finally:
             fresh.close()
