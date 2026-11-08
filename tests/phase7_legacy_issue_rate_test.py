@@ -343,7 +343,9 @@ class Phase722AtomicIssueAndRateIntegrationTests(unittest.TestCase):
         self.raw.delete(mobile_key)
 
         self.raw.set(rec, b"test-only-invalid", ex=120)
-        self.assertEqual(self.issue().status, "challenge_already_pending")
+        # Corrupt serialized legacy STRING must fail closed, not be
+        # mistaken for a valid pending challenge (both forbid issuance).
+        self.assertEqual(self.issue().status, "invalid_existing_record")
         self.raw.persist(rec)
         self.assertEqual(self.issue().status, "invalid_existing_record")
         self.raw.delete(rec)
