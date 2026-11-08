@@ -459,6 +459,10 @@ jobs:
         run: |
           python manage.py test apps.accounts.test_phase7_otp_legacy_issue_rate --failfast
 
+      - name: Phase 7.23 integrated issue/verify outage and no-live-auth guards
+        run: |
+          python manage.py test apps.accounts.test_phase7_otp_legacy_integrated_recovery --failfast
+
       - name: Phase 7.7 experimental Redis OTP isolation and live-auth no-wiring guards
         run: |
           python manage.py test apps.accounts.test_phase7_redis_atomic_contract --failfast
@@ -598,7 +602,7 @@ jobs:
         run: |
           bash tests/phase7_redis_legacy_state_machine_ci.sh
 
-      - name: Phase 7.22 real Django-Redis OTP atomic issue resend rate CAS races
+      - name: Phase 7.22 + 7.23 real Django-Redis OTP issue/consume, retries and outage
         env:
           LOOMERA_PHASE722_TEST_REDIS: "1"
         run: |
