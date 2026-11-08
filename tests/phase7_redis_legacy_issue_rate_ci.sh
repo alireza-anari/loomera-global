@@ -36,6 +36,7 @@ docker network create --driver bridge "$bridge" >/dev/null
 docker volume create "$volume" >/dev/null
 docker run -d --name "$redis_container" --network "$bridge" \
   --mount "type=volume,source=$volume,target=/data" \
+  --label loomera.phase723=synthetic \
   --publish 127.0.0.1:6414:6379 \
   redis:7.4-alpine redis-server \
     --protected-mode no --appendonly yes --appendfsync always --save "" >/dev/null
@@ -56,4 +57,10 @@ fi
 export PYTHONPATH="$PWD"
 python tests/phase7_legacy_issue_rate_test.py -v
 
-echo "Phase 7.22 real multi-key issue/rate/cooldown CAS passed; CI-only"
+# Phase 7.23 MUST run on the *same* isolated physical Redis as Phase 7.22,
+# before the EXIT cleanup trap; no second port or shared production cache.
+export LOOMERA_PHASE723_TEST_REDIS="1"
+export LOOMERA_PHASE723_CONTAINER="$redis_container"
+python tests/phase7_legacy_integrated_recovery_test.py -v
+
+echo "Phase 7.22+7.23 real synthetic issue/rate/consume/outage CI passed"
