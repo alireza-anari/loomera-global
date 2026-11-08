@@ -1,0 +1,32 @@
+{
+  "schema_version": 1,
+  "phase": "7.27",
+  "baseline_main_sha": "6e4afcb685ce5d9398c57c1761f4acbc9294dcd7",
+  "baseline_phase726_postmerge_ci": "VERIFIED_FOUR_SUCCESS_42515689736",
+  "scope": "CI_ONLY_POSTGIS_REDIS74_PHYSICAL_UNGATED_WRITER_AND_ACL_NEGATIVE_PROOF",
+  "postgres": "isolated Django PostGIS test_ DB; two Phase7.26 synthetic tables",
+  "redis": "disposable Docker Redis 7.4 AOF, 127.0.0.1:6427 DB15, per-run fixture namespace, explicit ACL principals",
+  "synthetic_counterexamples": [
+    "PHASE726_POSTGRES_STALE_CLAIM_DENIED_BUT_OLD_REDIS_RAW_EVAL_WRITES",
+    "POSTGRES_UNIQUE_OPERATION_CONFLICT_DOES_NOT_PREVENT_DIRECT_REDIS_SET",
+    "ACKNOWLEDGED_POSTGRES_CLAIM_BEFORE_PROMOTION_DOES_NOT_FENCE_DELAYED_REDIS_WRITE",
+    "POSTGRES_TRANSACTION_ROLLBACK_DOES_NOT_ROLL_BACK_REDIS_EFFECT",
+    "POSTGRES_MISSING_LEASE_OR_LEDGER_DOES_NOT_REVOKE_RAW_WRITER",
+    "ACL_OFF_BLOCKS_ONLY_EXPLICIT_STALE_CREDENTIAL_ON_DISPOSABLE_SERVER",
+    "PREEXISTING_STALE_SOCKET_AND_FRESH_STALE_CONNECTION_DENIED_LOCALLY_AFTER_REVOCATION",
+    "PROMOTED_CREDENTIAL_AND_TEST_ADMIN_RETAIN_RAW_WRITE_PATH",
+    "ANONYMOUS_WRITES_AND_OUT_OF_PREFIX_KEYS_DENIED_BY_TEST_ACL",
+    "ALL_ROUTE_RESULTS_AND_RELEASE_GATES_DENY_PRODUCTION"
+  ],
+  "production_auth_changed": false,
+  "raw_old_master_globally_fenced": false,
+  "all_writer_ingress_authority_enforced": false,
+  "postgres_redis_atomicity": false,
+  "external_sms_exactly_once": false,
+  "live_account_or_session_atomicity": false,
+  "real_customer_data_accessed": false,
+  "security_owner_signoff": false,
+  "production_deployment_authorized": false,
+  "deployed": false,
+  "release_gate": "BLOCKED: PostgreSQL-only authority does not control raw Redis ingress or transact with Redis/SMS; bounded ACL revocation is not a global fence."
+}
