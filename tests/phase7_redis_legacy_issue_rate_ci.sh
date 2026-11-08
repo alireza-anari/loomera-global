@@ -37,6 +37,7 @@ docker volume create "$volume" >/dev/null
 docker run -d --name "$redis_container" --network "$bridge" \
   --mount "type=volume,source=$volume,target=/data" \
   --label loomera.phase723=synthetic \
+  --label loomera.phase724=idempotency-test \
   --publish 127.0.0.1:6414:6379 \
   redis:7.4-alpine redis-server \
     --protected-mode no --appendonly yes --appendfsync always --save "" >/dev/null
@@ -63,4 +64,10 @@ export LOOMERA_PHASE723_TEST_REDIS="1"
 export LOOMERA_PHASE723_CONTAINER="$redis_container"
 python tests/phase7_legacy_integrated_recovery_test.py -v
 
-echo "Phase 7.22+7.23 real synthetic issue/rate/consume/outage CI passed"
+# Phase 7.24 reuses the SAME physical AOF master and exact prior
+# isolated fixture namespace while the EXIT trap owns all resources.
+export LOOMERA_PHASE724_TEST_REDIS="1"
+export LOOMERA_PHASE724_CONTAINER="$redis_container"
+python tests/phase7_legacy_idempotency_test.py -v
+
+echo "Phases 7.22-7.24 real synthetic issuer/verify/idempotency/AOF CI PASSED"
