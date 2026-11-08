@@ -455,6 +455,10 @@ jobs:
         run: |
           python manage.py test apps.accounts.test_phase7_otp_legacy_state_machine --failfast
 
+      - name: Phase 7.22 synthetic legacy OTP four-key issue rate safety and no-live-wiring
+        run: |
+          python manage.py test apps.accounts.test_phase7_otp_legacy_issue_rate --failfast
+
       - name: Phase 7.7 experimental Redis OTP isolation and live-auth no-wiring guards
         run: |
           python manage.py test apps.accounts.test_phase7_redis_atomic_contract --failfast
@@ -593,6 +597,12 @@ jobs:
           LOOMERA_PHASE721_TEST_REDIS: "1"
         run: |
           bash tests/phase7_redis_legacy_state_machine_ci.sh
+
+      - name: Phase 7.22 real Django-Redis OTP atomic issue resend rate CAS races
+        env:
+          LOOMERA_PHASE722_TEST_REDIS: "1"
+        run: |
+          bash tests/phase7_redis_legacy_issue_rate_ci.sh
 
   browser-smoke:
     name: Chromium keyboard smoke (booking and post-booking fixtures)
