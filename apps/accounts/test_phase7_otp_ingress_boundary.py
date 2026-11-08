@@ -181,6 +181,11 @@ class Phase727IngressBoundaryOfflineGuards(SimpleTestCase):
             self.assertIn(marker, shell)
         self.assertIn("bash tests/phase7_postgis_redis_ingress_ci.sh",
                       workflow)
+        ingress = (ROOT / "apps/accounts/test_phase7_postgis_redis_ingress.py").read_text(
+            encoding="utf-8"
+        )
+        self.assertIn('"CLIENT", "KILL", "USER", "phase727_stale"', ingress)
+        self.assertIn("existing-socket-survives-acl-off", ingress)
         self.assertNotIn("FLUSHALL", shell)
         self.assertNotIn("FLUSHDB", shell)
 

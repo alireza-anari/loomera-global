@@ -237,15 +237,22 @@ class Phase727PostGISRedisIngressProof(TransactionTestCase):
         self.assertEqual(self.raw_write(self.old, "sql-halted-raw-live"), b"OK")
         self.assertEqual(self.admin.get(self.key), b"sql-halted-raw-live")
 
-    def test_local_acl_revocation_denies_existing_and_fresh_stale_only(self):
+    def test_acl_off_needs_existing_client_kill_and_still_not_global(self):
         self.assertEqual(self.raw_write(self.old, "old-before-revoke"), b"OK")
         self.promote()
         self.assertEqual(self.claim().status, "stale_writer")
         # Physical ACL revision on this exact disposable node; not a multihost
         # command or a PostgreSQL operation. Existing socket was opened above.
         self.admin.execute_command("ACL", "SETUSER", "phase727_stale", "off")
-        with self.assertRaises(redis.exceptions.ResponseError):
-            self.raw_write(self.old, "must-not-reach-redis")
+        # Critical physical negative proof: Redis 7.4 ACL "off" does NOT
+        # invalidate an already authenticated socket. Do not call this
+        # state fenced simply because a fresh AUTH attempt is rejected.
+        self.assertEqual(
+            self.raw_write(self.old, "existing-socket-survives-acl-off"), b"OK"
+        )
+        self.assertEqual(
+            self.admin.get(self.key), b"existing-socket-survives-acl-off"
+        )
         fresh = redis.Redis(
             host="127.0.0.1", port=6427, db=15, username="phase727_stale",
             password=self.credentials["STALE"], socket_connect_timeout=1,
@@ -256,7 +263,17 @@ class Phase727PostGISRedisIngressProof(TransactionTestCase):
                 self.raw_write(fresh, "must-not-reach-redis")
         finally:
             fresh.close()
-        self.assertEqual(self.admin.get(self.key), b"old-before-revoke")
+        # Independently terminate the old session on THIS Redis server.
+        # Other Redis servers/privileged credentials remain out of scope.
+        killed = self.admin.execute_command(
+            "CLIENT", "KILL", "USER", "phase727_stale"
+        )
+        self.assertGreaterEqual(killed, 1)
+        with self.assertRaises(redis.exceptions.RedisError):
+            self.raw_write(self.old, "must-not-reach-after-client-kill")
+        self.assertEqual(
+            self.admin.get(self.key), b"existing-socket-survives-acl-off"
+        )
         self.assertEqual(self.raw_write(self.promoted, "new-raw-after-revoke"), b"OK")
         self.assertEqual(self.raw_write(self.admin, "admin-raw-bypass"), b"OK")
         self.assertEqual(self.admin.get(self.key), b"admin-raw-bypass")
