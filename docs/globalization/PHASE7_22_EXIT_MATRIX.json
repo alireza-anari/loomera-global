@@ -1,0 +1,65 @@
+{
+  "schema_version": 1,
+  "phase": "7.22",
+  "baseline_main_sha": "7f34b5639d089ec34285d7c5cf2d19f06e46fde6",
+  "baseline_phase721_postmerge_ci": "VERIFIED_ALL_FOUR_SUCCESS_42447668047",
+  "scope": "CI_ONLY_DJANGO_REDIS54_SERIALIZED_STRING_FOUR_KEY_WATCH_ISSUE_RESEND_MOBILE_IP_RATE_SINGLE_NODE",
+  "redis_image": "redis:7.4-alpine",
+  "redis_endpoint": "127.0.0.1:6414/15 separate Docker bridge and AOF",
+  "legacy_record": "Django-Redis 5.4 dictionary serialized into Redis STRING",
+  "legacy_counters": "Django-Redis 5.4 numeric integer optimization into Redis STRING",
+  "synthetic_ttl_seconds": {
+    "record": 120,
+    "resend": 60,
+    "rate": 3600
+  },
+  "synthetic_limits": {
+    "mobile_per_hour": 2,
+    "ip_per_hour": 3
+  },
+  "watched_keys": [
+    "record",
+    "resend",
+    "mobile-hour-counter",
+    "ip-hour-counter"
+  ],
+  "committed_operations": "MULTI SET record EX; SET cooldown EX; SET mobile counter EX or XX KEEPTTL; SET ip counter EX or XX KEEPTTL; EXEC",
+  "source_of_truth": "single writable isolated Redis node ONLY",
+  "synthetic_tests": [
+    "FOUR_REAL_REDIS_STRING_KEYS_SIMULTANEOUSLY_MUTATED",
+    "CHALLENGE_PENDING_OR_RESEND_COOLDOWN_DENY_NO_CHARGE",
+    "MOBILE_QUOTA_LIMIT_AND_NO_TTL_EXTENSION",
+    "IP_QUOTA_SHARED_ACROSS_MOBILES",
+    "TWO_WORKERS_SAME_MOBILE_ONE_ISSUE_ONE_CONFLICT",
+    "TWO_WORKERS_DIFFERENT_MOBILES_SAME_IP_ONE_QUOTA_COMMIT_ONE_CONFLICT",
+    "TEST_ONLY_ISSUED_RECORD_ACCEPTED_BY_PHASE721_LEGACY_RECORD_VALIDATION_AND_RAW_WATCH_DELETE",
+    "IDENTICAL_BYTE_REISSUE_OF_WATCHED_QUOTA_KEY_ABORTS",
+    "MALFORMED_COUNTER_AND_REDIS_TYPE_DENIED_WITHOUT_PARTIAL_WRITES",
+    "SIMULATED_HOUR_ROLLOVER_SEPARATE_COUNTER_NAMESPACE",
+    "AMBIGUOUS_POST_COMMIT_EXEC_REPLY_NEVER_AUTHORIZES_REAL_ISSUE",
+    "STRICT_UNTRUSTED_REMOTE_AND_NONFIXTURE_SCOPE_REJECTION"
+  ],
+  "live_issue_or_rate_atomicity_fixed": false,
+  "live_otp_consume_replay_fixed": false,
+  "live_auth_or_sessions_rewired": false,
+  "real_otp_sent": false,
+  "all_legacy_sessions_drained": false,
+  "old_master_globally_fenced": false,
+  "multihost_consensus_proven": false,
+  "cross_store_account_session_atomicity_proven": false,
+  "real_user_data_accessed": false,
+  "owner_security_signoff": false,
+  "production_deployment_authorized": false,
+  "deployed": false,
+  "release_gate": "BLOCKED_SYNTHETIC_SINGLE_MASTER_MULTI_KEY_CAS_NOT_LIVE_OTP_NO_REMOTE_FENCING_NO_ATOMIC_ACCOUNT_SESSION_NO_PRODUCTION_OWNER_SECURITY_SIGNOFF",
+  "unproven_risks": [
+    "Non-atomic existing Production OTP request and verify functions are still unchanged",
+    "No durable cross-node Redis consensus, failover fencing or old-master denial",
+    "Test only checks compatibility with Phase 7.21 serialized record, not a wired end-to-end Production verifier",
+    "Hour rollover and Redis TTL are test-only inputs; no real server-time trusted clock/expiry design",
+    "No external SMS provider delivery receipts or resend transactional outbox",
+    "No strict Production IP/forwarded-for normalization or trusted-proxy handling",
+    "Existing client workflows and old OTP/password-reset sessions not drained",
+    "No atomic cross-store account/session authentication or live rate limiting"
+  ]
+}
