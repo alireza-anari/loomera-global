@@ -83,7 +83,7 @@ class Phase727PostGISRedisIngressProof(TransactionTestCase):
         self.admin.execute_command(
             "ACL", "SETUSER", name, "reset", "on", "resetpass",
             ">" + self.credentials[role],
-            "~" + self.prefix + "*", "+ping", "+get", "+set", "+eval",
+            "~" + self.prefix + "*", "+ping", "+select", "+get", "+set", "+eval",
         )
         client = redis.Redis(
             host="127.0.0.1", port=6427, db=15, username=name,
