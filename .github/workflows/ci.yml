@@ -471,6 +471,10 @@ jobs:
         run: |
           python manage.py test apps.accounts.test_phase7_otp_idempotency_failover --failfast
 
+      - name: Phase 7.26 PostgreSQL synthetic write-authority offline boundary
+        run: |
+          python manage.py test apps.accounts.test_phase7_otp_postgis_authority_guards --failfast
+
       - name: Phase 7.7 experimental Redis OTP isolation and live-auth no-wiring guards
         run: |
           python manage.py test apps.accounts.test_phase7_redis_atomic_contract --failfast
@@ -720,6 +724,12 @@ jobs:
       - name: Phase 7.4 PostgreSQL shadow UNIQUE CAS and transaction rollback rehearsal
         run: |
           python manage.py test apps.accounts.test_phase7_postgis_shadow --failfast --noinput
+
+      - name: Phase 7.26 isolated PostGIS global operation ledger and epoch CAS concurrency
+        env:
+          LOOMERA_PHASE726_TEST_POSTGIS: "1"
+        run: |
+          python manage.py test apps.accounts.test_phase7_postgis_writer_authority --failfast --noinput
 
       - name: Phase 7.5 reversible Django shadow expansion and bounded synthetic backfill
         run: |

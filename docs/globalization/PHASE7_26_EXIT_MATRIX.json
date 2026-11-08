@@ -1,0 +1,34 @@
+{
+  "schema_version": 1,
+  "phase": "7.26",
+  "baseline_main_sha": "d49a9bb92b1ff1ff0d4fe9786731dfaa1dbaa48b",
+  "baseline_phase725_postmerge_ci": "VERIFIED_FOUR_SUCCESS_42453506211",
+  "scope": "CI_ONLY_POSTGIS_TEST_DATABASE_SINGLE_WRITER_AND_OPERATION_UNIQUE_CONSTRAINT",
+  "test_tables": [
+    "loomera_phase726_synthetic_lease",
+    "loomera_phase726_synthetic_operations"
+  ],
+  "topology": "isolated PostGIS test DB, two independent PostgreSQL client sessions; prior Phase 7.25 Redis split-brain bypass remains relevant",
+  "proofs": [
+    "POSTGRES_SELECT_FOR_UPDATE_SERIALIZES_COOPERATING_WRITERS",
+    "GLOBAL_UNIQUE_OPERATION_ID_SURVIVES_TEST_EPOCH_ROTATION",
+    "EPOCH_OWNER_CAS_DENIES_OLD_WRITER_AFTER_PROMOTION",
+    "MULTICONNECTION_DIFFERENT_DIGEST_RACE_ONLY_ONE_INSERT",
+    "MULTICONNECTION_SAME_DIGEST_RACE_ONLY_ONE_INSERT",
+    "TEST_TRANSACTION_ROLLBACK_REVERTS_LEDGER",
+    "TERMINAL_HALT_AND_MISSING_GATE_FAIL_CLOSED",
+    "MISSING_POSTGRES_LEDGER_RAISES_DATABASE_ERROR_NO_FALLBACK"
+  ],
+  "cooperating_writer_db_constraint_rehearsed": true,
+  "live_redis_dual_master_prior_counterexample_acknowledged": true,
+  "production_otp_wired": false,
+  "real_customer_records_accessed": false,
+  "old_master_raw_writers_fenced": false,
+  "postgres_redis_atomicity_proven": false,
+  "external_sms_exactly_once_proven": false,
+  "real_session_idempotency_proven": false,
+  "independent_security_signoff": false,
+  "production_deployment_authorized": false,
+  "deployed": false,
+  "release_gate": "BLOCKED: local PostgreSQL authority cannot fence bypass Redis ingress or atomically commit OTP/SMS/session cross-store side effects."
+}
