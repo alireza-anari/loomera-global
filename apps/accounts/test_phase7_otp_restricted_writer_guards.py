@@ -18,7 +18,7 @@ ROOT = Path(__file__).resolve().parents[2]
 
 class Phase728OfflineRestrictedGatewayGuards(SimpleTestCase):
     @staticmethod
-    def client(**overrides):
+    def fake_client(**overrides):
         scope = {
             "host": "127.0.0.1", "port": 6428, "db": 15,
             "username": "phase728_gateway",
@@ -41,7 +41,7 @@ class Phase728OfflineRestrictedGatewayGuards(SimpleTestCase):
     def test_restricted_scope_accepts_exact_test_target_only(self):
         with self.grant():
             self.assertEqual(
-                gate.validate_gateway_scope(self.client(), "a" * 32),
+                gate.validate_gateway_scope(self.fake_client(), "a" * 32),
                 gate.PREFIX + "a" * 32 + ":",
             )
             for update in (
@@ -52,13 +52,13 @@ class Phase728OfflineRestrictedGatewayGuards(SimpleTestCase):
                 {"username": "phase728_legacy"}, {"username": None},
             ):
                 with self.subTest(update=update), self.assertRaises(RuntimeError):
-                    gate.validate_gateway_scope(self.client(**update), "a" * 32)
+                    gate.validate_gateway_scope(self.fake_client(**update), "a" * 32)
 
     def test_reject_invalid_fixture_and_unstructured_clients(self):
         with self.grant():
             for ident in ("b" * 31, "B" * 32, "c" * 33, None, True, 12):
                 with self.subTest(ident=str(ident)), self.assertRaises(ValueError):
-                    gate.validate_gateway_scope(self.client(), ident)
+                    gate.validate_gateway_scope(self.fake_client(), ident)
             for bad in (
                 object(), SimpleNamespace(connection_pool=None),
                 SimpleNamespace(connection_pool=SimpleNamespace(
@@ -71,7 +71,7 @@ class Phase728OfflineRestrictedGatewayGuards(SimpleTestCase):
     def test_every_ci_grant_is_indispensable(self):
         with patch.dict(os.environ, {}, clear=True):
             with self.assertRaises(RuntimeError):
-                gate.validate_gateway_scope(self.client(), "a" * 32)
+                gate.validate_gateway_scope(self.fake_client(), "a" * 32)
         for key in (
             "GITHUB_ACTIONS", "GITHUB_RUN_ID", "GITHUB_RUN_ATTEMPT",
             "LOOMERA_PHASE728_TEST_REDIS",
@@ -80,7 +80,7 @@ class Phase728OfflineRestrictedGatewayGuards(SimpleTestCase):
             with self.grant():
                 os.environ.pop(key)
                 with self.subTest(key=key), self.assertRaises(RuntimeError):
-                    gate.validate_gateway_scope(self.client(), "a" * 32)
+                    gate.validate_gateway_scope(self.fake_client(), "a" * 32)
 
     def test_truthy_values_cannot_authorize_production(self):
         for status in (
