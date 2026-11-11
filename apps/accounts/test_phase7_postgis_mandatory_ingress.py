@@ -131,9 +131,11 @@ class Phase728PhysicalRestrictedWriterTest(TransactionTestCase):
         self.legacy = self.configure_actor(
             "phase728_legacy", "LEGACY", "+get",
         )
-        self.revocable = self.configure_actor(
-            "phase728_revoke", "REVOKE", "+get", "+set", "+eval",
-        )
+        # Adversarial writer is OFF outside its single explicit test.
+        self.admin.execute_command("ACL", "SETUSER", "phase728_revoke",
+                                   "reset", "off")
+        self.admin.execute_command("CLIENT", "KILL", "USER", "phase728_revoke")
+        self.revocable = None
         self.gateway = SyntheticRestrictedWriterGateway(
             self.gateway_client, self.fixture,
         )
@@ -154,7 +156,8 @@ class Phase728PhysicalRestrictedWriterTest(TransactionTestCase):
             self.clear_fixture()
             self.gateway_client.close()
             self.legacy.close()
-            self.revocable.close()
+            if self.revocable is not None:
+                self.revocable.close()
             with connection.cursor() as cur:
                 cur.execute(f'DROP TABLE IF EXISTS "{LEDGER}"')
                 cur.execute(f'DROP TABLE IF EXISTS "{LEASE}"')
@@ -274,6 +277,9 @@ class Phase728PhysicalRestrictedWriterTest(TransactionTestCase):
         self.assertIsNone(self.admin.get(self.key()))
 
     def test_acl_off_does_not_close_old_socket_without_client_kill(self):
+        self.revocable = self.configure_actor(
+            "phase728_revoke", "REVOKE", "+get", "+set", "+eval",
+        )
         proof = self.prefix + "revocation-proof"
         self.assertEqual(self.revocable.eval(RAW, 1, proof, "before-off"), b"OK")
         self.admin.execute_command("ACL", "SETUSER", "phase728_revoke", "off")
