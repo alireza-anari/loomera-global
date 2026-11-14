@@ -487,6 +487,10 @@ jobs:
         run: |
           python manage.py test apps.accounts.test_phase7_otp_outbox_guards --failfast
 
+      - name: Phase 7.30 read-only cross-store incident review and ingress blockers
+        run: |
+          python manage.py test apps.accounts.test_phase7_otp_review_guards --failfast
+
       - name: Phase 7.7 experimental Redis OTP isolation and live-auth no-wiring guards
         run: |
           python manage.py test apps.accounts.test_phase7_redis_atomic_contract --failfast
@@ -750,10 +754,11 @@ jobs:
         run: |
           bash tests/phase7_postgis_redis_ingress_ci.sh
 
-      - name: Phase 7.28-7.29 restricted gateway and SQL-first outbox physical tests
+      - name: Phase 7.28-7.30 restricted gateway, outbox and read-only incident review
         env:
           LOOMERA_PHASE728_TEST_REDIS: "1"
           LOOMERA_PHASE729_TEST_OUTBOX: "1"
+          LOOMERA_PHASE730_TEST_REVIEW: "1"
           LOOMERA_PHASE726_TEST_POSTGIS: "1"
         run: |
           bash tests/phase7_postgis_restricted_writer_ci.sh

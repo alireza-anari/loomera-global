@@ -1,0 +1,43 @@
+{
+  "schema_version": 1,
+  "phase": "7.30",
+  "baseline_main_sha": "63b92c748881072b951016645caac910cc793cec",
+  "baseline_phase729_postmerge_ci": "VERIFIED_FOUR_SUCCESS_43627366547",
+  "scope": "ISOLATED_TEST_POSTGIS_AND_LOCALHOST_REDIS_GET_ONLY_REVIEW_NO_RECONCILIATION",
+  "known_ingress_routes": {
+    "legacy_fixture": "READONLY_ACL_SET_EVAL_DENIED_TEST_ONLY",
+    "cooperating_gateway": "COOPERATIVE_PG_GATE_ONLY_RAW_CLIENT_NOT_GLOBALLY_FENCED",
+    "fixture_admin": "PRIVILEGED_RAW_WRITE_BYPASS_OPEN",
+    "already_authenticated_socket": "ACL_OFF_ALONE_DOES_NOT_CLOSE_ACTIVE_SOCKET",
+    "alternate_host_endpoint": "PRIOR_RAW_OLD_PRIMARY_HOST_BYPASS_STILL_UNFENCED",
+    "unknown_redis_nodes": "UNVERIFIED_NOT_GLOBALLY_FENCED"
+  },
+  "bounded_observations": [
+    "READONLY_LEGACY_GET_PRINCIPAL_REQUIRED_WITH_EXACT_CI_SCOPES",
+    "EXACT_ONE_SQL_FULL_OUTER_LEDGER_OUTBOX_SNAPSHOT_BETWEEN_TWO_REDIS_GETS",
+    "PENDING_OBSERVED_QUARANTINED_AND_INFLIGHT_STATES_CLASSIFIED_WITH_MARKER_PRESENCE",
+    "REAL_LOST_ACK_AFTER_REDIS_EFFECT_RETAINS_INFLIGHT_WITH_MATCHING_MARKER",
+    "REAL_PRE_WRITE_FAILURE_RETAINS_INFLIGHT_WITH_ABSENT_MARKER",
+    "ORPHAN_LEDGER_OR_INTENT_AND_UNTRACKED_REDIS_MARKER_CLASSIFIED",
+    "OWNER_EPOCH_STALE_HALTED_AND_MISSING_AUTHORITY_CLASSIFIED",
+    "RAW_ADMIN_EVAL_AFTER_POSTGRES_HALT_REMAINS_POSSIBLE",
+    "PHYSICAL_INTERPOSED_MARKER_CHANGE_DETECTED_AS_UNSTABLE",
+    "DIAGNOSTIC_OUTPUT_OMITS_OPERATION_ID_AND_FINGERPRINT",
+    "NO_SQL_OR_REDIS_REPAIR_AND_NO_AUTOMATIC_REPLAY"
+  ],
+  "limitations": [
+    "REDIS_GET_SQL_GET_SEQUENCE_IS_NOT_AN_ATOMIC_CROSS_STORE_SNAPSHOT",
+    "REDIS_ABA_OR_WRITE_AFTER_SECOND_GET_CANNOT_BE_RULED_OUT",
+    "READONLY_FIXTURE_ROLE_DOES_NOT_PROVE_GLOBAL_CREDENTIAL_OR_NETWORK_POLICY",
+    "RAW_PRIVILEGED_WRITER_AND_STALE_AUTHENTICATED_SOCKETS_REMAIN_RELEASE_BLOCKERS"
+  ],
+  "live_auth_code_changed": false,
+  "automatic_outbox_recovery_approved": false,
+  "redis_global_ingress_fenced": false,
+  "cross_store_atomic_snapshot": false,
+  "external_sms_receipt_proven": false,
+  "security_owner_approval": false,
+  "production_deployment_authorized": false,
+  "deployed": false,
+  "release_gate": "BLOCKED: read-only synthetic outbox evidence and narrow ACL tests cannot authorize replay, guarantee external delivery, reconcile cross-store divergence, or close privileged/unknown Redis ingress."
+}

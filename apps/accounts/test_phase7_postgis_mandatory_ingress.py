@@ -21,6 +21,9 @@ import redis
 from loomera.globalization.otp_postgis_writer_authority_rehearsal import (
     LEASE, LEDGER, SyntheticPostGISWriterAuthority, verify_ci_test_scope,
 )
+from loomera.globalization.otp_outbox_review_rehearsal import (
+    SyntheticReadOnlyCrossStoreReviewer, validate_review_scope,
+)
 from loomera.globalization.otp_postgis_outbox_rehearsal import (
     OUTBOX, SyntheticPostGISOutboxRehearsal,
 )
@@ -637,3 +640,214 @@ class Phase728PhysicalRestrictedWriterTest(TransactionTestCase):
             self.dispatch_outbox()
         self.assertEqual(self.outbox_state(), "inflight")
         self.assertIsNone(self.admin.get(self.key()))
+
+    # Phase 7.30 — read-only review of REAL isolated SQL + Redis effects.
+    @property
+    def reviewer(self):
+        return SyntheticReadOnlyCrossStoreReviewer(self.legacy, self.fixture)
+
+    def inspect730(self, op="a" * 32, digest="b" * 64):
+        return self.reviewer.inspect(operation_id=op, fingerprint=digest)
+
+    def test_phase730_pending_intent_never_implies_delivery(self):
+        self.enqueue_outbox()
+        evidence = self.inspect730()
+        self.assertEqual(evidence.classification, "pending_marker_absent")
+        self.assertTrue(evidence.redis_reads_stable)
+        self.assertFalse(evidence.marker_present)
+        self.assertTrue(evidence.requires_manual_review)
+        self.assertFalse(evidence.auto_replay_allowed)
+        self.assertFalse(evidence.production_release_authorized)
+        self.assertEqual(self.outbox_state(), "pending")
+        self.assertIsNone(self.admin.get(self.key()))
+
+    def test_phase730_observed_matching_bytes_are_not_delivery_receipt(self):
+        self.enqueue_outbox()
+        self.assertEqual(self.dispatch_outbox().status, "synthetic_marker_observed")
+        evidence = self.inspect730()
+        self.assertEqual(evidence.classification, "observed_marker_matches_untrusted")
+        self.assertTrue(evidence.marker_present)
+        self.assertTrue(evidence.redis_reads_stable)
+        self.assertFalse(evidence.external_sms_delivery_proven)
+        self.assertFalse(evidence.cross_store_atomic_snapshot_proven)
+        self.assertEqual(self.admin.get(self.key()), b"b" * 64)
+
+    def test_phase730_inflight_with_marker_after_real_lost_ack(self):
+        self.enqueue_outbox()
+        actual_set = self.gateway_client.set
+
+        def physical_write_then_timeout(*args, **kwargs):
+            self.assertIs(actual_set(*args, **kwargs), True)
+            raise redis.exceptions.ConnectionError("synthetic_lost_ack")
+
+        with patch.object(self.gateway_client, "set",
+                          side_effect=physical_write_then_timeout):
+            with self.assertRaises(redis.exceptions.ConnectionError):
+                self.dispatch_outbox()
+        evidence = self.inspect730()
+        self.assertEqual(evidence.classification, "inflight_marker_matches_untrusted")
+        self.assertTrue(evidence.marker_present)
+        self.assertEqual(self.outbox_state(), "inflight")
+        self.assertEqual(self.dispatch_outbox().status,
+                         "inflight_requires_manual_review")
+
+    def test_phase730_inflight_without_marker_is_also_not_replay_grant(self):
+        self.enqueue_outbox()
+        with patch.object(self.gateway_client, "set",
+                          side_effect=redis.exceptions.ConnectionError(
+                              "synthetic_down"
+                          )):
+            with self.assertRaises(redis.exceptions.ConnectionError):
+                self.dispatch_outbox()
+        evidence = self.inspect730()
+        self.assertEqual(evidence.classification, "inflight_marker_absent")
+        self.assertFalse(evidence.marker_present)
+        self.assertFalse(evidence.auto_replay_allowed)
+        self.assertEqual(self.outbox_state(), "inflight")
+
+    def test_phase730_admin_raw_bypass_visible_but_not_fenced(self):
+        self.enqueue_outbox()
+        self.assertEqual(self.admin.eval(RAW, 1, self.key(),
+                                         "fixture-admin-bypass"), b"OK")
+        evidence = self.inspect730()
+        self.assertEqual(evidence.classification, "pending_foreign_marker")
+        self.assertFalse(evidence.all_redis_ingress_fenced)
+        self.assertEqual(self.outbox_state(), "pending")
+        self.assertEqual(self.admin.get(self.key()), b"fixture-admin-bypass")
+        self.assertEqual(self.authority.halt(
+            owner="old", epoch=1,
+        ).status, "synthetic_halted")
+        self.assertEqual(self.inspect730().classification, "authority_halted")
+        self.assertEqual(self.admin.eval(
+            RAW, 1, self.key(), "admin-after-halt",
+        ), b"OK")
+        self.assertEqual(self.admin.get(self.key()), b"admin-after-halt")
+
+    def test_phase730_sql_orphan_ledger_and_intent_are_distinguished(self):
+        self.enqueue_outbox()
+        with connection.cursor() as cur:
+            cur.execute(f'DELETE FROM "{OUTBOX}"')
+        self.assertEqual(
+            self.inspect730().classification, "orphan_ledger_without_intent",
+        )
+        with connection.cursor() as cur:
+            cur.execute(f'DELETE FROM "{LEDGER}"')
+            cur.execute(
+                f'INSERT INTO "{OUTBOX}" '
+                '(operation_id, fingerprint, epoch, owner, state) '
+                'VALUES (%s, %s, %s, %s, %s)',
+                ["a" * 32, "b" * 64, 1, "old", "pending"],
+            )
+        self.assertEqual(
+            self.inspect730().classification, "orphan_intent_without_ledger",
+        )
+
+    def test_phase730_untracked_redis_marker_and_no_operation(self):
+        self.assertEqual(
+            self.inspect730().classification, "no_intent_or_marker",
+        )
+        self.assertTrue(self.admin.set(self.key(), "fixture-untracked"))
+        self.assertEqual(
+            self.inspect730().classification, "untracked_redis_marker",
+        )
+        self.assertEqual(self.ledger(), ())
+
+    def test_phase730_fingerprint_mismatch_stays_redacted(self):
+        self.enqueue_outbox()
+        with connection.cursor() as cur:
+            cur.execute(
+                f'UPDATE "{OUTBOX}" SET fingerprint=%s WHERE operation_id=%s',
+                ["c" * 64, "a" * 32],
+            )
+        evidence = self.inspect730()
+        self.assertEqual(evidence.classification, "conflicting_sql_identity")
+        # The report contains only structural classification and bools.
+        self.assertNotIn("a" * 32, repr(evidence))
+        self.assertNotIn("b" * 64, repr(evidence))
+        self.assertNotIn("c" * 64, repr(evidence))
+
+    def test_phase730_stale_epoch_and_missing_lease_are_not_ignored(self):
+        self.enqueue_outbox()
+        self.assertEqual(self.authority.promote(
+            expected_owner="old", expected_epoch=1,
+            new_owner="promoted",
+        ).status, "synthetic_promoted")
+        self.assertEqual(self.inspect730().classification, "owner_epoch_stale")
+        with connection.cursor() as cur:
+            cur.execute(f'DELETE FROM "{LEASE}"')
+        self.assertEqual(self.inspect730().classification, "authority_missing")
+        self.assertIsNone(self.admin.get(self.key()))
+
+    def test_phase730_two_reads_detect_interposed_physical_raw_write(self):
+        self.enqueue_outbox()
+        actual_read = self.legacy.get
+        reads = [0]
+
+        def interpose_between_reads(key):
+            value = actual_read(key)
+            reads[0] += 1
+            if reads[0] == 1:
+                self.assertTrue(self.admin.set(self.key(), "interposed-raw-write"))
+            return value
+
+        with patch.object(self.legacy, "get",
+                          side_effect=interpose_between_reads):
+            evidence = self.inspect730()
+        self.assertEqual(reads[0], 2)
+        self.assertEqual(evidence.classification, "redis_changed_during_review")
+        self.assertFalse(evidence.redis_reads_stable)
+        self.assertTrue(evidence.marker_present)
+        self.assertFalse(evidence.auto_replay_allowed)
+        self.assertEqual(self.outbox_state(), "pending")
+
+    def test_phase730_reviewer_never_writes_or_repairs_sql_or_redis(self):
+        self.enqueue_outbox()
+        self.assertTrue(self.admin.set(self.key(), "foreign"))
+        before_ledger = self.ledger()
+        before_state = self.outbox_state()
+        before_marker = self.admin.get(self.key())
+        with patch.object(self.legacy, "set",
+                          side_effect=AssertionError("read-only violation")):
+            self.assertEqual(
+                self.inspect730().classification, "pending_foreign_marker",
+            )
+        self.assertEqual(self.ledger(), before_ledger)
+        self.assertEqual(self.outbox_state(), before_state)
+        self.assertEqual(self.admin.get(self.key()), before_marker)
+
+    def test_phase730_readonly_actor_denied_writes_and_acl_verified(self):
+        self.enqueue_outbox()
+        self.assertEqual(
+            validate_review_scope(self.legacy, self.fixture), self.prefix,
+        )
+        with self.assertRaises(redis.exceptions.RedisError):
+            self.legacy.set(self.key(), "legacy-writer-denied")
+        with self.assertRaises(redis.exceptions.RedisError):
+            self.legacy.eval(RAW, 1, self.key(), "legacy-script-denied")
+        legacy_acl = self.admin.acl_getuser("phase728_legacy")
+        admin_acl = self.admin.acl_getuser("phase728_admin")
+        self.assertIn("+get", str(legacy_acl.get("commands", "")))
+        # Redis ACL GETUSER may encode +@all as the 'allcommands' flag
+        # rather than an entry in 'commands'. The separate physical raw
+        # EVAL test proves the admin bypass without response-format guesses.
+        self.assertIsInstance(admin_acl, dict)
+        self.assertIn("flags", admin_acl)
+        self.assertFalse(self.inspect730().auto_replay_allowed)
+
+    def test_phase730_revoked_legacy_reader_fails_closed_without_repair(self):
+        self.enqueue_outbox()
+        self.admin.execute_command("ACL", "SETUSER", "phase728_legacy", "off")
+        self.admin.execute_command("CLIENT", "KILL", "USER", "phase728_legacy")
+        with self.assertRaises(redis.exceptions.RedisError):
+            self.inspect730()
+        self.assertEqual(self.outbox_state(), "pending")
+        self.assertIsNone(self.admin.get(self.key()))
+
+    def test_phase730_revoked_extra_ci_grant_denies_before_redis_get(self):
+        self.enqueue_outbox()
+        with patch.dict(os.environ, {"LOOMERA_PHASE730_TEST_REVIEW": "0"}):
+            with patch.object(self.legacy, "get",
+                              side_effect=AssertionError("unexpected read")):
+                with self.assertRaises(RuntimeError):
+                    self.inspect730()
+        self.assertEqual(self.outbox_state(), "pending")
