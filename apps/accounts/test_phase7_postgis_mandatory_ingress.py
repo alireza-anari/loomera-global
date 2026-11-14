@@ -152,9 +152,6 @@ class Phase728PhysicalRestrictedWriterTest(TransactionTestCase):
             self.gateway_client, self.fixture,
         )
         self.authority = SyntheticPostGISWriterAuthority()
-        self.outbox = SyntheticPostGISOutboxRehearsal(
-            self.gateway_client, self.fixture,
-        )
         self.clear_fixture()
 
     def key(self, op="a" * 32):
@@ -425,6 +422,12 @@ class Phase728PhysicalRestrictedWriterTest(TransactionTestCase):
         self.assertIsNone(self.admin.get(self.key("e" * 32)))
 
     # Phase 7.29: the same isolated CI fixture now covers SQL-first intent.
+    @property
+    def outbox(self):
+        return SyntheticPostGISOutboxRehearsal(
+            self.gateway_client, self.fixture,
+        )
+
     def outbox_state(self, operation_id="a" * 32):
         with connection.cursor() as cur:
             cur.execute(
