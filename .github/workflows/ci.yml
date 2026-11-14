@@ -20,7 +20,7 @@ concurrency:
 jobs:
   fast-checks:
     name: Fast checks
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 20
 
     env:
@@ -505,7 +505,7 @@ jobs:
 
   redis-phase7-7-rehearsal:
     name: Redis Phase 7.7 atomic OTP consume (synthetic isolated)
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 15
     services:
       redis:
@@ -640,7 +640,7 @@ jobs:
 
   browser-smoke:
     name: Chromium keyboard smoke (booking and post-booking fixtures)
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 15
 
     steps:
@@ -678,7 +678,7 @@ jobs:
 
   postgis-phase5-rehearsal:
     name: PostGIS Phase 5.2 migration rehearsal (synthetic data)
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 25
     services:
       postgis:
