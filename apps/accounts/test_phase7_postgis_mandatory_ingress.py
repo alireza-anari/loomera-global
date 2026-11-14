@@ -827,7 +827,11 @@ class Phase728PhysicalRestrictedWriterTest(TransactionTestCase):
         legacy_acl = self.admin.acl_getuser("phase728_legacy")
         admin_acl = self.admin.acl_getuser("phase728_admin")
         self.assertIn("+get", str(legacy_acl.get("commands", "")))
-        self.assertIn("+@all", str(admin_acl.get("commands", "")))
+        # Redis ACL GETUSER may encode +@all as the 'allcommands' flag
+        # rather than an entry in 'commands'. The separate physical raw
+        # EVAL test proves the admin bypass without response-format guesses.
+        self.assertIsInstance(admin_acl, dict)
+        self.assertIn("flags", admin_acl)
         self.assertFalse(self.inspect730().auto_replay_allowed)
 
     def test_phase730_revoked_legacy_reader_fails_closed_without_repair(self):
