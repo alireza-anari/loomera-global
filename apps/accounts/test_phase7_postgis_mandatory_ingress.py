@@ -21,6 +21,9 @@ import redis
 from loomera.globalization.otp_postgis_writer_authority_rehearsal import (
     LEASE, LEDGER, SyntheticPostGISWriterAuthority, verify_ci_test_scope,
 )
+from loomera.globalization.otp_postgis_outbox_rehearsal import (
+    OUTBOX, SyntheticPostGISOutboxRehearsal,
+)
 from loomera.globalization.otp_restricted_writer_gateway_rehearsal import (
     PREFIX, PORT, DB, SyntheticRestrictedWriterGateway,
     validate_gateway_scope,
@@ -106,6 +109,7 @@ class Phase728PhysicalRestrictedWriterTest(TransactionTestCase):
             dbname, version = cur.fetchone()
             self.assertTrue(dbname.startswith("test_"))
             self.assertTrue(version)
+            cur.execute(f'DROP TABLE IF EXISTS "{OUTBOX}"')
             cur.execute(f'DROP TABLE IF EXISTS "{LEDGER}"')
             cur.execute(f'DROP TABLE IF EXISTS "{LEASE}"')
             cur.execute(
@@ -125,6 +129,14 @@ class Phase728PhysicalRestrictedWriterTest(TransactionTestCase):
                 f'INSERT INTO "{LEASE}" (singleton, epoch, owner, mode) '
                 "VALUES (1, 1, 'old', 'active')"
             )
+            cur.execute(
+                f'CREATE TABLE "{OUTBOX}" ('
+                'operation_id CHAR(32) PRIMARY KEY, '
+                'fingerprint CHAR(64) NOT NULL, '
+                'epoch INTEGER NOT NULL, owner VARCHAR(12) NOT NULL, '
+                "state VARCHAR(12) NOT NULL CHECK "
+                "(state IN ('pending', 'inflight', 'observed', 'quarantined')))"
+            )
         self.gateway_client = self.configure_actor(
             "phase728_gateway", "GATEWAY", "+get", "+set",
         )
@@ -140,6 +152,9 @@ class Phase728PhysicalRestrictedWriterTest(TransactionTestCase):
             self.gateway_client, self.fixture,
         )
         self.authority = SyntheticPostGISWriterAuthority()
+        self.outbox = SyntheticPostGISOutboxRehearsal(
+            self.gateway_client, self.fixture,
+        )
         self.clear_fixture()
 
     def key(self, op="a" * 32):
@@ -159,6 +174,7 @@ class Phase728PhysicalRestrictedWriterTest(TransactionTestCase):
             if self.revocable is not None:
                 self.revocable.close()
             with connection.cursor() as cur:
+                cur.execute(f'DROP TABLE IF EXISTS "{OUTBOX}"')
                 cur.execute(f'DROP TABLE IF EXISTS "{LEDGER}"')
                 cur.execute(f'DROP TABLE IF EXISTS "{LEASE}"')
         finally:
@@ -407,3 +423,214 @@ class Phase728PhysicalRestrictedWriterTest(TransactionTestCase):
         )
         self.assertEqual(self.admin.get(self.key("d" * 32)), b"b" * 64)
         self.assertIsNone(self.admin.get(self.key("e" * 32)))
+
+    # Phase 7.29: the same isolated CI fixture now covers SQL-first intent.
+    def outbox_state(self, operation_id="a" * 32):
+        with connection.cursor() as cur:
+            cur.execute(
+                f'SELECT state FROM "{OUTBOX}" WHERE operation_id=%s',
+                [operation_id],
+            )
+            row = cur.fetchone()
+            return row[0] if row else None
+
+    def enqueue_outbox(self, owner="old", epoch=1, op="a" * 32,
+                       digest="b" * 64):
+        return self.outbox.enqueue(
+            owner=owner, epoch=epoch, operation_id=op, fingerprint=digest,
+        )
+
+    def dispatch_outbox(self, owner="old", epoch=1, op="a" * 32,
+                        digest="b" * 64):
+        return self.outbox.dispatch_once(
+            owner=owner, epoch=epoch, operation_id=op, fingerprint=digest,
+        )
+
+    def test_phase729_commit_intent_before_any_redis_effect(self):
+        self.assertEqual(
+            self.enqueue_outbox().status, "synthetic_intent_committed",
+        )
+        self.assertEqual(self.outbox_state(), "pending")
+        self.assertEqual(len(self.ledger()), 1)
+        self.assertIsNone(self.admin.get(self.key()))
+        self.assertEqual(
+            self.outbox.inspect_read_only(
+                operation_id="a" * 32, fingerprint="b" * 64,
+            ).status,
+            "pending_marker_absent_no_repair",
+        )
+
+    def test_phase729_one_shot_dispatch_and_no_duplicate_redis_set(self):
+        self.enqueue_outbox()
+        result = self.dispatch_outbox()
+        self.assertEqual(result.status, "synthetic_marker_observed")
+        self.assertTrue(result.synthetic_redis_marker_written)
+        self.assertFalse(result.real_sms_sent)
+        self.assertFalse(result.production_release_authorized)
+        self.assertEqual(self.outbox_state(), "observed")
+        self.assertEqual(self.admin.get(self.key()), b"b" * 64)
+        with patch.object(self.gateway_client, "set",
+                          side_effect=AssertionError("no second SET")):
+            self.assertEqual(
+                self.dispatch_outbox().status, "already_observed_no_retry",
+            )
+        self.assertEqual(self.outbox.inspect_read_only(
+            operation_id="a" * 32, fingerprint="b" * 64,
+        ).status, "observed_marker_matches_no_receipt")
+
+    def test_phase729_duplicate_or_conflicting_enqueue_never_rearms(self):
+        self.assertEqual(
+            self.enqueue_outbox().status, "synthetic_intent_committed",
+        )
+        self.assertEqual(
+            self.enqueue_outbox().status, "same_operation_observed",
+        )
+        self.assertEqual(
+            self.enqueue_outbox(digest="c" * 64).status,
+            "global_operation_conflict",
+        )
+        self.assertEqual(self.outbox_state(), "pending")
+        self.assertIsNone(self.admin.get(self.key()))
+
+    def test_phase729_rollback_discards_sql_intent_and_ledger(self):
+        with self.assertRaises(SimulatedPostgresRollback):
+            with transaction.atomic():
+                self.assertEqual(
+                    self.enqueue_outbox().status, "synthetic_intent_committed",
+                )
+                raise SimulatedPostgresRollback()
+        self.assertIsNone(self.outbox_state())
+        self.assertEqual(self.ledger(), ())
+        self.assertIsNone(self.admin.get(self.key()))
+
+    def test_phase729_lost_ack_after_physical_set_never_retries(self):
+        self.enqueue_outbox()
+        actual_set = self.gateway_client.set
+
+        def commit_then_lose_reply(*args, **kwargs):
+            self.assertIs(actual_set(*args, **kwargs), True)
+            raise redis.exceptions.ConnectionError("synthetic_lost_ack")
+
+        with patch.object(self.gateway_client, "set",
+                          side_effect=commit_then_lose_reply):
+            with self.assertRaises(redis.exceptions.ConnectionError):
+                self.dispatch_outbox()
+        self.assertEqual(self.outbox_state(), "inflight")
+        self.assertEqual(self.admin.get(self.key()), b"b" * 64)
+        with patch.object(self.gateway_client, "set",
+                          side_effect=AssertionError("unsafe retry")):
+            self.assertEqual(
+                self.dispatch_outbox().status, "inflight_requires_manual_review",
+            )
+        self.assertEqual(self.outbox.inspect_read_only(
+            operation_id="a" * 32, fingerprint="b" * 64,
+        ).status, "inflight_marker_matches_no_receipt")
+
+    def test_phase729_failure_before_redis_call_remains_inflight(self):
+        self.enqueue_outbox()
+        with patch.object(self.gateway_client, "set",
+                          side_effect=redis.exceptions.ConnectionError(
+                              "synthetic_connection_down"
+                          )):
+            with self.assertRaises(redis.exceptions.ConnectionError):
+                self.dispatch_outbox()
+        self.assertEqual(self.outbox_state(), "inflight")
+        self.assertIsNone(self.admin.get(self.key()))
+        self.assertEqual(
+            self.dispatch_outbox().status, "inflight_requires_manual_review",
+        )
+        self.assertEqual(self.outbox.inspect_read_only(
+            operation_id="a" * 32, fingerprint="b" * 64,
+        ).status, "inflight_marker_absent_no_repair")
+
+    def test_phase729_preexisting_foreign_marker_is_quarantined(self):
+        self.enqueue_outbox()
+        self.assertTrue(self.admin.set(self.key(), "raw-admin-marker"))
+        self.assertEqual(
+            self.dispatch_outbox().status, "marker_collision_quarantined",
+        )
+        self.assertEqual(self.outbox_state(), "quarantined")
+        self.assertEqual(self.admin.get(self.key()), b"raw-admin-marker")
+        self.assertEqual(self.outbox.inspect_read_only(
+            operation_id="a" * 32, fingerprint="b" * 64,
+        ).status, "foreign_marker_no_repair")
+        self.assertEqual(
+            self.dispatch_outbox().status, "quarantined_no_retry",
+        )
+
+    def test_phase729_missing_intent_denies_even_with_committed_ledger(self):
+        self.enqueue_outbox()
+        with connection.cursor() as cur:
+            cur.execute(f'DELETE FROM "{OUTBOX}"')
+        self.assertEqual(
+            self.dispatch_outbox().status, "missing_committed_intent",
+        )
+        self.assertIsNone(self.admin.get(self.key()))
+
+    def test_phase729_stale_or_halted_authority_denies_pending_dispatch(self):
+        self.enqueue_outbox()
+        self.assertEqual(
+            self.authority.promote(
+                expected_owner="old", expected_epoch=1,
+                new_owner="promoted",
+            ).status, "synthetic_promoted",
+        )
+        self.assertEqual(self.dispatch_outbox().status, "stale_writer")
+        self.assertEqual(self.outbox_state(), "pending")
+        self.assertIsNone(self.admin.get(self.key()))
+        self.assertEqual(
+            self.enqueue_outbox(owner="promoted", epoch=2,
+                                op="c" * 32).status,
+            "synthetic_intent_committed",
+        )
+        self.assertEqual(
+            self.dispatch_outbox(owner="promoted", epoch=2,
+                                 op="c" * 32).status,
+            "synthetic_marker_observed",
+        )
+        self.assertEqual(
+            self.authority.halt(owner="promoted", epoch=2).status,
+            "synthetic_halted",
+        )
+        self.assertEqual(
+            self.enqueue_outbox(owner="promoted", epoch=2,
+                                op="d" * 32).status, "terminal_halt",
+        )
+        self.assertIsNone(self.admin.get(self.key("d" * 32)))
+
+    def test_phase729_two_sql_workers_only_one_can_dispatch(self):
+        self.enqueue_outbox()
+
+        def worker():
+            close_old_connections()
+            try:
+                return self.dispatch_outbox().status
+            finally:
+                connections["default"].close()
+
+        with ThreadPoolExecutor(max_workers=2) as pool:
+            futures = [pool.submit(worker) for _ in range(2)]
+            statuses = [future.result(timeout=20) for future in futures]
+        self.assertEqual(statuses.count("synthetic_marker_observed"), 1)
+        self.assertEqual(
+            set(statuses) - {"synthetic_marker_observed"},
+            {"inflight_requires_manual_review"}
+            if "inflight_requires_manual_review" in statuses else
+            {"already_observed_no_retry"},
+        )
+        self.assertEqual(self.outbox_state(), "observed")
+        self.assertEqual(self.admin.get(self.key()), b"b" * 64)
+
+    def test_phase729_acl_and_ci_grant_revocation_still_fail_closed(self):
+        self.enqueue_outbox()
+        with patch.dict(os.environ, {"LOOMERA_PHASE729_TEST_OUTBOX": "0"}):
+            with self.assertRaises(RuntimeError):
+                self.dispatch_outbox()
+        self.assertEqual(self.outbox_state(), "pending")
+        self.assertIsNone(self.admin.get(self.key()))
+        self.admin.execute_command("ACL", "SETUSER", "phase728_gateway", "off")
+        self.admin.execute_command("CLIENT", "KILL", "USER", "phase728_gateway")
+        with self.assertRaises(redis.exceptions.RedisError):
+            self.dispatch_outbox()
+        self.assertEqual(self.outbox_state(), "inflight")
+        self.assertIsNone(self.admin.get(self.key()))
