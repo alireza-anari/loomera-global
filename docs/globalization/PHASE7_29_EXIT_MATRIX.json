@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "phase": "7.29",
+  "baseline_main_sha": "913f00826ccb2f54a2e58c9dd093aa0c738e5245",
+  "baseline_phase728_postmerge_ci": "VERIFIED_FOUR_SUCCESS_43084981845",
+  "scope": "DISPOSABLE_POSTGIS_TEST_DB_AND_PHASE728_LOCALHOST_REDIS_ACL_ONLY",
+  "bounded_observations": [
+    "SQL_LEDGER_AND_OUTBOX_INTENT_COMMIT_TOGETHER_BEFORE_REDIS_EFFECT",
+    "ONE_WAY_DURABLE_INFLIGHT_BARRIER_PRECEDES_SET_NX",
+    "REDIS_ACK_POSITIVE_RECORDS_OBSERVED_WITHOUT_DUPLICATE_DISPATCH",
+    "POSTGIS_PROMOTION_RECHECKS_LEASE_BEFORE_EXTERNAL_WRITE",
+    "AMBIGUOUS_AFTER_WRITE_ACK_LOSS_STRANDS_INFLIGHT_WITH_MARKER",
+    "FAILURE_BEFORE_EXTERNAL_WRITE_STRANDS_INFLIGHT_WITHOUT_MARKER",
+    "POSTGRES_OUTER_ROLLBACK_OF_ENQUEUE_LEAVES_NO_REDIS_MARKER",
+    "RAW_ADMIN_MARKER_COLLISION_QUARANTINED_NOT_OVERWRITTEN",
+    "READ_ONLY_BYTE_INSPECTION_NEVER_REPAIRS_OR_AUTHORIZES_RETRY",
+    "CONCURRENT_COOPERATING_WORKERS_ALLOW_ONE_DISPATCH_ONLY",
+    "ACL_REVOKE_AND_MISSING_POSTGRES_INTENT_DENY_DISPATCH"
+  ],
+  "real_auth_code_changed": false,
+  "live_otp_outbox_connected": false,
+  "cross_store_atomicity": false,
+  "automatic_ambiguous_replay_safe": false,
+  "redis_ingress_globally_mandatory": false,
+  "external_sms_exactly_once": false,
+  "real_session_account_consistency": false,
+  "security_owner_approval": false,
+  "production_deployment_authorized": false,
+  "deployed": false,
+  "release_gate": "BLOCKED: synthetic committed intent and one-shot Redis marker cannot establish mandatory ingress, reliable external delivery, automatic reconciliation or exactly-once OTP/SMS/session behavior."
+}

@@ -3,9 +3,10 @@
 set -Eeuo pipefail
 if [[ "${GITHUB_ACTIONS:-}" != "true" ||
       "${LOOMERA_PHASE728_TEST_REDIS:-}" != "1" ||
+      "${LOOMERA_PHASE729_TEST_OUTBOX:-}" != "1" ||
       "${LOOMERA_PHASE726_TEST_POSTGIS:-}" != "1" ||
       -z "${GITHUB_RUN_ID:-}" || -z "${GITHUB_RUN_ATTEMPT:-}" ]]; then
-  echo "Phase 7.28 requires BOTH explicit isolated GitHub CI grants" >&2
+  echo "Phase 7.28-7.29 requires explicit isolated GitHub CI grants" >&2
   exit 2
 fi
 if [[ ! "$GITHUB_RUN_ID" =~ ^[0-9]+$ ||
@@ -88,4 +89,4 @@ unset generated
 
 python manage.py test apps.accounts.test_phase7_postgis_mandatory_ingress \
   --failfast --noinput
-echo "Phase 7.28 real PostGIS and Redis scoped-gateway negative tests PASSED"
+echo "Phase 7.28-7.29 physical PostGIS, Redis gate and SQL-first outbox proofs PASSED"
