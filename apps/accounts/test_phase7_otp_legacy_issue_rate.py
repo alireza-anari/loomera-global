@@ -205,7 +205,7 @@ class Phase722LegacyIssueRateOfflineTests(SimpleTestCase):
         src = (ROOT / "apps/api/v1/auth_otp.py").read_text(encoding="utf-8")
         self.assertIn("record = _cache_get(key)", src)
         self.assertIn("secrets.compare_digest(expected_hash, submitted_hash)", src)
-        self.assertIn("cache.delete(key)", src)
+        self.assertIn("_otp_cache().delete(key)", src)
         self.assertIn("return True", src)
 
     def test_ci_runner_isolation_concurrency_and_compose_contracts(self):
