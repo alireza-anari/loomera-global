@@ -64,7 +64,11 @@ def _parse_target(value: Any) -> _Target:
         host = parsed.hostname
         port = parsed.port or 6379
         path = parsed.path.lstrip("/")
-        if not host or (path and ("/" in path or not path.isdigit())):
+        if (
+            not host
+            or not 1 <= port <= 65535
+            or (path and ("/" in path or not path.isdigit()))
+        ):
             return _Target(status="invalid", scheme=parsed.scheme)
         database = int(path) if path else 0
         if database < 0:
@@ -169,13 +173,18 @@ def audit_runtime_redis_roles(settings_obj: Any) -> dict[str, Any]:
             "active": role.active,
             "status": target.status,
             "scheme": target.scheme,
-            "tls_enabled": target.scheme == "rediss",
-            "named_acl_user_present": bool(
-                target.username and target.username != "default"
+            "tls_enabled": (
+                target.scheme == "rediss" if target.status == "configured" else None
             ),
-            "password_present": target.password_present,
+            "named_acl_user_present": (
+                bool(target.username and target.username != "default")
+                if target.status == "configured" else None
+            ),
+            "password_present": (
+                target.password_present if target.status == "configured" else None
+            ),
             "logical_database": target.database,
-            "local_endpoint": target.local,
+            "local_endpoint": target.local if target.status == "configured" else None,
             "endpoint_group": endpoint_groups.get(target.endpoint_key),
             "principal_group": principal_groups.get(target.principal_key),
             "shares_principal_with": [
