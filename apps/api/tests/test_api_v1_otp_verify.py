@@ -23,6 +23,7 @@ from tests_stage1_helpers import Stage1DomainFactoryMixin
     },
     LOOMERA_API_AUTH_OTP_CACHE_PREFIX="loomera:test-api-auth-otp-verify",
     LOOMERA_API_AUTH_OTP_LENGTH=6,
+    SECURE_SSL_REDIRECT=False,
     LOOMERA_API_AUTH_OTP_TTL_SECONDS=120,
     LOOMERA_API_AUTH_OTP_RESEND_SECONDS=60,
     LOOMERA_API_AUTH_MAX_VERIFY_ATTEMPTS=3,
