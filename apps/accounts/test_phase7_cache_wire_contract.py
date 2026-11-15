@@ -42,13 +42,17 @@ class Phase78WireContractTests(SimpleTestCase):
             with self.subTest(token=forbidden):
                 self.assertNotIn(forbidden, source)
 
-    def test_production_legacy_race_still_explicitly_unfixed(self):
+    def test_live_legacy_compare_delete_is_still_nonatomic_after_ack_hardening(self):
         src = (ROOT / "apps/api/v1/auth_otp.py").read_text(encoding="utf-8")
+        # Phase 7.34 rejects false deletion acknowledgements, but it does not
+        # bind the observed record generation to the eventual DELETE.
         self.assertIn("record = _cache_get(key)", src)
         self.assertIn("secrets.compare_digest(expected_hash, submitted_hash)", src)
-        self.assertIn("_cache_delete(", src)
-        self.assertIn("_otp_cache().delete(key)", src)
-        self.assertIn("return True", src)
+        self.assertIn("deleted = _otp_cache().delete(key)", src)
+        self.assertIn("if not deleted and required:", src)
+        self.assertIn("if not _cache_delete(", src)
+        self.assertNotIn("pipeline(", src)
+        self.assertNotIn("WATCH", src)
 
     def test_exit_evidence_keeps_release_blocked(self):
         matrix = json.loads(MATRIX.read_text(encoding="utf-8"))
