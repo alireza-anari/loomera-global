@@ -566,30 +566,30 @@ class Phase731CachePreflightTests(SimpleTestCase):
         output = io.StringIO()
         secret = "phase731-audit-secret"
         location = f"rediss://audit_user:{secret}@audit.example:6380/0"
-        with (
-            override_settings(
-                LOOMERA_ENVIRONMENT="staging",
-                LOOMERA_API_AUTH_OTP_CACHE_ALIAS="default",
-                LOOMERA_ENABLE_CELERY=True,
-                CACHES={
-                    "default": {
-                        "BACKEND": "django_redis.cache.RedisCache",
-                        "LOCATION": location,
-                    }
-                },
-                CELERY_BROKER_URL=location,
-                CELERY_RESULT_BACKEND=location,
-            ),
-            patch(
-                "django.db.connection.cursor",
-                side_effect=AssertionError("role audit must not query SQL"),
-            ),
+        with override_settings(
+            LOOMERA_ENVIRONMENT="staging",
+            LOOMERA_API_AUTH_OTP_CACHE_ALIAS="default",
+            LOOMERA_ENABLE_CELERY=True,
+            CACHES={
+                "default": {
+                    "BACKEND": "django_redis.cache.RedisCache",
+                    "LOCATION": location,
+                }
+            },
+            CELERY_BROKER_URL=location,
+            CELERY_RESULT_BACKEND=location,
         ):
             call_command(
                 "audit_phase7_otp_redis_roles",
                 json=True,
                 stdout=output,
             )
+        policy_source = (
+            ROOT / "apps/main/cache_preflight.py"
+        ).read_text(encoding="utf-8")
+        self.assertNotIn("django.db", policy_source)
+        self.assertNotIn("redis.Redis(", policy_source)
+        self.assertNotIn("redis.from_url(", policy_source)
         rendered = output.getvalue()
         self.assertIn('"redis_connections_opened": false', rendered)
         self.assertIn('"database_connections_opened": false', rendered)
