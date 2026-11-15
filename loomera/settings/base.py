@@ -4,7 +4,7 @@ import os
 import sys
 import importlib
 from pathlib import Path
-from urllib.parse import parse_qs, urlsplit
+from urllib.parse import parse_qs, unquote, urlsplit
 from zoneinfo import ZoneInfo, ZoneInfoNotFoundError
 import environ
 from django.core.exceptions import ImproperlyConfigured
@@ -1530,7 +1530,7 @@ def _redis_principal_identity(location: str):
     return (
         parsed.hostname.lower(),
         port,
-        parsed.username or "default",
+        unquote(parsed.username or "") or "default",
     )
 
 
@@ -1558,8 +1558,8 @@ if LOOMERA_API_AUTH_OTP_CACHE_LOCATION:
         in {"localhost", "127.0.0.1", "0.0.0.0", "::1", "::"}
         or not 1 <= _otp_cache_port <= 65535
         or (_otp_cache_database and not _otp_cache_database.isdigit())
-        or not _otp_cache_url.username
-        or _otp_cache_url.username.lower() == "default"
+        or not unquote(_otp_cache_url.username or "")
+        or unquote(_otp_cache_url.username or "").lower() == "default"
         or not _otp_cache_url.password
         or _otp_cache_cert_reqs.intersection({"none", "optional"})
     ):
