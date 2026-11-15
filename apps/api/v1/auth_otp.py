@@ -430,8 +430,8 @@ def create_api_otp_request(
                 scope=scope_by_status[outcome.status],
             )
         if outcome.status != "issued":
-            # WATCH conflict, corrupt storage, malformed/ambiguous EXEC or
-            # backend failure is never permission to create a challenge.
+            # Concurrent Redis transaction conflict, invalid state or
+            # ambiguous backend acknowledgement never authorize issuance.
             raise ApiOtpRateLimitUnavailable
 
         logger.info(
