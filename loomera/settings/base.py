@@ -4,7 +4,7 @@ import os
 import sys
 import importlib
 from pathlib import Path
-from urllib.parse import urlsplit
+from urllib.parse import parse_qs, urlsplit
 from zoneinfo import ZoneInfo, ZoneInfoNotFoundError
 import environ
 from django.core.exceptions import ImproperlyConfigured
@@ -1498,6 +1498,92 @@ LOOMERA_API_AUTH_OTP_CACHE_PREFIX = env(
     "LOOMERA_API_AUTH_OTP_CACHE_PREFIX",
     default="loomera:api-auth-otp",
 ).strip()
+
+# The dedicated OTP Redis role is opt-in. The default alias preserves the
+# existing global Django cache behavior until an operator provisions a separate
+# named ACL principal and explicitly configures its TLS Redis URL.
+LOOMERA_API_AUTH_OTP_CACHE_LOCATION = env(
+    "LOOMERA_API_AUTH_OTP_CACHE_LOCATION",
+    default="",
+).strip()
+LOOMERA_API_AUTH_OTP_CACHE_ALIAS = env(
+    "LOOMERA_API_AUTH_OTP_CACHE_ALIAS",
+    default=("otp" if LOOMERA_API_AUTH_OTP_CACHE_LOCATION else "default"),
+).strip().lower() or "default"
+
+if LOOMERA_API_AUTH_OTP_CACHE_ALIAS not in {"default", "otp"}:
+    raise ImproperlyConfigured("Invalid API OTP cache alias.")
+
+def _redis_principal_identity(location: str):
+    try:
+        parsed = urlsplit(str(location or "").strip())
+        port = parsed.port or 6379
+    except ValueError:
+        return None
+    if parsed.scheme not in {"redis", "rediss"} or not parsed.hostname:
+        return None
+    return (
+        parsed.hostname.lower(),
+        port,
+        parsed.username or "",
+        parsed.password or "",
+    )
+
+
+if LOOMERA_API_AUTH_OTP_CACHE_LOCATION:
+    try:
+        _otp_cache_url = urlsplit(LOOMERA_API_AUTH_OTP_CACHE_LOCATION)
+        _otp_cache_port = _otp_cache_url.port or 6379
+        _otp_cache_query = parse_qs(_otp_cache_url.query)
+    except ValueError as exc:
+        raise ImproperlyConfigured("Invalid dedicated API OTP Redis URL.") from exc
+
+    _otp_cache_database = _otp_cache_url.path.lstrip("/")
+    _otp_cache_cert_reqs = {
+        item.strip().lower()
+        for item in _otp_cache_query.get("ssl_cert_reqs", [])
+    }
+    if (
+        _otp_cache_url.scheme != "rediss"
+        or not _otp_cache_url.hostname
+        or _otp_cache_url.hostname.lower() in {"localhost", "127.0.0.1", "::1"}
+        or not 1 <= _otp_cache_port <= 65535
+        or (_otp_cache_database and not _otp_cache_database.isdigit())
+        or not _otp_cache_url.username
+        or _otp_cache_url.username.lower() == "default"
+        or not _otp_cache_url.password
+        or _otp_cache_cert_reqs.intersection({"none", "optional"})
+    ):
+        raise ImproperlyConfigured(
+            "Dedicated API OTP Redis URL must use remote rediss, verified TLS, "
+            "a named non-default ACL user, and a password."
+        )
+
+if LOOMERA_API_AUTH_OTP_CACHE_ALIAS == "otp":
+    if not LOOMERA_API_AUTH_OTP_CACHE_LOCATION:
+        raise ImproperlyConfigured(
+            "API OTP cache alias 'otp' requires LOOMERA_API_AUTH_OTP_CACHE_LOCATION."
+        )
+    if not _module_available("django_redis"):
+        raise ImproperlyConfigured(
+            "API OTP cache alias 'otp' requires django-redis."
+        )
+    _otp_identity = _redis_principal_identity(LOOMERA_API_AUTH_OTP_CACHE_LOCATION)
+    _default_cache_identity = _redis_principal_identity(
+        str(CACHES.get("default", {}).get("LOCATION", "") or "")
+    )
+    if _otp_identity is None or _otp_identity == _default_cache_identity:
+        raise ImproperlyConfigured(
+            "Dedicated API OTP cache must use a distinct Redis ACL principal."
+        )
+    CACHES["otp"] = {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": LOOMERA_API_AUTH_OTP_CACHE_LOCATION,
+        "KEY_PREFIX": "loomera:api-auth-otp-cache",
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+        },
+    }
 LOOMERA_API_AUTH_OTP_FAIL_CLOSED = env.bool(
     "LOOMERA_API_AUTH_OTP_FAIL_CLOSED",
     default=True,
