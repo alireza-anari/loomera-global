@@ -13,6 +13,9 @@ on:
 permissions:
   contents: read
 
+env:
+  LOOMERA_ENVIRONMENT: ci
+
 concurrency:
   group: loomera-ci-${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
