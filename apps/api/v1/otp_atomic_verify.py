@@ -13,11 +13,13 @@ No new Redis hashes, Lua, automatic retries or login/session grants.
 from __future__ import annotations
 
 from dataclasses import dataclass, field
+from pickle import UnpicklingError
+import zlib
 import re
 import secrets
 from typing import Any
 
-from redis.exceptions import WatchError
+from redis.exceptions import RedisError, WatchError
 
 _SHA1 = re.compile(r"[0-9a-f]{40}\Z")
 
@@ -141,7 +143,11 @@ def atomic_verify_legacy_record(
                 # MUST ensure dedicated Redis writer ACL and trusted storage;
                 # untrusted pickle is not made safe by WATCH.
                 record = cache_backend.client.decode(raw)
-            except Exception:
+            except (
+                RedisError, OSError, RuntimeError, ValueError, TypeError,
+                AttributeError, LookupError, EOFError, UnpicklingError,
+                zlib.error,
+            ):
                 return AtomicOtpOutcome("unavailable")
             if not _valid_record(
                 record, mobile_number=mobile_number,
@@ -181,7 +187,11 @@ def atomic_verify_legacy_record(
                     or cache_backend.client.decode(encoded) != updated
                 ):
                     return AtomicOtpOutcome("unavailable")
-            except Exception:
+            except (
+                RedisError, OSError, RuntimeError, ValueError, TypeError,
+                AttributeError, LookupError, EOFError, UnpicklingError,
+                zlib.error,
+            ):
                 return AtomicOtpOutcome("unavailable")
 
             pipe.multi()
@@ -194,7 +204,10 @@ def atomic_verify_legacy_record(
             )
     except WatchError:
         return AtomicOtpOutcome("unavailable")
-    except Exception:
+    except (
+        RedisError, OSError, RuntimeError, ValueError, TypeError,
+        AttributeError, LookupError, EOFError, UnpicklingError, zlib.error,
+    ):
         # No raw error details, redis URL, mobile, submitted digest or pickle
         # leak, including after a possibly committed but unacknowledged EXEC.
         return AtomicOtpOutcome("unavailable")
