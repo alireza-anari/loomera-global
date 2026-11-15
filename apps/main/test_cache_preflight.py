@@ -207,7 +207,7 @@ class Phase731CachePreflightTests(SimpleTestCase):
         environment.pop("DJANGO_SETTINGS_MODULE", None)
         environment.pop("LOOMERA_API_AUTH_OTP_CACHE_ALIAS", None)
         environment.pop("LOOMERA_API_AUTH_OTP_CACHE_LOCATION", None)
-        environment["SECRET_KEY" = "phase731-test-only-secret-key-not-runtime"
+        environment["SECRET_KEY"] = "phase731-test-only-secret-key-not-runtime"
         environment["DATABASE_URL"] = "sqlite:///phase731-settings-check.sqlite3"
         environment["DEBUG"] = "False"
         environment["PYTHONPATH"] = str(ROOT)
