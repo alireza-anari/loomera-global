@@ -1,32 +1,42 @@
-# Phase 7.31 — deployed environment identity and non-destructive Redis cache preflight
+# Phase 7.31 — dedicated OTP cache role, runtime Redis inventory and safe preflight
 
-**Runtime guard improvement; no credentials inspected, no live data migration, no OTP/SMS/session wiring, and no deployment executed.**
+**Backward-compatible runtime seam and readiness hardening. Dedicated OTP Redis is opt-in. No Production credentials, deployment, OTP delivery or release approval.**
 
-Baseline `main`: `ff8ec57bd595f4133c2502bbf8bd1da853caa253` (Phase 7.30 merged; four post-merge CI jobs succeeded).
+Baseline `main` at PR review: `ab70c12900e952ad907b6ee319037ffd4850dda1`. The repository's accompanying Phase 7.31 role map is documented in `PHASE7_31_REDIS_RUNTIME_ROLES.md`.
 
 ## Findings addressed
 
-1. `manage.py`, WSGI and ASGI default to `loomera.settings.production`, but the base setting defaulted `LOOMERA_ENVIRONMENT` to `local`. As a result, deployed-environment checks could be bypassed by a missing environment variable even when the production settings module was active.
-2. Both `infrastructure_preflight_check` and `pre_beta_check` wrote to predictable shared cache keys with `cache.set`. A readiness command could overwrite an existing key in the application cache.
-3. Deployed cache checks only rejected localhost and LocMem. They did not require an authenticated remote Redis URL or report whether the URL requested TLS / a named ACL identity.
-4. Celery broker readiness similarly checked only presence and localhost.
+1. Production WSGI/ASGI and `manage.py` default to `loomera.settings.production`, but the base setting defaulted `LOOMERA_ENVIRONMENT` to `local`. A missing environment variable could make deployed checks treat a production settings module as local.
+2. Both `infrastructure_preflight_check` and `pre_beta_check` wrote to predictable shared cache keys with `cache.set`, risking overwrite of an application key.
+3. Live API OTP used Django's global cache proxy for challenge records, resend cooldowns and rate counters. General cache, OTP, infrastructure probes and Celery broker/result could share one Redis principal.
+4. Deployed cache validation only rejected localhost/LocMem and did not require an authenticated Redis URL or report TLS / named ACL posture.
 
 ## Changes
 
-- `loomera.settings.production` now defaults `LOOMERA_ENVIRONMENT=production`; a deployment may explicitly set `staging`. The CI workflow declares `LOOMERA_ENVIRONMENT=ci`.
-- Liara staging and production workflows explicitly synchronize their respective runtime identity before deploying. This changes workflow code only; no workflow was dispatched.
-- Shared `apps.main.cache_preflight` validates deployed Django cache backend type and Redis URL scheme, host, port, database path, password presence, and explicit TLS certificate-verification downgrades. Error/warning codes never contain the URL, username or password.
-- A missing or `default` Redis ACL username is reported as a warning; a plain `redis://` transport is reported as a TLS warning. The checker cannot inspect the live ACL command allowlist or prove network isolation.
-- Both readiness commands use a cryptographically random per-run cache key and marker with `add` (SET NX semantics), read back only that key, and let its 30-second TTL expire. They no longer overwrite or delete a predictable shared cache key.
-- When Celery is enabled in a deployed environment, its broker URL receives the same remote/authenticated Redis URL assessment.
-- Fast CI, the security regression suite and the release-readiness structural suite run the new tests.
+### Runtime identity and safe preflight
+
+- `loomera.settings.production` defaults `LOOMERA_ENVIRONMENT=production`; staging explicitly sets `staging`; CI explicitly sets `ci`.
+- Liara staging and production workflows set their respective runtime identity before deployment. No workflow was dispatched.
+- Shared cache assessment requires the exact Django-Redis backend for deployed environments and checks Redis URL scheme, remote host, port, database path, password and explicit TLS certificate-verification downgrades. Error/warning codes never contain URLs or credentials.
+- Plain `redis://` and absent/default ACL usernames are warnings, not proof of TLS or least privilege. The check cannot inspect the live ACL command allowlist.
+- Both readiness commands use a cryptographically random per-run key and marker with cache `add` (NX semantics), read only that key, and rely on a 30-second TTL. They no longer overwrite or delete predictable shared keys.
+- Enabled Celery broker URLs receive the same deployed Redis URL assessment.
+
+### Optional dedicated OTP cache role
+
+- `LOOMERA_API_AUTH_OTP_CACHE_LOCATION` optionally configures a dedicated OTP Redis URL.
+- `LOOMERA_API_AUTH_OTP_CACHE_ALIAS` accepts `default` or `otp`; it defaults to `otp` when a dedicated location is supplied and otherwise remains `default`.
+- Selecting `otp` without a location, without `django-redis`, with a non-TLS URL, a default/missing ACL username, no password, invalid URL, disabled certificate verification, or the same Redis principal as the general cache fails settings import with a generic error.
+- The dedicated cache uses a separate key prefix. The live API OTP helpers resolve the selected cache lazily. When the alias is `default`, the original global cache proxy is returned, preserving existing behavior and test patch contracts. **No default is silently switched.**
+- Infrastructure and pre-beta readiness warn while OTP still shares the general cache; when `otp` is selected, they probe the dedicated alias as well.
+- `python manage.py audit_phase7_otp_redis_roles --json` emits a settings-only role map for general cache, OTP, infrastructure preflight, Celery broker and Celery result. It groups endpoints/principals without printing host, username, password or full URLs and opens no Redis or SQL connection. Logical DB numbers are not treated as security boundaries.
 
 ## Explicit limits
 
-This phase does **not** inspect Liara environment secrets or connect to a production Redis endpoint. A configured `rediss://` URL does not prove that all application, host, administrator, stale TCP, old-master or alternate-network writers are fenced. A password does not prove a least-privilege ACL. A `redis://` endpoint still receives a warning, not a TLS proof. The live OTP helper still uses Django cache and retains its separate GET/compare/DELETE race; this phase does not migrate it to the synthetic outbox.
+This phase does **not** provision or rotate Redis credentials, inspect actual Liara environment values, verify server-side ACL commands/key patterns, prove network isolation, enumerate every node/host, revoke privileged or stale TCP writers, or fix the live OTP GET/compare/DELETE race. The dedicated OTP alias remains opt-in and must be exercised against a disposable/staging Redis service only after the service-side ACL and network policy are independently verified. The synthetic SQL-first outbox remains disconnected from live OTP and SMS.
 
 ## Release gate remains BLOCKED
 
-Before Production can be considered, the runtime owner must provide a named least-privilege ACL principal and verified TLS/private-network posture; enumerate and fence every Redis ingress including privileged and stale connections; isolate cache and broker identities; implement reviewed live OTP consume/rate-limit/session semantics and durable external SMS delivery/reconciliation; complete failover, rollback, privacy, operational and security-owner signoff. The CI fixtures in Phases 7.26–7.30 are evidence of limitations, not a deployable implementation.
+Before Production can be considered, the runtime owner must provision and independently verify a dedicated named least-privilege OTP ACL principal with TLS, isolate general cache and Celery broker/result identities, enumerate and fence every Redis ingress including privileged and stale connections, implement reviewed live OTP consume/rate-limit/session semantics and durable external SMS delivery/reconciliation, and complete failover, rollback, privacy, operations and security-owner signoff.
 
-Review the exact PR diff and all four PR-head CI jobs on one immutable SHA. Squash merge only after the scope and test review, then verify all four post-merge `main` jobs independently. **Do not deploy.**
+Review the exact PR diff and all four PR-head CI jobs on one immutable SHA. Squash merge only after scope and security review, then verify all four post-merge `main` jobs independently. **Do not deploy.**
