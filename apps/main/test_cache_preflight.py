@@ -5,6 +5,7 @@ import os
 from pathlib import Path
 import subprocess
 import sys
+from types import SimpleNamespace
 from unittest.mock import patch
 
 from django.test import SimpleTestCase
@@ -13,6 +14,7 @@ from apps.main.cache_preflight import (
     CacheProbeError,
     assess_cache_configuration,
     assess_redis_url,
+    build_redis_role_inventory,
     probe_cache_backend,
 )
 
@@ -229,3 +231,179 @@ class Phase731CachePreflightTests(SimpleTestCase):
             self.assertIn(scope, source)
             self.assertNotIn('cache.set("loomera:', source)
             self.assertNotIn('cache.delete("loomera:', source)
+
+    def _settings_subprocess(self, extra_env):
+        environment = os.environ.copy()
+        for key in (
+            "LOOMERA_ENVIRONMENT",
+            "LOOMERA_API_AUTH_OTP_CACHE_ALIAS",
+            "LOOMERA_API_AUTH_OTP_CACHE_LOCATION",
+            "CACHE_LOCATION",
+        ):
+            environment.pop(key, None)
+        environment.update(
+            {
+                "SECRET_KEY": "phase731-test-only-secret-key-not-runtime",
+                "DATABASE_URL": "sqlite:///phase731-settings-check.sqlite3",
+                "DEBUG": "False",
+                "PYTHONPATH": str(ROOT),
+                **extra_env,
+            }
+        )
+        return subprocess.run(
+            [
+                sys.executable,
+                "-c",
+                "import loomera.settings.production as s; "
+                "print(s.LOOMERA_API_AUTH_OTP_CACHE_ALIAS); "
+                "print(s.CACHES.get('otp', {}).get('BACKEND', 'absent')); "
+                "print(s.CACHES.get('otp', {}).get('KEY_PREFIX', 'absent'))",
+            ],
+            cwd=ROOT,
+            env=environment,
+            capture_output=True,
+            text=True,
+            check=False,
+            timeout=30,
+        )
+
+    def test_dedicated_otp_alias_is_opt_in_and_uses_its_own_cache(self):
+        secret = "phase731-synthetic-otp-secret"
+        result = self._settings_subprocess(
+            {
+                "CACHE_LOCATION": "rediss://general_user:general-secret@cache.example:6380/1",
+                "LOOMERA_API_AUTH_OTP_CACHE_LOCATION":
+                    f"rediss://otp_user:{secret}@otp-cache.example:6380/0",
+            }
+        )
+        self.assertEqual(result.returncode, 0, result.stderr[-1500:])
+        self.assertEqual(
+            result.stdout.strip().splitlines()[-3:],
+            [
+                "otp",
+                "django_redis.cache.RedisCache",
+                "loomera:api-auth-otp-cache",
+            ],
+        )
+        self.assertNotIn(secret, result.stdout + result.stderr)
+
+    def test_dedicated_otp_alias_requires_location_and_named_tls_principal(self):
+        missing = self._settings_subprocess(
+            {"LOOMERA_API_AUTH_OTP_CACHE_ALIAS": "otp"}
+        )
+        self.assertNotEqual(missing.returncode, 0)
+        self.assertNotIn("secret", missing.stderr.lower())
+
+        for location in (
+            "redis://otp_user:phase731-secret@otp-cache.example:6379/0",
+            "rediss://default:phase731-secret@otp-cache.example:6380/0",
+        ):
+            with self.subTest(location=location):
+                result = self._settings_subprocess(
+                    {"LOOMERA_API_AUTH_OTP_CACHE_LOCATION": location}
+                )
+                self.assertNotEqual(result.returncode, 0)
+                self.assertNotIn("phase731-secret", result.stdout + result.stderr)
+
+    def test_dedicated_otp_alias_rejects_same_acl_principal_even_on_other_db(self):
+        secret = "phase731-shared-secret"
+        result = self._settings_subprocess(
+            {
+                "CACHE_LOCATION":
+                    f"rediss://shared_user:{secret}@redis.example:6380/1",
+                "LOOMERA_API_AUTH_OTP_CACHE_LOCATION":
+                    f"rediss://shared_user:{secret}@redis.example:6380/9",
+            }
+        )
+        self.assertNotEqual(result.returncode, 0)
+        self.assertNotIn(secret, result.stdout + result.stderr)
+
+    def test_role_inventory_groups_principals_without_disclosing_identity(self):
+        general = "rediss://general_user:general-secret@redis.example:6380/1"
+        otp = "rediss://otp_user:otp-secret@redis.example:6380/9"
+        config = SimpleNamespace(
+            CACHES={
+                "default": {
+                    "BACKEND": "django_redis.cache.RedisCache",
+                    "LOCATION": general,
+                },
+                "otp": {
+                    "BACKEND": "django_redis.cache.RedisCache",
+                    "LOCATION": otp,
+                },
+            },
+            LOOMERA_API_AUTH_OTP_CACHE_ALIAS="otp",
+            LOOMERA_ENVIRONMENT="staging",
+            LOOMERA_ENABLE_CELERY=True,
+            CELERY_BROKER_URL=general.replace("/1", "/2"),
+            CELERY_RESULT_BACKEND=general.replace("/1", "/3"),
+        )
+        report = build_redis_role_inventory(config)
+        roles = report["roles"]
+        self.assertEqual(
+            roles["general_cache"]["principal_group"],
+            roles["celery_broker"]["principal_group"],
+        )
+        self.assertEqual(
+            roles["celery_broker"]["principal_group"],
+            roles["celery_result"]["principal_group"],
+        )
+        self.assertNotEqual(
+            roles["general_cache"]["principal_group"],
+            roles["api_otp"]["principal_group"],
+        )
+        self.assertEqual(
+            roles["general_cache"]["endpoint_group"],
+            roles["api_otp"]["endpoint_group"],
+        )
+        self.assertNotEqual(
+            roles["general_cache"]["database_index"],
+            roles["celery_broker"]["database_index"],
+        )
+        rendered = repr(report)
+        for secret in (
+            "redis.example", "general_user", "general-secret",
+            "otp_user", "otp-secret",
+        ):
+            self.assertNotIn(secret, rendered)
+        self.assertIn("celery_broker_shares_general_cache_principal",
+                      report["warnings"])
+
+    def test_role_audit_command_is_settings_only_and_redacted(self):
+        import io
+        from django.core.management import call_command
+        from django.test import override_settings
+
+        output = io.StringIO()
+        secret = "phase731-audit-secret"
+        location = f"rediss://audit_user:{secret}@audit.example:6380/0"
+        with (
+            override_settings(
+                LOOMERA_ENVIRONMENT="staging",
+                LOOMERA_API_AUTH_OTP_CACHE_ALIAS="default",
+                LOOMERA_ENABLE_CELERY=True,
+                CACHES={
+                    "default": {
+                        "BACKEND": "django_redis.cache.RedisCache",
+                        "LOCATION": location,
+                    }
+                },
+                CELERY_BROKER_URL=location,
+                CELERY_RESULT_BACKEND=location,
+            ),
+            patch(
+                "django.db.connection.cursor",
+                side_effect=AssertionError("role audit must not query SQL"),
+            ),
+        ):
+            call_command(
+                "audit_phase7_otp_redis_roles",
+                json=True,
+                stdout=output,
+            )
+        rendered = output.getvalue()
+        self.assertIn('"redis_connections_opened": false', rendered)
+        self.assertIn('"database_connections_opened": false', rendered)
+        self.assertIn('"api_otp_shares_general_cache_alias"', rendered)
+        for value in ("audit.example", "audit_user", secret):
+            self.assertNotIn(value, rendered)
