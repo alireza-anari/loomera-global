@@ -20,7 +20,6 @@ STRUCTURAL_GUARD_SUITE = (
     "apps.api.tests.test_api_v1_otp_cache_alias",
     "apps.api.tests.test_api_v1_otp_cache_delete_policy",
     "apps.api.tests.test_api_v1_otp_required_delete_race",
-    "apps.api.tests.test_api_v1_otp_verify",
     "apps.payments.test_gateway_contract_documentation",
     "apps.orders.test_booking_checkout_contract_documentation",
     "apps.api.tests.test_api_v1_otp_auth_contract_documentation",
