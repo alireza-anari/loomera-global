@@ -111,16 +111,18 @@ def assess_cache_configuration(
     )
 
 
-def probe_cache_backend(*, scope: str) -> None:
+def probe_cache_backend(*, scope: str, alias: str = "default") -> None:
     """Prove add/read on a unique expiring key without clobbering shared state.
 
     The key and marker are random per invocation. No delete is attempted: the
     30-second TTL bounds residue even if the write acknowledgement is ambiguous.
     """
-    if scope not in {"infrastructure", "pre_beta"}:
+    if scope not in {"infrastructure", "pre_beta", "otp", "pre_beta_otp"}:
         raise ValueError("unsupported_cache_probe_scope")
+    if alias not in {"default", "otp"}:
+        raise ValueError("unsupported_cache_alias")
 
-    backend = caches["default"]
+    backend = caches[alias]
     key = f"loomera:preflight:{scope}:{secrets.token_hex(16)}"
     marker = secrets.token_hex(32)
 
@@ -137,3 +139,126 @@ def probe_cache_backend(*, scope: str) -> None:
         raise CacheProbeError("cache_probe_read_failed") from exc
     if observed != marker:
         raise CacheProbeError("cache_probe_mismatch")
+
+
+
+def build_redis_role_inventory(settings_obj=None) -> dict:
+    """Return a redacted settings-only Redis role map; never opens connections."""
+    if settings_obj is None:
+        from django.conf import settings as settings_obj
+
+    caches_config = getattr(settings_obj, "CACHES", {}) or {}
+    default_config = caches_config.get("default", {}) or {}
+    otp_alias = str(
+        getattr(settings_obj, "LOOMERA_API_AUTH_OTP_CACHE_ALIAS", "default")
+        or "default"
+    ).strip().lower()
+    otp_config = (
+        caches_config.get("otp", {}) if otp_alias == "otp" else default_config
+    ) or {}
+
+    celery_enabled = bool(getattr(settings_obj, "LOOMERA_ENABLE_CELERY", False))
+    role_sources = (
+        ("general_cache", default_config.get("LOCATION", ""), "configured"),
+        ("api_otp", otp_config.get("LOCATION", ""), "configured"),
+        ("infrastructure_preflight", default_config.get("LOCATION", ""), "configured"),
+        (
+            "celery_broker",
+            getattr(settings_obj, "CELERY_BROKER_URL", "") if celery_enabled else "",
+            "configured" if celery_enabled else "disabled",
+        ),
+        (
+            "celery_result",
+            getattr(settings_obj, "CELERY_RESULT_BACKEND", "") if celery_enabled else "",
+            "configured" if celery_enabled else "disabled",
+        ),
+    )
+
+    endpoint_groups: dict[tuple, str] = {}
+    principal_groups: dict[tuple, str] = {}
+    roles: dict[str, dict] = {}
+
+    for role, raw_location, default_status in role_sources:
+        location = str(raw_location or "").strip()
+        if not location:
+            roles[role] = {"status": default_status if default_status != "configured" else "unconfigured"}
+            continue
+        try:
+            parsed = urlsplit(location)
+            port = parsed.port or 6379
+            database_text = parsed.path.lstrip("/")
+            database = int(database_text) if database_text.isdigit() else None
+        except ValueError:
+            roles[role] = {"status": "invalid"}
+            continue
+        if parsed.scheme not in {"redis", "rediss"} or not parsed.hostname:
+            roles[role] = {"status": "non_redis_or_invalid"}
+            continue
+
+        endpoint = (parsed.hostname.lower(), port)
+        principal = (
+            parsed.hostname.lower(),
+            port,
+            parsed.username or "",
+            parsed.password or "",
+        )
+        if endpoint not in endpoint_groups:
+            endpoint_groups[endpoint] = f"endpoint_{len(endpoint_groups) + 1}"
+        if principal not in principal_groups:
+            principal_groups[principal] = f"principal_{len(principal_groups) + 1}"
+        roles[role] = {
+            "status": "configured",
+            "scheme": parsed.scheme,
+            "database_index": database,
+            "endpoint_group": endpoint_groups[endpoint],
+            "principal_group": principal_groups[principal],
+            "named_acl_user": bool(
+                parsed.username and parsed.username.lower() != "default"
+            ),
+            "tls_requested": parsed.scheme == "rediss",
+        }
+
+    warnings: list[str] = []
+    if otp_alias == "default":
+        warnings.append("api_otp_shares_general_cache_alias")
+    elif (
+        roles.get("api_otp", {}).get("principal_group")
+        == roles.get("general_cache", {}).get("principal_group")
+    ):
+        warnings.append("api_otp_shares_general_cache_principal")
+    if (
+        celery_enabled
+        and roles.get("celery_broker", {}).get("principal_group")
+        == roles.get("general_cache", {}).get("principal_group")
+    ):
+        warnings.append("celery_broker_shares_general_cache_principal")
+    if (
+        celery_enabled
+        and roles.get("celery_result", {}).get("principal_group")
+        == roles.get("celery_broker", {}).get("principal_group")
+    ):
+        warnings.append("celery_result_shares_celery_broker_principal")
+    if any(
+        role.get("status") == "configured" and not role.get("tls_requested")
+        for role in roles.values()
+    ):
+        warnings.append("one_or_more_redis_roles_do_not_request_tls")
+    if any(
+        role.get("status") == "configured" and not role.get("named_acl_user")
+        for role in roles.values()
+    ):
+        warnings.append("one_or_more_redis_roles_use_default_or_missing_acl_user")
+
+    return {
+        "environment": str(getattr(settings_obj, "LOOMERA_ENVIRONMENT", "unknown")),
+        "api_otp_cache_alias": otp_alias,
+        "roles": roles,
+        "warnings": list(dict.fromkeys(warnings)),
+        "redis_connections_opened": False,
+        "database_connections_opened": False,
+        "secrets_emitted": False,
+        "logical_database_isolation_is_security_boundary": False,
+        "server_side_acl_verified": False,
+        "global_ingress_fenced": False,
+        "production_release_authorized": False,
+    }
