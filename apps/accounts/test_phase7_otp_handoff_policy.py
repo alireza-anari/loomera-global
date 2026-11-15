@@ -151,7 +151,7 @@ class Phase710SyntheticSessionTests(SimpleTestCase):
         self.assertIn("secrets.compare_digest", verify)
         self.assertIn('context="verified"', verify)
         helper = source[source.index("def _cache_delete("):source.index("def _increment_hour_rate(")]
-        self.assertIn("cache.delete(key)", helper)
+        self.assertIn("_otp_cache().delete(key)", helper)
         self.assertIn("return True", helper)
 
     def test_exit_matrix_requires_real_approval(self):
