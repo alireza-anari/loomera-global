@@ -29,7 +29,7 @@ Baseline `main` at final review: `e622739f5df8c366d0dc4c506d07a2d7d4a72c32`.
 - Selecting `otp` without a location, without `django-redis`, with a non-TLS URL, a default/missing ACL username, no password, invalid URL, disabled certificate verification, or the same Redis principal as the general cache fails settings import with a generic error.
 - The dedicated cache uses a separate key prefix. The live API OTP helpers resolve the selected cache lazily. When the alias is `default`, the original global cache proxy is returned, preserving existing behavior and test patch contracts. **No default is silently switched.**
 - Infrastructure and pre-beta readiness warn while OTP still shares the general cache; when `otp` is selected, they probe the dedicated alias as well.
-- `python manage.py audit_phase7_otp_redis_roles --json` emits a settings-only role map for general cache, OTP, infrastructure preflight, Celery broker and Celery result. It groups endpoints/principals without printing host, username, password or full URLs and opens no Redis or SQL connection. Logical DB numbers are not treated as security boundaries.
+- `python manage.py audit_phase7_otp_redis_roles --json` emits a settings-only role map for general cache, OTP, infrastructure preflight, Celery broker and Celery result. It groups endpoints/principals without printing host, username, password or full URLs and opens no Redis or SQL connection. Principal identity is endpoint plus ACL username: changing the password or logical DB number does not create a new ACL user or security boundary.
 
 ## Explicit limits
 
