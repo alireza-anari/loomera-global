@@ -491,6 +491,14 @@ jobs:
         run: |
           python manage.py test apps.accounts.test_phase7_otp_review_guards --failfast
 
+      - name: Phase 7.31 dedicated OTP cache alias and redacted Redis role audit
+        run: |
+          python manage.py test \
+            apps.api.tests.test_api_v1_otp_cache_alias \
+            apps.accounts.test_phase7_otp_runtime_role_guards \
+            --failfast
+          python manage.py audit_phase7_otp_redis_roles --json
+
       - name: Phase 7.7 experimental Redis OTP isolation and live-auth no-wiring guards
         run: |
           python manage.py test apps.accounts.test_phase7_redis_atomic_contract --failfast
