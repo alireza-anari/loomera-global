@@ -92,6 +92,13 @@ jobs:
         run: |
           python manage.py test apps.main.test_phase7_33_acl_fixture_guards --failfast
 
+      - name: Phase 7.34 required OTP delete confirmation and verify response guards
+        run: |
+          python manage.py test \
+            apps.api.tests.test_api_v1_otp_cache_delete_policy \
+            apps.api.tests.test_api_v1_otp_required_delete_race \
+            --failfast
+
       - name: Phase 7.31 opt-in OTP cache alias compatibility guards
         run: |
           python manage.py test apps.api.tests.test_api_v1_otp_cache_alias --failfast
@@ -757,6 +764,10 @@ jobs:
         run: |
           python manage.py check
           python manage.py makemigrations --check --dry-run
+
+      - name: Phase 7.34 OTP verify HTTP 503 and no-session PostGIS integration
+        run: |
+          python manage.py test apps.api.tests.test_api_v1_otp_verify --failfast --noinput
 
       - name: Rehearse spatial migration with synthetic appointments and rollback
         run: |

@@ -1,0 +1,21 @@
+{
+  "schema_version": 1,
+  "phase": "7.34",
+  "baseline_main_sha": "e6bae24c6af33b3b461665e05dbe1780acd815e0",
+  "scope": "LIVE_OTP_REQUIRED_DELETE_ACKNOWLEDGEMENT_FAIL_CLOSED_NO_ATOMIC_CLAIM",
+  "required_delete_false_blocks_auth": true,
+  "required_delete_none_or_zero_blocks_auth": true,
+  "local_failopen_delete_exception_cannot_authenticate": true,
+  "view_http_status_on_unconfirmed_delete": 503,
+  "view_login_not_called_on_unconfirmed_delete": true,
+  "two_readers_one_confirmed_delete_one_blocked": true,
+  "backend_successful_delete_may_return_bool_or_positive_count": true,
+  "live_atomic_compare_and_delete_implemented": false,
+  "live_wrong_attempt_atomicity_proven": false,
+  "new_challenge_reissue_ABA_safe": false,
+  "cross_node_failover_fenced": false,
+  "sms_outbox_live": false,
+  "deployment_executed": false,
+  "production_release_authorized": false,
+  "release_gate": "BLOCKED"
+}

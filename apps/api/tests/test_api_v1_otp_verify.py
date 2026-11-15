@@ -23,6 +23,7 @@ from tests_stage1_helpers import Stage1DomainFactoryMixin
     },
     LOOMERA_API_AUTH_OTP_CACHE_PREFIX="loomera:test-api-auth-otp-verify",
     LOOMERA_API_AUTH_OTP_LENGTH=6,
+    SECURE_SSL_REDIRECT=False,
     LOOMERA_API_AUTH_OTP_TTL_SECONDS=120,
     LOOMERA_API_AUTH_OTP_RESEND_SECONDS=60,
     LOOMERA_API_AUTH_MAX_VERIFY_ATTEMPTS=3,
@@ -90,6 +91,50 @@ class ApiV1OtpVerifyTests(Stage1DomainFactoryMixin, TestCase):
         me_response = self.client.get(reverse("api:v1:auth_me"))
         self.assertEqual(me_response.status_code, 200)
         self.assertEqual(me_response.json()["data"]["user"]["id"], user.pk)
+
+
+    @override_settings(LOOMERA_API_AUTH_OTP_FAIL_CLOSED=True)
+    def test_false_delete_ack_returns_503_without_creating_a_session(self):
+        self._make_existing_user()
+        self._request_known_otp()
+        with (
+            patch("apps.api.v1.auth_otp.cache.delete", return_value=False) as deletion,
+            patch("apps.api.v1.auth_views.login") as login_mock,
+        ):
+            response = self.client.post(
+                self.verify_url,
+                data={"mobile_number": "09121234567", "code": "123456"},
+                content_type="application/json",
+            )
+        self.assertEqual(response.status_code, 503)
+        self.assertEqual(
+            response.json()["error"]["code"], "otp_rate_limit_unavailable"
+        )
+        login_mock.assert_not_called()
+        deletion.assert_called_once()
+
+    @override_settings(LOOMERA_API_AUTH_OTP_FAIL_CLOSED=False)
+    def test_local_failopen_delete_exception_still_cannot_log_in(self):
+        self._make_existing_user()
+        self._request_known_otp()
+        with (
+            patch(
+                "apps.api.v1.auth_otp.cache.delete",
+                side_effect=RuntimeError("private-redis-detail"),
+            ),
+            patch("apps.api.v1.auth_views.login") as login_mock,
+        ):
+            response = self.client.post(
+                self.verify_url,
+                data={"mobile_number": "09121234567", "code": "123456"},
+                content_type="application/json",
+            )
+        self.assertEqual(response.status_code, 503)
+        self.assertEqual(
+            response.json()["error"]["code"], "otp_rate_limit_unavailable"
+        )
+        self.assertNotIn("private-redis-detail", response.content.decode("utf-8"))
+        login_mock.assert_not_called()
 
     def test_otp_verify_rejects_invalid_code_and_keeps_attempt_count(self):
         self._make_existing_user()
