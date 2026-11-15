@@ -212,7 +212,7 @@ class Phase721PerRecordStateMachineOfflineTests(SimpleTestCase):
         self.assertIn(
             "secrets.compare_digest(expected_hash, submitted_hash)", src,
         )
-        self.assertIn("cache.delete(key)", src)
+        self.assertIn("_otp_cache().delete(key)", src)
         self.assertIn("return True", src)
 
     def test_fixed_docker_isolation_real_concurrency_and_negative_cases(self):
