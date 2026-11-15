@@ -306,17 +306,28 @@ class Phase731CachePreflightTests(SimpleTestCase):
                 self.assertNotIn("phase731-secret", result.stdout + result.stderr)
 
     def test_dedicated_otp_alias_rejects_same_acl_principal_even_on_other_db(self):
-        secret = "phase731-shared-secret"
-        result = self._settings_subprocess(
-            {
-                "CACHE_LOCATION":
-                    f"rediss://shared_user:{secret}@redis.example:6380/1",
-                "LOOMERA_API_AUTH_OTP_CACHE_LOCATION":
-                    f"rediss://shared_user:{secret}@redis.example:6380/9",
-            }
+        cases = (
+            (
+                "rediss://shared_user:shared-secret@redis.example:6380/1",
+                "rediss://shared_user:shared-secret@redis.example:6380/9",
+            ),
+            (
+                "rediss://shared_user:old-password@redis.example:6380/1",
+                "rediss://shared_user:new-password@redis.example:6380/2",
+            ),
         )
-        self.assertNotEqual(result.returncode, 0)
-        self.assertNotIn(secret, result.stdout + result.stderr)
+        for general, otp in cases:
+            with self.subTest(general=general, otp=otp):
+                result = self._settings_subprocess(
+                    {
+                        "CACHE_LOCATION": general,
+                        "LOOMERA_API_AUTH_OTP_CACHE_LOCATION": otp,
+                    }
+                )
+                self.assertNotEqual(result.returncode, 0)
+                self.assertNotIn("shared-secret", result.stdout + result.stderr)
+                self.assertNotIn("old-password", result.stdout + result.stderr)
+                self.assertNotIn("new-password", result.stdout + result.stderr)
 
     def test_role_inventory_groups_principals_without_disclosing_identity(self):
         general = "rediss://general_user:general-secret@redis.example:6380/1"
@@ -368,6 +379,58 @@ class Phase731CachePreflightTests(SimpleTestCase):
             self.assertNotIn(secret, rendered)
         self.assertIn("celery_broker_shares_general_cache_principal",
                       report["warnings"])
+
+    def test_role_inventory_treats_password_rotation_as_same_acl_principal(self):
+        config = SimpleNamespace(
+            CACHES={
+                "default": {
+                    "BACKEND": "django_redis.cache.RedisCache",
+                    "LOCATION": (
+                        "rediss://shared_user:old-password@redis.example:6380/1"
+                    ),
+                },
+                "otp": {
+                    "BACKEND": "django_redis.cache.RedisCache",
+                    "LOCATION": (
+                        "rediss://shared_user:new-password@redis.example:6380/9"
+                    ),
+                },
+            },
+            LOOMERA_API_AUTH_OTP_CACHE_ALIAS="otp",
+            LOOMERA_ENVIRONMENT="staging",
+            LOOMERA_ENABLE_CELERY=False,
+        )
+        report = build_redis_role_inventory(config)
+        roles = report["roles"]
+        self.assertEqual(
+            roles["general_cache"]["principal_group"],
+            roles["api_otp"]["principal_group"],
+        )
+        rendered = repr(report)
+        self.assertNotIn("old-password", rendered)
+        self.assertNotIn("new-password", rendered)
+
+    def test_role_inventory_rejects_zero_port_and_invalid_database_path(self):
+        for location in (
+            "rediss://cache_user:secret@redis.example:0/1",
+            "rediss://cache_user:secret@redis.example:6380/1/not-a-db",
+        ):
+            with self.subTest(location=location):
+                config = SimpleNamespace(
+                    CACHES={
+                        "default": {
+                            "BACKEND": "django_redis.cache.RedisCache",
+                            "LOCATION": location,
+                        }
+                    },
+                    LOOMERA_API_AUTH_OTP_CACHE_ALIAS="default",
+                    LOOMERA_ENVIRONMENT="staging",
+                    LOOMERA_ENABLE_CELERY=False,
+                )
+                report = build_redis_role_inventory(config)
+                self.assertEqual(
+                    report["roles"]["general_cache"]["status"], "invalid",
+                )
 
     def test_role_audit_command_is_settings_only_and_redacted(self):
         import io
