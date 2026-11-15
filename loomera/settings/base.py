@@ -1611,6 +1611,21 @@ if LOOMERA_API_AUTH_OTP_ATOMIC_REDIS_VERIFY and (
         "Atomic API OTP verification requires the dedicated OTP Redis cache "
         "alias and fail-closed cache policy."
     )
+# Phase 7.36 atomic issuance is separately opt-in and requires the Phase 7.35
+# atomic verifier. An issuer-only rollout would reintroduce unsafe races.
+LOOMERA_API_AUTH_OTP_ATOMIC_REDIS_ISSUE = env.bool(
+    "LOOMERA_API_AUTH_OTP_ATOMIC_REDIS_ISSUE",
+    default=False,
+)
+if LOOMERA_API_AUTH_OTP_ATOMIC_REDIS_ISSUE and (
+    not LOOMERA_API_AUTH_OTP_ATOMIC_REDIS_VERIFY
+    or LOOMERA_API_AUTH_OTP_CACHE_ALIAS != "otp"
+    or not LOOMERA_API_AUTH_OTP_FAIL_CLOSED
+):
+    raise ImproperlyConfigured(
+        "Atomic API OTP issuance requires atomic verification, a named "
+        "dedicated OTP Redis cache and fail-closed policy."
+    )
 LOOMERA_API_BOOKING_DRAFT_MAX_BYTES = env.int(
     "LOOMERA_API_BOOKING_DRAFT_MAX_BYTES",
     default=4 * 1024,

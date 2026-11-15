@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "phase": "7.36",
+  "baseline_main_sha": "2e9cdaa948a3adc85cce589dc63268df59887ee9",
+  "scope": "DEFAULT_OFF_LIVE_COMPATIBLE_SINGLE_NODE_FOUR_KEY_ISSUE_WATCH_CAS",
+  "atomic_issue_flag_disabled_by_default": true,
+  "single_node_four_key_watch_issue_optin_wired": true,
+  "atomic_verify_and_named_cache_required": true,
+  "issue_cooldown_mobile_ip_quotas_one_confirmed_exec": true,
+  "same_ip_cross_mobile_contention_tested_in_disposable_redis": true,
+  "same_byte_counter_rewrite_fenced_in_disposable_redis": true,
+  "expired_or_corrupt_redis_state_denies": true,
+  "production_cutover_authorized": false,
+  "multihost_fencing_proven": false,
+  "delivery_outbox_implemented_live": false,
+  "request_idempotency_live": false,
+  "trusted_proxy_ip_chain_verified": false,
+  "sms_provider_live": false,
+  "session_cross_store_consistency_proven": false,
+  "deployment_executed": false,
+  "release_gate": "BLOCKED"
+}

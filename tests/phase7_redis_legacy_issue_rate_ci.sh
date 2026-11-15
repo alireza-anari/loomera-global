@@ -70,4 +70,9 @@ export LOOMERA_PHASE724_TEST_REDIS="1"
 export LOOMERA_PHASE724_CONTAINER="$redis_container"
 python tests/phase7_legacy_idempotency_test.py -v
 
-echo "Phases 7.22-7.24 real synthetic issuer/verify/idempotency/AOF CI PASSED"
+# Phase 7.36: use this SAME disposable Redis and independently randomized
+# fixture keys to test the live-compatible opt-in four-key issuer.
+export LOOMERA_PHASE736_TEST_REDIS="1"
+python tests/phase7_36_atomic_issue_live_test.py -v
+
+echo "Phases 7.22-7.24/7.36 real synthetic issuer/verify/idempotency/AOF CAS PASSED"
