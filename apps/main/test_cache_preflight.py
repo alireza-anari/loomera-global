@@ -157,6 +157,25 @@ class Phase731CachePreflightTests(SimpleTestCase):
         self.assertEqual(fake.set_calls, [])
         self.assertEqual(fake.delete_calls, [])
 
+    def test_dedicated_otp_cache_probe_uses_only_the_otp_alias(self):
+        default = FakeCache()
+        otp = FakeCache(observed="e" * 64)
+        with (
+            patch(
+                "apps.main.cache_preflight.caches",
+                {"default": default, "otp": otp},
+            ),
+            patch(
+                "apps.main.cache_preflight.secrets.token_hex",
+                side_effect=["f" * 32, "e" * 64],
+            ),
+        ):
+            probe_cache_backend(scope="otp", alias="otp")
+        self.assertEqual(len(otp.add_calls), 1)
+        self.assertEqual(len(otp.get_calls), 1)
+        self.assertEqual(default.add_calls, [])
+        self.assertEqual(default.get_calls, [])
+
     def test_cache_probe_never_reads_or_deletes_when_add_not_confirmed(self):
         fake = FakeCache(add_result=False)
         with (
@@ -186,7 +205,9 @@ class Phase731CachePreflightTests(SimpleTestCase):
         environment = os.environ.copy()
         environment.pop("LOOMERA_ENVIRONMENT", None)
         environment.pop("DJANGO_SETTINGS_MODULE", None)
-        environment["SECRET_KEY"] = "phase731-test-only-secret-key-not-runtime"
+        environment.pop("LOOMERA_API_AUTH_OTP_CACHE_ALIAS", None)
+        environment.pop("LOOMERA_API_AUTH_OTP_CACHE_LOCATION", None)
+        environment["SECRET_KEY" = "phase731-test-only-secret-key-not-runtime"
         environment["DATABASE_URL"] = "sqlite:///phase731-settings-check.sqlite3"
         environment["DEBUG"] = "False"
         environment["PYTHONPATH"] = str(ROOT)
