@@ -14,7 +14,7 @@ from unittest.mock import patch
 from django.test import SimpleTestCase, override_settings
 from rest_framework.test import APIRequestFactory
 
-from apps.api.v1 import auth_otp
+from apps.api.v1 import auth_otp, otp_atomic_issue
 from apps.api.v1.auth_views import ApiOtpRequestAPIView
 from apps.api.v1.otp_atomic_issue import (
     AtomicOtpIssueOutcome,
@@ -263,8 +263,9 @@ class Phase736AtomicIssuerOfflineGuards(SimpleTestCase):
         self.assertIn("LOOMERA_API_AUTH_OTP_ATOMIC_REDIS_VERIFY", caller)
         self.assertIn('get("REMOTE_ADDR")', caller)
         self.assertIn('default=False', settings_text)
-        self.assertNotIn("client.decode(raw)", module)
-        self.assertIn("_NUMERIC_WIRE.fullmatch(raw)", module)
+        reader = inspect.getsource(otp_atomic_issue._read_legacy_string)
+        self.assertNotIn("client.decode(raw)", reader)
+        self.assertIn("_NUMERIC_WIRE.fullmatch(raw)", reader)
         self.assertNotIn("except Exception", module)
         self.assertNotIn("FLUSHDB", module)
         self.assertNotIn("FLUSHALL", module)

@@ -18,7 +18,7 @@ Each new challenge stores only a salted HMAC digest (not a plaintext OTP). API d
 
 In the opt-in path, the IP quota is based solely on directly observed REMOTE_ADDR, NOT HTTP X-Forwarded-For, which is untrusted unless ingress sanitization has been independently verified. This may conservatively throttle users sharing a reverse-proxy address. Invalid or missing peer addresses cause HTTP 503 rather than trusting a spoofable forwarded value.
 
-**Fail-closed behavior:** WATCH conflicts, unexpected Redis types or TTLs, corrupt serialized legacy data, malformed numeric counters, unsupported serializer/client, malformed or lost EXEC replies and backend errors yield HTTP 503. Pending challenge/cooldown and exhausted mobile/IP limits yield HTTP 429 with the existing scope and positive Redis-PTTL-derived retry-after. A lost EXEC reply is *not proof of issuance*: Redis may already have applied the transaction, and there is no automatic retry.
+**Fail-closed behavior:** WATCH conflicts, unexpected Redis types or TTLs, corrupt numeric counter/cooldown wire, unsupported serializer/client, malformed or lost EXEC replies and backend errors yield HTTP 503. Any existing unexpired Redis STRING at the challenge key (even malformed serialized data) is conservatively treated as a pending challenge and denied with HTTP 429 until TTL expires, without deserializing it. Pending challenge/cooldown and exhausted mobile/IP limits yield HTTP 429 with the existing scope and positive Redis-PTTL-derived retry-after. A lost EXEC reply is *not proof of issuance*: Redis may already have applied the transaction, and there is no automatic retry.
 
 ## Tests and limitations
 
