@@ -1521,7 +1521,11 @@ def _redis_principal_identity(location: str):
         port = parsed_port if parsed_port is not None else 6379
     except ValueError:
         return None
-    if parsed.scheme not in {"redis", "rediss"} or not parsed.hostname:
+    if (
+        parsed.scheme not in {"redis", "rediss"}
+        or not parsed.hostname
+        or not 1 <= port <= 65535
+    ):
         return None
     return (
         parsed.hostname.lower(),
@@ -1550,7 +1554,8 @@ if LOOMERA_API_AUTH_OTP_CACHE_LOCATION:
     if (
         _otp_cache_url.scheme != "rediss"
         or not _otp_cache_url.hostname
-        or _otp_cache_url.hostname.lower() in {"localhost", "127.0.0.1", "0.0.0.0", "::1", "::"}
+        or _otp_cache_url.hostname.lower()
+        in {"localhost", "127.0.0.1", "0.0.0.0", "::1", "::"}
         or not 1 <= _otp_cache_port <= 65535
         or (_otp_cache_database and not _otp_cache_database.isdigit())
         or not _otp_cache_url.username
