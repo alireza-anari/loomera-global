@@ -198,7 +198,7 @@ class Phase724IdempotencyOfflinePolicyTests(SimpleTestCase):
         )
         self.assertIn("record = _cache_get(key)", otp_live)
         self.assertIn("secrets.compare_digest(expected_hash, submitted_hash)", otp_live)
-        self.assertIn("cache.delete(key)", otp_live)
+        self.assertIn("_otp_cache().delete(key)", otp_live)
 
     def test_real_aof_rehearsal_and_ci_runner_remain_disposable(self):
         sh = (ROOT / "tests/phase7_redis_legacy_issue_rate_ci.sh").read_text(
