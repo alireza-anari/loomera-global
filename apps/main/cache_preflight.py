@@ -225,25 +225,30 @@ def build_redis_role_inventory(settings_obj=None) -> dict:
         }
 
     warnings: list[str] = []
+    general_principal = roles.get("general_cache", {}).get("principal_group")
+    otp_principal = roles.get("api_otp", {}).get("principal_group")
+    broker_principal = roles.get("celery_broker", {}).get("principal_group")
+    result_principal = roles.get("celery_result", {}).get("principal_group")
+
     if otp_alias == "default":
         warnings.append("api_otp_shares_general_cache_alias")
-    elif (
-        roles.get("api_otp", {}).get("principal_group")
-        == roles.get("general_cache", {}).get("principal_group")
-    ):
+        if getattr(settings_obj, "LOOMERA_API_AUTH_OTP_CACHE_LOCATION", ""):
+            warnings.append("api_otp_dedicated_location_configured_but_alias_default")
+    elif otp_principal and otp_principal == general_principal:
         warnings.append("api_otp_shares_general_cache_principal")
-    if (
-        celery_enabled
-        and roles.get("celery_broker", {}).get("principal_group")
-        == roles.get("general_cache", {}).get("principal_group")
-    ):
-        warnings.append("celery_broker_shares_general_cache_principal")
-    if (
-        celery_enabled
-        and roles.get("celery_result", {}).get("principal_group")
-        == roles.get("celery_broker", {}).get("principal_group")
-    ):
-        warnings.append("celery_result_shares_celery_broker_principal")
+
+    if celery_enabled and broker_principal:
+        if broker_principal == general_principal:
+            warnings.append("celery_broker_shares_general_cache_principal")
+        if broker_principal == otp_principal:
+            warnings.append("celery_broker_shares_api_otp_principal")
+    if celery_enabled and result_principal:
+        if result_principal == broker_principal:
+            warnings.append("celery_result_shares_celery_broker_principal")
+        if result_principal == general_principal:
+            warnings.append("celery_result_shares_general_cache_principal")
+        if result_principal == otp_principal:
+            warnings.append("celery_result_shares_api_otp_principal")
     if any(
         role.get("status") == "configured" and not role.get("tls_requested")
         for role in roles.values()
