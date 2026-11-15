@@ -232,6 +232,30 @@ class Command(BaseCommand):
         if assessment.ok and cache_backend:
             self._ok(f"Cache backend: {cache_backend}")
 
+        otp_alias = str(
+            getattr(settings, "LOOMERA_API_AUTH_OTP_CACHE_ALIAS", "default")
+            or "default"
+        ).strip().lower()
+        if otp_alias == "default":
+            self._warn("API OTP هنوز از هویت Cache عمومی استفاده می‌کند.")
+        else:
+            otp_config = settings.CACHES.get(otp_alias, {})
+            otp_assessment = assess_cache_configuration(
+                otp_config,
+                deployed=self._is_deployed_environment(),
+                debug=bool(getattr(settings, "DEBUG", False)),
+            )
+            for error in otp_assessment.errors:
+                self._fail(f"API OTP cache configuration: {error}")
+            for warning in otp_assessment.warnings:
+                self._warn(f"API OTP cache configuration: {warning}")
+            if otp_assessment.ok:
+                try:
+                    probe_cache_backend(scope="pre_beta_otp", alias=otp_alias)
+                    self._ok("Dedicated API OTP cache add/read probe succeeded.")
+                except Exception as exc:
+                    self._fail(f"API OTP cache probe failed: {exc.__class__.__name__}")
+
     def _check_media_storage(self):
         use_s3_media = bool(getattr(settings, "USE_S3_MEDIA", False))
         require_object_storage = bool(
