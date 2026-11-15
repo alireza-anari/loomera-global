@@ -167,6 +167,74 @@ class Phase731RedisRuntimeRolePolicyTests(SimpleTestCase):
         self.assertIn(roles["django_cache_default"]["status"], {"invalid", "missing"})
         self.assertEqual(roles["celery_broker"]["status"], "missing")
 
+    def test_unused_dedicated_otp_location_is_not_mistaken_for_active_isolation(self):
+        report = audit_runtime_redis_roles(_settings(
+            LOOMERA_API_AUTH_OTP_CACHE_ALIAS="default",
+            LOOMERA_API_AUTH_OTP_CACHE_LOCATION=(
+                "rediss://otp-user:otp-secret@otp.internal:6380/2"
+            ),
+            CACHES={
+                "default": {
+                    "BACKEND": "django_redis.cache.RedisCache",
+                    "LOCATION": "rediss://cache-user:cache-secret@cache.internal:6380/1",
+                },
+                "otp": {
+                    "BACKEND": "django_redis.cache.RedisCache",
+                    "LOCATION": "rediss://otp-user:otp-secret@otp.internal:6380/2",
+                },
+            },
+            LOOMERA_ENABLE_CELERY=False,
+        ))
+        self.assertIn(
+            "DEDICATED_OTP_REDIS_LOCATION_CONFIGURED_BUT_NOT_SELECTED",
+            report["findings"],
+        )
+        self.assertIn("OTP_SHARES_DEFAULT_DJANGO_CACHE_ALIAS", report["findings"])
+
+    def test_audit_never_emits_host_username_or_password(self):
+        report = audit_runtime_redis_roles(_settings(
+            CACHES={
+                "default": {
+                    "BACKEND": "django_redis.cache.RedisCache",
+                    "LOCATION": (
+                        "rediss://private-cache-user:private-cache-secret@"
+                        "private-cache.internal:6380/1"
+                    ),
+                },
+                "otp": {
+                    "BACKEND": "django_redis.cache.RedisCache",
+                    "LOCATION": (
+                        "rediss://private-otp-user:private-otp-secret@"
+                        "private-otp.internal:6380/2"
+                    ),
+                },
+            },
+            LOOMERA_API_AUTH_OTP_CACHE_ALIAS="otp",
+            LOOMERA_ENABLE_CELERY=False,
+        ))
+        rendered = json.dumps(report, sort_keys=True)
+        for secret in (
+            "private-cache-user", "private-cache-secret",
+            "private-otp-user", "private-otp-secret",
+            "private-cache.internal", "private-otp.internal",
+        ):
+            self.assertNotIn(secret, rendered)
+
+    def test_invalid_redis_port_is_rejected_without_exposing_target(self):
+        report = audit_runtime_redis_roles(_settings(
+            CACHES={
+                "default": {
+                    "BACKEND": "django_redis.cache.RedisCache",
+                    "LOCATION": "rediss://user:secret@redis.internal:70000/1",
+                },
+            },
+            LOOMERA_ENABLE_CELERY=False,
+        ))
+        roles = {role["name"]: role for role in report["roles"]}
+        self.assertEqual(roles["django_cache_default"]["status"], "invalid")
+        self.assertNotIn("redis.internal", json.dumps(report))
+        self.assertNotIn("secret", json.dumps(report))
+
     def test_disabled_celery_roles_are_not_counted_as_active_writers(self):
         report = audit_runtime_redis_roles(_settings(LOOMA_ENABLE_CELERY=False))
         roles = {role["name"]: role for role in report["roles"]}
