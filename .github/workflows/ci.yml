@@ -80,6 +80,10 @@ jobs:
             apps.main.test_liara_deployment_config \
             --failfast
 
+      - name: Phase 7.31 runtime Redis and non-destructive cache preflight guards
+        run: |
+          python manage.py test apps.main.test_cache_preflight --failfast
+
       - name: Phase 3 language selection persistence and catalog guards
         run: |
           python manage.py test \
