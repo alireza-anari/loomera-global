@@ -47,7 +47,7 @@ class Phase78WireContractTests(SimpleTestCase):
         self.assertIn("record = _cache_get(key)", src)
         self.assertIn("secrets.compare_digest(expected_hash, submitted_hash)", src)
         self.assertIn("_cache_delete(", src)
-        self.assertIn("cache.delete(key)", src)
+        self.assertIn("_otp_cache().delete(key)", src)
         self.assertIn("return True", src)
 
     def test_exit_evidence_keeps_release_blocked(self):
