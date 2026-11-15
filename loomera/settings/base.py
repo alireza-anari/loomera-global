@@ -1517,7 +1517,8 @@ if LOOMERA_API_AUTH_OTP_CACHE_ALIAS not in {"default", "otp"}:
 def _redis_principal_identity(location: str):
     try:
         parsed = urlsplit(str(location or "").strip())
-        port = parsed.port or 6379
+        parsed_port = parsed.port
+        port = parsed_port if parsed_port is not None else 6379
     except ValueError:
         return None
     if parsed.scheme not in {"redis", "rediss"} or not parsed.hostname:
@@ -1525,15 +1526,18 @@ def _redis_principal_identity(location: str):
     return (
         parsed.hostname.lower(),
         port,
-        parsed.username or "",
-        parsed.password or "",
+        parsed.username or "default",
     )
 
 
 if LOOMERA_API_AUTH_OTP_CACHE_LOCATION:
     try:
         _otp_cache_url = urlsplit(LOOMERA_API_AUTH_OTP_CACHE_LOCATION)
-        _otp_cache_port = _otp_cache_url.port or 6379
+        _parsed_otp_cache_port = _otp_cache_url.port
+        _otp_cache_port = (
+            _parsed_otp_cache_port
+            if _parsed_otp_cache_port is not None else 6379
+        )
         _otp_cache_query = parse_qs(_otp_cache_url.query)
     except ValueError as exc:
         raise ImproperlyConfigured("Invalid dedicated API OTP Redis URL.") from exc
@@ -1546,7 +1550,7 @@ if LOOMERA_API_AUTH_OTP_CACHE_LOCATION:
     if (
         _otp_cache_url.scheme != "rediss"
         or not _otp_cache_url.hostname
-        or _otp_cache_url.hostname.lower() in {"localhost", "127.0.0.1", "::1"}
+        or _otp_cache_url.hostname.lower() in {"localhost", "127.0.0.1", "0.0.0.0", "::1", "::"}
         or not 1 <= _otp_cache_port <= 65535
         or (_otp_cache_database and not _otp_cache_database.isdigit())
         or not _otp_cache_url.username
