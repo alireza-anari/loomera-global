@@ -1,11 +1,14 @@
 from __future__ import annotations
 
-from urllib.parse import urlparse
-
 from django.conf import settings
-from django.core.cache import cache
 from django.core.management.base import BaseCommand
 from django.db import connection
+
+from apps.main.cache_preflight import (
+    assess_cache_configuration,
+    assess_redis_url,
+    probe_cache_backend,
+)
 
 
 class Command(BaseCommand):
@@ -26,12 +29,6 @@ class Command(BaseCommand):
 
     def _is_deployed_environment(self) -> bool:
         return self._environment() in {"staging", "production"}
-
-    def _is_local_url(self, value: str) -> bool:
-        if not value:
-            return False
-        parsed = urlparse(value)
-        return parsed.hostname in {"127.0.0.1", "localhost"}
 
     def _check_core_security(self):
         if getattr(settings, "DEBUG", False):
@@ -213,28 +210,27 @@ class Command(BaseCommand):
         else:
             self._ok(f"Database engine: {engine}")
 
-        try:
-            cache.set("loomera:pre-beta-check", "ok", timeout=30)
-            if cache.get("loomera:pre-beta-check") == "ok":
-                self._ok("Cache قابل استفاده است.")
-            else:
-                self._fail("Cache مقدار تست را برنگرداند.")
-        except Exception as exc:
-            self._fail(f"Cache خطا دارد: {exc.__class__.__name__}")
-
         cache_config = settings.CACHES.get("default", {})
-        cache_backend = cache_config.get("BACKEND", "")
-        cache_location = str(cache_config.get("LOCATION", "") or "")
+        assessment = assess_cache_configuration(
+            cache_config,
+            deployed=self._is_deployed_environment(),
+            debug=bool(getattr(settings, "DEBUG", False)),
+        )
+        for error in assessment.errors:
+            self._fail(f"Cache configuration: {error}")
+        for warning in assessment.warnings:
+            self._warn(f"Cache configuration: {warning}")
 
-        if "LocMemCache" in cache_backend and not getattr(settings, "DEBUG", False):
-            self._fail(
-                "در staging/production نباید از LocMemCache استفاده شود؛ Redis را تنظیم کن."
-            )
-        else:
+        if assessment.ok:
+            try:
+                probe_cache_backend(scope="pre_beta")
+                self._ok("Cache add/read probe succeeded.")
+            except Exception as exc:
+                self._fail(f"Cache probe failed: {exc.__class__.__name__}")
+
+        cache_backend = str(cache_config.get("BACKEND", "") or "")
+        if cache_backend:
             self._ok(f"Cache backend: {cache_backend}")
-
-        if self._is_deployed_environment() and self._is_local_url(cache_location):
-            self._fail("Redis/Cache در staging/production نباید localhost باشد.")
 
     def _check_media_storage(self):
         use_s3_media = bool(getattr(settings, "USE_S3_MEDIA", False))
@@ -262,8 +258,17 @@ class Command(BaseCommand):
 
     def _check_celery_policy(self):
         if getattr(settings, "LOOMERA_ENABLE_CELERY", False):
-            if not getattr(settings, "CELERY_BROKER_URL", ""):
+            broker = str(getattr(settings, "CELERY_BROKER_URL", "") or "")
+            if not broker:
                 self._fail("Celery فعال است اما CELERY_BROKER_URL تنظیم نشده.")
+            elif self._is_deployed_environment():
+                assessment = assess_redis_url(broker)
+                for error in assessment.errors:
+                    self._fail(f"Celery broker configuration: {error}")
+                for warning in assessment.warnings:
+                    self._warn(f"Celery broker configuration: {warning}")
+                if not assessment.errors:
+                    self._ok("Celery broker تنظیم شده است.")
             else:
                 self._ok("Celery broker تنظیم شده است.")
         else:
