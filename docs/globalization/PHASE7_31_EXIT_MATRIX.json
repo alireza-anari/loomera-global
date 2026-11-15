@@ -1,8 +1,8 @@
 {
   "schema_version": 1,
   "phase": "7.31",
-  "baseline_main_sha": "ab70c12900e952ad907b6ee319037ffd4850dda1",
-  "prior_phase731_role_map_commit": "5f65172593af7939310367bc14e2ba5388bbdaf8",
+  "baseline_main_sha": "e622739f5df8c366d0dc4c506d07a2d7d4a72c32",
+  "prior_phase731_role_map_commit": null,
   "scope": "OPT_IN_OTP_CACHE_ALIAS_REDACTED_ROLE_AUDIT_AND_NONDESTRUCTIVE_RUNTIME_PREFLIGHT",
   "runtime_environment": {
     "production_settings_default": "production",
