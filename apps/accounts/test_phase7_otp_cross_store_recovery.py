@@ -182,7 +182,7 @@ class Phase711CrossStoreRecoveryTests(SimpleTestCase):
         self.assertIn("secrets.compare_digest", verify)
         self.assertIn('context="verified"', verify)
         helper = source[source.index("def _cache_delete("):source.index("def _increment_hour_rate(")]
-        self.assertIn("cache.delete(key)", helper)
+        self.assertIn("_otp_cache().delete(key)", helper)
 
     def test_exit_matrix_requires_separate_live_approval(self):
         matrix = json.loads(MATRIX.read_text(encoding="utf-8"))
