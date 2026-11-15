@@ -67,7 +67,7 @@ class Command(BaseCommand):
                 self._fail(f"cache: {exc.__class__.__name__}")
 
         cache_backend = str(cache_config.get("BACKEND", "") or "")
-        if cache_backend:
+        if assessment.ok and cache_backend:
             self._ok(f"cache backend: {cache_backend}")
 
     def _check_static_and_media(self):
