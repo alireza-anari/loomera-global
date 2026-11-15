@@ -70,6 +70,30 @@ class Command(BaseCommand):
         if assessment.ok and cache_backend:
             self._ok(f"cache backend: {cache_backend}")
 
+        otp_alias = str(
+            getattr(settings, "LOOMERA_API_AUTH_OTP_CACHE_ALIAS", "default")
+            or "default"
+        ).strip().lower()
+        if otp_alias == "default":
+            self._warn("API OTP shares the general Django cache identity.")
+        else:
+            otp_config = settings.CACHES.get(otp_alias, {})
+            otp_assessment = assess_cache_configuration(
+                otp_config,
+                deployed=self._is_deployed_environment(),
+                debug=bool(getattr(settings, "DEBUG", False)),
+            )
+            for error in otp_assessment.errors:
+                self._fail(f"API OTP cache configuration: {error}")
+            for warning in otp_assessment.warnings:
+                self._warn(f"API OTP cache configuration: {warning}")
+            if otp_assessment.ok:
+                try:
+                    probe_cache_backend(scope="otp", alias=otp_alias)
+                    self._ok("dedicated API OTP cache add/read probe")
+                except Exception as exc:
+                    self._fail(f"API OTP cache: {exc.__class__.__name__}")
+
     def _check_static_and_media(self):
         static_backend = settings.STORAGES.get("staticfiles", {}).get("BACKEND", "")
         default_backend = settings.STORAGES.get("default", {}).get("BACKEND", "")
