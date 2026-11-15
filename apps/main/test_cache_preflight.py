@@ -105,6 +105,10 @@ class Phase731CachePreflightTests(SimpleTestCase):
             ("redis://", "redis_url_host_required"),
             ("redis://cache_user:secret@redis.example:notaport/0",
              "redis_url_invalid"),
+            ("rediss://cache_user:secret@redis.example:0/0",
+             "redis_url_port_invalid"),
+            ("rediss://cache_user:secret@0.0.0.0:6380/0",
+             "deployed_redis_url_must_not_use_localhost"),
             ("rediss://cache_user:secret@redis.example/not-a-db",
              "redis_url_database_invalid"),
             ("rediss://cache_user:secret@redis.example:6380/0?ssl_cert_reqs=none",
@@ -297,6 +301,11 @@ class Phase731CachePreflightTests(SimpleTestCase):
         for location in (
             "redis://otp_user:phase731-secret@otp-cache.example:6379/0",
             "rediss://default:phase731-secret@otp-cache.example:6380/0",
+            "rediss://otp_user:phase731-secret@0.0.0.0:6380/0",
+            (
+                "rediss://otp_user:phase731-secret@otp-cache.example:6380/0"
+                "?ssl_cert_reqs=none"
+            ),
         ):
             with self.subTest(location=location):
                 result = self._settings_subprocess(
