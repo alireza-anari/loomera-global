@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import ipaddress
 import logging
 import secrets
 import time
@@ -189,8 +190,12 @@ def otp_resend_cache_key(*, purpose: str, mobile_number: str) -> str:
     )
 
 
-def otp_hour_rate_cache_key(*, scope: str, value: str) -> str:
-    current_hour = api_otp_now_ts() // 3600
+def otp_hour_rate_cache_key(
+    *, scope: str, value: str, now_ts: int | None = None
+) -> str:
+    # Atomic issue observes one time bucket for all four watched keys.
+    # Legacy callers retain their original implicit clock behavior.
+    current_hour = (api_otp_now_ts() if now_ts is None else now_ts) // 3600
     return (
         f"{api_otp_cache_prefix()}:rate:"
         f"{_safe_cache_key_part(scope)}:{_safe_cache_key_part(value)}:{current_hour}"
@@ -337,6 +342,110 @@ def create_api_otp_request(
     valid, normalized_mobile, error = validate_mobile_for_auth(mobile_number)
     if not valid:
         raise ValueError(error or "شماره موبایل معتبر نیست.")
+
+    if bool(getattr(settings, "LOOMERA_API_AUTH_OTP_ATOMIC_REDIS_ISSUE", False)):
+        # Only the explicit named Redis OTP role with atomic verification and
+        # fail-closed policy may enter this path. Never downgrade on a conflict.
+        if (
+            str(getattr(settings, "LOOMERA_API_AUTH_OTP_CACHE_ALIAS", "default")).lower()
+            != "otp"
+            or not api_otp_fail_closed()
+            or not bool(
+                getattr(settings, "LOOMERA_API_AUTH_OTP_ATOMIC_REDIS_VERIFY", False)
+            )
+        ):
+            raise ApiOtpRateLimitUnavailable
+
+        # X-Forwarded-For is client-controlled unless a trusted ingress has
+        # sanitized it. Use only the directly observed peer for this opt-in
+        # quota, conservatively sharing one quota across a reverse proxy.
+        ip_address = "unknown"
+        if request is not None:
+            raw_peer = str(request.META.get("REMOTE_ADDR") or "").strip()
+            try:
+                ip_address = str(ipaddress.ip_address(raw_peer))
+            except ValueError as exc:
+                raise ApiOtpRateLimitUnavailable from exc
+
+        from .otp_atomic_issue import atomic_issue_legacy_record
+
+        now_ts = api_otp_now_ts()
+        ttl_seconds = api_otp_ttl_seconds()
+        resend_seconds = api_otp_resend_seconds()
+        code = generate_numeric_otp()
+        record = {
+            "purpose": purpose,
+            "mobile_number": normalized_mobile,
+            "code_hash": hash_otp_code(
+                mobile_number=normalized_mobile, code=code, purpose=purpose,
+            ),
+            "created_at": now_ts,
+            "expires_at": now_ts + ttl_seconds,
+            "attempts": 0,
+            "max_attempts": api_otp_max_verify_attempts(),
+            "verified": False,
+            "delivery": {
+                "channel": "sms",
+                "mode": "simulated",
+                "sent": False,
+                "provider": "none",
+            },
+        }
+        outcome = atomic_issue_legacy_record(
+            cache_backend=_otp_cache(),
+            logical_keys=(
+                otp_record_cache_key(
+                    purpose=purpose, mobile_number=normalized_mobile,
+                ),
+                otp_resend_cache_key(
+                    purpose=purpose, mobile_number=normalized_mobile,
+                ),
+                otp_hour_rate_cache_key(
+                    scope="mobile",
+                    value=f"{purpose}:{normalized_mobile}",
+                    now_ts=now_ts,
+                ),
+                otp_hour_rate_cache_key(
+                    scope="ip",
+                    value=f"{purpose}:{ip_address}",
+                    now_ts=now_ts,
+                ),
+            ),
+            record=record,
+            now_ts=now_ts,
+            record_ttl_seconds=ttl_seconds,
+            resend_ttl_seconds=resend_seconds,
+            mobile_hour_limit=api_otp_mobile_hour_limit(),
+            ip_hour_limit=api_otp_ip_hour_limit(),
+        )
+        scope_by_status = {
+            "challenge_pending": "mobile_resend",
+            "resend_limited": "mobile_resend",
+            "mobile_limited": "mobile",
+            "ip_limited": "ip",
+        }
+        if outcome.status in scope_by_status:
+            raise ApiOtpRateLimited(
+                retry_after=outcome.retry_after,
+                scope=scope_by_status[outcome.status],
+            )
+        if outcome.status != "issued":
+            # Concurrent Redis transaction conflict, invalid state or
+            # ambiguous backend acknowledgement never authorize issuance.
+            raise ApiOtpRateLimitUnavailable
+
+        logger.info(
+            "API OTP atomic request accepted | purpose=%s | mobile=%s | mode=simulated",
+            purpose,
+            mask_mobile_for_api(normalized_mobile),
+        )
+        return ApiOtpRequestResult(
+            mobile_number=normalized_mobile,
+            masked_mobile_number=mask_mobile_for_api(normalized_mobile),
+            ttl_seconds=ttl_seconds,
+            resend_seconds=resend_seconds,
+            length=api_otp_length(),
+        )
 
     ip_address = client_ip_from_request(request) if request is not None else "unknown"
 
