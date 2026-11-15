@@ -249,25 +249,33 @@ def _cache_delete(
     Delete OTP state with an explicit replay-prevention requirement.
     
     ``required=False`` is best-effort cleanup for expired or exhausted records.
-    ``required=True`` is used after a correct OTP comparison; with fail-closed
-    enabled, deletion failure raises ``ApiOtpRateLimitUnavailable`` so the caller
-    cannot authenticate while the valid record may still be replayable. This
-    helper never exposes the stored OTP payload.
+    ``required=True`` is used after a correct OTP comparison. A missing
+    deletion acknowledgement (False/0/None) is always rejected, including under
+    the local compatibility fail-open policy, because a cache miss cannot prove
+    replay prevention. Backend exceptions continue to use the configured policy;
+    callers must still check a False return before authentication. This is not
+    an atomic compare-and-delete. No stored payload is logged.
     """
     try:
-        _otp_cache().delete(key)
-        return True
+        deleted = _otp_cache().delete(key)
     except Exception as exc:
         logger.warning(
             "API OTP cache delete failed | context=%s | key_scope=%s",
             context,
             key.split(":")[-3:-1],
         )
-
         if required and api_otp_fail_closed():
             raise ApiOtpRateLimitUnavailable from exc
-
         return False
+
+    if not deleted and required:
+        logger.warning(
+            "API OTP required cache delete not confirmed | context=%s",
+            context,
+        )
+        raise ApiOtpRateLimitUnavailable
+
+    return bool(deleted)
 
 
 def _increment_hour_rate(*, scope: str, value: str, limit: int):
@@ -478,11 +486,15 @@ def verify_api_otp_code(
     record["verified"] = True
     record["verified_at"] = now_ts
 
-    _cache_delete(
+    if not _cache_delete(
         key,
         context="verified",
         required=True,
-    )
+    ):
+        # A local fail-open cache exception is not permission to issue a session.
+        # Two verifiers may read the same challenge; only confirmed deletion
+        # can pass this narrow boundary (atomic compare/delete is still missing).
+        raise ApiOtpRateLimitUnavailable
 
     logger.info(
         "API OTP verified | purpose=%s | mobile=%s",
