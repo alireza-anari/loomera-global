@@ -322,6 +322,7 @@ class Phase731CachePreflightTests(SimpleTestCase):
         for location in (
             "redis://otp_user:phase731-secret@otp-cache.example:6379/0",
             "rediss://default:phase731-secret@otp-cache.example:6380/0",
+            "rediss://%64efault:phase731-secret@otp-cache.example:6380/0",
             "rediss://otp_user:phase731-secret@0.0.0.0:6380/0",
             (
                 "rediss://otp_user:phase731-secret@otp-cache.example:6380/0"
@@ -439,6 +440,32 @@ class Phase731CachePreflightTests(SimpleTestCase):
         rendered = repr(report)
         self.assertNotIn("old-password", rendered)
         self.assertNotIn("new-password", rendered)
+
+    def test_role_inventory_normalizes_percent_encoded_default_acl_username(self):
+        config = SimpleNamespace(
+            CACHES={
+                "default": {
+                    "BACKEND": "django_redis.cache.RedisCache",
+                    "LOCATION": "rediss://default:general-secret@redis.example:6380/1",
+                },
+                "otp": {
+                    "BACKEND": "django_redis.cache.RedisCache",
+                    "LOCATION": "rediss://%64efault:otp-secret@redis.example:6380/9",
+                },
+            },
+            LOOMERA_API_AUTH_OTP_CACHE_ALIAS="otp",
+            LOOMERA_ENVIRONMENT="staging",
+            LOOMERA_ENABLE_CELERY=False,
+        )
+        report = build_redis_role_inventory(config)
+        roles = report["roles"]
+        self.assertEqual(
+            roles["general_cache"]["principal_group"],
+            roles["api_otp"]["principal_group"],
+        )
+        self.assertFalse(roles["api_otp"]["named_acl_user"])
+        self.assertNotIn("general-secret", repr(report))
+        self.assertNotIn("otp-secret", repr(report))
 
     def test_role_inventory_rejects_zero_port_and_invalid_database_path(self):
         for location in (
