@@ -56,4 +56,9 @@ fi
 export PYTHONPATH="$PWD"
 python tests/phase7_legacy_state_machine_test.py -v
 
-echo "Phase 7.21 DONE: real Django-Redis WRONG/CORRECT/EXHAUSTED CAS (test-only)"
+# Phase 7.35 exercises the opt-in runtime-compatible CAS module on exactly
+# the same disposable Redis server and genuine Django-Redis legacy bytes.
+export LOOMERA_PHASE735_TEST_REDIS=1
+python tests/phase7_35_atomic_live_test.py -v
+
+echo "Phase 7.21/7.35 DONE: real legacy OTP state transitions and opt-in CAS"

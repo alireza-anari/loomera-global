@@ -1597,6 +1597,20 @@ LOOMERA_API_AUTH_OTP_FAIL_CLOSED = env.bool(
     "LOOMERA_API_AUTH_OTP_FAIL_CLOSED",
     default=True,
 )
+# Phase 7.35: disabled until the named TLS OTP Redis principal, permissions,
+# operational fencing and migration have been reviewed. No automatic fallback.
+LOOMERA_API_AUTH_OTP_ATOMIC_REDIS_VERIFY = env.bool(
+    "LOOMERA_API_AUTH_OTP_ATOMIC_REDIS_VERIFY",
+    default=False,
+)
+if LOOMERA_API_AUTH_OTP_ATOMIC_REDIS_VERIFY and (
+    LOOMERA_API_AUTH_OTP_CACHE_ALIAS != "otp"
+    or not LOOMERA_API_AUTH_OTP_FAIL_CLOSED
+):
+    raise ImproperlyConfigured(
+        "Atomic API OTP verification requires the dedicated OTP Redis cache "
+        "alias and fail-closed cache policy."
+    )
 LOOMERA_API_BOOKING_DRAFT_MAX_BYTES = env.int(
     "LOOMERA_API_BOOKING_DRAFT_MAX_BYTES",
     default=4 * 1024,

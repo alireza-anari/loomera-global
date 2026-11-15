@@ -436,6 +436,49 @@ def verify_api_otp_code(
         raise ApiOtpInvalidCode(attempts_remaining=0)
 
     key = otp_record_cache_key(purpose=purpose, mobile_number=normalized_mobile)
+
+    if bool(getattr(settings, "LOOMERA_API_AUTH_OTP_ATOMIC_REDIS_VERIFY", False)):
+        # Opt-in only: the default legacy cache path remains unchanged.
+        # Never downgrade on a concurrent modification or backend failure.
+        if (
+            str(getattr(settings, "LOOMERA_API_AUTH_OTP_CACHE_ALIAS", "default")).lower()
+            != "otp"
+            or not api_otp_fail_closed()
+        ):
+            raise ApiOtpRateLimitUnavailable
+        from .otp_atomic_verify import atomic_verify_legacy_record
+
+        outcome = atomic_verify_legacy_record(
+            cache_backend=_otp_cache(),
+            logical_key=key,
+            mobile_number=normalized_mobile,
+            purpose=purpose,
+            submitted_hash=hash_otp_code(
+                mobile_number=normalized_mobile,
+                code=normalized_code,
+                purpose=purpose,
+            ),
+            now_ts=api_otp_now_ts(),
+            ttl_seconds=api_otp_ttl_seconds(),
+        )
+        if outcome.status == "verified" and type(outcome.record) is dict:
+            logger.info(
+                "API OTP atomic record consumed | purpose=%s | mobile=%s",
+                purpose,
+                mask_mobile_for_api(normalized_mobile),
+            )
+            return outcome.record
+        if outcome.status == "missing":
+            raise ApiOtpNotFound
+        if outcome.status == "expired":
+            raise ApiOtpExpired
+        if outcome.status == "exhausted":
+            raise ApiOtpMaxAttemptsExceeded
+        if outcome.status == "wrong":
+            raise ApiOtpInvalidCode(attempts_remaining=outcome.attempts_remaining)
+        # Includes concurrent mutations and ambiguous/lost EXEC replies.
+        raise ApiOtpRateLimitUnavailable
+
     record = _cache_get(key)
 
     if not record:
