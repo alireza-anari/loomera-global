@@ -1,0 +1,21 @@
+{
+  "schema_version": 1,
+  "phase": "7.35",
+  "baseline_main_sha": "49fec7090b7dc048b3db198ec11bb8848c7eb494",
+  "scope": "OPT_IN_SINGLE_NODE_LEGACY_OTP_VERIFY_WATCH_CAS",
+  "atomic_verify_flag_disabled_by_default": true,
+  "dedicated_named_redis_alias_mandatory": true,
+  "fail_closed_cache_policy_mandatory": true,
+  "single_node_legacy_watch_verify_optin_wired": true,
+  "same_byte_reissue_watch_conflict_tested_in_disposable_redis": true,
+  "wrong_attempt_set_xx_keepttl_tested_in_disposable_redis": true,
+  "lost_exec_reply_never_authenticates": true,
+  "real_production_redis_acl_verified": false,
+  "production_cutover_authorized": false,
+  "multihost_fencing_proven": false,
+  "otp_issue_rate_atomicity_proven": false,
+  "session_cross_store_atomicity_proven": false,
+  "sms_delivery_durable": false,
+  "deployment_executed": false,
+  "release_gate": "BLOCKED"
+}

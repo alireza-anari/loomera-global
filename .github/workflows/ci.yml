@@ -99,6 +99,10 @@ jobs:
             apps.api.tests.test_api_v1_otp_required_delete_race \
             --failfast
 
+      - name: Phase 7.35 offline atomic OTP opt-in and no-fallback guards
+        run: |
+          python manage.py test apps.api.tests.test_phase7_35_atomic_optin_guards --failfast
+
       - name: Phase 7.31 opt-in OTP cache alias compatibility guards
         run: |
           python manage.py test apps.api.tests.test_api_v1_otp_cache_alias --failfast
