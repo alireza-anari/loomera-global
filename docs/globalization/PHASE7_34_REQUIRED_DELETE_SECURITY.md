@@ -23,7 +23,7 @@ The same verifier could also proceed after a cache-deletion exception under an e
 
 Add focused helper tests for confirmed success, false/none/zero, optional cleanup and both failure-policy modes. Extend actual API view tests to prove HTTP 503 and **no login** on false acknowledgements or local fail-open deletion exceptions. Add a deterministic two-worker barrier test: both verifiers read the same synthetic record, but when only the first delete confirms success, exactly one verifier proceeds and the second fails closed. Run helper, deterministic race and no-database API denial tests in Fast CI; run full Django view/session integration tests against the real PostGIS test service. Register the tests in security regression and release-readiness suites.
 
-The Phase 7.8 source guard now checks the strengthened deletion acknowledgement and independently keeps the non-atomic GET/compare/DELETE architecture flagged as unresolved; its historical release BLOCKED matrix remains unchanged.
+Phase 7.8, 7.10, 7.21 and 7.22 source guards now check the strengthened deletion acknowledgement, while independently preserving the non-atomic GET/compare/DELETE architecture as an unresolved blocker; their historical release BLOCKED matrices remain unchanged.
 
 **Important: this fix is NOT atomic compare-and-delete.** A new OTP generation can replace the record between GET and DELETE; the stale verifier could delete that newer generation and still pass. Wrong-attempt update and rate/cooldown state likewise use non-atomic read/write. Redis failover, raw admin/stale socket ingress, ambiguous acknowledgements, SQL session/account handoff and external SMS delivery remain unresolved. There is no retry or alternative login path added, and no migration or deployment performed.
 

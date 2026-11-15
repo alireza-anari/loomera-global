@@ -151,8 +151,12 @@ class Phase710SyntheticSessionTests(SimpleTestCase):
         self.assertIn("secrets.compare_digest", verify)
         self.assertIn('context="verified"', verify)
         helper = source[source.index("def _cache_delete("):source.index("def _increment_hour_rate(")]
-        self.assertIn("_otp_cache().delete(key)", helper)
-        self.assertIn("return True", helper)
+        # Missing deletion acknowledgements now fail closed, but this remains
+        # a non-atomic GET/compare/DELETE live verifier (no WATCH/CAS).
+        self.assertIn("deleted = _otp_cache().delete(key)", helper)
+        self.assertIn("if not deleted and required:", helper)
+        self.assertIn("return bool(deleted)", helper)
+        self.assertNotIn("WATCH", helper)
 
     def test_exit_matrix_requires_real_approval(self):
         matrix = json.loads(MATRIX.read_text(encoding="utf-8"))
