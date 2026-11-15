@@ -84,6 +84,10 @@ jobs:
         run: |
           python manage.py test apps.main.test_cache_preflight --failfast
 
+      - name: Phase 7.32 offline Redis role configuration gate guards
+        run: |
+          python manage.py test apps.main.test_phase7_32_redis_role_gate --failfast
+
       - name: Phase 7.31 opt-in OTP cache alias compatibility guards
         run: |
           python manage.py test apps.api.tests.test_api_v1_otp_cache_alias --failfast

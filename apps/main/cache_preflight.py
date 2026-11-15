@@ -277,3 +277,72 @@ def build_redis_role_inventory(settings_obj=None) -> dict:
         "global_ingress_fenced": False,
         "production_release_authorized": False,
     }
+
+
+def assess_redis_role_isolation(settings_obj=None) -> dict:
+    """Gate configured Redis role separation without any I/O or release approval.
+
+    PASS means only that the supplied settings describe distinct, named, TLS
+    Redis principals for each enabled role. It does not attest to server ACLs,
+    DNS/cluster identity, certificate trust, network policy, or OTP atomicity.
+    """
+    if settings_obj is None:
+        from django.conf import settings as settings_obj
+
+    inventory = build_redis_role_inventory(settings_obj)
+    caches_config = getattr(settings_obj, "CACHES", {}) or {}
+    default_location = (caches_config.get("default", {}) or {}).get("LOCATION", "")
+    otp_alias = inventory["api_otp_cache_alias"]
+    otp_location = (
+        (caches_config.get("otp", {}) or {}).get("LOCATION", "")
+        if otp_alias == "otp"
+        else default_location
+    )
+    celery_enabled = bool(getattr(settings_obj, "LOOMERA_ENABLE_CELERY", False))
+    locations = {
+        "general_cache": default_location,
+        "api_otp": otp_location,
+        "celery_broker": getattr(settings_obj, "CELERY_BROKER_URL", ""),
+        "celery_result": getattr(settings_obj, "CELERY_RESULT_BACKEND", ""),
+    }
+    required_roles = ["general_cache", "api_otp"]
+    if celery_enabled:
+        required_roles.extend(("celery_broker", "celery_result"))
+
+    blockers: list[str] = []
+    if otp_alias != "otp":
+        blockers.append("dedicated_api_otp_alias_required")
+
+    seen_principals: dict[str, str] = {}
+    for role in required_roles:
+        details = inventory["roles"].get(role, {})
+        if details.get("status") != "configured":
+            blockers.append(f"{role}_not_configured")
+            continue
+
+        url_assessment = assess_redis_url(str(locations[role] or ""))
+        if url_assessment.errors:
+            blockers.append(f"{role}_invalid_redis_url")
+        if details.get("scheme") != "rediss":
+            blockers.append(f"{role}_tls_required")
+        if not details.get("named_acl_user"):
+            blockers.append(f"{role}_named_acl_user_required")
+
+        principal_group = details.get("principal_group")
+        if principal_group:
+            first_role = seen_principals.setdefault(principal_group, role)
+            if first_role != role:
+                blockers.append(f"{role}_shares_{first_role}_principal")
+
+    return {
+        "configuration_gate": "FAIL" if blockers else "PASS",
+        "required_roles": required_roles,
+        "blocking_reasons": list(dict.fromkeys(blockers)),
+        "redis_connections_opened": False,
+        "database_connections_opened": False,
+        "server_side_acl_verified": False,
+        "network_ingress_verified": False,
+        "redis_cluster_or_dns_aliases_verified": False,
+        "live_otp_atomicity_verified": False,
+        "production_release_authorized": False,
+    }
