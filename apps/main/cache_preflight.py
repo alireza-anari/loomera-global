@@ -8,7 +8,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 import secrets
-from urllib.parse import parse_qs, urlsplit
+from urllib.parse import parse_qs, unquote, urlsplit
 
 from django.core.cache import caches
 
@@ -66,9 +66,10 @@ def assess_redis_url(value: str) -> RedisURLAssessment:
 
     if parsed.scheme == "redis":
         warnings.append("redis_transport_tls_not_enabled")
-    if not parsed.username:
+    username = unquote(parsed.username or "")
+    if not username:
         warnings.append("redis_named_acl_username_not_configured")
-    elif parsed.username.lower() == "default":
+    elif username.lower() == "default":
         warnings.append("redis_default_acl_username_in_use")
 
     cert_requirements = {
@@ -208,7 +209,7 @@ def build_redis_role_inventory(settings_obj=None) -> dict:
         principal = (
             parsed.hostname.lower(),
             port,
-            parsed.username or "default",
+            unquote(parsed.username or "") or "default",
         )
         if endpoint not in endpoint_groups:
             endpoint_groups[endpoint] = f"endpoint_{len(endpoint_groups) + 1}"
@@ -221,7 +222,8 @@ def build_redis_role_inventory(settings_obj=None) -> dict:
             "endpoint_group": endpoint_groups[endpoint],
             "principal_group": principal_groups[principal],
             "named_acl_user": bool(
-                parsed.username and parsed.username.lower() != "default"
+                unquote(parsed.username or "")
+                and unquote(parsed.username or "").lower() != "default"
             ),
             "tls_requested": parsed.scheme == "rediss",
         }
