@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "phase": "7.31",
+  "baseline_main_sha": "ff8ec57bd595f4133c2502bbf8bd1da853caa253",
+  "scope": "PRODUCTION_ENVIRONMENT_IDENTITY_AND_NONDESTRUCTIVE_REDIS_PREFLIGHT_ONLY",
+  "changes": {
+    "production_settings_default_environment": "production",
+    "staging_deployment_sets_environment": "staging",
+    "production_deployment_sets_environment": "production",
+    "ci_environment": "ci",
+    "cache_probe": "RANDOM_ADD_ONLY_KEY_WITH_30_SECOND_TTL_NO_DELETE",
+    "deployed_cache_backend": "DJANGO_REDIS_REQUIRED",
+    "redis_url_checks": [
+      "REDIS_OR_REDIS_TLS_SCHEME",
+      "REMOTE_HOST",
+      "VALID_PORT_AND_DATABASE_PATH",
+      "PASSWORD_REQUIRED",
+      "TLS_DOWNGRADE_DETECTED"
+    ],
+    "warnings": [
+      "PLAIN_REDIS_TRANSPORT",
+      "MISSING_OR_DEFAULT_ACL_USERNAME"
+    ],
+    "celery_broker_checked_when_enabled": true
+  },
+  "known_remaining_risks": {
+    "live_otp_get_compare_delete_race": "OPEN",
+    "redis_global_ingress_fencing": "UNPROVEN",
+    "privileged_raw_writer": "OPEN",
+    "stale_authenticated_connections": "OPEN",
+    "alternate_hosts_and_old_masters": "UNPROVEN",
+    "named_acl_permissions": "NOT_INSPECTED",
+    "tls_runtime_and_network_posture": "NOT_VERIFIED",
+    "cache_and_celery_identity_isolation": "NOT_ENFORCED",
+    "external_sms_delivery_and_reconciliation": "NOT_IMPLEMENTED"
+  },
+  "production_secrets_inspected": false,
+  "production_redis_contacted": false,
+  "live_auth_changed": false,
+  "live_otp_outbox_connected": false,
+  "deployment_workflow_executed": false,
+  "production_deployed": false,
+  "security_owner_approval": false,
+  "production_release_authorized": false,
+  "release_gate": "BLOCKED: this phase improves environment classification and safe preflight only; it does not implement live OTP atomicity or global Redis ingress fencing."
+}
