@@ -1,7 +1,10 @@
 from .base import *
 
 # Production settings default to a deployed identity. Staging must opt in explicitly.
-LOOMERA_ENVIRONMENT = env("LOOMERA_ENVIRONMENT", default="production").strip().lower() or "production"
+LOOMERA_ENVIRONMENT = (
+    env("LOOMERA_ENVIRONMENT", default="production").strip().lower()
+    or "production"
+)
 
 DEBUG = env.bool("DEBUG", default=False)
 
