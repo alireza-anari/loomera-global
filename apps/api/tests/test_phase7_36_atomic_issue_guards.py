@@ -105,7 +105,9 @@ class Phase736AtomicIssuerOfflineGuards(SimpleTestCase):
             ),
         )
         self.assertNotIn("code", record)
-        self.assertNotIn("123456", repr(result))
+        self.assertNotIn("123456", result.masked_mobile_number)
+        self.assertFalse(hasattr(result, "code"))
+        self.assertFalse(hasattr(result, "code_hash"))
 
     def test_four_limit_outcomes_are_safe_429_with_expected_scopes(self):
         mapping = (
