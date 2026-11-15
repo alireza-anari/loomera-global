@@ -1,9 +1,10 @@
 from __future__ import annotations
 
+from secrets import token_hex
 from urllib.parse import urlparse
 
 from django.conf import settings
-from django.core.cache import cache
+from django.core.cache import cache, caches
 from django.core.management.base import BaseCommand
 from django.db import connection
 
@@ -71,6 +72,36 @@ class Command(BaseCommand):
 
         if self._is_deployed_environment() and self._is_local_redis_url(cache_location):
             self._fail("staging/production cache must not point to localhost Redis")
+
+    def _check_otp_cache(self):
+        alias = str(
+            getattr(settings, "LOOMERA_API_AUTH_OTP_CACHE_ALIAS", "default")
+            or "default"
+        ).strip()
+        if alias == "default":
+            self._warn(
+                "API OTP shares the default cache alias; no dedicated Redis role"
+            )
+            return
+
+        key = f"loomera:infra-preflight:otp:{token_hex(12)}"
+        marker = token_hex(16)
+        otp_cache = None
+        try:
+            otp_cache = caches[alias]
+            otp_cache.set(key, marker, timeout=30)
+            if otp_cache.get(key) == marker:
+                self._ok("API OTP dedicated cache read/write")
+            else:
+                self._fail("API OTP dedicated cache read/write mismatch")
+        except Exception as exc:
+            self._fail(f"API OTP dedicated cache: {exc.__class__.__name__}")
+        finally:
+            if otp_cache is not None:
+                try:
+                    otp_cache.delete(key)
+                except Exception:
+                    self._fail("API OTP dedicated cache cleanup failed")
 
     def _check_static_and_media(self):
         static_backend = settings.STORAGES.get("staticfiles", {}).get("BACKEND", "")
@@ -146,6 +177,7 @@ class Command(BaseCommand):
 
         self._check_database()
         self._check_cache()
+        self._check_otp_cache()
         self._check_static_and_media()
         self._check_celery_and_cron()
         self._check_monitoring()
