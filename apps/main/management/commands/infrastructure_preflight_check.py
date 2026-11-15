@@ -1,11 +1,14 @@
 from __future__ import annotations
 
-from urllib.parse import urlparse
-
 from django.conf import settings
-from django.core.cache import cache
 from django.core.management.base import BaseCommand
 from django.db import connection
+
+from apps.main.cache_preflight import (
+    assess_cache_configuration,
+    assess_redis_url,
+    probe_cache_backend,
+)
 
 
 class Command(BaseCommand):
@@ -27,12 +30,6 @@ class Command(BaseCommand):
     def _is_deployed_environment(self) -> bool:
         return self._environment() in {"staging", "production"}
 
-    def _is_local_redis_url(self, value: str) -> bool:
-        if not value:
-            return False
-        parsed = urlparse(value)
-        return parsed.hostname in {"127.0.0.1", "localhost"}
-
     def _check_database(self):
         try:
             with connection.cursor() as cursor:
@@ -51,26 +48,27 @@ class Command(BaseCommand):
             self._warn(f"database engine is not PostGIS: {engine}")
 
     def _check_cache(self):
-        try:
-            cache.set("loomera:infra-preflight", "ok", timeout=30)
-            if cache.get("loomera:infra-preflight") == "ok":
-                self._ok("cache")
-            else:
-                self._fail("cache read/write mismatch")
-        except Exception as exc:
-            self._fail(f"cache: {exc.__class__.__name__}")
-
         cache_config = settings.CACHES.get("default", {})
-        cache_backend = cache_config.get("BACKEND", "")
-        cache_location = str(cache_config.get("LOCATION", "") or "")
+        assessment = assess_cache_configuration(
+            cache_config,
+            deployed=self._is_deployed_environment(),
+            debug=bool(getattr(settings, "DEBUG", False)),
+        )
+        for error in assessment.errors:
+            self._fail(f"cache configuration: {error}")
+        for warning in assessment.warnings:
+            self._warn(f"cache configuration: {warning}")
 
-        if "LocMemCache" in cache_backend and not settings.DEBUG:
-            self._fail("production/staging must not use LocMemCache")
-        else:
+        if assessment.ok:
+            try:
+                probe_cache_backend(scope="infrastructure")
+                self._ok("cache add/read probe")
+            except Exception as exc:
+                self._fail(f"cache: {exc.__class__.__name__}")
+
+        cache_backend = str(cache_config.get("BACKEND", "") or "")
+        if cache_backend:
             self._ok(f"cache backend: {cache_backend}")
-
-        if self._is_deployed_environment() and self._is_local_redis_url(cache_location):
-            self._fail("staging/production cache must not point to localhost Redis")
 
     def _check_static_and_media(self):
         static_backend = settings.STORAGES.get("staticfiles", {}).get("BACKEND", "")
@@ -123,13 +121,17 @@ class Command(BaseCommand):
 
     def _check_celery_and_cron(self):
         if getattr(settings, "LOOMERA_ENABLE_CELERY", False):
-            broker = getattr(settings, "CELERY_BROKER_URL", "")
+            broker = str(getattr(settings, "CELERY_BROKER_URL", "") or "")
             if not broker:
                 self._fail("CELERY_BROKER_URL is required when celery is enabled")
-            elif self._is_deployed_environment() and self._is_local_redis_url(broker):
-                self._fail(
-                    "staging/production CELERY_BROKER_URL must not point to localhost"
-                )
+            elif self._is_deployed_environment():
+                assessment = assess_redis_url(broker)
+                for error in assessment.errors:
+                    self._fail(f"celery broker configuration: {error}")
+                for warning in assessment.warnings:
+                    self._warn(f"celery broker configuration: {warning}")
+                if not assessment.errors:
+                    self._ok("celery broker configured")
             else:
                 self._ok("celery broker configured")
         else:
