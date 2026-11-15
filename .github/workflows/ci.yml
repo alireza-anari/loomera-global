@@ -88,6 +88,10 @@ jobs:
         run: |
           python manage.py test apps.main.test_phase7_32_redis_role_gate --failfast
 
+      - name: Phase 7.33 offline Redis ACL physical-fixture policy guards
+        run: |
+          python manage.py test apps.main.test_phase7_33_acl_fixture_guards --failfast
+
       - name: Phase 7.31 opt-in OTP cache alias compatibility guards
         run: |
           python manage.py test apps.api.tests.test_api_v1_otp_cache_alias --failfast
@@ -656,6 +660,12 @@ jobs:
           LOOMERA_PHASE725_TEST_REDIS: "1"
         run: |
           bash tests/phase7_redis_idempotency_failover_ci.sh
+
+      - name: Phase 7.33 physical Redis ACL four-role isolation and overbroad bypass
+        env:
+          LOOMERA_PHASE733_TEST_REDIS: "1"
+        run: |
+          bash tests/phase7_redis_role_acl_ci.sh
 
   browser-smoke:
     name: Chromium keyboard smoke (booking and post-booking fixtures)

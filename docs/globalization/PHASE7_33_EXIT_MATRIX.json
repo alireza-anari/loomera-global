@@ -1,0 +1,39 @@
+{
+  "schema_version": 1,
+  "phase": "7.33",
+  "baseline_main_sha": "39ac7b454eff2fd19dba6acb2a5749f5764bbd37",
+  "scope": "CI_ONLY_DISPOSABLE_PHYSICAL_REDIS_ACL_ROLE_ISOLATION_AND_NEGATIVE_COUNTEREXAMPLE",
+  "redis_fixture": {
+    "version": "7.4-alpine",
+    "host": "127.0.0.1",
+    "port": 6433,
+    "db": 15,
+    "persistent_volume": false
+  },
+  "explicit_grant": "LOOMERA_PHASE733_TEST_REDIS=1",
+  "role_names": [
+    "general",
+    "otp",
+    "broker",
+    "result"
+  ],
+  "test_goals": [
+    "ALL_12_DIRECTED_CROSS_ROLE_GET_SET_DEL_DENIED",
+    "REAL_DJANGO_REDIS_OTP_PREFIX_ADD_GET_DELETE_TTL",
+    "ACL_DRYRUN_PRIVILEGED_COMMANDS_DENIED",
+    "ANONYMOUS_DEFAULT_USER_DISABLED",
+    "PRIVILEGED_ADMIN_BYPASSES_ROLE_ACL",
+    "SEPARATE_NAMED_WILDCARD_USER_BYPASSES_ALL_ROLES"
+  ],
+  "valid_production_acl_attested": false,
+  "production_redis_touched": false,
+  "production_tls_verified": false,
+  "all_ingress_fenced": false,
+  "live_otp_atomic_consume_proven": false,
+  "sql_outbox_or_sms_delivery_live": false,
+  "application_runtime_modified": false,
+  "production_secrets_accessed": false,
+  "deployed": false,
+  "production_release_authorized": false,
+  "release_gate": "BLOCKED"
+}

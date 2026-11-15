@@ -13,6 +13,7 @@ SECURITY_SUITE = (
     "apps.main.test_liara_deployment_config",
     "apps.main.test_cache_preflight",
     "apps.main.test_phase7_32_redis_role_gate",
+    "apps.main.test_phase7_33_acl_fixture_guards",
     "apps.main.test_production_security_audit",
     "apps.main.test_secrets_static_media_audit",
     "apps.main.test_media_proxy_security",

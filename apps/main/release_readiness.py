@@ -16,6 +16,7 @@ STRUCTURAL_GUARD_SUITE = (
     "apps.main.test_liara_deployment_config",
     "apps.main.test_cache_preflight",
     "apps.main.test_phase7_32_redis_role_gate",
+    "apps.main.test_phase7_33_acl_fixture_guards",
     "apps.api.tests.test_api_v1_otp_cache_alias",
     "apps.payments.test_gateway_contract_documentation",
     "apps.orders.test_booking_checkout_contract_documentation",
