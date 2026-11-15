@@ -28,8 +28,18 @@ class AtomicOtpIssueOutcome:
     retry_after: int = 0
 
 
-def _read_legacy_string(pipe: Any, backend: Any, key: str, max_ttl_ms: int):
-    """Read one already-watched key; do not decode untrusted non-STRING types."""
+_NUMERIC_WIRE = re.compile(rb"(?:0|[1-9][0-9]{0,19})\Z")
+
+
+def _read_legacy_string(
+    pipe: Any, key: str, max_ttl_ms: int, *, numeric: bool = False
+):
+    """Inspect one WATCHed key without unpickling existing Redis data.
+
+    Redis stores django-redis integer counters as plain decimal bytes, not
+    pickles. Existing challenge bytes are intentionally never deserialized
+    by the issuer, since any live challenge conservatively blocks reissue.
+    """
     kind = pipe.type(key)
     if kind == b"none":
         return "missing", None, 0
@@ -45,11 +55,11 @@ def _read_legacy_string(pipe: Any, backend: Any, key: str, max_ttl_ms: int):
     raw = pipe.get(key)
     if type(raw) is not bytes:
         return "invalid", None, 0
-    try:
-        value = backend.client.decode(raw)
-    except _RECOVERY_ERRORS:
+    if not numeric:
+        return "present", None, remaining
+    if _NUMERIC_WIRE.fullmatch(raw) is None:
         return "invalid", None, 0
-    return "present", value, remaining
+    return "present", int(raw), remaining
 
 
 def _encoded(backend: Any, value: Any) -> bytes | int:
@@ -142,7 +152,7 @@ def atomic_issue_legacy_record(
         with client.pipeline(transaction=True) as pipe:
             pipe.watch(*physical)
             record_state, _, record_ttl = _read_legacy_string(
-                pipe, cache_backend, physical[0], record_ttl_seconds * 1000
+                pipe, physical[0], record_ttl_seconds * 1000
             )
             if record_state == "invalid":
                 return AtomicOtpIssueOutcome("unavailable")
@@ -152,7 +162,7 @@ def atomic_issue_legacy_record(
                 )
 
             cooldown_state, cooldown, cooldown_ttl = _read_legacy_string(
-                pipe, cache_backend, physical[1], resend_ttl_seconds * 1000
+                pipe, physical[1], resend_ttl_seconds * 1000, numeric=True
             )
             if cooldown_state == "invalid":
                 return AtomicOtpIssueOutcome("unavailable")
@@ -165,10 +175,10 @@ def atomic_issue_legacy_record(
                 )
 
             mobile_state, mobile_used, mobile_ttl = _read_legacy_string(
-                pipe, cache_backend, physical[2], 3600 * 1000
+                pipe, physical[2], 3600 * 1000, numeric=True
             )
             ip_state, ip_used, ip_ttl = _read_legacy_string(
-                pipe, cache_backend, physical[3], 3600 * 1000
+                pipe, physical[3], 3600 * 1000, numeric=True
             )
             if mobile_state == "invalid" or ip_state == "invalid":
                 return AtomicOtpIssueOutcome("unavailable")

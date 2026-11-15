@@ -261,6 +261,8 @@ class Phase736AtomicIssuerOfflineGuards(SimpleTestCase):
         self.assertIn("LOOMERA_API_AUTH_OTP_ATOMIC_REDIS_VERIFY", caller)
         self.assertIn('get("REMOTE_ADDR")', caller)
         self.assertIn('default=False', settings_text)
+        self.assertNotIn("client.decode(raw)", module)
+        self.assertIn("_NUMERIC_WIRE.fullmatch(raw)", module)
         self.assertNotIn("except Exception", module)
         self.assertNotIn("FLUSHDB", module)
         self.assertNotIn("FLUSHALL", module)
