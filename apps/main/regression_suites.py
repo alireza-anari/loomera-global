@@ -20,6 +20,7 @@ SECURITY_SUITE = (
     "apps.api.tests.test_api_v1_auth_security",
     "apps.api.tests.test_api_v1_auth_payload_parsing",
     "apps.api.tests.test_api_v1_otp_cache_delete_policy",
+    "apps.api.tests.test_api_v1_otp_cache_alias",
     "apps.api.tests.test_api_v1_otp_auth_contract_documentation",
     "apps.bale_bot.test_webhook_security",
     "apps.messaging.tests_security",
