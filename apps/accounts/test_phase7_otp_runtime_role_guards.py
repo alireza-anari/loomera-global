@@ -8,15 +8,12 @@ import subprocess
 import sys
 from io import StringIO
 from types import SimpleNamespace
-from unittest.mock import Mock, patch
+from unittest.mock import MagicMock, Mock, patch
 
 from django.conf import settings
 from django.core.management import call_command
 from django.test import SimpleTestCase, override_settings
 
-from apps.main.management.commands.audit_phase7_otp_redis_roles import (
-    Command as RedisRoleAuditCommand,
-)
 from apps.main.management.commands.infrastructure_preflight_check import (
     Command as InfrastructurePreflightCommand,
 )
@@ -200,7 +197,7 @@ class Phase731RedisRuntimeRolePolicyTests(SimpleTestCase):
         command.stdout = output
         fake_cache = Mock()
         fake_cache.get.side_effect = lambda key: marker
-        handler = Mock()
+        handler = MagicMock()
         handler.__getitem__.return_value = fake_cache
         marker = "synthetic-preflight-marker"
         with override_settings(LOOMERA_API_AUTH_OTP_CACHE_ALIAS="otp"):
