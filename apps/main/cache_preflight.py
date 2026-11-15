@@ -99,7 +99,7 @@ def assess_cache_configuration(
         errors.append("non_debug_cache_must_not_use_locmem")
 
     if deployed:
-        if "django_redis.cache.RedisCache" not in backend:
+        if backend != "django_redis.cache.RedisCache":
             errors.append("deployed_cache_backend_must_be_django_redis")
         assessment = assess_redis_url(location)
         errors.extend(assessment.errors)
