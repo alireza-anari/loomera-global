@@ -1068,6 +1068,56 @@ else:
         }
     }
 
+# API OTP may opt into a separately credentialed Redis cache. The default stays
+# on Django's existing cache alias until the deployment has provisioned and
+# independently verified the dedicated Redis principal and ACL key patterns.
+LOOMERA_API_AUTH_OTP_CACHE_LOCATION = env(
+    "LOOMERA_API_AUTH_OTP_CACHE_LOCATION", default=""
+).strip()
+LOOMERA_API_AUTH_OTP_CACHE_ALIAS = env(
+    "LOOMERA_API_AUTH_OTP_CACHE_ALIAS",
+    default="otp" if LOOMERA_API_AUTH_OTP_CACHE_LOCATION else "default",
+).strip()
+if LOOMERA_API_AUTH_OTP_CACHE_ALIAS not in {"default", "otp"}:
+    raise ImproperlyConfigured(
+        "LOOMERA_API_AUTH_OTP_CACHE_ALIAS must be 'default' or 'otp'"
+    )
+if LOOMERA_API_AUTH_OTP_CACHE_LOCATION:
+    if not _module_available("django_redis"):
+        raise ImproperlyConfigured(
+            "LOOMERA_API_AUTH_OTP_CACHE_LOCATION requires django-redis"
+        )
+    try:
+        otp_cache_url = urlsplit(LOOMERA_API_AUTH_OTP_CACHE_LOCATION)
+        otp_cache_host = otp_cache_url.hostname
+        otp_cache_port = otp_cache_url.port
+    except ValueError as exc:
+        raise ImproperlyConfigured(
+            "LOOMERA_API_AUTH_OTP_CACHE_LOCATION is invalid"
+        ) from exc
+    if (
+        otp_cache_url.scheme not in {"redis", "rediss"}
+        or not otp_cache_host
+        or (otp_cache_url.path not in {"", "/"} and
+            not otp_cache_url.path.lstrip("/").isdigit())
+        or (otp_cache_port is not None and not 1 <= otp_cache_port <= 65535)
+    ):
+        raise ImproperlyConfigured(
+            "LOOMERA_API_AUTH_OTP_CACHE_LOCATION must be a valid Redis URL"
+        )
+    CACHES["otp"] = {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": LOOMERA_API_AUTH_OTP_CACHE_LOCATION,
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+        },
+    }
+elif LOOMERA_API_AUTH_OTP_CACHE_ALIAS == "otp":
+    raise ImproperlyConfigured(
+        "LOOMERA_API_AUTH_OTP_CACHE_ALIAS='otp' requires "
+        "LOOMERA_API_AUTH_OTP_CACHE_LOCATION"
+    )
+
 
 # ==============================================================================
 # INFRASTRUCTURE, CACHE, BACKGROUND JOBS & MONITORING
