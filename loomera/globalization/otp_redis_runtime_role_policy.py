@@ -39,7 +39,7 @@ class _Target:
     @property
     def local(self) -> bool:
         return (self.host or "").lower() in {
-            "localhost", "127.0.0.1", "::1",
+            "localhost", "127.0.0.1", "0.0.0.0", "::1", "::",
         }
 
 
@@ -62,7 +62,8 @@ def _parse_target(value: Any) -> _Target:
                 status="non_redis", scheme=parsed.scheme or None,
             )
         host = parsed.hostname
-        port = parsed.port or 6379
+        parsed_port = parsed.port
+        port = parsed_port if parsed_port is not None else 6379
         path = parsed.path.lstrip("/")
         if (
             not host
@@ -203,12 +204,16 @@ def audit_runtime_redis_roles(settings_obj: Any) -> dict[str, Any]:
         "CROSS_STORE_ATOMIC_DELIVERY_AND_EXTERNAL_SMS_RECEIPT_NOT_PROVEN",
     ]
 
+    otp_location_configured = bool(str(
+        getattr(settings_obj, "LOOMERA_API_AUTH_OTP_CACHE_LOCATION", "") or ""
+    ).strip())
     if otp_alias == "default":
         findings.append("OTP_SHARES_DEFAULT_DJANGO_CACHE_ALIAS")
+        findings.append("OTP_HAS_NO_DEDICATED_REDIS_PRINCIPAL_BOUNDARY")
+        if otp_location_configured:
+            findings.append("DEDICATED_OTP_REDIS_LOCATION_CONFIGURED_BUT_NOT_SELECTED")
     elif otp_alias not in caches:
         findings.append("OTP_CACHE_ALIAS_IS_NOT_CONFIGURED")
-    if otp_alias == "default":
-        findings.append("OTP_HAS_NO_DEDICATED_REDIS_PRINCIPAL_BOUNDARY")
 
     if deployed:
         for role in roles:
