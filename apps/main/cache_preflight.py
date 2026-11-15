@@ -52,7 +52,7 @@ def assess_redis_url(value: str) -> RedisURLAssessment:
         errors.append("redis_url_scheme_must_be_redis_or_rediss")
     if not parsed.hostname:
         errors.append("redis_url_host_required")
-    elif parsed.hostname.lower() in {"localhost", "127.0.0.1", "::1"}:
+    elif parsed.hostname.lower() in {"localhost", "127.0.0.1", "0.0.0.0", "::1", "::"}:
         errors.append("deployed_redis_url_must_not_use_localhost")
     if port is not None and not 1 <= port <= 65535:
         errors.append("redis_url_port_invalid")
@@ -185,9 +185,16 @@ def build_redis_role_inventory(settings_obj=None) -> dict:
             continue
         try:
             parsed = urlsplit(location)
-            port = parsed.port or 6379
+            parsed_port = parsed.port
+            port = parsed_port if parsed_port is not None else 6379
             database_text = parsed.path.lstrip("/")
-            database = int(database_text) if database_text.isdigit() else None
+            if database_text and ("/" in database_text or not database_text.isdigit()):
+                roles[role] = {"status": "invalid"}
+                continue
+            database = int(database_text) if database_text else 0
+            if not 1 <= port <= 65535:
+                roles[role] = {"status": "invalid"}
+                continue
         except ValueError:
             roles[role] = {"status": "invalid"}
             continue
@@ -199,8 +206,7 @@ def build_redis_role_inventory(settings_obj=None) -> dict:
         principal = (
             parsed.hostname.lower(),
             port,
-            parsed.username or "",
-            parsed.password or "",
+            parsed.username or "default",
         )
         if endpoint not in endpoint_groups:
             endpoint_groups[endpoint] = f"endpoint_{len(endpoint_groups) + 1}"
