@@ -203,6 +203,8 @@ def build_redis_role_inventory(settings_obj=None) -> dict:
             continue
 
         endpoint = (parsed.hostname.lower(), port)
+        # Redis ACL identity is endpoint + username. Password rotation and
+        # SELECTing another logical DB do not create a separate ACL principal.
         principal = (
             parsed.hostname.lower(),
             port,
