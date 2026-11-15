@@ -56,7 +56,7 @@ class Phase77RedisContractTests(SimpleTestCase):
             with self.subTest(dangerous=dangerous):
                 self.assertNotIn(dangerous, source)
 
-    def test_contract_anchors_match_actual_unmodified_legacy_otp_consumers(self):
+    def test_contract_anchors_match_actual_legacy_otp_consumers(self):
         contract = json.loads(CONTRACT.read_text(encoding="utf-8"))
         self.assertEqual(contract["phase"], "7.7")
         self.assertEqual(contract["implementation"]["test_redis_database"], 15)

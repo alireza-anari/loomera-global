@@ -250,7 +250,7 @@ class Phase725RealFailoverIdempotencyOfflineGuards(SimpleTestCase):
         self.assertIn("record = _cache_get(key)", actual)
         self.assertIn("secrets.compare_digest(expected_hash, submitted_hash)",
                       actual)
-        self.assertIn("cache.delete(key)", actual)
+        self.assertIn("_otp_cache().delete(key)", actual)
 
     def test_runner_physical_partition_host_bypass_and_aof_contract(self):
         shell = (ROOT / "tests/phase7_redis_idempotency_failover_ci.sh").read_text(

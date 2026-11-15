@@ -174,7 +174,7 @@ class Phase723IntegratedRecoveryOfflineTests(SimpleTestCase):
         self.assertIn(
             "secrets.compare_digest(expected_hash, submitted_hash)", live_auth,
         )
-        self.assertIn("cache.delete(key)", live_auth)
+        self.assertIn("_otp_cache().delete(key)", live_auth)
 
     def test_real_stop_restart_exact_test_only_docker_guard(self):
         shell = (ROOT / "tests/phase7_redis_legacy_issue_rate_ci.sh").read_text(

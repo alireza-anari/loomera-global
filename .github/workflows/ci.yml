@@ -13,6 +13,9 @@ on:
 permissions:
   contents: read
 
+env:
+  LOOMERA_ENVIRONMENT: ci
+
 concurrency:
   group: loomera-ci-${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
@@ -76,6 +79,14 @@ jobs:
           python manage.py test \
             apps.main.test_liara_deployment_config \
             --failfast
+
+      - name: Phase 7.31 runtime Redis and non-destructive cache preflight guards
+        run: |
+          python manage.py test apps.main.test_cache_preflight --failfast
+
+      - name: Phase 7.31 opt-in OTP cache alias compatibility guards
+        run: |
+          python manage.py test apps.api.tests.test_api_v1_otp_cache_alias --failfast
 
       - name: Phase 3 language selection persistence and catalog guards
         run: |

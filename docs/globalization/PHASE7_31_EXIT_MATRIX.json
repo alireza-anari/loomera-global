@@ -1,0 +1,83 @@
+{
+  "schema_version": 1,
+  "phase": "7.31",
+  "baseline_main_sha": "e622739f5df8c366d0dc4c506d07a2d7d4a72c32",
+  "prior_phase731_role_map_commit": null,
+  "scope": "OPT_IN_OTP_CACHE_ALIAS_REDACTED_ROLE_AUDIT_AND_NONDESTRUCTIVE_RUNTIME_PREFLIGHT",
+  "runtime_environment": {
+    "production_settings_default": "production",
+    "staging_deployment_sets": "staging",
+    "production_deployment_sets": "production",
+    "ci_workflow_sets": "ci",
+    "missing_environment_variable_can_no_longer_silently_default_to_local_in_production_settings": true
+  },
+  "cache_preflight": {
+    "deployed_backend": "EXACT_DJANGO_REDIS_REQUIRED",
+    "redis_url_checks": [
+      "REDIS_OR_REDISS",
+      "REMOTE_HOST",
+      "VALID_PORT_AND_DATABASE_PATH",
+      "PASSWORD_REQUIRED",
+      "TLS_CERTIFICATE_VERIFICATION_DOWNGRADE_REJECTED"
+    ],
+    "warnings": [
+      "PLAIN_REDIS_TRANSPORT",
+      "MISSING_OR_DEFAULT_ACL_USERNAME"
+    ],
+    "probe": "RANDOM_PER_RUN_ADD_ONLY_KEY_AND_MARKER_30_SECOND_TTL_NO_DELETE",
+    "fixed_shared_probe_key_overwrite_removed": true,
+    "celery_broker_checked_when_enabled": true
+  },
+  "otp_cache_role": {
+    "dedicated_location_setting": "LOOMERA_API_AUTH_OTP_CACHE_LOCATION",
+    "alias_setting": "LOOMERA_API_AUTH_OTP_CACHE_ALIAS",
+    "allowed_aliases": [
+      "default",
+      "otp"
+    ],
+    "default_alias_without_location": "default",
+    "location_auto_selects_alias": "otp",
+    "dedicated_alias_requires": [
+      "REDISS",
+      "REMOTE_HOST",
+      "NONDEFAULT_NAMED_ACL_USER",
+      "PASSWORD",
+      "TLS_CERTIFICATE_VERIFICATION",
+      "DISTINCT_REDIS_PRINCIPAL_FROM_GENERAL_CACHE"
+    ],
+    "live_auth_uses_lazy_alias_resolution": true,
+    "default_alias_preserves_global_cache_proxy": true,
+    "default_runtime_behavior_changed": false,
+    "infrastructure_and_prebeta_probe_selected_alias": true
+  },
+  "redacted_role_audit": {
+    "command": "python manage.py audit_phase7_otp_redis_roles --json",
+    "reads_django_settings_only": true,
+    "redis_connections_opened": false,
+    "database_connections_opened": false,
+    "secrets_emitted": false,
+    "logical_database_index_treated_as_security_boundary": false
+  },
+  "remaining_assurance_gaps": [
+    "DEDICATED_OTP_ALIAS_NOT_ENABLED_BY_DEFAULT_OR_PRODUCTION",
+    "ACTUAL_LIARA_ENVIRONMENT_VALUES_NOT_INSPECTED",
+    "SERVER_SIDE_REDIS_ACL_COMMANDS_AND_KEY_PATTERNS_NOT_VERIFIED",
+    "REDIS_NETWORK_POLICY_AND_ALL_NODES_NOT_VERIFIED",
+    "PRIVILEGED_ADMIN_CREDENTIALS_AND_STALE_SOCKETS_NOT_REVOKED_OR_PROVEN",
+    "ALTERNATE_ENDPOINTS_AND_UNKNOWN_REDIS_NODES_NOT_INVENTORIED",
+    "LIVE_OTP_GET_COMPARE_DELETE_FLOW_NOT_ATOMIC",
+    "SYNTHETIC_OUTBOX_NOT_CONNECTED_TO_LIVE_OTP",
+    "EXTERNAL_SMS_RECEIPT_AND_ACCOUNT_SESSION_HANDOFF_NOT_PROVEN",
+    "CELERY_CACHE_PRINCIPAL_SEPARATION_NOT_ENFORCED"
+  ],
+  "production_secrets_inspected": false,
+  "production_redis_contacted": false,
+  "live_otp_atomic_consume_proven": false,
+  "redis_server_acl_verified": false,
+  "global_redis_ingress_fenced": false,
+  "outbox_connected_to_live_otp": false,
+  "production_release_authorized": false,
+  "deployment_workflow_executed": false,
+  "deployed": false,
+  "release_gate": "BLOCKED: the opt-in OTP alias and settings-only role inventory are not proof of server ACL, network fencing, atomic live OTP consume, outbox/SMS delivery or production cutover."
+}

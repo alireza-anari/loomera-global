@@ -7,7 +7,7 @@ from dataclasses import dataclass
 from typing import Any
 
 from django.conf import settings
-from django.core.cache import cache
+from django.core.cache import cache, caches
 from django.utils.crypto import salted_hmac
 
 from .auth_serializers import normalize_iran_mobile, validate_mobile_for_auth
@@ -15,6 +15,18 @@ from .auth_serializers import normalize_iran_mobile, validate_mobile_for_auth
 logger = logging.getLogger(__name__)
 
 API_AUTH_OTP_PURPOSE_LOGIN = "app_login"
+
+def _otp_cache():
+    """Resolve the configured OTP cache lazily without changing default patches."""
+    alias = str(
+        getattr(settings, "LOOMERA_API_AUTH_OTP_CACHE_ALIAS", "default")
+        or "default"
+    ).strip().lower()
+    if alias == "default":
+        return cache
+    return caches[alias]
+
+
 
 
 class ApiOtpPayloadTooLarge(Exception):
@@ -202,7 +214,7 @@ def _cache_get(key: str, default=None):
     logged by this boundary.
     """
     try:
-        return cache.get(key, default)
+        return _otp_cache().get(key, default)
     except Exception as exc:
         logger.warning("API OTP cache get failed | key_scope=%s", key.split(":")[-3:-1])
         if api_otp_fail_closed():
@@ -220,7 +232,7 @@ def _cache_set(key: str, value, *, timeout: int):
     an enforceable rate-limit record.
     """
     try:
-        cache.set(key, value, timeout=timeout)
+        _otp_cache().set(key, value, timeout=timeout)
     except Exception as exc:
         logger.warning("API OTP cache set failed | key_scope=%s", key.split(":")[-3:-1])
         if api_otp_fail_closed():
@@ -243,7 +255,7 @@ def _cache_delete(
     helper never exposes the stored OTP payload.
     """
     try:
-        cache.delete(key)
+        _otp_cache().delete(key)
         return True
     except Exception as exc:
         logger.warning(
@@ -268,9 +280,9 @@ def _increment_hour_rate(*, scope: str, value: str, limit: int):
     """
     key = otp_hour_rate_cache_key(scope=scope, value=value)
     try:
-        current = cache.get(key, 0)
+        current = _otp_cache().get(key, 0)
         current = int(current or 0) + 1
-        cache.set(key, current, timeout=3600)
+        _otp_cache().set(key, current, timeout=3600)
     except Exception as exc:
         logger.warning("API OTP rate cache failed | scope=%s", scope)
         if api_otp_fail_closed():

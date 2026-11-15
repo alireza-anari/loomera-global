@@ -184,7 +184,7 @@ class Phase720WatchCandidateOfflineTests(SimpleTestCase):
         )
         self.assertIn("record = _cache_get(key)", original)
         self.assertIn("secrets.compare_digest(expected_hash, submitted_hash)", original)
-        self.assertIn("cache.delete(key)", original)
+        self.assertIn("_otp_cache().delete(key)", original)
 
     def test_ci_disposable_and_negative_cases_present(self):
         shell = (ROOT / "tests/phase7_redis_legacy_watch_ci.sh").read_text()

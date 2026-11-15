@@ -68,6 +68,18 @@ jobs:
 
           echo "Production deployment target validated."
 
+      - name: Set production runtime environment identity
+        env:
+          LIARA_TOKEN: ${{ secrets.LIARA_API_TOKEN }}
+          LIARA_APP_NAME: ${{ vars.LIARA_APP_NAME }}
+        run: |
+          set -euo pipefail
+          liara env set \
+            --app="$LIARA_APP_NAME" \
+            --api-token="$LIARA_TOKEN" \
+            --force \
+            "LOOMERA_ENVIRONMENT=production"
+
       - name: Stamp production release
         env:
           RELEASE_SHA: ${{ github.sha }}
