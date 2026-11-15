@@ -432,6 +432,75 @@ class Phase731CachePreflightTests(SimpleTestCase):
                     report["roles"]["general_cache"]["status"], "invalid",
                 )
 
+    def test_role_inventory_detects_celery_reuse_of_otp_and_result_reuse_of_cache(self):
+        general = "rediss://general_user:general-secret@redis.example:6380/1"
+        otp = "rediss://otp_user:otp-secret@redis.example:6380/2"
+        config = SimpleNamespace(
+            CACHES={
+                "default": {
+                    "BACKEND": "django_redis.cache.RedisCache",
+                    "LOCATION": general,
+                },
+                "otp": {
+                    "BACKEND": "django_redis.cache.RedisCache",
+                    "LOCATION": otp,
+                },
+            },
+            LOOMERA_API_AUTH_OTP_CACHE_ALIAS="otp",
+            LOOMERA_ENVIRONMENT="staging",
+            LOOMERA_ENABLE_CELERY=True,
+            CELERY_BROKER_URL=otp,
+            CELERY_RESULT_BACKEND=general,
+        )
+        report = build_redis_role_inventory(config)
+        self.assertIn("celery_broker_shares_api_otp_principal",
+                      report["warnings"])
+        self.assertIn("celery_result_shares_general_cache_principal",
+                      report["warnings"])
+
+    def test_role_inventory_warns_when_dedicated_location_is_not_selected(self):
+        general = "rediss://general_user:general-secret@redis.example:6380/1"
+        otp = "rediss://otp_user:otp-secret@otp.example:6380/2"
+        config = SimpleNamespace(
+            CACHES={
+                "default": {
+                    "BACKEND": "django_redis.cache.RedisCache",
+                    "LOCATION": general,
+                }
+            },
+            LOOMERA_API_AUTH_OTP_CACHE_ALIAS="default",
+            LOOMERA_API_AUTH_OTP_CACHE_LOCATION=otp,
+            LOOMERA_ENVIRONMENT="staging",
+            LOOMERA_ENABLE_CELERY=False,
+        )
+        report = build_redis_role_inventory(config)
+        self.assertIn(
+            "api_otp_dedicated_location_configured_but_alias_default",
+            report["warnings"],
+        )
+
+    def test_role_inventory_rejects_zero_port_and_invalid_database_path(self):
+        for location in (
+            "rediss://cache_user:secret@redis.example:0/1",
+            "rediss://cache_user:secret@redis.example:6380/1/not-a-db",
+        ):
+            with self.subTest(location=location):
+                config = SimpleNamespace(
+                    CACHES={
+                        "default": {
+                            "BACKEND": "django_redis.cache.RedisCache",
+                            "LOCATION": location,
+                        }
+                    },
+                    LOOMERA_API_AUTH_OTP_CACHE_ALIAS="default",
+                    LOOMERA_ENVIRONMENT="staging",
+                    LOOMERA_ENABLE_CELERY=False,
+                )
+                report = build_redis_role_inventory(config)
+                self.assertEqual(
+                    report["roles"]["general_cache"]["status"], "invalid",
+                )
+
     def test_role_audit_command_is_settings_only_and_redacted(self):
         import io
         from django.core.management import call_command
