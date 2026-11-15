@@ -2,7 +2,7 @@
 
 **Backward-compatible runtime seam and readiness hardening. Dedicated OTP Redis is opt-in. No Production credentials, deployment, OTP delivery or release approval.**
 
-Baseline `main` at PR review: `ab70c12900e952ad907b6ee319037ffd4850dda1`. The repository's accompanying Phase 7.31 role map is documented in `PHASE7_31_REDIS_RUNTIME_ROLES.md`.
+Baseline `main` at final review: `e622739f5df8c366d0dc4c506d07a2d7d4a72c32`.
 
 ## Findings addressed
 
