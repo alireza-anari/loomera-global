@@ -98,6 +98,12 @@ jobs:
             --force \
             "TELEGRAM_WEBHOOK_SECRET=$TELEGRAM_WEBHOOK_SECRET"
 
+          liara env set \
+            --app="$LIARA_APP_NAME" \
+            --api-token="$LIARA_TOKEN" \
+            --force \
+            "LOOMERA_ENVIRONMENT=staging"
+
           echo "Staging messaging secrets synced to Liara."
 
       - name: Prepare staging PostgreSQL dependency
