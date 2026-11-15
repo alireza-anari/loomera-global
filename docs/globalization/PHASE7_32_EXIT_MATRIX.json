@@ -1,0 +1,33 @@
+{
+  "schema_version": 1,
+  "phase": "7.32",
+  "baseline_main_sha": "297b80e473583267e1494fd50a5a92046931c5e4",
+  "scope": "OPT_IN_SETTINGS_ONLY_REDIS_ROLE_CONFIGURATION_GATE",
+  "command": "python manage.py audit_phase7_otp_redis_roles --json --require-isolation",
+  "legacy_audit_output_preserved": true,
+  "gate": "PASS_ONLY_FOR_STATIC_ROLE_CONFIGURATION_NOT_PRODUCTION_RELEASE",
+  "negative_exit_code": 1,
+  "requires_named_tls_principals": true,
+  "requires_dedicated_otp_alias": true,
+  "enabled_celery_requires_broker_and_result_isolation": true,
+  "same_principal_different_database_or_password_is_not_isolation": true,
+  "inspects_production_secrets": false,
+  "contacts_redis": false,
+  "contacts_database": false,
+  "checks_server_side_acl": false,
+  "checks_runtime_tls_negotiation": false,
+  "checks_all_network_ingress": false,
+  "proves_live_otp_atomicity": false,
+  "changes_runtime_default_behavior": false,
+  "deploys": false,
+  "production_release_authorized": false,
+  "remaining_blockers": [
+    "PRODUCTION_REDIS_ACL_UNVERIFIED",
+    "NETWORK_INGRESS_AND_STALE_SOCKET_UNVERIFIED",
+    "DNS_CLUSTER_IDENTITY_UNVERIFIED",
+    "LIVE_OTP_NONATOMIC_CONSUME",
+    "SMS_OUTBOX_NOT_LIVE",
+    "FAILOVER_AND_OPERATIONS_APPROVAL_MISSING"
+  ],
+  "release_gate": "BLOCKED"
+}
