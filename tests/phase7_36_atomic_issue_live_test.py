@@ -334,5 +334,112 @@ class Phase736AtomicIssueRealRedisTests(unittest.TestCase):
         self.assertEqual(self.raw.exists(*physical), 0)
 
 
+    # Phase 7.37: bounded operation-marker tests reuse this same disposable
+    # Redis process, per-test random namespace and exact-key cleanup.
+    def operation(self, tag="a", binding="b"):
+        logical = "loomera:api-auth-otp:issue-operation:v1:" + tag * 64
+        physical = str(self.cache.make_key(logical))
+        self.known_keys.add(physical)
+        return (logical, binding * 64), physical
+
+    def test_phase737_first_issue_records_fifth_key_with_bounded_ttl(self):
+        op, marker = self.operation()
+        self.assertEqual(self.issue(operation=op).status, "issued")
+        self.assertEqual(self.raw.get(marker), b"v1:" + b"b" * 64)
+        self.assertGreater(self.raw.pttl(marker), 0)
+        self.assertLessEqual(self.raw.pttl(marker), 3900 * 1000)
+        _, keys = self.keys()
+        self.assertEqual(self.raw.exists(*keys, marker), 5)
+
+    def test_phase737_replay_after_challenge_and_cooldown_removed(self):
+        op, marker = self.operation()
+        self.assertEqual(self.issue(operation=op).status, "issued")
+        marker_ttl = self.raw.pttl(marker)
+        self.clear_challenge()
+        _, keys = self.keys()
+        snapshot = self.raw.mget(keys[2:])
+        result = self.issue(operation=op)
+        self.assertEqual(result.status, "operation_recorded")
+        self.assertEqual(self.raw.exists(*keys[:2]), 0)
+        self.assertEqual(self.raw.mget(keys[2:]), snapshot)
+        self.assertLessEqual(self.raw.pttl(marker), marker_ttl)
+
+    def test_phase737_replay_across_hour_boundary_never_charges_new_bucket(self):
+        op, _ = self.operation()
+        self.assertEqual(self.issue(operation=op).status, "issued")
+        self.clear_challenge()
+        next_hour = (self.now // 3600 + 1) * 3600 + 1
+        self.assertEqual(
+            self.issue(operation=op, now_ts=next_hour).status,
+            "operation_recorded",
+        )
+        _, next_keys = self.keys(now_ts=next_hour)
+        self.assertEqual(self.raw.exists(*next_keys), 0)
+
+    def test_phase737_changed_binding_cannot_reuse_operation(self):
+        op, marker = self.operation()
+        self.assertEqual(self.issue(operation=op).status, "issued")
+        changed = (op[0], "c" * 64)
+        result = self.issue(operation=changed, mobile=MOBILES[0])
+        self.assertEqual(result.status, "operation_conflict")
+        _, keys = self.keys(mobile=MOBILES[0])
+        self.assertEqual(self.raw.exists(*keys[:3]), 0)
+        self.assertEqual(self.raw.get(marker), b"v1:" + b"b" * 64)
+
+    def test_phase737_lost_exec_reply_then_retry_does_not_grant_or_reissue(self):
+        op, marker = self.operation()
+        original = Pipeline.execute
+
+        def commit_then_timeout(pipe, *args, **kwargs):
+            original(pipe, *args, **kwargs)
+            raise ConnectionError("synthetic lost reply")
+
+        with patch.object(Pipeline, "execute", commit_then_timeout):
+            self.assertEqual(self.issue(operation=op).status, "unavailable")
+        _, keys = self.keys()
+        self.assertEqual(self.raw.exists(*keys, marker), 5)
+        snapshot = self.raw.mget(keys)
+        self.assertEqual(self.issue(operation=op).status, "operation_recorded")
+        self.assertEqual(self.raw.mget(keys), snapshot)
+
+    def test_phase737_marker_alone_never_proves_success(self):
+        op, marker = self.operation()
+        self.raw.set(marker, b"v1:" + b"b" * 64, ex=3900)
+        self.assertEqual(self.issue(operation=op).status, "operation_recorded")
+        _, keys = self.keys()
+        self.assertEqual(self.raw.exists(*keys), 0)
+
+    def test_phase737_corrupt_or_persistent_marker_fails_closed(self):
+        op, marker = self.operation()
+        for raw, expiry in ((b"bad", 3900), (b"v1:" + b"b" * 64, None)):
+            with self.subTest(expiry=expiry):
+                self.raw.set(marker, raw, ex=expiry)
+                self.assertEqual(self.issue(operation=op).status, "unavailable")
+                _, keys = self.keys()
+                self.assertEqual(self.raw.exists(*keys), 0)
+
+    def test_phase737_concurrent_same_operation_has_one_accepted_write(self):
+        op, marker = self.operation()
+        gate = Barrier(2, timeout=15)
+        original = Pipeline.multi
+
+        def race(pipe, *args, **kwargs):
+            gate.wait(timeout=15)
+            return original(pipe, *args, **kwargs)
+
+        with (
+            patch.object(Pipeline, "multi", race),
+            ThreadPoolExecutor(max_workers=2) as pool,
+        ):
+            futures = [pool.submit(self.issue, operation=op) for _ in range(2)]
+            states = sorted(f.result(timeout=22).status for f in futures)
+        self.assertEqual(states, ["issued", "unavailable"])
+        _, keys = self.keys()
+        self.assertEqual(self.cache.client.decode(self.raw.get(keys[2])), 1)
+        self.assertEqual(self.cache.client.decode(self.raw.get(keys[3])), 1)
+        self.assertTrue(self.raw.exists(marker))
+        self.assertEqual(self.issue(operation=op).status, "operation_recorded")
+
+
 if __name__ == "__main__":
     unittest.main()

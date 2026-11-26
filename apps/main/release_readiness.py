@@ -22,6 +22,7 @@ STRUCTURAL_GUARD_SUITE = (
     "apps.api.tests.test_api_v1_otp_required_delete_race",
     "apps.api.tests.test_phase7_35_atomic_optin_guards",
     "apps.api.tests.test_phase7_36_atomic_issue_guards",
+    "apps.api.tests.test_phase7_37_replay_fence",
     "apps.payments.test_gateway_contract_documentation",
     "apps.orders.test_booking_checkout_contract_documentation",
     "apps.api.tests.test_api_v1_otp_auth_contract_documentation",

@@ -10,6 +10,8 @@ from rest_framework.views import APIView
 
 from .auth_otp import (
     ApiOtpExpired,
+    ApiOtpIdempotencyConflict,
+    ApiOtpIdempotencyInvalid,
     ApiOtpInvalidCode,
     ApiOtpMaxAttemptsExceeded,
     ApiOtpNotFound,
@@ -213,6 +215,18 @@ class ApiOtpRequestAPIView(APIView):
             result = create_api_otp_request(
                 mobile_number=normalized_mobile,
                 request=request,
+            )
+        except ApiOtpIdempotencyInvalid:
+            return api_error(
+                "otp_idempotency_key_invalid",
+                "شناسه یکتای درخواست معتبر نیست.",
+                status=400,
+            )
+        except ApiOtpIdempotencyConflict:
+            return api_error(
+                "otp_request_replay_blocked",
+                "این شناسه قبلاً ثبت شده است؛ کد جدیدی صادر نشد.",
+                status=409,
             )
         except ApiOtpRateLimited as exc:
             return api_error(

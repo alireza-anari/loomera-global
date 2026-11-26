@@ -10,12 +10,15 @@ from __future__ import annotations
 from dataclasses import dataclass
 from pickle import UnpicklingError
 import re
+import secrets
 import zlib
 from typing import Any
 
 from redis.exceptions import RedisError, WatchError
 
 _DIGEST = re.compile(r"[0-9a-f]{40}\Z")
+_FINGERPRINT = re.compile(r"[0-9a-f]{64}\Z")
+OPERATION_TTL_SECONDS = 3900
 _RECOVERY_ERRORS = (
     RedisError, OSError, RuntimeError, ValueError, TypeError, AttributeError,
     LookupError, EOFError, UnpicklingError, zlib.error,
@@ -87,6 +90,7 @@ def atomic_issue_legacy_record(
     resend_ttl_seconds: int,
     mobile_hour_limit: int,
     ip_hour_limit: int,
+    operation: tuple[str, str] | None = None,
 ) -> AtomicOtpIssueOutcome:
     """One confirmed four-SET Redis transaction or no successful issuance.
 
@@ -130,6 +134,17 @@ def atomic_issue_legacy_record(
     ):
         return AtomicOtpIssueOutcome("unavailable")
 
+    if operation is not None and (
+        type(operation) is not tuple
+        or len(operation) != 2
+        or type(operation[0]) is not str
+        or not operation[0]
+        or operation[0] in logical_keys
+        or type(operation[1]) is not str
+        or _FINGERPRINT.fullmatch(operation[1]) is None
+    ):
+        return AtomicOtpIssueOutcome("unavailable")
+
     try:
         from django_redis.cache import RedisCache
         from django_redis.client import DefaultClient
@@ -141,7 +156,9 @@ def atomic_issue_legacy_record(
             return AtomicOtpIssueOutcome("unavailable")
 
         physical = tuple(str(cache_backend.make_key(k)) for k in logical_keys)
-        if len(set(physical)) != 4 or any(not key for key in physical):
+        if operation is not None:
+            physical += (str(cache_backend.make_key(operation[0])),)
+        if len(set(physical)) != len(physical) or any(not key for key in physical):
             return AtomicOtpIssueOutcome("unavailable")
         client = cache_backend.client.get_client(write=True)
         if client.connection_pool.connection_kwargs.get(
@@ -151,6 +168,28 @@ def atomic_issue_legacy_record(
 
         with client.pipeline(transaction=True) as pipe:
             pipe.watch(*physical)
+            if operation is not None:
+                kind = pipe.type(physical[4])
+                if kind != b"none":
+                    if kind != b"string":
+                        return AtomicOtpIssueOutcome("unavailable")
+                    remaining = pipe.pttl(physical[4])
+                    if type(remaining) is not int or not (
+                        0 < remaining <= OPERATION_TTL_SECONDS * 1000
+                    ):
+                        return AtomicOtpIssueOutcome("unavailable")
+                    raw = pipe.get(physical[4])
+                    if type(raw) is not bytes or not re.fullmatch(
+                        rb"v1:[0-9a-f]{64}", raw
+                    ):
+                        return AtomicOtpIssueOutcome("unavailable")
+                    if secrets.compare_digest(
+                        raw, b"v1:" + operation[1].encode("ascii")
+                    ):
+                        # A marker only proves a recorded attempt, not delivery
+                        # or complete EXEC success. Never grant a replay.
+                        return AtomicOtpIssueOutcome("operation_recorded")
+                    return AtomicOtpIssueOutcome("operation_conflict")
             record_state, _, record_ttl = _read_legacy_string(
                 pipe, physical[0], record_ttl_seconds * 1000
             )
@@ -207,6 +246,13 @@ def atomic_issue_legacy_record(
                 _encoded(cache_backend, ip_used + 1),
             )
             pipe.multi()
+            if operation is not None:
+                # Mark first: Redis transactions do not roll back individual
+                # runtime errors. A replay must not infer successful issuance.
+                pipe.set(
+                    physical[4], b"v1:" + operation[1].encode("ascii"),
+                    ex=OPERATION_TTL_SECONDS,
+                )
             pipe.set(physical[0], encoded[0], ex=record_ttl_seconds)
             pipe.set(physical[1], encoded[1], ex=resend_ttl_seconds)
             if mobile_state == "missing":
@@ -220,7 +266,7 @@ def atomic_issue_legacy_record(
             result = pipe.execute()
             if (
                 type(result) is not list
-                or len(result) != 4
+                or len(result) != len(physical)
                 or any(value is not True for value in result)
             ):
                 return AtomicOtpIssueOutcome("unavailable")
