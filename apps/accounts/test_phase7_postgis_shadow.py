@@ -422,7 +422,7 @@ class Phase74PostGISPhoneShadowRehearsal(TransactionTestCase):
         root = Path(__file__).resolve().parents[2]
         source = (root / "apps/accounts/models.py").read_text(encoding="utf-8")
         self.assertIn('USERNAME_FIELD = "mobile_number"', source)
-        self.assertIn("max_length=11, unique=True", source)
+        self.assertIn("max_length=16, unique=True", source)
         # The test-only SQL is constrained to the dedicated fixture table.
         from inspect import getsource
         module_text = getsource(type(self))

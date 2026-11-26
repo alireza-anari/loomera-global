@@ -2,13 +2,13 @@
   "schema_version": 1,
   "phase": "7.2",
   "baseline_main_sha": "986a6a03aa0eed3923a482c3a4bd8e2510e69026",
-  "legacy_login": "CustomUser.mobile_number unique max11 USERNAME_FIELD",
+  "legacy_login": "Phase 7.2 baseline: CustomUser.mobile_number unique max11 USERNAME_FIELD; exit package A expands storage to 16 while retaining the 11-character legacy validation limit and USERNAME_FIELD.",
   "source_scope": "CI-anchored source review, not exhaustive dynamic or external client inventory",
   "reviewed": [
     {
       "path": "apps/accounts/models.py",
       "kind": "schema",
-      "anchor": "max_length=11, unique=True"
+      "anchor": "max_length=16, unique=True"
     },
     {
       "path": "apps/accounts/models.py",

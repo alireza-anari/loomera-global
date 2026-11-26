@@ -4,8 +4,10 @@ from django.contrib.auth.models import (
     Permission,
     PermissionsMixin,
 )
+from django.core.validators import MaxLengthValidator
 from django.db import models
 from django.db.models import Avg
+from django.db.models.functions import Concat, Substr
 from django.utils import timezone
 from utils import File_Uploader
 
@@ -56,8 +58,39 @@ class CustomUserManager(BaseUserManager):
 # ----------------------------------------------------------------------------
 # Custom User
 class CustomUser(AbstractBaseUser, PermissionsMixin):
+    # Storage expands now; existing form validation remains at 11 until
+    # the authentication and provider boundaries are deliberately converted.
     mobile_number = models.CharField(
-        max_length=11, unique=True, verbose_name="شماره موبایل"
+        max_length=16, unique=True, validators=[MaxLengthValidator(11)],
+        verbose_name="شماره موبایل",
+    )
+    # The database derives the shadow identity on every write, including
+    # bulk updates and account anonymization. No independent mutable claim.
+    canonical_mobile_number = models.GeneratedField(
+        expression=models.Case(
+            models.When(
+                models.Q(mobile_number__regex=r"^09[0-9]{9}$")
+                & ~models.Q(mobile_number__regex=r"[^0-9]"),
+                then=Concat(models.Value("+98"), Substr("mobile_number", 2)),
+            ),
+            models.When(
+                models.Q(mobile_number__regex=r"^\+989[0-9]{9}$")
+                & ~models.Q(mobile_number__regex=r"[^+0-9]"),
+                then=models.F("mobile_number"),
+            ),
+            models.When(
+                models.Q(mobile_number__regex=r"^\+[1-9][0-9]{7,14}$")
+                & ~models.Q(mobile_number__regex=r"[^+0-9]")
+                & ~models.Q(mobile_number__startswith="+98"),
+                then=models.F("mobile_number"),
+            ),
+            default=models.Value(None),
+            output_field=models.CharField(max_length=16),
+        ),
+        output_field=models.CharField(max_length=16),
+        db_persist=True,
+        null=True,
+        unique=True,
     )
     email = models.EmailField(max_length=100, blank=True, verbose_name="ایمیل")
     name = models.CharField(max_length=50, blank=True, verbose_name="نام")

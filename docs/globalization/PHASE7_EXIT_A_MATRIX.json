@@ -1,0 +1,17 @@
+{
+  "schema_version": 1,
+  "phase": "7-exit-A",
+  "issue": 165,
+  "baseline_main_sha": "9272e8ea29c13390bc34de12b771a6fc76c15602",
+  "installed_migration": "accounts.0005_canonical_phone_storage",
+  "storage_max_length": 16,
+  "legacy_validation_max_length": 11,
+  "generated_nullable_canonical_unique": true,
+  "production_migration_executed": false,
+  "real_data_accessed": false,
+  "international_auth_enabled": false,
+  "numbering_allocation_validated": false,
+  "tests": "CI_REQUIRED_NOT_YET_VERIFIED",
+  "phase7_exit": "PENDING_B_AND_C",
+  "release_gate": "BLOCKED"
+}
