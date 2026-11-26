@@ -1,0 +1,15 @@
+# Phase 7.37 — bounded duplicate suppression for atomic OTP issue
+
+Default OFF. Release BLOCKED; no production deployment.
+
+The Phase 7.36 optional issuer could commit on Redis but lose the EXEC reply, returning HTTP 503. Once its challenge and cooldown expired, a retry could create another challenge and charge quota again.
+
+Phase 7.37 adds LOOMERA_API_AUTH_OTP_ISSUE_REPLAY_FENCE (False by default). It requires both atomic OTP flags, the dedicated otp cache alias and fail-closed policy. The opted-in request endpoint requires a canonical lowercase random UUIDv4 Idempotency-Key. Clients must generate a new UUID for a new logical request and preserve it across retries; missing or invalid UUID returns HTTP 400 otp_idempotency_key_invalid. Existing clients are unaffected when disabled.
+
+The server derives a domain-separated HMAC-SHA256 key from the UUID and a separate binding from UUID, purpose, normalized mobile and direct peer IP. No plaintext UUID, mobile, peer, OTP or hash appears in the operation marker. A binding is independent of time bucket and newly generated code. WATCH covers the existing four keys plus this fifth marker. The issuer queues the marker first in the same MULTI/EXEC with the four writes and requires five exact True acknowledgements. The marker is an ASCII v1: plus 64 hex HMAC string, with bounded TTL 3900 seconds. It is inspected before challenge or quota reads without unpickling. Matching replay and changed binding both return the same HTTP 409 otp_request_replay_blocked without reissuing or modifying quota. Malformed type, TTL or marker, WATCH conflict and unconfirmed EXEC return 503. A refused quota or cooldown request creates no marker.
+
+**Important scope distinction:** a marker is not a successful issuance receipt. Redis MULTI does not roll back individual execution-time errors. Marker-only and lost-ack states must never return accepted=True on replay. This implementation provides bounded duplicate suppression, not full response replay, SMS delivery confirmation, exactly-once execution, or durable idempotency. A new logical request can proceed under normal quota rules. There is no automatic retry, marker extension or session creation. A replay after marker expiry, eviction, data loss, secret rotation or unsafe mixed-worker rollout may not be suppressed. Use noeviction, controlled secret rotation and coordinated rollout only after independent operational approval.
+
+Tests: offline API/UUID/binding/flag and response guards; eight extra real Redis tests in the existing disposable Phase 7.36 fixture covering five writes, same-key contention, changed binding, replay after challenge/cooldown deletion, across hourly boundaries, marker-only denial, malformed TTL/wire and committed-lost reply. The runner uses only the isolated loopback fixture and known keys.
+
+Remaining blockers: reliable durable SQL-first operation/receipt and SMS outbox, trusted ingress attribution, cross-store authentication/session consistency, multi-primary fencing, ACL/eviction/rotation assurance, legacy drain and approval. Production release BLOCKED. No actual SMS sent.

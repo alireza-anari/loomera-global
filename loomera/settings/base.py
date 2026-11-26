@@ -1626,6 +1626,21 @@ if LOOMERA_API_AUTH_OTP_ATOMIC_REDIS_ISSUE and (
         "Atomic API OTP issuance requires atomic verification, a named "
         "dedicated OTP Redis cache and fail-closed policy."
     )
+# Phase 7.37: bounded duplicate suppression, not a durable delivery receipt.
+LOOMERA_API_AUTH_OTP_ISSUE_REPLAY_FENCE = env.bool(
+    "LOOMERA_API_AUTH_OTP_ISSUE_REPLAY_FENCE",
+    default=False,
+)
+if LOOMERA_API_AUTH_OTP_ISSUE_REPLAY_FENCE and not (
+    LOOMERA_API_AUTH_OTP_ATOMIC_REDIS_ISSUE
+    and LOOMERA_API_AUTH_OTP_ATOMIC_REDIS_VERIFY
+    and LOOMERA_API_AUTH_OTP_CACHE_ALIAS == "otp"
+    and LOOMERA_API_AUTH_OTP_FAIL_CLOSED
+):
+    raise ImproperlyConfigured(
+        "OTP replay fencing requires atomic issuance and verification, "
+        "dedicated OTP cache and fail-closed policy."
+    )
 LOOMERA_API_BOOKING_DRAFT_MAX_BYTES = env.int(
     "LOOMERA_API_BOOKING_DRAFT_MAX_BYTES",
     default=4 * 1024,

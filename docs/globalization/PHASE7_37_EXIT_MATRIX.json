@@ -1,0 +1,15 @@
+{
+  "schema_version": 1,
+  "phase": "7.37",
+  "baseline_main_sha": "4881f8ad5dc642a838c9698d34b6886fcb93007c",
+  "scope": "DEFAULT_OFF_SINGLE_NODE_BOUNDED_ISSUE_REPLAY_FENCE",
+  "flag_default_off": true,
+  "marker_ttl_seconds": 3900,
+  "marker_is_not_success_receipt": true,
+  "full_durable_idempotency_proven": false,
+  "sms_outbox_live": false,
+  "multihost_fencing_proven": false,
+  "production_cutover_authorized": false,
+  "deployment_executed": false,
+  "release_gate": "BLOCKED"
+}

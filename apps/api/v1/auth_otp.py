@@ -1,6 +1,8 @@
 from __future__ import annotations
 
 import ipaddress
+import json
+import re
 import logging
 import secrets
 import time
@@ -40,6 +42,35 @@ class ApiOtpPayloadInvalid(Exception):
 
 class ApiOtpRateLimitUnavailable(Exception):
     pass
+
+
+class ApiOtpIdempotencyInvalid(Exception):
+    pass
+
+
+class ApiOtpIdempotencyConflict(Exception):
+    pass
+
+
+def _otp_issue_operation(request, *, purpose, mobile_number, peer):
+    # Client creates a random UUIDv4 per logical request and reuses it on retry.
+    operation_id = (
+        request.META.get("HTTP_IDEMPOTENCY_KEY") if request is not None else None
+    )
+    if type(operation_id) is not str or re.fullmatch(
+        r"[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}",
+        operation_id,
+    ) is None:
+        raise ApiOtpIdempotencyInvalid
+    operation_key = salted_hmac(
+        "loomera.api.auth.otp.issue.operation.v1", operation_id, algorithm="sha256"
+    ).hexdigest()
+    binding = salted_hmac(
+        "loomera.api.auth.otp.issue.binding.v1",
+        json.dumps([operation_id, purpose, mobile_number, peer], separators=(",", ":")),
+        algorithm="sha256",
+    ).hexdigest()
+    return f"{api_otp_cache_prefix()}:issue-operation:v1:{operation_key}", binding
 
 
 class ApiOtpRateLimited(Exception):
@@ -343,7 +374,16 @@ def create_api_otp_request(
     if not valid:
         raise ValueError(error or "شماره موبایل معتبر نیست.")
 
-    if bool(getattr(settings, "LOOMERA_API_AUTH_OTP_ATOMIC_REDIS_ISSUE", False)):
+    atomic_issue_enabled = bool(
+        getattr(settings, "LOOMERA_API_AUTH_OTP_ATOMIC_REDIS_ISSUE", False)
+    )
+    replay_fence_enabled = bool(
+        getattr(settings, "LOOMERA_API_AUTH_OTP_ISSUE_REPLAY_FENCE", False)
+    )
+    if replay_fence_enabled and not atomic_issue_enabled:
+        raise ApiOtpRateLimitUnavailable
+
+    if atomic_issue_enabled:
         # Only the explicit named Redis OTP role with atomic verification and
         # fail-closed policy may enter this path. Never downgrade on a conflict.
         if (
@@ -369,6 +409,12 @@ def create_api_otp_request(
 
         from .otp_atomic_issue import atomic_issue_legacy_record
 
+        operation = None
+        if replay_fence_enabled:
+            operation = _otp_issue_operation(
+                request, purpose=purpose, mobile_number=normalized_mobile,
+                peer=ip_address,
+            )
         now_ts = api_otp_now_ts()
         ttl_seconds = api_otp_ttl_seconds()
         resend_seconds = api_otp_resend_seconds()
@@ -417,7 +463,10 @@ def create_api_otp_request(
             resend_ttl_seconds=resend_seconds,
             mobile_hour_limit=api_otp_mobile_hour_limit(),
             ip_hour_limit=api_otp_ip_hour_limit(),
+            **({"operation": operation} if operation is not None else {}),
         )
+        if outcome.status in ("operation_recorded", "operation_conflict"):
+            raise ApiOtpIdempotencyConflict
         scope_by_status = {
             "challenge_pending": "mobile_resend",
             "resend_limited": "mobile_resend",

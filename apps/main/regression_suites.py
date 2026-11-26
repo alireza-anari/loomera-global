@@ -25,6 +25,7 @@ SECURITY_SUITE = (
     "apps.api.tests.test_api_v1_otp_required_delete_race",
     "apps.api.tests.test_phase7_35_atomic_optin_guards",
     "apps.api.tests.test_phase7_36_atomic_issue_guards",
+    "apps.api.tests.test_phase7_37_replay_fence",
     "apps.api.tests.test_api_v1_otp_verify",
     "apps.api.tests.test_api_v1_otp_cache_alias",
     "apps.api.tests.test_api_v1_otp_auth_contract_documentation",
