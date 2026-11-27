@@ -78,13 +78,13 @@ class CanonicalPhoneAuthTests(TestCase):
         user = self.account(FOREIGN)
         Customer.objects.create(user=user, notify_appointment_sms=False)
         url = reverse("accounts:login")
-        page = self.client.get(url)
+        page = self.client.get(url, secure=True)
         self.assertEqual(page.status_code, 200)
         self.assertContains(page, 'inputmode="tel"')
-        response = self.client.post(url, {"mobile_number": FOREIGN, "password": PASSWORD})
+        response = self.client.post(url, {"mobile_number": FOREIGN, "password": PASSWORD}, secure=True)
         self.assertEqual(response.status_code, 302)
         self.assertEqual(self.client.session["_auth_user_id"], str(user.pk))
-        response = self.client.get("/api/v1/auth/me/")
+        response = self.client.get("/api/v1/auth/me/", secure=True)
         self.assertEqual(response.status_code, 200)
 
     def test_legacy_sms_signup_alias_and_foreign_rejection(self):
@@ -105,7 +105,7 @@ class CanonicalPhoneAuthTests(TestCase):
         self.assertFalse(RememberPasswordForm({"mobile_number": FOREIGN}).is_valid())
         with patch("apps.accounts.views.CustomUser.objects.get") as lookup:
             response = self.client.post(
-                reverse("accounts:remember_password"), {"mobile_number": FOREIGN}
+                reverse("accounts:remember_password"), {"mobile_number": FOREIGN}, secure=True
             )
         self.assertEqual(response.status_code, 200)
         lookup.assert_not_called()
