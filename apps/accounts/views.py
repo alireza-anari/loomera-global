@@ -742,6 +742,11 @@ def _create_verification_session(
 
 
 def _send_verification_code(request, *, user, purpose, signup_kind=None):
+    from .services.phone_auth import reject_sms_destination
+
+    if reject_sms_destination(user.mobile_number):
+        messages.error(request, gettext("ارسال پیامک در حال حاضر امکان‌پذیر نیست."), "danger")
+        return None
     try:
         remaining = _otp_cooldown_remaining(
             purpose=purpose,

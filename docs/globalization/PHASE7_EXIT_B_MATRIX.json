@@ -1,0 +1,17 @@
+{
+  "schema_version": 1,
+  "phase": "7-exit-B",
+  "issue": 165,
+  "baseline_main_sha": "9d800a12d3d502912f8dcffaeab65000b9e94458",
+  "canonical_password_default_off": true,
+  "operator_only_foreign_customer": true,
+  "foreign_public_signup_enabled": false,
+  "foreign_otp_enabled": false,
+  "foreign_password_recovery_enabled": false,
+  "numbering_metadata": "phonenumbers==9.0.44",
+  "number_ownership_proven": false,
+  "production_deployment": false,
+  "tests": "CI_REQUIRED_NOT_YET_VERIFIED",
+  "phase7_exit": "PENDING_C",
+  "release_gate": "BLOCKED"
+}

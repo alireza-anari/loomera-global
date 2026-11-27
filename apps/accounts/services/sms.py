@@ -286,7 +286,14 @@ def _send_smsir_verify(*, mobile_number: str, code: str, purpose: str) -> SMSDel
 
 
 def send_otp_sms(mobile_number: str, code: str, *, purpose: str) -> SMSDeliveryResult:
+    from .phone_auth import reject_sms_destination
+
     provider = _get_sms_provider()
+    if reject_sms_destination(mobile_number):
+        return SMSDeliveryResult(
+            success=False, provider=provider, mode="unsupported",
+            error_code="unsupported_destination", simulated=False,
+        )
     if not getattr(settings, "SMS_OTP_ENABLED", False):
         logger.warning(
             "SMS delivery disabled by configuration | provider=%s | mobile=%s",

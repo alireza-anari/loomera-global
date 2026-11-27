@@ -14,6 +14,8 @@ from django.utils.translation import gettext, gettext_lazy
 import jdatetime
 
 from .models import Customer, CustomerAddress, CustomUser, SalonManager, Stylist
+from .services.phone_auth import canonical_password_enabled, legacy_sms_mobile
+from loomera.globalization.phone_identity import PhoneIdentityInputError
 from django.core.validators import validate_email
 
 PERSIAN_DIGITS_MAP = str.maketrans("۰۱۲۳۴۵۶۷۸۹", "0123456789")
@@ -197,7 +199,13 @@ class CustomUserChangeForm(forms.ModelForm):
 
 # -------------------------------------------------------------------------------------------------------------
 # Shared signup form
-class BaseSignupForm(forms.ModelForm):
+class CanonicalPhoneFormMixin:
+    @property
+    def canonical_phone_enabled(self):
+        return canonical_password_enabled()
+
+
+class BaseSignupForm(CanonicalPhoneFormMixin, forms.ModelForm):
     signup_kind = None
     password1 = forms.CharField(
         label="رمز عبور",
@@ -240,9 +248,14 @@ class BaseSignupForm(forms.ModelForm):
         }
 
     def clean_mobile_number(self):
-        mobile_number = "".join(
-            ch for ch in self.cleaned_data.get("mobile_number", "") if ch.isdigit()
-        )
+        raw_mobile = self.cleaned_data.get("mobile_number", "")
+        if canonical_password_enabled():
+            try:
+                mobile_number = legacy_sms_mobile(raw_mobile)
+            except PhoneIdentityInputError:
+                raise ValidationError(gettext("شماره موبایل باید ۱۱ رقم باشد و با 09 شروع شود")) from None
+        else:
+            mobile_number = "".join(ch for ch in raw_mobile if ch.isdigit())
 
         if len(mobile_number) != 11 or not mobile_number.startswith("09"):
             raise ValidationError(gettext("شماره موبایل باید ۱۱ رقم باشد و با 09 شروع شود"))
@@ -414,7 +427,7 @@ class VerifyRegisterForm(forms.Form):
 
 # ------------------------------------------------------------------------------------------------------------------
 # Login Form
-class LoginUserForm(forms.Form):
+class LoginUserForm(CanonicalPhoneFormMixin, forms.Form):
     mobile_number = forms.CharField(
         label="شماره موبایل",
         error_messages={"required": gettext_lazy("این فیلد نمی‌تواند خالی باشد ")},
@@ -508,7 +521,7 @@ class ChangePasswordForm(forms.Form):
 
 # ------------------------------------------------------------------------------------------------------------------------
 # فرم فراموشی رمز عبور
-class RememberPasswordForm(forms.Form):
+class RememberPasswordForm(CanonicalPhoneFormMixin, forms.Form):
     mobile_number = forms.CharField(
         label=gettext_lazy("شماره موبایل"),
         error_messages={"required": gettext_lazy("این فیلد نمی‌تواند خالی باشد ")},
@@ -519,6 +532,16 @@ class RememberPasswordForm(forms.Form):
             },
         ),
     )
+
+
+    def clean_mobile_number(self):
+        value = self.cleaned_data["mobile_number"]
+        if not canonical_password_enabled():
+            return value
+        try:
+            return legacy_sms_mobile(value)
+        except PhoneIdentityInputError:
+            raise ValidationError(gettext("شماره موبایل را درست وارد کنید.")) from None
 
 
 # ------------------------------------------------------------------------------------------------------------------------
