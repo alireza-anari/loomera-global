@@ -30,7 +30,7 @@ const FA = {
   manager: "حداقل ۸ کاراکتر؛ ترکیب حروف و عدد بهتر است.",
   customer: "حداقل ۸ کاراکتر؛ بهتر است از حروف و عدد استفاده کنی.",
 };
-function prepare(page, language) {
+function prepare(page, language, canonicalPhone = false) {
   const html = fs.readFileSync(path.join(ROOT, "templates/accounts", page + ".html"), "utf8");
   const block = html.match(/\{% block js %\}\s*<script>([\s\S]*?)<\/script>\s*\{% endblock %\}/);
   assert.ok(block, page + " must have a self-contained page script");
@@ -39,6 +39,7 @@ function prepare(page, language) {
   for (const id of ["id_password", "id_password1", "id_password2", "id_mobile_number"]) {
     inputs[id] = {
       id, type: id === "id_mobile_number" ? "tel" : "password", value: "",
+      dataset: id === "id_mobile_number" && canonicalPhone ? {canonicalPhone:"1"} : {},
       addEventListener(type, fn) { this[type] = fn; },
       dispatch(type) { this[type]?.({target:this}); },
     };
@@ -145,5 +146,17 @@ for (const page of PAGES){
     field.value="09x12-345۶78901";
     field.dispatch("input");
     assert.equal(field.value,page==="stylist_signup"?"09123457890":"091234578901");
+  });
+}
+
+for (const page of PAGES) {
+  test(page+" opt-in preserves international input for strict server validation",()=>{
+    const ui=prepare(page,"en",true);
+    const field=ui.inputs.id_mobile_number;
+    for (const value of ["+44 7400 123456", "+98۹۱۲۳۴۵۶۷۸۹", "+09x123456789"]) {
+      field.value=value;
+      field.dispatch("input");
+      assert.equal(field.value,value);
+    }
   });
 }

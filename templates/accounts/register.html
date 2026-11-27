@@ -60,7 +60,7 @@
             <span class="lm-signup-label">{% trans "شماره موبایل" %}</span>
             <span class="lm-signup-control">
               <span class="lm-signup-control-icon"><i class="fa-solid fa-mobile-screen-button" aria-hidden="true"></i></span>
-              <input class="lm-signup-input" type="tel" name="mobile_number" id="id_mobile_number" value="{{ form.mobile_number.value|default_if_none:'' }}" {% if form.canonical_phone_enabled %}inputmode="tel"{% else %}inputmode="numeric"{% endif %} autocomplete="tel" placeholder="09xxxxxxxxx" dir="ltr" required aria-invalid="{% if form.mobile_number.errors %}true{% else %}false{% endif %}" {% if form.mobile_number.errors %}aria-describedby="id_mobile_number-error"{% endif %}>
+              <input class="lm-signup-input" type="tel" name="mobile_number" id="id_mobile_number" value="{{ form.mobile_number.value|default_if_none:'' }}" {% if form.canonical_phone_enabled %}inputmode="tel" data-canonical-phone="1"{% else %}inputmode="numeric"{% endif %} autocomplete="tel" placeholder="09xxxxxxxxx" dir="ltr" required aria-invalid="{% if form.mobile_number.errors %}true{% else %}false{% endif %}" {% if form.mobile_number.errors %}aria-describedby="id_mobile_number-error"{% endif %}>
             </span>
             {% if form.mobile_number.errors %}<small class="lm-signup-error" id="id_mobile_number-error" role="alert">{{ form.mobile_number.errors.0 }}</small>{% endif %}
           </label>
@@ -128,10 +128,8 @@
           : authPasswordText('password.show', 'نمایش رمز عبور'));
       });
     });
-    {% if not form.canonical_phone_enabled %}
     var mobileInput = document.getElementById('id_mobile_number');
-    if (mobileInput) mobileInput.addEventListener('input', function (e) { e.target.value = e.target.value.replace(/[^\d]/g, ''); });
-    {% endif %}
+    if (mobileInput && mobileInput.dataset?.canonicalPhone !== '1') mobileInput.addEventListener('input', function (e) { e.target.value = e.target.value.replace(/[^\d]/g, ''); });
     var password = document.getElementById('id_password1');
     var bars = Array.from(document.querySelectorAll('[data-strength-bar]'));
     var hint = document.querySelector('[data-password-hint]');
