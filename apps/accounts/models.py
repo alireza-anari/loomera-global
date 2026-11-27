@@ -11,10 +11,36 @@ from django.db.models.functions import Concat, Substr
 from django.utils import timezone
 from utils import File_Uploader
 
+from .services.phone_auth import canonical_password_enabled, password_identity
+from loomera.globalization.phone_identity import PhoneIdentityInputError
+
 
 # ----------------------------------------------------------------
 #  Create User
 class CustomUserManager(BaseUserManager):
+    def _canonical_login_lookup(self, username):
+        try:
+            canonical = password_identity(username)
+        except PhoneIdentityInputError:
+            raise self.model.DoesNotExist from None
+        # Iranian OTP/session paths still require the exact legacy username.
+        stored = "0" + canonical[3:] if canonical.startswith("+98") else canonical
+        return {"canonical_mobile_number": canonical, "mobile_number": stored}
+
+    def get_by_natural_key(self, username):
+        if not canonical_password_enabled():
+            if isinstance(username, str) and username.startswith("+"):
+                raise self.model.DoesNotExist
+            return super().get_by_natural_key(username)
+        return self.get(**self._canonical_login_lookup(username))
+
+    async def aget_by_natural_key(self, username):
+        if not canonical_password_enabled():
+            if isinstance(username, str) and username.startswith("+"):
+                raise self.model.DoesNotExist
+            return await super().aget_by_natural_key(username)
+        return await self.aget(**self._canonical_login_lookup(username))
+
     def create_user(
         self,
         mobile_number,

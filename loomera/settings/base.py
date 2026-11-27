@@ -580,6 +580,10 @@ AUTH_PASSWORD_VALIDATORS = [
     {"NAME": "django.contrib.auth.password_validation.NumericPasswordValidator"},
 ]
 AUTH_USER_MODEL = "accounts.CustomUser"
+# Exit B: controlled password identities; never enables international SMS.
+LOOMERA_CANONICAL_PASSWORD_LOGIN = env.bool(
+    "LOOMERA_CANONICAL_PASSWORD_LOGIN", default=False,
+)
 CSRF_FAILURE_VIEW = "apps.main.views.csrf_failure_view"
 
 # ==============================================================================

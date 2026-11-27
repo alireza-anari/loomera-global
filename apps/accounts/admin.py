@@ -32,6 +32,13 @@ class CustomUserAdmin(UserAdmin):
     ordering = ("name", "family")
     filter_horizontal = ("user_permissions", "groups")
 
+    def get_readonly_fields(self, request, obj=None):
+        fields = tuple(super().get_readonly_fields(request, obj))
+        # Foreign identity changes require a separate ownership-verified process.
+        if obj and obj.mobile_number.startswith("+"):
+            return (*fields, "mobile_number")
+        return fields
+
     fieldsets = (
         (None, {"fields": ("mobile_number", "password")}),
         ("Personal Info", {"fields": ("name", "family", "email")}),

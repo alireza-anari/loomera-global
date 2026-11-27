@@ -25,6 +25,17 @@ def normalize_iran_mobile(value: str | None) -> str:
 
 
 def validate_mobile_for_auth(value: str | None) -> tuple[bool, str, str]:
+    from apps.accounts.services.phone_auth import (
+        canonical_password_enabled, legacy_sms_mobile,
+    )
+    from loomera.globalization.phone_identity import PhoneIdentityInputError
+
+    if canonical_password_enabled():
+        try:
+            return True, legacy_sms_mobile(value), ""
+        except PhoneIdentityInputError:
+            return False, "", "شماره موبایل معتبر نیست."
+
     mobile = normalize_iran_mobile(value)
 
     if not mobile:

@@ -785,6 +785,10 @@ jobs:
         run: |
           python manage.py test apps.salons.test_phase5_postgis_migration --failfast --noinput
 
+      - name: Phase 7 exit B canonical password identity and SMS admission
+        run: |
+          python manage.py test apps.accounts.test_phase7_canonical_auth --failfast --noinput
+
       - name: Phase 7 exit A installed canonical phone migration and uniqueness
         run: |
           python manage.py test apps.accounts.test_phase7_canonical_phone_storage --failfast --noinput
