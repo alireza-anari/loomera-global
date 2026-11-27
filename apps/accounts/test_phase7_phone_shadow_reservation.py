@@ -385,6 +385,20 @@ class Phase73ShadowStorageContractTests(SimpleTestCase):
         self.assertFalse(manifest["evidence"]["multi_process_race_verified"])
         self.assertFalse(manifest["evidence"]["schema_migration_approved"])
         self.assertFalse(manifest["evidence"]["production_cutover_authorized"])
+        self.assertEqual(manifest["current_legacy_storage"]["max_length"], 11)
+        self.assertEqual(
+            manifest["superseded_for_storage_by"],
+            "PHASE7_EXIT_A_CANONICAL_PHONE_STORAGE.md",
+        )
+        # Historical evidence remains historical. Current schema changes are
+        # checked separately, without asserting the old physical width.
+        from apps.accounts.models import CustomUser
+        from django.core.validators import MaxLengthValidator
+        mobile = CustomUser._meta.get_field("mobile_number")
+        self.assertEqual(mobile.max_length, 16)
+        self.assertTrue(mobile.unique)
+        self.assertIn(MaxLengthValidator(11), mobile.validators)
+        self.assertTrue(CustomUser._meta.get_field("canonical_mobile_number").generated)
         for entry in manifest["legacy_source_anchors"]:
             self.assertIn(
                 entry["anchor"],

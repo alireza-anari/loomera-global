@@ -11,7 +11,8 @@
     "username_field": true,
     "unique": true,
     "write_behavior": "UNCHANGED",
-    "otp_key_behavior": "UNCHANGED"
+    "otp_key_behavior": "UNCHANGED",
+    "baseline_scope": "Historical Phase 7.3 proposal at the pinned baseline, not a current schema inventory."
   },
   "storage_proposal": {
     "canonical_field_name": "canonical_mobile_e164",
@@ -67,7 +68,11 @@
   "legacy_source_anchors": [
     {
       "path": "apps/accounts/models.py",
-      "anchor": "max_length=11, unique=True"
+      "anchor": "max_length=16, unique=True, validators=[MaxLengthValidator(11)]"
+    },
+    {
+      "path": "apps/accounts/models.py",
+      "anchor": "canonical_mobile_number = models.GeneratedField("
     },
     {
       "path": "apps/accounts/models.py",
@@ -114,5 +119,6 @@
     "schema_migration_approved": false,
     "production_cutover_authorized": false,
     "manual_accessibility_accepted": false
-  }
+  },
+  "superseded_for_storage_by": "PHASE7_EXIT_A_CANONICAL_PHONE_STORAGE.md"
 }

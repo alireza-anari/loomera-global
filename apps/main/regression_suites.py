@@ -18,6 +18,7 @@ SECURITY_SUITE = (
     "apps.main.test_secrets_static_media_audit",
     "apps.main.test_media_proxy_security",
     "apps.accounts.test_stage1_auth_access",
+    "apps.accounts.test_phase7_canonical_phone_storage",
     "apps.accounts.test_otp_rate_limit_security",
     "apps.api.tests.test_api_v1_auth_security",
     "apps.api.tests.test_api_v1_auth_payload_parsing",

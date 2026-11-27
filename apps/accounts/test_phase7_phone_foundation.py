@@ -76,7 +76,7 @@ class Phase71PhoneIdentityTests(SimpleTestCase):
         root = Path(__file__).resolve().parents[2]
         sources = {
             "apps/accounts/models.py": (
-                "max_length=11, unique=True",
+                "max_length=16, unique=True",
                 'USERNAME_FIELD = "mobile_number"',
             ),
             "apps/api/v1/auth_serializers.py": (
